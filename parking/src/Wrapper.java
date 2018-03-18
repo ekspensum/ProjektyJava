@@ -1,7 +1,11 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Wrapper {
+public class Wrapper implements Serializable {
 
     private ArrayList<Kontener> rejestrPojazdow;
     private static ArrayList<Kontener> rejestrParkowan;
@@ -36,5 +40,13 @@ public class Wrapper {
 
     public ArrayList<Kontener> getRejestrPojazdow() {
         return rejestrPojazdow;
+    }
+
+    public void zapiszDoPliku() throws IOException {
+        FileOutputStream fos = new FileOutputStream("parkowanie.p");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        for (int i = 0; i < rejestrParkowan.size(); i++)
+            oos.writeObject(rejestrParkowan.get(i));
+        oos.close();
     }
 }

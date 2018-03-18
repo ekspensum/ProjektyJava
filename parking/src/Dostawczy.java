@@ -1,3 +1,4 @@
+import java.io.IOException;
 
 public class Dostawczy extends Pojazd {
 
@@ -7,7 +8,13 @@ public class Dostawczy extends Pojazd {
 
     @Override
     public void parkowanie() {
-        wp.setRejestrParkowan(cena, dataIn, dataOut, x, y, rodzajPojazdu, nrRejString);
+        try {
+            wp.setRejestrParkowan(cena, dataIn, dataOut, x, y, rodzajPojazdu, nrRejString);
+            wp.zapiszDoPliku();
+        } catch (IOException e) {
+            System.err.println("Błąd zapisu do pliku");
+            System.out.println(e.toString());
+        }
     }
 
     @Override

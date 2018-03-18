@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Kontener {
+public class Kontener implements Serializable {
     private double cena;
     private LocalDateTime dataIn, dataOut;
     private String nrRejString;
