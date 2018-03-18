@@ -1,9 +1,8 @@
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static java.lang.System.out;
 
 public class Wrapper implements Serializable {
 
@@ -15,7 +14,7 @@ public class Wrapper implements Serializable {
         this.rejestrParkowan = new ArrayList<>();
     }
 
-    public void setRejestrParkowan(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString) {
+    public void setRejestrParkowan(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString) throws IOException {
         Kontener k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
@@ -25,9 +24,20 @@ public class Wrapper implements Serializable {
         k.setRodzajPojazdu(rodzajPojazdu);
         k.setNrRejString(nrRejString);
         this.rejestrParkowan.add(k);
+        FileOutputStream fos = new FileOutputStream("parkowanie.p");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(rejestrParkowan);
+        oos.close();
     }
 
-    public static ArrayList<Kontener> getRejestrParkowan() {
+    public static ArrayList<Kontener> getRejestrParkowan() throws IOException {
+        FileInputStream fis = new FileInputStream("parkowanie.p");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        try {
+            rejestrParkowan = (ArrayList<Kontener>) ois.readObject();
+        } catch (ClassNotFoundException c) {
+            System.out.println(c.getException());
+        }
         return rejestrParkowan;
     }
 
@@ -40,13 +50,5 @@ public class Wrapper implements Serializable {
 
     public ArrayList<Kontener> getRejestrPojazdow() {
         return rejestrPojazdow;
-    }
-
-    public void zapiszDoPliku() throws IOException {
-        FileOutputStream fos = new FileOutputStream("parkowanie.p");
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        for (int i = 0; i < rejestrParkowan.size(); i++)
-            oos.writeObject(rejestrParkowan.get(i));
-        oos.close();
     }
 }

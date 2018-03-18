@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 
 
 public abstract class Pojazd {
-    protected double cena;
+    protected Double cena;
     protected LocalDateTime dataIn, dataOut;
     protected String nrRejString;
     protected Integer x, y;

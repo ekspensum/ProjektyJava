@@ -10,7 +10,6 @@ public class Dostawczy extends Pojazd {
     public void parkowanie() {
         try {
             wp.setRejestrParkowan(cena, dataIn, dataOut, x, y, rodzajPojazdu, nrRejString);
-            wp.zapiszDoPliku();
         } catch (IOException e) {
             System.err.println("Błąd zapisu do pliku");
             System.out.println(e.toString());

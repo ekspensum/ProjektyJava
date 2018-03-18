@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Kontener implements Serializable {
-    private double cena;
+    private Double cena;
     private LocalDateTime dataIn, dataOut;
     private String nrRejString;
     private Integer x, y;
@@ -18,7 +18,7 @@ public class Kontener implements Serializable {
         this.rodzajPojazdu = rodzajPojazdu;
     }
 
-    public void setCena(double cena) {
+    public void setCena(Double cena) {
         this.cena = cena;
     }
 
