@@ -7,6 +7,7 @@ public class Kontener implements Serializable {
     private String nrRejString;
     private Integer x, y;
     private Integer rodzajPojazdu;
+    private boolean trzyKola;
 
     public Kontener() {
         this.cena = cena;
@@ -16,6 +17,7 @@ public class Kontener implements Serializable {
         this.x = x;
         this.y = y;
         this.rodzajPojazdu = rodzajPojazdu;
+        this.trzyKola = false;
     }
 
     public void setCena(Double cena) {
@@ -72,5 +74,13 @@ public class Kontener implements Serializable {
 
     public Integer getRodzajPojazdu() {
         return rodzajPojazdu;
+    }
+
+    public boolean isTrzyKola() {
+        return trzyKola;
+    }
+
+    public void setTrzyKola(boolean trzyKola) {
+        this.trzyKola = trzyKola;
     }
 }

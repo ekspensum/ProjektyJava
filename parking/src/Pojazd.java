@@ -51,4 +51,5 @@ public abstract class Pojazd {
     public void setDataOut(LocalDateTime dataOut) {
         this.dataOut = dataOut;
     }
+
 }

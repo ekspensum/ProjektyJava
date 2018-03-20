@@ -30,6 +30,23 @@ public class Wrapper implements Serializable {
         oos.close();
     }
 
+    public void setRejestrParkowanM(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, boolean trzyKola) throws IOException {
+        Kontener k = new Kontener();
+        k.setCena(cena);
+        k.setDataIn(dataIn);
+        k.setDataOut(dataOut);
+        k.setX(x);
+        k.setY(y);
+        k.setRodzajPojazdu(rodzajPojazdu);
+        k.setNrRejString(nrRejString);
+        k.setTrzyKola(trzyKola);
+        this.rejestrParkowan.add(k);
+        FileOutputStream fos = new FileOutputStream("parkowanie.p");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(rejestrParkowan);
+        oos.close();
+    }
+
     public static ArrayList<Kontener> getRejestrParkowan() throws IOException {
         FileInputStream fis = new FileInputStream("parkowanie.p");
         ObjectInputStream ois = new ObjectInputStream(fis);
