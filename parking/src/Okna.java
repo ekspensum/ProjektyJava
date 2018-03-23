@@ -65,6 +65,7 @@ public class Okna {
                 p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
                 p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
                 try {
+                    wo.przypiszRejestrParkowan();
                     Wrapper.getRejestrParkowan();
                 } catch (IOException park) {
                     System.out.println(park.toString());
@@ -86,9 +87,10 @@ public class Okna {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    wo.przypiszRejestrParkowan();
                     for (int i = 0; i < wo.getRejestrParkowan().size(); i++) {
-                        odczytMiejsc();
                         System.out.println(i + ". " + Wrapper.getRejestrParkowan().get(i).getNrRejString() + " " + Wrapper.getRejestrParkowan().get(i).getCena() + " " + Wrapper.getRejestrParkowan().get(i).getDataIn() + " " + Wrapper.getRejestrParkowan().get(i).getDataOut() + " " + Wrapper.getRejestrParkowan().get(i).isTrzyKola() + " " + Wrapper.getRejestrParkowan().get(i).getMycie() + " " + Wrapper.getRejestrParkowan().get(i).getX() + " " + Wrapper.getRejestrParkowan().get(i).getY());
+//                        System.out.println(i + ". " + Wrapper.getRejestrParkowan().get(i).isTrzyKola() + " " + Wrapper.getRejestrParkowan().get(i).getMycie() + " " + Wrapper.getRejestrParkowan().get(i).getX() + " " + Wrapper.getRejestrParkowan().get(i).getY());
                     }
                 } catch (IOException f) {
                     System.out.println(f.toString());
@@ -180,6 +182,7 @@ public class Okna {
 
     public void odczytMiejsc() {
         try {
+            wo.przypiszRejestrParkowan();
             for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
                 tabelaParking.setValueAt(Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getX());
             }

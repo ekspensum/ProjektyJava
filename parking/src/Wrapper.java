@@ -64,7 +64,7 @@ public class Wrapper implements Serializable {
         oos.close();
     }
 
-    public static ArrayList<Kontener> getRejestrParkowan() throws IOException {
+    public void przypiszRejestrParkowan() throws IOException {
         FileInputStream fis = new FileInputStream("parkowanie.p");
         ObjectInputStream ois = new ObjectInputStream(fis);
         try {
@@ -72,6 +72,9 @@ public class Wrapper implements Serializable {
         } catch (ClassNotFoundException c) {
             System.out.println(c.getException());
         }
+    }
+
+    public static ArrayList<Kontener> getRejestrParkowan() {
         return rejestrParkowan;
     }
 
