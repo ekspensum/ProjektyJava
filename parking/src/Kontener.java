@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Kontener implements Serializable {
-    private Double cena;
+    private Double cena, mycie;
     private LocalDateTime dataIn, dataOut;
     private String nrRejString;
     private Integer x, y;
@@ -82,5 +82,13 @@ public class Kontener implements Serializable {
 
     public void setTrzyKola(boolean trzyKola) {
         this.trzyKola = trzyKola;
+    }
+
+    public Double getMycie() {
+        return mycie;
+    }
+
+    public void setMycie(Double mycie) {
+        this.mycie = mycie;
     }
 }

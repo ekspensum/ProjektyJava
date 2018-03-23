@@ -1,15 +1,12 @@
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class Motocykl extends Pojazd {
 
     protected boolean trzyKola;
 
-    public Motocykl() {
-        super();
-    }
-
-    public Motocykl(boolean trzyKola) {
-        super();
+    public Motocykl(Double cena, LocalDateTime dataIn, LocalDateTime dataOut, String nrRejString, Integer x, Integer y, Integer rodzajPojazdu, boolean trzyKola) {
+        super(cena, dataIn, dataOut, nrRejString, x, y, rodzajPojazdu);
         this.trzyKola = trzyKola;
     }
 
