@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -20,6 +19,9 @@ public class Okna {
     private JButton dodajPojazdButton;
     private JButton odczytBazyButton;
     private JCheckBox motocyklTrzykolowyCheckBox;
+    private JCheckBox mycieCheckBox;
+    private JButton wyjazdButton;
+    private JButton usunPojazdButton;
     private String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
     private Pojazd[] p;
     private Wrapper wo;
@@ -60,18 +62,14 @@ public class Okna {
         parkujButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ustawMiejsce(comboPojazd.getSelectedIndex());
-                p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
-                p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
-                p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
-                try {
-                    wo.przypiszRejestrParkowan();
-                    Wrapper.getRejestrParkowan();
-                } catch (IOException park) {
-                    System.out.println(park.toString());
+                if (textFieldNrRej.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
+                else {
+                    ustawMiejsce(comboPojazd.getSelectedIndex());
+                    p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
+                    p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
+                    p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
+                    p[comboPojazd.getSelectedIndex()].parkowanie();
                 }
-
-                p[comboPojazd.getSelectedIndex()].parkowanie();
             }
         });
         dodajPojazdButton.addActionListener(new ActionListener() {
@@ -96,7 +94,27 @@ public class Okna {
                 }
             }
         });
-
+        tabelaParking.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (tabelaParking.getValueAt(tabelaParking.getSelectedRow(), tabelaParking.getSelectedColumn()) != null)
+                    textFieldNrRej.setText(tabelaParking.getValueAt(tabelaParking.getSelectedRow(), tabelaParking.getSelectedColumn()).toString());
+            }
+        });
+        mycieCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mycieCheckBox.isSelected()){
+                    textFieldMycie.setEnabled(true);
+                    textFieldMycie.setText("40");
+                }
+                else {
+                    textFieldMycie.setEnabled(false);
+                    textFieldMycie.setText("0");
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -124,6 +142,7 @@ public class Okna {
         parkujButton = new JButton();
         dodajPojazdButton = new JButton();
         comboPojazd = new JComboBox(pojazdy);
+        comboPojazd.setSelectedIndex(1);
         textFieldCenaMotocykl = new JTextField();
         textFieldCenaOsobowy = new JTextField();
         textFieldCenaDostawczy = new JTextField();

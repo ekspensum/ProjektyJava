@@ -18,6 +18,7 @@ public class Kontener implements Serializable {
         this.y = y;
         this.rodzajPojazdu = rodzajPojazdu;
         this.trzyKola = false;
+        this.mycie = mycie;
     }
 
     public void setCena(Double cena) {
