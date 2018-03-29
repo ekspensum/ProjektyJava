@@ -20,8 +20,12 @@ public abstract class Pojazd {
         wp = new Wrapper();
     }
 
+    public Pojazd(LocalDateTime dataOut) {
+        this.dataOut = dataOut;
+    }
+
     public abstract void parkowanie();
 
-    public abstract void wyjazd();
+    public abstract void wyjazd(int index);
 
 }

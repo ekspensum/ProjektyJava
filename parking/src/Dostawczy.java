@@ -19,7 +19,7 @@ public class Dostawczy extends Pojazd {
     }
 
     @Override
-    public void wyjazd() {
+    public void wyjazd(int index) {
 
     }
 }

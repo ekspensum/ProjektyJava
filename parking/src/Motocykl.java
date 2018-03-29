@@ -10,6 +10,10 @@ public class Motocykl extends Pojazd {
         this.trzyKola = trzyKola;
     }
 
+    public Motocykl(LocalDateTime dataOut) {
+        super(dataOut);
+    }
+
     @Override
     public void parkowanie() {
         try {
@@ -21,8 +25,13 @@ public class Motocykl extends Pojazd {
     }
 
     @Override
-    public void wyjazd() {
-
+    public void wyjazd(int index) {
+        try {
+            wp.setRejestrParkowanWyjazdM(index, cena, dataIn, dataOut, x, y, rodzajPojazdu, nrRejString, trzyKola);
+        } catch (IOException e) {
+            System.err.println("Błąd zapisu do pliku");
+            System.out.println(e.toString());
+        }
     }
 
 }

@@ -20,7 +20,12 @@ public class Osobowy extends Pojazd {
     }
 
     @Override
-    public void wyjazd() {
-
+    public void wyjazd(int index) {
+        try {
+            wp.setRejestrParkowanWyjazdO(index, cena, dataIn, dataOut, x, y, rodzajPojazdu, nrRejString, mycie);
+        } catch (IOException e) {
+            System.err.println("Błąd zapisu do pliku");
+            System.out.println(e.toString());
+        }
     }
 }

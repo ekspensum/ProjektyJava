@@ -62,6 +62,38 @@ public class Wrapper implements Serializable {
         oos.close();
     }
 
+    public void setRejestrParkowanWyjazdM(int index, double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, boolean trzyKola) throws IOException {
+        k.setCena(cena);
+        k.setDataIn(dataIn);
+        k.setDataOut(dataOut);
+        k.setX(x);
+        k.setY(y);
+        k.setRodzajPojazdu(rodzajPojazdu);
+        k.setNrRejString(nrRejString);
+        k.setTrzyKola(trzyKola);
+        rejestrParkowan.set(index, k);
+        fos = new FileOutputStream("parkowanie.p");
+        oos = new ObjectOutputStream(fos);
+        oos.writeObject(rejestrParkowan);
+        oos.close();
+    }
+
+    public void setRejestrParkowanWyjazdO(int index, double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double mycie) throws IOException {
+        k.setCena(cena);
+        k.setDataIn(dataIn);
+        k.setDataOut(dataOut);
+        k.setX(x);
+        k.setY(y);
+        k.setRodzajPojazdu(rodzajPojazdu);
+        k.setNrRejString(nrRejString);
+        k.setMycie(mycie);
+        rejestrParkowan.set(index, k);
+        fos = new FileOutputStream("parkowanie.p");
+        oos = new ObjectOutputStream(fos);
+        oos.writeObject(rejestrParkowan);
+        oos.close();
+    }
+
     public void przypiszRejestrParkowan() throws IOException {
         FileInputStream fis = new FileInputStream("parkowanie.p");
         ObjectInputStream ois = new ObjectInputStream(fis);

@@ -62,7 +62,8 @@ public class Okna {
         parkujButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textFieldNrRej.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
+                if (textFieldNrRej.getText().isEmpty())
+                    JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
                 else {
                     ustawMiejsce(comboPojazd.getSelectedIndex());
                     p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
@@ -105,13 +106,35 @@ public class Okna {
         mycieCheckBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (mycieCheckBox.isSelected()){
+                if (mycieCheckBox.isSelected()) {
                     textFieldMycie.setEnabled(true);
                     textFieldMycie.setText("40");
-                }
-                else {
+                } else {
                     textFieldMycie.setEnabled(false);
                     textFieldMycie.setText("0");
+                }
+            }
+        });
+        wyjazdButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (textFieldNrRej.getText().isEmpty())
+                    JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
+                else {
+                    for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
+                        if (Wrapper.getRejestrParkowan().get(i).getNrRejString().equals(textFieldNrRej.getText()) && Wrapper.getRejestrParkowan().get(i).getDataOut() == null) {
+                            if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(0))
+                                p[0] = new Motocykl(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Wrapper.getRejestrParkowan().get(i).isTrzyKola());
+                            else if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(1))
+                                p[1] = new Osobowy(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Double.valueOf(Wrapper.getRejestrParkowan().get(i).getMycie()));
+                            else if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(2))
+                                p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
+
+                            p[Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu()].wyjazd(i);
+                            tabelaParking.setValueAt(null, tabelaParking.getSelectedRow(), tabelaParking.getSelectedColumn());
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -202,7 +225,8 @@ public class Okna {
         try {
             wo.przypiszRejestrParkowan();
             for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
-                tabelaParking.setValueAt(Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getX());
+                if (Wrapper.getRejestrParkowan().get(i).getDataOut() == null)
+                    tabelaParking.setValueAt(Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getX());
             }
         } catch (IOException msc) {
             System.out.println(msc);
