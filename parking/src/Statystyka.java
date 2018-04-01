@@ -1,6 +1,11 @@
+import com.toedter.calendar.JDateChooser;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Statystyka extends JDialog {
     private JPanel contentPane;
@@ -9,6 +14,10 @@ public class Statystyka extends JDialog {
     private JScrollPane scrollStatystyka;
     private DefaultTableModel modelTabeliStat;
     private JTable tabelaStat;
+    private JPanel panelKalendarz;
+    private JLabel wprowadzDateLabel;
+    private JDateChooser wybierzDate;
+    private Calendar cld;
 
     public Statystyka() {
         setContentPane(contentPane);
@@ -56,6 +65,14 @@ public class Statystyka extends JDialog {
     }
 
     private void createUIComponents() {
+        wprowadzDateLabel = new JLabel();
+        cld = Calendar.getInstance();
+        wybierzDate = new JDateChooser(cld.getTime());
+        wybierzDate.setPreferredSize(new Dimension(150,20));
+        wprowadzDateLabel.setLabelFor(wybierzDate);
+        panelKalendarz = new JPanel();
+        panelKalendarz.setSize(200,30);
+        panelKalendarz.add(wybierzDate);
         modelTabeliStat = new DefaultTableModel();
         modelTabeliStat.addColumn("L.p.");
         modelTabeliStat.addColumn("Nr rej.");
@@ -82,5 +99,6 @@ public class Statystyka extends JDialog {
             tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getDataOut(), i, 4);
 
         }
+
     }
 }
