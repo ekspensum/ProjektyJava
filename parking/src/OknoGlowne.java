@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-public class Okna {
+public class OknoGlowne {
     private JPanel panelGlowny;
     private JScrollPane scrollPane;
     private DefaultTableModel modelTabeli;
@@ -22,6 +22,7 @@ public class Okna {
     private JCheckBox mycieCheckBox;
     private JButton wyjazdButton;
     private JButton usunPojazdButton;
+    private JButton statystykaButton;
     private String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
     private Pojazd[] p;
     private Wrapper wo;
@@ -31,9 +32,10 @@ public class Okna {
     private String cenaMotocykl_2;
     private Integer x, y;
 
-    public Okna() {
+    public OknoGlowne() {
         this.trzyKola = false;
         JFrame frame = new JFrame("Obsługa parkingu");
+//        panelGlowny = new JPanel();
         frame.setContentPane(panelGlowny);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -64,11 +66,15 @@ public class Okna {
             public void actionPerformed(ActionEvent e) {
                 if (textFieldNrRej.getText().isEmpty())
                     JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
-                else {
+                else if (sprawdzCzyNieZaparkowany()) {
                     ustawMiejsce(comboPojazd.getSelectedIndex());
-                    p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
-                    p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
-                    p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
+                    if (comboPojazd.getSelectedIndex() == 0)
+                        p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
+                    else if (comboPojazd.getSelectedIndex() == 1)
+                        p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
+                    else if (comboPojazd.getSelectedIndex() == 2)
+                        p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
+
                     p[comboPojazd.getSelectedIndex()].parkowanie();
                 }
             }
@@ -138,13 +144,20 @@ public class Okna {
                 }
             }
         });
+        statystykaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Statystyka();
+            }
+        });
     }
 
     public static void main(String[] args) {
-        new Okna();
+        new OknoGlowne();
     }
 
     private void createUIComponents() {
+        panelGlowny = new JPanel();
         modelTabeli = new DefaultTableModel();
         modelTabeli.addColumn("1 M");
         modelTabeli.addColumn("2 M");
@@ -231,5 +244,22 @@ public class Okna {
         } catch (IOException msc) {
             System.out.println(msc);
         }
+    }
+
+    public boolean sprawdzCzyNieZaparkowany() {
+        boolean nr = true;
+        try {
+            wo.przypiszRejestrParkowan();
+            for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
+                if (Wrapper.getRejestrParkowan().get(i).getNrRejString().equals(textFieldNrRej.getText()) && Wrapper.getRejestrParkowan().get(i).getDataOut() == null) {
+                    nr = false;
+                    break;
+                }
+            }
+        } catch (IOException p) {
+            JOptionPane.showMessageDialog(null, "Błąd pliku");
+        }
+        if (!nr) JOptionPane.showMessageDialog(null, "Pojazd o podanym numerze rejestracyjnym jest już zaparkowany");
+        return nr;
     }
 }
