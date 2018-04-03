@@ -1,3 +1,5 @@
+import javafx.scene.control.CheckBox;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
@@ -23,6 +25,8 @@ public class OknoGlowne {
     private JButton wyjazdButton;
     private JButton usunPojazdButton;
     private JButton statystykaButton;
+    private JCheckBox chlodniaCheckBox;
+    private JTextField textFieldChlodnia;
     private String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
     private Pojazd[] p;
     private Wrapper wo;
@@ -73,7 +77,7 @@ public class OknoGlowne {
                     else if (comboPojazd.getSelectedIndex() == 1)
                         p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
                     else if (comboPojazd.getSelectedIndex() == 2)
-                        p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
+                        p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldChlodnia.getText()));
 
                     p[comboPojazd.getSelectedIndex()].parkowanie();
                 }
@@ -94,7 +98,7 @@ public class OknoGlowne {
                 try {
                     wo.przypiszRejestrParkowan();
                     for (int i = 0; i < wo.getRejestrParkowan().size(); i++) {
-                        System.out.println(i + ". " + Wrapper.getRejestrParkowan().get(i).getNrRejString() + " " + Wrapper.getRejestrParkowan().get(i).getCena() + " " + Wrapper.getRejestrParkowan().get(i).getDataIn() + " " + Wrapper.getRejestrParkowan().get(i).getDataOut() + " " + Wrapper.getRejestrParkowan().get(i).isTrzyKola() + " " + Wrapper.getRejestrParkowan().get(i).getMycie() + " " + Wrapper.getRejestrParkowan().get(i).getX() + " " + Wrapper.getRejestrParkowan().get(i).getY());
+                        System.out.println(i + ". " + Wrapper.getRejestrParkowan().get(i).getNrRejString() + " " + Wrapper.getRejestrParkowan().get(i).getCena() + " " + Wrapper.getRejestrParkowan().get(i).getDataIn() + " " + Wrapper.getRejestrParkowan().get(i).getDataOut() + " " + Wrapper.getRejestrParkowan().get(i).isTrzyKola() + " " + Wrapper.getRejestrParkowan().get(i).getMycie() + " " + Wrapper.getRejestrParkowan().get(i).getX() + " " + Wrapper.getRejestrParkowan().get(i).getY() + " " + Wrapper.getRejestrParkowan().get(i).getChlodnia());
                     }
                 } catch (IOException f) {
                     System.out.println(f.toString());
@@ -134,7 +138,7 @@ public class OknoGlowne {
                             else if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(1))
                                 p[1] = new Osobowy(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Double.valueOf(Wrapper.getRejestrParkowan().get(i).getMycie()));
                             else if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(2))
-                                p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex());
+                                p[2] = new Dostawczy(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Double.valueOf(Wrapper.getRejestrParkowan().get(i).getChlodnia()));
 
                             p[Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu()].wyjazd(i);
                             tabelaParking.setValueAt(null, tabelaParking.getSelectedRow(), tabelaParking.getSelectedColumn());
@@ -148,6 +152,18 @@ public class OknoGlowne {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Statystyka();
+            }
+        });
+        chlodniaCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (chlodniaCheckBox.isSelected()) {
+                    textFieldChlodnia.setEnabled(true);
+                    textFieldChlodnia.setText("1.2");
+                } else {
+                    textFieldChlodnia.setEnabled(false);
+                    textFieldChlodnia.setText("0");
+                }
             }
         });
     }
@@ -184,6 +200,8 @@ public class OknoGlowne {
         textFieldCenaDostawczy = new JTextField();
         textFieldMycie = new JTextField();
         motocyklTrzykolowyCheckBox = new JCheckBox();
+        textFieldChlodnia = new JTextField();
+        chlodniaCheckBox = new JCheckBox();
 
 
     }

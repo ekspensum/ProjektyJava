@@ -41,7 +41,7 @@ public class Wrapper implements Serializable {
         zapiszDoPliku(rejestrParkowan);
     }
 
-    public void setRejestrParkowanD(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString) throws IOException {
+    public void setRejestrParkowanD(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double chlodnia) throws IOException {
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -49,6 +49,7 @@ public class Wrapper implements Serializable {
         k.setY(y);
         k.setRodzajPojazdu(rodzajPojazdu);
         k.setNrRejString(nrRejString);
+        k.setChlodnia(chlodnia);
         rejestrParkowan.add(k);
         zapiszDoPliku(rejestrParkowan);
     }
@@ -75,6 +76,19 @@ public class Wrapper implements Serializable {
         k.setRodzajPojazdu(rodzajPojazdu);
         k.setNrRejString(nrRejString);
         k.setMycie(mycie);
+        rejestrParkowan.set(index, k);
+        zapiszDoPliku(rejestrParkowan);
+    }
+
+    public void setRejestrParkowanWyjazdD(int index, double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double chlodnia) throws IOException {
+        k.setCena(cena);
+        k.setDataIn(dataIn);
+        k.setDataOut(dataOut);
+        k.setX(x);
+        k.setY(y);
+        k.setRodzajPojazdu(rodzajPojazdu);
+        k.setNrRejString(nrRejString);
+        k.setChlodnia(chlodnia);
         rejestrParkowan.set(index, k);
         zapiszDoPliku(rejestrParkowan);
     }
