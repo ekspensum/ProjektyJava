@@ -27,7 +27,7 @@ public class OknoGlowne {
     private JButton statystykaButton;
     private JCheckBox chlodniaCheckBox;
     private JTextField textFieldChlodnia;
-    private String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
+    static String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
     private Pojazd[] p;
     private Wrapper wo;
     private LocalDateTime dataIn, dataOut;
@@ -39,7 +39,6 @@ public class OknoGlowne {
     public OknoGlowne() {
         this.trzyKola = false;
         JFrame frame = new JFrame("Obsługa parkingu");
-//        panelGlowny = new JPanel();
         frame.setContentPane(panelGlowny);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -159,7 +158,7 @@ public class OknoGlowne {
             public void actionPerformed(ActionEvent e) {
                 if (chlodniaCheckBox.isSelected()) {
                     textFieldChlodnia.setEnabled(true);
-                    textFieldChlodnia.setText("1.2");
+                    textFieldChlodnia.setText("10.80");
                 } else {
                     textFieldChlodnia.setEnabled(false);
                     textFieldChlodnia.setText("0");
@@ -279,5 +278,9 @@ public class OknoGlowne {
         }
         if (!nr) JOptionPane.showMessageDialog(null, "Pojazd o podanym numerze rejestracyjnym jest już zaparkowany");
         return nr;
+    }
+
+    public String[] getPojazdy() {
+        return pojazdy;
     }
 }
