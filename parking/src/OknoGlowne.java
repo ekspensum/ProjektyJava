@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class OknoGlowne {
+    static String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
     private JPanel panelGlowny;
     private JScrollPane scrollPane;
     private DefaultTableModel modelTabeli;
@@ -27,7 +28,6 @@ public class OknoGlowne {
     private JButton statystykaButton;
     private JCheckBox chlodniaCheckBox;
     private JTextField textFieldChlodnia;
-    static String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
     private Pojazd[] p;
     private Wrapper wo;
     private LocalDateTime dataIn, dataOut;
@@ -129,8 +129,11 @@ public class OknoGlowne {
             public void actionPerformed(ActionEvent e) {
                 if (textFieldNrRej.getText().isEmpty())
                     JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
+                else if (tabelaParking.getSelectedRow() == -1)
+                    JOptionPane.showMessageDialog(null, "Proszę wskazać myszką na zaparkowany pojazd i kliknąć");
                 else {
                     for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
+
                         if (Wrapper.getRejestrParkowan().get(i).getNrRejString().equals(textFieldNrRej.getText()) && Wrapper.getRejestrParkowan().get(i).getDataOut() == null) {
                             if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(0))
                                 p[0] = new Motocykl(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Wrapper.getRejestrParkowan().get(i).isTrzyKola());

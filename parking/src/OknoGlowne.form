@@ -35,7 +35,7 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="72860" layout-manager="GridLayoutManager" row-count="8" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="72860" layout-manager="GridLayoutManager" row-count="8" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -101,7 +101,7 @@
           </component>
           <component id="775ad" class="javax.swing.JLabel">
             <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Nr rejestracyjny:"/>
@@ -109,7 +109,7 @@
           </component>
           <component id="3bf0d" class="javax.swing.JTextField" binding="textFieldNrRej">
             <constraints>
-              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="80" height="-1"/>
                 <maximum-size width="80" height="-1"/>
               </grid>
@@ -140,7 +140,7 @@
           </component>
           <component id="5e06e" class="javax.swing.JButton" binding="parkujButton" custom-create="true" default-binding="true">
             <constraints>
-              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
+              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="120" height="-1"/>
               </grid>
             </constraints>
@@ -150,7 +150,7 @@
           </component>
           <component id="33e5f" class="javax.swing.JButton" binding="wyjazdButton" default-binding="true">
             <constraints>
-              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Wyjazd"/>
@@ -158,7 +158,7 @@
           </component>
           <component id="17cd6" class="javax.swing.JButton" binding="dodajPojazdButton" custom-create="true" default-binding="true">
             <constraints>
-              <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
+              <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="120" height="-1"/>
               </grid>
             </constraints>
@@ -168,7 +168,7 @@
           </component>
           <component id="48dfa" class="javax.swing.JComboBox" binding="comboPojazd" custom-create="true">
             <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="100" height="-1"/>
                 <preferred-size width="130" height="-1"/>
               </grid>
@@ -177,7 +177,7 @@
           </component>
           <component id="f9aea" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Wybierz pojazd:"/>
@@ -185,7 +185,7 @@
           </component>
           <component id="6b905" class="javax.swing.JButton" binding="usunPojazdButton">
             <constraints>
-              <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Usuń pojazd"/>
@@ -193,7 +193,7 @@
           </component>
           <component id="9d87e" class="javax.swing.JButton" binding="statystykaButton">
             <constraints>
-              <grid row="6" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Statystyka"/>
@@ -309,7 +309,7 @@
             <properties>
               <horizontalAlignment value="2"/>
               <horizontalTextPosition value="2"/>
-              <text value="/ sam. dostawczy"/>
+              <text value="/ godz. postoju sam. dost."/>
             </properties>
           </component>
           <component id="acd7d" class="javax.swing.JLabel">
@@ -350,7 +350,7 @@
           </component>
           <component id="cebe1" class="javax.swing.JButton" binding="odczytBazyButton" default-binding="true">
             <constraints>
-              <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="7" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="120" height="-1"/>
               </grid>
             </constraints>
@@ -358,6 +358,11 @@
               <text value="Odczyt bazy"/>
             </properties>
           </component>
+          <hspacer id="db0f5">
+            <constraints>
+              <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
         </children>
       </grid>
       <grid id="b1e2c" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
