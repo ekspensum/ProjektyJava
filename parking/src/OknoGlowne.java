@@ -128,9 +128,7 @@ public class OknoGlowne {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (textFieldNrRej.getText().isEmpty())
-                    JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
-                else if (tabelaParking.getSelectedRow() == -1)
-                    JOptionPane.showMessageDialog(null, "Proszę wskazać myszką na zaparkowany pojazd i kliknąć");
+                    JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu lub wskazać myszką i kliknąć");
                 else {
                     for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
 
@@ -143,7 +141,7 @@ public class OknoGlowne {
                                 p[2] = new Dostawczy(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Double.valueOf(Wrapper.getRejestrParkowan().get(i).getChlodnia()));
 
                             p[Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu()].wyjazd(i);
-                            tabelaParking.setValueAt(null, tabelaParking.getSelectedRow(), tabelaParking.getSelectedColumn());
+                            tabelaParking.setValueAt(null, Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getX());
                             break;
                         }
                     }
