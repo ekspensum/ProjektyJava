@@ -1,9 +1,13 @@
 import com.toedter.calendar.JDateChooser;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+
+import static java.time.temporal.ChronoUnit.HOURS;
 
 public class Statystyka extends JDialog {
     private JPanel contentPane;
@@ -33,6 +37,8 @@ public class Statystyka extends JDialog {
                     tabelaStat.setValueAt(null, i, 5);
                     tabelaStat.setValueAt(null, i, 6);
                     tabelaStat.setValueAt(null, i, 7);
+                    tabelaStat.setValueAt(null, i, 8);
+                    tabelaStat.setValueAt(null, i, 9);
                     if (Wrapper.getRejestrParkowan().get(i).getDataOut() != null && wybierzDate.getDate() != null) {
                         if (Wrapper.getRejestrParkowan().get(i).getDataOut().getMonth().getValue() == (wybierzDate.getJCalendar().getMonthChooser().getMonth() + 1)) {
                             if (Wrapper.getRejestrParkowan().get(i).getDataOut().getDayOfMonth() == wybierzDate.getJCalendar().getDayChooser().getDay()) {
@@ -41,10 +47,11 @@ public class Statystyka extends JDialog {
                                 tabelaStat.setValueAt(OknoGlowne.pojazdy[Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu()], x, 2);
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getDataIn(), x, 3);
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getDataOut(), x, 4);
-                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getCena(), x, 5);
-                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getMycie(), x, 6);
-                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getChlodnia(), x, 7);
-//                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getDataOut(), x, 8);
+                                tabelaStat.setValueAt(godzinParkowania(Wrapper.getRejestrParkowan().get(i).getDataIn(), Wrapper.getRejestrParkowan().get(i).getDataOut()), x, 5);
+                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getCena(), x, 6);
+                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getMycie(), x, 7);
+                                tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getChlodnia(), x, 8);
+                                tabelaStat.setValueAt(oplata(godzinParkowania(Wrapper.getRejestrParkowan().get(i).getDataIn(), Wrapper.getRejestrParkowan().get(i).getDataOut()), Wrapper.getRejestrParkowan().get(i).getCena(), Wrapper.getRejestrParkowan().get(i).getMycie(), Wrapper.getRejestrParkowan().get(i).getChlodnia()), x, 9);
                                 x++;
                             }
                         }
@@ -85,21 +92,35 @@ public class Statystyka extends JDialog {
         modelTabeliStat.addColumn("Rodzaj pojazdu");
         modelTabeliStat.addColumn("Data parkowania");
         modelTabeliStat.addColumn("Data wyjazdu");
+        modelTabeliStat.addColumn("Godz. parkowania");
         modelTabeliStat.addColumn("Cena");
         modelTabeliStat.addColumn("Dod. za mycie");
         modelTabeliStat.addColumn("Zasil. chłodni");
-        modelTabeliStat.addColumn("Opłata razem");
+        modelTabeliStat.addColumn("Opłata");
         tabelaStat = new JTable(modelTabeliStat);
         tabelaStat.getColumnModel().getColumn(0).setPreferredWidth(5);
         tabelaStat.getColumnModel().getColumn(1).setPreferredWidth(30);
         tabelaStat.getColumnModel().getColumn(2).setPreferredWidth(70);
         tabelaStat.getColumnModel().getColumn(3).setPreferredWidth(70);
         tabelaStat.getColumnModel().getColumn(4).setPreferredWidth(70);
-        tabelaStat.getColumnModel().getColumn(5).setPreferredWidth(50);
-        tabelaStat.getColumnModel().getColumn(6).setPreferredWidth(50);
-        tabelaStat.getColumnModel().getColumn(6).setPreferredWidth(50);
+        tabelaStat.getColumnModel().getColumn(5).setPreferredWidth(30);
+        tabelaStat.getColumnModel().getColumn(6).setPreferredWidth(30);
+        tabelaStat.getColumnModel().getColumn(7).setPreferredWidth(30);
+        tabelaStat.getColumnModel().getColumn(8).setPreferredWidth(30);
+        tabelaStat.getColumnModel().getColumn(9).setPreferredWidth(50);
         scrollStatystyka = new JScrollPane(tabelaStat);
         modelTabeliStat.setRowCount(Wrapper.getRejestrParkowan().size());
 
+    }
+
+    public long godzinParkowania(LocalDateTime dateIn, LocalDateTime dateOut){
+        long godzinPark = dateIn.until(dateOut, HOURS);
+        return godzinPark + 1;
+    }
+
+    public double oplata(long godzPark, Double cena, Double mycie, Double chlodnia) {
+        if (mycie == null) mycie = 0.0;
+        if (chlodnia == null) chlodnia = 0.0;
+        return mycie + cena * godzPark + chlodnia * godzPark;
     }
 }

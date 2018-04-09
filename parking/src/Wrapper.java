@@ -4,18 +4,18 @@ import java.util.ArrayList;
 
 public class Wrapper implements Serializable {
 
-    private ArrayList<Kontener> rejestrPojazdow;
+    private ArrayList<Kontener> rejestrPojazdow = new ArrayList<>();
     private static ArrayList<Kontener> rejestrParkowan = new ArrayList<>();
-    private FileOutputStream fos;
-    private ObjectOutputStream oos;
-    private Kontener k;
+    private FileOutputStream fos, fosPoj;
+    private ObjectOutputStream oos, oosPoj;
+    private Kontener k, kPoj;
 
     public Wrapper() {
-        this.rejestrPojazdow = new ArrayList<>();
-        k = new Kontener();
+
     }
 
-    public void setRejestrParkowanM(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, boolean trzyKola) throws IOException {
+    public void setRejestrParkowanM(Double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, boolean trzyKola) throws IOException {
+        k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -28,7 +28,8 @@ public class Wrapper implements Serializable {
         zapiszDoPliku(rejestrParkowan);
     }
 
-    public void setRejestrParkowanO(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double mycie) throws IOException {
+    public void setRejestrParkowanO(Double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double mycie) throws IOException {
+        k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -41,7 +42,8 @@ public class Wrapper implements Serializable {
         zapiszDoPliku(rejestrParkowan);
     }
 
-    public void setRejestrParkowanD(double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double chlodnia) throws IOException {
+    public void setRejestrParkowanD(Double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double chlodnia) throws IOException {
+        k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -54,7 +56,8 @@ public class Wrapper implements Serializable {
         zapiszDoPliku(rejestrParkowan);
     }
 
-    public void setRejestrParkowanWyjazdM(int index, double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, boolean trzyKola) throws IOException {
+    public void setRejestrParkowanWyjazdM(Integer index, Double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, boolean trzyKola) throws IOException {
+        k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -67,7 +70,8 @@ public class Wrapper implements Serializable {
         zapiszDoPliku(rejestrParkowan);
     }
 
-    public void setRejestrParkowanWyjazdO(int index, double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double mycie) throws IOException {
+    public void setRejestrParkowanWyjazdO(Integer index, Double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double mycie) throws IOException {
+        k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -80,7 +84,8 @@ public class Wrapper implements Serializable {
         zapiszDoPliku(rejestrParkowan);
     }
 
-    public void setRejestrParkowanWyjazdD(int index, double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double chlodnia) throws IOException {
+    public void setRejestrParkowanWyjazdD(Integer index, Double cena, LocalDateTime dataIn, LocalDateTime dataOut, Integer x, Integer y, Integer rodzajPojazdu, String nrRejString, Double chlodnia) throws IOException {
+        k = new Kontener();
         k.setCena(cena);
         k.setDataIn(dataIn);
         k.setDataOut(dataOut);
@@ -98,6 +103,8 @@ public class Wrapper implements Serializable {
         ObjectInputStream ois = new ObjectInputStream(fis);
         try {
             rejestrParkowan = (ArrayList<Kontener>) ois.readObject();
+            ois.close();
+            fis.close();
         } catch (ClassNotFoundException c) {
             System.out.println(c.getException());
         }
@@ -107,21 +114,37 @@ public class Wrapper implements Serializable {
         return rejestrParkowan;
     }
 
-    public void setRejestrPojazdow(String nrRejString, Integer rodzajPojazdu) {
-        k = new Kontener();
-        k.setNrRejString(nrRejString);
-        k.setRodzajPojazdu(rodzajPojazdu);
-        this.rejestrPojazdow.add(k);
+    private void zapiszDoPliku(ArrayList<Kontener> rejestrParkowan) throws IOException {
+        fos = new FileOutputStream("parkowanie.p");
+        oos = new ObjectOutputStream(fos);
+        oos.writeObject(rejestrParkowan);
+        oos.close();
+        fos.close();
+    }
+
+    public void setRejestrPojazdow(String nrRejString, Integer rodzajPojazdu) throws IOException {
+        kPoj = new Kontener();
+        kPoj.setNrRejString(nrRejString);
+        kPoj.setRodzajPojazdu(rodzajPojazdu);
+        rejestrPojazdow.add(kPoj);
+        fosPoj = new FileOutputStream("pojazdy.p");
+        oosPoj = new ObjectOutputStream(fosPoj);
+        oosPoj.writeObject(rejestrPojazdow);
+        oosPoj.close();
+        fosPoj.close();
     }
 
     public ArrayList<Kontener> getRejestrPojazdow() {
         return rejestrPojazdow;
     }
 
-    private void zapiszDoPliku(ArrayList<Kontener> rejestrParkowan) throws IOException {
-        fos = new FileOutputStream("parkowanie.p");
-        oos = new ObjectOutputStream(fos);
-        oos.writeObject(rejestrParkowan);
-        oos.close();
+    public void przypiszRejestrPojazdow() throws IOException {
+        FileInputStream fisPoj = new FileInputStream("pojazdy.p");
+        ObjectInputStream oisPoj = new ObjectInputStream(fisPoj);
+        try {
+            rejestrPojazdow = (ArrayList<Kontener>) oisPoj.readObject();
+        } catch (ClassNotFoundException cP) {
+            System.out.println(cP.getException());
+        }
     }
 }

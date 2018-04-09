@@ -28,6 +28,7 @@ public class OknoGlowne {
     private JButton statystykaButton;
     private JCheckBox chlodniaCheckBox;
     private JTextField textFieldChlodnia;
+    private JButton odczytPojazdButton;
     private Pojazd[] p;
     private Wrapper wo;
     private LocalDateTime dataIn, dataOut;
@@ -48,6 +49,11 @@ public class OknoGlowne {
         wo = new Wrapper();
 
         odczytMiejsc();
+//        try {
+//            wo.przypiszRejestrPojazdow();
+//        } catch (IOException b){
+//            System.out.println(b);
+//        }
 
         motocyklTrzykolowyCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -85,10 +91,11 @@ public class OknoGlowne {
         dodajPojazdButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                wo.setRejestrPojazdow(textFieldNrRej.toString(), comboPojazd.getSelectedIndex());
-
-                for (int i = 0; i < wo.getRejestrPojazdow().size(); i++)
-                    System.out.println(i + ". " + wo.getRejestrPojazdow().get(i).getNrRejString() + " " + wo.getRejestrPojazdow().get(i).getRodzajPojazdu());
+                try {
+                    wo.setRejestrPojazdow(textFieldNrRej.getText(), comboPojazd.getSelectedIndex());
+                } catch (IOException ePoj){
+                    System.out.println(ePoj);
+                }
             }
         });
         odczytBazyButton.addActionListener(new ActionListener() {
@@ -164,6 +171,18 @@ public class OknoGlowne {
                     textFieldChlodnia.setEnabled(false);
                     textFieldChlodnia.setText("0");
                 }
+            }
+        });
+        odczytPojazdButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    wo.przypiszRejestrPojazdow();
+                } catch (IOException exPoj){
+                    System.out.println(exPoj);
+                }
+                for (int i = 0; i < wo.getRejestrPojazdow().size(); i++)
+                    System.out.println(i + ". " + wo.getRejestrPojazdow().get(i).getNrRejString() + " " + wo.getRejestrPojazdow().get(i).getRodzajPojazdu());
             }
         });
     }
