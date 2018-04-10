@@ -148,24 +148,6 @@
               <text value="Parkuj"/>
             </properties>
           </component>
-          <component id="33e5f" class="javax.swing.JButton" binding="wyjazdButton" default-binding="true">
-            <constraints>
-              <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Wyjazd"/>
-            </properties>
-          </component>
-          <component id="17cd6" class="javax.swing.JButton" binding="dodajPojazdButton" custom-create="true" default-binding="true">
-            <constraints>
-              <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="120" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value="Dodaj pojazd"/>
-            </properties>
-          </component>
           <component id="48dfa" class="javax.swing.JComboBox" binding="comboPojazd" custom-create="true">
             <constraints>
               <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -183,12 +165,12 @@
               <text value="Wybierz pojazd:"/>
             </properties>
           </component>
-          <component id="6b905" class="javax.swing.JButton" binding="usunPojazdButton">
+          <component id="6b905" class="javax.swing.JButton" binding="pojazdyButton">
             <constraints>
               <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Usuń pojazd"/>
+              <text value="Pojazdy"/>
             </properties>
           </component>
           <component id="9d87e" class="javax.swing.JButton" binding="statystykaButton">
@@ -363,12 +345,12 @@
               <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
-          <component id="b07c3" class="javax.swing.JButton" binding="odczytPojazdButton" default-binding="true">
+          <component id="33e5f" class="javax.swing.JButton" binding="wyjazdButton" default-binding="true">
             <constraints>
-              <grid row="6" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="odczyt pojazd"/>
+              <text value="Wyjazd"/>
             </properties>
           </component>
         </children>

@@ -24,11 +24,10 @@ public class OknoGlowne {
     private JCheckBox motocyklTrzykolowyCheckBox;
     private JCheckBox mycieCheckBox;
     private JButton wyjazdButton;
-    private JButton usunPojazdButton;
+    private JButton pojazdyButton;
     private JButton statystykaButton;
     private JCheckBox chlodniaCheckBox;
     private JTextField textFieldChlodnia;
-    private JButton odczytPojazdButton;
     private Pojazd[] p;
     private Wrapper wo;
     private LocalDateTime dataIn, dataOut;
@@ -49,11 +48,6 @@ public class OknoGlowne {
         wo = new Wrapper();
 
         odczytMiejsc();
-//        try {
-//            wo.przypiszRejestrPojazdow();
-//        } catch (IOException b){
-//            System.out.println(b);
-//        }
 
         motocyklTrzykolowyCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -85,16 +79,6 @@ public class OknoGlowne {
                         p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldChlodnia.getText()));
 
                     p[comboPojazd.getSelectedIndex()].parkowanie();
-                }
-            }
-        });
-        dodajPojazdButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    wo.setRejestrPojazdow(textFieldNrRej.getText(), comboPojazd.getSelectedIndex());
-                } catch (IOException ePoj){
-                    System.out.println(ePoj);
                 }
             }
         });
@@ -173,16 +157,10 @@ public class OknoGlowne {
                 }
             }
         });
-        odczytPojazdButton.addActionListener(new ActionListener() {
+        pojazdyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    wo.przypiszRejestrPojazdow();
-                } catch (IOException exPoj){
-                    System.out.println(exPoj);
-                }
-                for (int i = 0; i < wo.getRejestrPojazdow().size(); i++)
-                    System.out.println(i + ". " + wo.getRejestrPojazdow().get(i).getNrRejString() + " " + wo.getRejestrPojazdow().get(i).getRodzajPojazdu());
+                new OknoPojazdy();
             }
         });
     }

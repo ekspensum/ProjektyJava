@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Wrapper implements Serializable {
 
-    private ArrayList<Kontener> rejestrPojazdow = new ArrayList<>();
+    private static ArrayList<Kontener> rejestrPojazdow = new ArrayList<>();
     private static ArrayList<Kontener> rejestrParkowan = new ArrayList<>();
     private FileOutputStream fos, fosPoj;
     private ObjectOutputStream oos, oosPoj;
@@ -122,10 +122,11 @@ public class Wrapper implements Serializable {
         fos.close();
     }
 
-    public void setRejestrPojazdow(String nrRejString, Integer rodzajPojazdu) throws IOException {
+    public void setRejestrPojazdow(String nrRejString, Integer rodzajPojazdu, Double cena) throws IOException {
         kPoj = new Kontener();
         kPoj.setNrRejString(nrRejString);
         kPoj.setRodzajPojazdu(rodzajPojazdu);
+        kPoj.setCena(cena);
         rejestrPojazdow.add(kPoj);
         fosPoj = new FileOutputStream("pojazdy.p");
         oosPoj = new ObjectOutputStream(fosPoj);
@@ -134,7 +135,7 @@ public class Wrapper implements Serializable {
         fosPoj.close();
     }
 
-    public ArrayList<Kontener> getRejestrPojazdow() {
+    public static ArrayList<Kontener> getRejestrPojazdow() {
         return rejestrPojazdow;
     }
 
