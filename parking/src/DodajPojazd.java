@@ -18,6 +18,7 @@ public class DodajPojazd extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
         wr = new Wrapper();
 
+
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -73,14 +74,14 @@ public class DodajPojazd extends JDialog {
     }
 
     private void onOK() {
-
-        try {
-            wr.setRejestrPojazdow(textFieldNrRejestr.getText(), comboPojazd.getSelectedIndex(), Double.valueOf(textFieldCena.getText()));
-        } catch (IOException ePoj){
-            System.out.println(ePoj);
-        }
-
-//        dispose();
+        if (!textFieldNrRejestr.getText().isEmpty()){
+            try {
+                wr.setRejestrPojazdow(textFieldNrRejestr.getText(), comboPojazd.getSelectedIndex(), Double.valueOf(textFieldCena.getText()));
+            } catch (IOException ePoj){
+                System.out.println(ePoj);
+            }
+            dispose();
+        } else JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu.");
     }
 
     private void onCancel() {
@@ -91,5 +92,7 @@ public class DodajPojazd extends JDialog {
     private void createUIComponents() {
         comboPojazd = new JComboBox(OknoGlowne.pojazdy);
         comboPojazd.setSelectedIndex(1);
+        textFieldCena = new JTextField("2.77");
+
     }
 }

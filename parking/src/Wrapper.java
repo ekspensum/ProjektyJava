@@ -148,4 +148,15 @@ public class Wrapper implements Serializable {
             System.out.println(cP.getException());
         }
     }
+
+    public void usunPojazd(String nrRej) throws IOException {
+        for (int i=0; i<rejestrPojazdow.size(); i++)
+            if (rejestrPojazdow.get(i).getNrRejString() == nrRej) rejestrPojazdow.remove(i);
+        fosPoj = new FileOutputStream("pojazdy.p");
+        oosPoj = new ObjectOutputStream(fosPoj);
+        oosPoj.writeObject(rejestrPojazdow);
+        oosPoj.close();
+        fosPoj.close();
+        przypiszRejestrPojazdow();
+    }
 }

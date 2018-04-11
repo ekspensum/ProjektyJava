@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class OknoPojazdy extends JDialog {
     private JPanel contentPane;
@@ -11,17 +12,12 @@ public class OknoPojazdy extends JDialog {
     private JButton dodajPojazdButton;
     private JButton usunPojazdButton;
     private DefaultTableModel modelTabeliPojazdy;
+    private Wrapper war;
 
     public OknoPojazdy() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
 
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -48,38 +44,39 @@ public class OknoPojazdy extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new DodajPojazd();
+                wypelnijTabelePojazdy();
             }
         });
 
         usunPojazdButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(int i=0;i<tabelaPojazdy.getRowCount();i++)
-                {
+                Boolean b = true;
+                for (int i = 0; i < tabelaPojazdy.getRowCount(); i++) {
                     if (tabelaPojazdy.getValueAt(i, 4) != null) {
-                        Boolean checked=Boolean.valueOf(tabelaPojazdy.getValueAt(i, 4).toString());
-//                        String col=tabelaPojazdy.getValueAt(i, 1).toString();
-
-                        if(checked)
-                        {
-//                        JOptionPane.showMessageDialog(null, col);
-                            System.out.println("Do usunięcia");
+                        Boolean checked = Boolean.valueOf(tabelaPojazdy.getValueAt(i, 4).toString());
+                        String nrRej = tabelaPojazdy.getValueAt(i, 1).toString();
+                        if (checked) {
+                            try {
+                                war.usunPojazd(nrRej);
+                            } catch (IOException ioe2){
+                                System.out.println(ioe2);
+                            }
+                            wypelnijTabelePojazdy();
+                            JOptionPane.showMessageDialog(null, "Usunięto pojazd o numerze rej.: "+nrRej);
                         }
+                        b = false;
+                        break;
                     }
-
                 }
+                if (b) JOptionPane.showMessageDialog(null, "Proszę zaznaczyć pojazd do usunięcia.");
             }
         });
 
 
         setTitle("Dodaj / usuń pojazd");
-        setSize(700,500);
+        setSize(700, 400);
         setVisible(true);
-    }
-
-    private void onOK() {
-        // add your code here
-        dispose();
     }
 
     private void onCancel() {
@@ -88,13 +85,9 @@ public class OknoPojazdy extends JDialog {
     }
 
     private void createUIComponents() {
-
-        modelTabeliPojazdy = new DefaultTableModel()
-        {
-            public Class<?> getColumnClass(int column)
-            {
-                switch(column)
-                {
+        modelTabeliPojazdy = new DefaultTableModel() {
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
                     case 0:
                         return String.class;
                     case 1:
@@ -111,7 +104,6 @@ public class OknoPojazdy extends JDialog {
                 }
             }
         };
-
         tabelaPojazdy = new JTable(modelTabeliPojazdy);
         scrollPojazdy = new JScrollPane(tabelaPojazdy);
         modelTabeliPojazdy.addColumn("L.p.");
@@ -124,6 +116,24 @@ public class OknoPojazdy extends JDialog {
         tabelaPojazdy.getColumnModel().getColumn(2).setPreferredWidth(130);
         tabelaPojazdy.getColumnModel().getColumn(3).setPreferredWidth(130);
         tabelaPojazdy.getColumnModel().getColumn(4).setPreferredWidth(70);
-        modelTabeliPojazdy.setRowCount(10);
+        wypelnijTabelePojazdy();
+
+
+    }
+
+    public void wypelnijTabelePojazdy() {
+        try {
+            war = new Wrapper();
+            war.przypiszRejestrPojazdow();
+            modelTabeliPojazdy.setRowCount(Wrapper.getRejestrPojazdow().size());
+            for (int i = 0; i < Wrapper.getRejestrPojazdow().size(); i++) {
+                tabelaPojazdy.setValueAt(i + 1, i, 0);
+                tabelaPojazdy.setValueAt(Wrapper.getRejestrPojazdow().get(i).getNrRejString(), i, 1);
+                tabelaPojazdy.setValueAt(OknoGlowne.pojazdy[Wrapper.getRejestrPojazdow().get(i).getRodzajPojazdu()], i, 2);
+                tabelaPojazdy.setValueAt(Wrapper.getRejestrPojazdow().get(i).getCena(), i, 3);
+            }
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        }
     }
 }

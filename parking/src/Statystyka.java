@@ -18,6 +18,7 @@ public class Statystyka extends JDialog {
     private JTable tabelaStat;
     private JPanel panelKalendarz;
     private JLabel wprowadzDateLabel;
+    private JTextField textFieldRazem;
     private JDateChooser wybierzDate;
     private Calendar cld;
 
@@ -28,6 +29,7 @@ public class Statystyka extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int x = 0;
+                Double wartosc, razem = 0.0;
                 for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
                     tabelaStat.setValueAt(null, i, 0);
                     tabelaStat.setValueAt(null, i, 1);
@@ -51,12 +53,15 @@ public class Statystyka extends JDialog {
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getCena(), x, 6);
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getMycie(), x, 7);
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getChlodnia(), x, 8);
-                                tabelaStat.setValueAt(oplata(godzinParkowania(Wrapper.getRejestrParkowan().get(i).getDataIn(), Wrapper.getRejestrParkowan().get(i).getDataOut()), Wrapper.getRejestrParkowan().get(i).getCena(), Wrapper.getRejestrParkowan().get(i).getMycie(), Wrapper.getRejestrParkowan().get(i).getChlodnia()), x, 9);
+                                wartosc = oplata(godzinParkowania(Wrapper.getRejestrParkowan().get(i).getDataIn(), Wrapper.getRejestrParkowan().get(i).getDataOut()), Wrapper.getRejestrParkowan().get(i).getCena(), Wrapper.getRejestrParkowan().get(i).getMycie(), Wrapper.getRejestrParkowan().get(i).getChlodnia());
+                                tabelaStat.setValueAt(wartosc, x, 9);
+                                razem += wartosc;
                                 x++;
                             }
                         }
                     }
                 }
+                textFieldRazem.setText(razem.toString());
             }
         });
 

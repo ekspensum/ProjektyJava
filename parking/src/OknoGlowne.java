@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class OknoGlowne {
     static String[] pojazdy = {"Motocykl", "Sam. osobowy", "Sam. dostawczy"};
@@ -28,6 +29,7 @@ public class OknoGlowne {
     private JButton statystykaButton;
     private JCheckBox chlodniaCheckBox;
     private JTextField textFieldChlodnia;
+    private JButton cennikButton;
     private Pojazd[] p;
     private Wrapper wo;
     private LocalDateTime dataIn, dataOut;
@@ -35,6 +37,7 @@ public class OknoGlowne {
     private String cenaMotocykl_1;
     private String cenaMotocykl_2;
     private Integer x, y;
+    private static ArrayList<String> cennik = new ArrayList<>();
 
     public OknoGlowne() {
         this.trzyKola = false;
@@ -42,7 +45,7 @@ public class OknoGlowne {
         frame.setContentPane(panelGlowny);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setSize(900, 500);
+        frame.setSize(1000, 500);
 
         p = new Pojazd[3];
         wo = new Wrapper();
@@ -161,6 +164,12 @@ public class OknoGlowne {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new OknoPojazdy();
+            }
+        });
+        cennikButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Cennik();
             }
         });
     }
