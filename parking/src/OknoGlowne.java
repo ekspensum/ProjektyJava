@@ -95,15 +95,17 @@ public class OknoGlowne {
                     } catch (IOException ogE){
                         System.out.println("Błąd pliku");
                     }
-                    ustawMiejsce(comboPojazd.getSelectedIndex());
-                    if (comboPojazd.getSelectedIndex() == 0)
-                        p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
-                    else if (comboPojazd.getSelectedIndex() == 1)
-                        p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
-                    else if (comboPojazd.getSelectedIndex() == 2)
-                        p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldChlodnia.getText()));
+                    if (sprawdzCzyZarejestrowany()){
+                        ustawMiejsce(comboPojazd.getSelectedIndex());
+                        if (comboPojazd.getSelectedIndex() == 0)
+                            p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
+                        else if (comboPojazd.getSelectedIndex() == 1)
+                            p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
+                        else if (comboPojazd.getSelectedIndex() == 2)
+                            p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldChlodnia.getText()));
 
-                    p[comboPojazd.getSelectedIndex()].parkowanie();
+                        p[comboPojazd.getSelectedIndex()].parkowanie();
+                    }
                 }
                 else if (sprawdzCzyNieZaparkowany()) {
                     ustawMiejsce(comboPojazd.getSelectedIndex());
@@ -160,7 +162,6 @@ public class OknoGlowne {
                     JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu lub wskazać myszką i kliknąć");
                 else {
                     for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
-
                         if (Wrapper.getRejestrParkowan().get(i).getNrRejString().equals(textFieldNrRej.getText()) && Wrapper.getRejestrParkowan().get(i).getDataOut() == null) {
                             if (Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu().equals(0))
                                 p[0] = new Motocykl(Double.valueOf(Wrapper.getRejestrParkowan().get(i).getCena()), Wrapper.getRejestrParkowan().get(i).getDataIn(), dataOut.now(), Wrapper.getRejestrParkowan().get(i).getNrRejString(), Wrapper.getRejestrParkowan().get(i).getX(), Wrapper.getRejestrParkowan().get(i).getY(), Wrapper.getRejestrParkowan().get(i).getRodzajPojazdu(), Wrapper.getRejestrParkowan().get(i).isTrzyKola());
