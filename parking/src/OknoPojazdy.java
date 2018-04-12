@@ -59,11 +59,11 @@ public class OknoPojazdy extends JDialog {
                         if (checked) {
                             try {
                                 war.usunPojazd(nrRej);
-                            } catch (IOException ioe2){
+                            } catch (IOException ioe2) {
                                 System.out.println(ioe2);
                             }
                             wypelnijTabelePojazdy();
-                            JOptionPane.showMessageDialog(null, "Usunięto pojazd o numerze rej.: "+nrRej);
+                            JOptionPane.showMessageDialog(null, "Usunięto pojazd o numerze rej.: " + nrRej);
                         }
                         b = false;
                         break;
@@ -112,10 +112,10 @@ public class OknoPojazdy extends JDialog {
         modelTabeliPojazdy.addColumn("Cena parkow.");
         modelTabeliPojazdy.addColumn("Do usunięcia");
         tabelaPojazdy.getColumnModel().getColumn(0).setPreferredWidth(20);
-        tabelaPojazdy.getColumnModel().getColumn(1).setPreferredWidth(70);
+        tabelaPojazdy.getColumnModel().getColumn(1).setPreferredWidth(80);
         tabelaPojazdy.getColumnModel().getColumn(2).setPreferredWidth(130);
-        tabelaPojazdy.getColumnModel().getColumn(3).setPreferredWidth(130);
-        tabelaPojazdy.getColumnModel().getColumn(4).setPreferredWidth(70);
+        tabelaPojazdy.getColumnModel().getColumn(3).setPreferredWidth(60);
+        tabelaPojazdy.getColumnModel().getColumn(4).setPreferredWidth(60);
         wypelnijTabelePojazdy();
 
 

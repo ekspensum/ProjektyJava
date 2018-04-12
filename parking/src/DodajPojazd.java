@@ -11,13 +11,16 @@ public class DodajPojazd extends JDialog {
     private JButton odczytButton;
     private JTextField textFieldCena;
     private Wrapper wr;
+    static String nrRej;
+    static int indexPojazdu = 1;
 
     public DodajPojazd() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         wr = new Wrapper();
-
+        textFieldNrRejestr.setText(nrRej);
+        comboPojazd.setSelectedIndex(indexPojazdu);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -55,16 +58,16 @@ public class DodajPojazd extends JDialog {
                     System.out.println(exPoj);
                 }
                 for (int i = 0; i < Wrapper.getRejestrPojazdow().size(); i++)
-                    System.out.println(i + ". " + Wrapper.getRejestrPojazdow().get(i).getNrRejString() + " " + Wrapper.getRejestrPojazdow().get(i).getRodzajPojazdu());
+                    System.out.println(i + ". " + Wrapper.getRejestrPojazdow().get(i).getNrRejString() + " " + Wrapper.getRejestrPojazdow().get(i).getRodzajPojazdu()+ " " + Wrapper.getRejestrPojazdow().get(i).getCena());
             }
         });
 
         comboPojazd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (comboPojazd.getSelectedIndex() == 0) textFieldCena.setText("1.20");
-                if (comboPojazd.getSelectedIndex() == 1) textFieldCena.setText("2.77");
-                if (comboPojazd.getSelectedIndex() == 2) textFieldCena.setText("7.80");
+                if (comboPojazd.getSelectedIndex() == 0) textFieldCena.setText(OknoGlowne.cennik.get(0));
+                if (comboPojazd.getSelectedIndex() == 1) textFieldCena.setText(OknoGlowne.cennik.get(1));
+                if (comboPojazd.getSelectedIndex() == 2) textFieldCena.setText(OknoGlowne.cennik.get(2));
             }
         });
 
@@ -91,8 +94,8 @@ public class DodajPojazd extends JDialog {
 
     private void createUIComponents() {
         comboPojazd = new JComboBox(OknoGlowne.pojazdy);
-        comboPojazd.setSelectedIndex(1);
-        textFieldCena = new JTextField("2.77");
-
+        comboPojazd.setSelectedIndex(indexPojazdu);
+        textFieldCena = new JTextField(OknoGlowne.cennik.get(indexPojazdu));
+        textFieldNrRejestr = new JTextField();
     }
 }

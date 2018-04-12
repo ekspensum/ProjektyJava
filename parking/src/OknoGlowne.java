@@ -3,7 +3,7 @@ import javafx.scene.control.CheckBox;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -18,9 +18,10 @@ public class OknoGlowne {
     private JTextField textFieldCenaDostawczy;
     private JTextField textFieldCenaOsobowy;
     private JTextField textFieldMycie;
+    private JTextField textFieldChlodnia;
+    private JTextField textFieldWspTrzyKola;
     private JButton parkujButton;
     private JComboBox comboPojazd;
-    private JButton dodajPojazdButton;
     private JButton odczytBazyButton;
     private JCheckBox motocyklTrzykolowyCheckBox;
     private JCheckBox mycieCheckBox;
@@ -28,7 +29,6 @@ public class OknoGlowne {
     private JButton pojazdyButton;
     private JButton statystykaButton;
     private JCheckBox chlodniaCheckBox;
-    private JTextField textFieldChlodnia;
     private JButton cennikButton;
     private Pojazd[] p;
     private Wrapper wo;
@@ -37,7 +37,7 @@ public class OknoGlowne {
     private String cenaMotocykl_1;
     private String cenaMotocykl_2;
     private Integer x, y;
-    private static ArrayList<String> cennik = new ArrayList<>();
+    static ArrayList<String> cennik = new ArrayList<>();
 
     public OknoGlowne() {
         this.trzyKola = false;
@@ -52,6 +52,20 @@ public class OknoGlowne {
 
         odczytMiejsc();
 
+        try {
+            przypiszCennik();
+        } catch (IOException gCen) {
+            System.out.println(gCen);
+        }
+        if (!cennik.isEmpty()){
+            textFieldCenaMotocykl.setText(cennik.get(0));
+            textFieldCenaOsobowy.setText(cennik.get(1));
+            textFieldCenaDostawczy.setText(cennik.get(2));
+            textFieldWspTrzyKola.setText(cennik.get(3));
+            textFieldMycie.setText("0.00");
+            textFieldChlodnia.setText("0.00");
+        }
+
         motocyklTrzykolowyCheckBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,7 +73,7 @@ public class OknoGlowne {
                 cenaMotocykl_1 = textFieldCenaMotocykl.getText();
                 if (trzyKola) {
                     Double x = Double.valueOf(textFieldCenaMotocykl.getText());
-                    x *= 100 * 1.5;
+                    x *= 100 * Double.valueOf(textFieldWspTrzyKola.getText());
                     Math.round(x);
                     x /= 100;
                     textFieldCenaMotocykl.setText(Double.toString(x));
@@ -72,6 +86,25 @@ public class OknoGlowne {
             public void actionPerformed(ActionEvent e) {
                 if (textFieldNrRej.getText().isEmpty())
                     JOptionPane.showMessageDialog(null, "Proszę wprowadzić nr rejestracyjny pojazdu");
+                else if (!sprawdzCzyZarejestrowany()){
+                    DodajPojazd.nrRej = textFieldNrRej.getText();
+                    DodajPojazd.indexPojazdu = comboPojazd.getSelectedIndex();
+                    new DodajPojazd();
+                    try {
+                        wo.przypiszRejestrPojazdow();
+                    } catch (IOException ogE){
+                        System.out.println("Błąd pliku");
+                    }
+                    ustawMiejsce(comboPojazd.getSelectedIndex());
+                    if (comboPojazd.getSelectedIndex() == 0)
+                        p[0] = new Motocykl(Double.valueOf(textFieldCenaMotocykl.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), trzyKola);
+                    else if (comboPojazd.getSelectedIndex() == 1)
+                        p[1] = new Osobowy(Double.valueOf(textFieldCenaOsobowy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldMycie.getText()));
+                    else if (comboPojazd.getSelectedIndex() == 2)
+                        p[2] = new Dostawczy(Double.valueOf(textFieldCenaDostawczy.getText()), dataIn.now(), null, textFieldNrRej.getText(), x, y, comboPojazd.getSelectedIndex(), Double.valueOf(textFieldChlodnia.getText()));
+
+                    p[comboPojazd.getSelectedIndex()].parkowanie();
+                }
                 else if (sprawdzCzyNieZaparkowany()) {
                     ustawMiejsce(comboPojazd.getSelectedIndex());
                     if (comboPojazd.getSelectedIndex() == 0)
@@ -96,6 +129,8 @@ public class OknoGlowne {
                 } catch (IOException f) {
                     System.out.println(f.toString());
                 }
+                for (int i = 0; i < cennik.size(); i++)
+                    System.out.println(i + ". " + cennik.get(i));
             }
         });
         tabelaParking.addMouseListener(new MouseAdapter() {
@@ -111,10 +146,10 @@ public class OknoGlowne {
             public void actionPerformed(ActionEvent e) {
                 if (mycieCheckBox.isSelected()) {
                     textFieldMycie.setEnabled(true);
-                    textFieldMycie.setText("40");
+                    textFieldMycie.setText(cennik.get(4));
                 } else {
                     textFieldMycie.setEnabled(false);
-                    textFieldMycie.setText("0");
+                    textFieldMycie.setText("0.00");
                 }
             }
         });
@@ -153,10 +188,10 @@ public class OknoGlowne {
             public void actionPerformed(ActionEvent e) {
                 if (chlodniaCheckBox.isSelected()) {
                     textFieldChlodnia.setEnabled(true);
-                    textFieldChlodnia.setText("10.80");
+                    textFieldChlodnia.setText(cennik.get(5));
                 } else {
                     textFieldChlodnia.setEnabled(false);
-                    textFieldChlodnia.setText("0");
+                    textFieldChlodnia.setText("0.00");
                 }
             }
         });
@@ -169,7 +204,14 @@ public class OknoGlowne {
         cennikButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Cennik();
+                setCennik(0, textFieldCenaMotocykl.getText());
+                setCennik(1, textFieldCenaOsobowy.getText());
+                setCennik(2, textFieldCenaDostawczy.getText());
+                setCennik(3, textFieldWspTrzyKola.getText());
+                if (mycieCheckBox.isSelected())
+                setCennik(4, textFieldMycie.getText());
+                if (chlodniaCheckBox.isSelected())
+                setCennik(5, textFieldChlodnia.getText());
             }
         });
     }
@@ -198,17 +240,16 @@ public class OknoGlowne {
         scrollPane = new JScrollPane(tabelaParking);
         modelTabeli.setRowCount(5);
         parkujButton = new JButton();
-        dodajPojazdButton = new JButton();
         comboPojazd = new JComboBox(pojazdy);
         comboPojazd.setSelectedIndex(1);
         textFieldCenaMotocykl = new JTextField();
         textFieldCenaOsobowy = new JTextField();
         textFieldCenaDostawczy = new JTextField();
         textFieldMycie = new JTextField();
+        textFieldWspTrzyKola = new JTextField();
         motocyklTrzykolowyCheckBox = new JCheckBox();
         textFieldChlodnia = new JTextField();
         chlodniaCheckBox = new JCheckBox();
-
 
     }
 
@@ -287,7 +328,47 @@ public class OknoGlowne {
         return nr;
     }
 
-    public String[] getPojazdy() {
-        return pojazdy;
+    public boolean sprawdzCzyZarejestrowany(){
+        boolean nr = false;
+        try {
+            wo.przypiszRejestrPojazdow();
+            for (int i = 0; i < Wrapper.getRejestrPojazdow().size(); i++) {
+                if (Wrapper.getRejestrPojazdow().get(i).getNrRejString().equals(textFieldNrRej.getText())) {
+                    nr = true;
+                    break;
+                }
+            }
+        } catch (IOException p) {
+            JOptionPane.showMessageDialog(null, "Błąd pliku");
+        }
+        if (!nr) JOptionPane.showMessageDialog(null, "Pojazd o podanym numerze rejestracyjnym nie jest zarejestrowany. Proszę dokonać rejestracji.");
+        return nr;
+    }
+
+    public static void setCennik(int index, String cena) {
+        try {
+            FileOutputStream fosCen = new FileOutputStream("cennik.p");
+            ObjectOutputStream oosCen = new ObjectOutputStream(fosCen);
+            cennik.set(index, cena);
+            oosCen.writeObject(cennik);
+            oosCen.close();
+            fosCen.close();
+        } catch (IOException eCen) {
+            System.out.println(eCen);
+        }
+    }
+
+    public static void przypiszCennik() throws IOException {
+        if (cennik.isEmpty()) {
+            for (int i = 0; i < 6; i++)
+                cennik.add(i, "0.00");
+        }
+        FileInputStream fisCen = new FileInputStream("cennik.p");
+        ObjectInputStream oisCen = new ObjectInputStream(fisCen);
+        try {
+            cennik = (ArrayList<String>) oisCen.readObject();
+        } catch (ClassNotFoundException fCen) {
+            System.out.println(fCen.getException());
+        }
     }
 }

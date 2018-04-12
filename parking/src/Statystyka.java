@@ -28,19 +28,30 @@ public class Statystyka extends JDialog {
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                int linia = 0;
+                for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
+                    if (Wrapper.getRejestrParkowan().get(i).getDataOut() != null && wybierzDate.getDate() != null) {
+                        if (Wrapper.getRejestrParkowan().get(i).getDataOut().getMonth().getValue() == (wybierzDate.getJCalendar().getMonthChooser().getMonth() + 1)) {
+                            if (Wrapper.getRejestrParkowan().get(i).getDataOut().getDayOfMonth() == wybierzDate.getJCalendar().getDayChooser().getDay()) {
+                                linia++;
+                            }
+                        }
+                    }
+                }
+                modelTabeliStat.setRowCount(linia);
                 int x = 0;
                 Double wartosc, razem = 0.0;
                 for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
-                    tabelaStat.setValueAt(null, i, 0);
-                    tabelaStat.setValueAt(null, i, 1);
-                    tabelaStat.setValueAt(null, i, 2);
-                    tabelaStat.setValueAt(null, i, 3);
-                    tabelaStat.setValueAt(null, i, 4);
-                    tabelaStat.setValueAt(null, i, 5);
-                    tabelaStat.setValueAt(null, i, 6);
-                    tabelaStat.setValueAt(null, i, 7);
-                    tabelaStat.setValueAt(null, i, 8);
-                    tabelaStat.setValueAt(null, i, 9);
+//                    tabelaStat.setValueAt(null, i, 0);
+//                    tabelaStat.setValueAt(null, i, 1);
+//                    tabelaStat.setValueAt(null, i, 2);
+//                    tabelaStat.setValueAt(null, i, 3);
+//                    tabelaStat.setValueAt(null, i, 4);
+//                    tabelaStat.setValueAt(null, i, 5);
+//                    tabelaStat.setValueAt(null, i, 6);
+//                    tabelaStat.setValueAt(null, i, 7);
+//                    tabelaStat.setValueAt(null, i, 8);
+//                    tabelaStat.setValueAt(null, i, 9);
                     if (Wrapper.getRejestrParkowan().get(i).getDataOut() != null && wybierzDate.getDate() != null) {
                         if (Wrapper.getRejestrParkowan().get(i).getDataOut().getMonth().getValue() == (wybierzDate.getJCalendar().getMonthChooser().getMonth() + 1)) {
                             if (Wrapper.getRejestrParkowan().get(i).getDataOut().getDayOfMonth() == wybierzDate.getJCalendar().getDayChooser().getDay()) {
@@ -114,11 +125,11 @@ public class Statystyka extends JDialog {
         tabelaStat.getColumnModel().getColumn(8).setPreferredWidth(30);
         tabelaStat.getColumnModel().getColumn(9).setPreferredWidth(50);
         scrollStatystyka = new JScrollPane(tabelaStat);
-        modelTabeliStat.setRowCount(Wrapper.getRejestrParkowan().size());
+//        modelTabeliStat.setRowCount(Wrapper.getRejestrParkowan().size());
 
     }
 
-    public long godzinParkowania(LocalDateTime dateIn, LocalDateTime dateOut){
+    public long godzinParkowania(LocalDateTime dateIn, LocalDateTime dateOut) {
         long godzinPark = dateIn.until(dateOut, HOURS);
         return godzinPark + 1;
     }
