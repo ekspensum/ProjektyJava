@@ -42,16 +42,6 @@ public class Statystyka extends JDialog {
                 int x = 0;
                 Double wartosc, razem = 0.0;
                 for (int i = 0; i < Wrapper.getRejestrParkowan().size(); i++) {
-//                    tabelaStat.setValueAt(null, i, 0);
-//                    tabelaStat.setValueAt(null, i, 1);
-//                    tabelaStat.setValueAt(null, i, 2);
-//                    tabelaStat.setValueAt(null, i, 3);
-//                    tabelaStat.setValueAt(null, i, 4);
-//                    tabelaStat.setValueAt(null, i, 5);
-//                    tabelaStat.setValueAt(null, i, 6);
-//                    tabelaStat.setValueAt(null, i, 7);
-//                    tabelaStat.setValueAt(null, i, 8);
-//                    tabelaStat.setValueAt(null, i, 9);
                     if (Wrapper.getRejestrParkowan().get(i).getDataOut() != null && wybierzDate.getDate() != null) {
                         if (Wrapper.getRejestrParkowan().get(i).getDataOut().getMonth().getValue() == (wybierzDate.getJCalendar().getMonthChooser().getMonth() + 1)) {
                             if (Wrapper.getRejestrParkowan().get(i).getDataOut().getDayOfMonth() == wybierzDate.getJCalendar().getDayChooser().getDay()) {
@@ -65,6 +55,7 @@ public class Statystyka extends JDialog {
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getMycie(), x, 7);
                                 tabelaStat.setValueAt(Wrapper.getRejestrParkowan().get(i).getChlodnia(), x, 8);
                                 wartosc = oplata(godzinParkowania(Wrapper.getRejestrParkowan().get(i).getDataIn(), Wrapper.getRejestrParkowan().get(i).getDataOut()), Wrapper.getRejestrParkowan().get(i).getCena(), Wrapper.getRejestrParkowan().get(i).getMycie(), Wrapper.getRejestrParkowan().get(i).getChlodnia());
+                                wartosc = Math.round(wartosc * 100) / 100.0;
                                 tabelaStat.setValueAt(wartosc, x, 9);
                                 razem += wartosc;
                                 x++;
@@ -72,6 +63,7 @@ public class Statystyka extends JDialog {
                         }
                     }
                 }
+                razem = Math.round(razem * 100) / 100D;
                 textFieldRazem.setText(razem.toString());
             }
         });
@@ -83,7 +75,7 @@ public class Statystyka extends JDialog {
         });
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(900, 400);
+        setSize(1000, 400);
         setTitle("Statystyka");
         setVisible(true);
     }
@@ -114,18 +106,17 @@ public class Statystyka extends JDialog {
         modelTabeliStat.addColumn("Zasil. chłodni");
         modelTabeliStat.addColumn("Opłata");
         tabelaStat = new JTable(modelTabeliStat);
-        tabelaStat.getColumnModel().getColumn(0).setPreferredWidth(5);
+        tabelaStat.getColumnModel().getColumn(0).setPreferredWidth(10);
         tabelaStat.getColumnModel().getColumn(1).setPreferredWidth(30);
         tabelaStat.getColumnModel().getColumn(2).setPreferredWidth(70);
         tabelaStat.getColumnModel().getColumn(3).setPreferredWidth(70);
         tabelaStat.getColumnModel().getColumn(4).setPreferredWidth(70);
-        tabelaStat.getColumnModel().getColumn(5).setPreferredWidth(30);
+        tabelaStat.getColumnModel().getColumn(5).setPreferredWidth(40);
         tabelaStat.getColumnModel().getColumn(6).setPreferredWidth(30);
         tabelaStat.getColumnModel().getColumn(7).setPreferredWidth(30);
         tabelaStat.getColumnModel().getColumn(8).setPreferredWidth(30);
         tabelaStat.getColumnModel().getColumn(9).setPreferredWidth(50);
         scrollStatystyka = new JScrollPane(tabelaStat);
-//        modelTabeliStat.setRowCount(Wrapper.getRejestrParkowan().size());
 
     }
 

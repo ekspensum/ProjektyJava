@@ -8,7 +8,6 @@ public class DodajPojazd extends JDialog {
     private JButton buttonCancel;
     private JTextField textFieldNrRejestr;
     private JComboBox comboPojazd;
-    private JButton odczytButton;
     private JTextField textFieldCena;
     private Wrapper wr;
     static String nrRej;
@@ -49,19 +48,6 @@ public class DodajPojazd extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        odczytButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    wr.przypiszRejestrPojazdow();
-                } catch (IOException exPoj){
-                    System.out.println(exPoj);
-                }
-                for (int i = 0; i < Wrapper.getRejestrPojazdow().size(); i++)
-                    System.out.println(i + ". " + Wrapper.getRejestrPojazdow().get(i).getNrRejString() + " " + Wrapper.getRejestrPojazdow().get(i).getRodzajPojazdu()+ " " + Wrapper.getRejestrPojazdow().get(i).getCena());
-            }
-        });
-
         comboPojazd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,10 +63,10 @@ public class DodajPojazd extends JDialog {
     }
 
     private void onOK() {
-        if (!textFieldNrRejestr.getText().isEmpty()){
+        if (!textFieldNrRejestr.getText().isEmpty()) {
             try {
                 wr.setRejestrPojazdow(textFieldNrRejestr.getText(), comboPojazd.getSelectedIndex(), Double.valueOf(textFieldCena.getText()));
-            } catch (IOException ePoj){
+            } catch (IOException ePoj) {
                 System.out.println(ePoj);
             }
             dispose();

@@ -66,7 +66,9 @@
             <children>
               <component id="bf660" class="javax.swing.JTable" binding="tabelaStat" custom-create="true">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <autoCreateRowSorter value="true"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

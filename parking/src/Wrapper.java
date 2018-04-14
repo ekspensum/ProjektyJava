@@ -133,6 +133,7 @@ public class Wrapper implements Serializable {
         oosPoj.writeObject(rejestrPojazdow);
         oosPoj.close();
         fosPoj.close();
+        przypiszRejestrPojazdow();
     }
 
     public static ArrayList<Kontener> getRejestrPojazdow() {
@@ -150,13 +151,19 @@ public class Wrapper implements Serializable {
     }
 
     public void usunPojazd(String nrRej) throws IOException {
-        for (int i=0; i<rejestrPojazdow.size(); i++)
-            if (rejestrPojazdow.get(i).getNrRejString() == nrRej) rejestrPojazdow.remove(i);
+        for (int i = 0; i < rejestrPojazdow.size(); i++)
+            if (rejestrPojazdow.get(i).getNrRejString().equals(nrRej)) rejestrPojazdow.remove(i);
         fosPoj = new FileOutputStream("pojazdy.p");
         oosPoj = new ObjectOutputStream(fosPoj);
         oosPoj.writeObject(rejestrPojazdow);
         oosPoj.close();
         fosPoj.close();
         przypiszRejestrPojazdow();
+    }
+
+    public Integer znajdzIndeksPojazdu(String nrRej) {
+        for (int i = 0; i < rejestrPojazdow.size(); i++)
+            if (rejestrPojazdow.get(i).getNrRejString().equals(nrRej)) return rejestrPojazdow.get(i).getRodzajPojazdu();
+        return -1;
     }
 }

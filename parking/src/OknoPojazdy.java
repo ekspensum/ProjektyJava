@@ -126,8 +126,10 @@ public class OknoPojazdy extends JDialog {
             war = new Wrapper();
             war.przypiszRejestrPojazdow();
             modelTabeliPojazdy.setRowCount(Wrapper.getRejestrPojazdow().size());
-            for (int i = 0; i < Wrapper.getRejestrPojazdow().size(); i++) {
-                tabelaPojazdy.setValueAt(i + 1, i, 0);
+            Integer lp;
+            for (Integer i = 0; i < Wrapper.getRejestrPojazdow().size(); i++) {
+                lp = i + 1;
+                tabelaPojazdy.setValueAt(lp.toString(), i, 0);
                 tabelaPojazdy.setValueAt(Wrapper.getRejestrPojazdow().get(i).getNrRejString(), i, 1);
                 tabelaPojazdy.setValueAt(OknoGlowne.pojazdy[Wrapper.getRejestrPojazdow().get(i).getRodzajPojazdu()], i, 2);
                 tabelaPojazdy.setValueAt(Wrapper.getRejestrPojazdow().get(i).getCena(), i, 3);
