@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Nauczyciel {
+public class Nauczyciele {
     private String imieNauczyciela, nazwiskoNauczyciela, loginNauczyciela, haslowNauczyciela;
     private LocalDateTime dataZatrudnienia;
 
