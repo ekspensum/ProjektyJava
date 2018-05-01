@@ -1,73 +1,51 @@
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 
-public class Dziennik {
+public class Dziennik<N, K> {
 
-    private LocalDateTime dataWpisu, dataOceny;
-    private String imieUcznia, nazwiskoUcznia;
-    private Integer idUcznia;
+    private N nauczycieleObiekt;
+    private K klasyObiekt;
+    private Date dataWpisu, dataOceny;
     private Double ocena;
-    private String imieNauczyciela, nazwiskoNauczyciela;
-    private Integer idNauczyciela;
     private String uwagiNauczyciela;
-    private String nazwaKlasy;
-    private Integer idKlasy;
-    private String nazwaPrzedmiotu;
-    private Integer idPrzedmiotu;
 
-    public void setDataWpisu(LocalDateTime dataWpisu) {
+    public Dziennik(Date dataWpisu, Date dataOceny, Double ocena, String uwagiNauczyciela) {
         this.dataWpisu = dataWpisu;
-    }
-
-    public void setDataOceny(LocalDateTime dataOceny) {
         this.dataOceny = dataOceny;
-    }
-
-    public void setImieUcznia(String imieUcznia) {
-        this.imieUcznia = imieUcznia;
-    }
-
-    public void setNazwiskoUcznia(String nazwiskoUcznia) {
-        this.nazwiskoUcznia = nazwiskoUcznia;
-    }
-
-    public void setIdUcznia(Integer idUcznia) {
-        this.idUcznia = idUcznia;
-    }
-
-    public void setOcena(Double ocena) {
         this.ocena = ocena;
-    }
-
-    public void setImieNauczyciela(String imieNauczyciela) {
-        this.imieNauczyciela = imieNauczyciela;
-    }
-
-    public void setNazwiskoNauczyciela(String nazwiskoNauczyciela) {
-        this.nazwiskoNauczyciela = nazwiskoNauczyciela;
-    }
-
-    public void setIdNauczyciela(Integer idNauczyciela) {
-        this.idNauczyciela = idNauczyciela;
-    }
-
-    public void setNazwaKlasy(String nazwaKlasy) {
-        this.nazwaKlasy = nazwaKlasy;
-    }
-
-    public void setIdKlasy(Integer idKlasy) {
-        this.idKlasy = idKlasy;
-    }
-
-    public void setNazwaPrzedmiotu(String nazwaPrzedmiotu) {
-        this.nazwaPrzedmiotu = nazwaPrzedmiotu;
-    }
-
-    public void setIdPrzedmiotu(Integer idPrzedmiotu) {
-        this.idPrzedmiotu = idPrzedmiotu;
-    }
-
-    public void setUwagiNauczyciela(String uwagiNauczyciela) {
         this.uwagiNauczyciela = uwagiNauczyciela;
+    }
+
+    public Dziennik(N nauczycieleObiekt, K klasyObiekt) {
+        this.nauczycieleObiekt = nauczycieleObiekt;
+        this.klasyObiekt = klasyObiekt;
+    }
+
+    public Dziennik() {
+    }
+
+    public N getNauczycieleObiekt() {
+        return nauczycieleObiekt;
+    }
+
+    public K getKlasyObiekt() {
+        return klasyObiekt;
+    }
+
+    public Date getDataWpisu() {
+        return dataWpisu;
+    }
+
+    public Date getDataOceny() {
+        return dataOceny;
+    }
+
+    public Double getOcena() {
+        return ocena;
+    }
+
+    public String getUwagiNauczyciela() {
+        return uwagiNauczyciela;
     }
 
 }
