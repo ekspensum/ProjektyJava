@@ -30,6 +30,7 @@ public class Uczniowie implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("dziła konstr. Uczniowie");
     }
 
     public Integer getIdUcznia() {

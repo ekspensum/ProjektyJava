@@ -21,15 +21,16 @@ public class Klasy<U, P> implements Serializable {
     public Klasy(U uczniowieObiekt, P przedmiotyObiekt) {
         this.uczniowieObiekt = uczniowieObiekt;
         this.przedmiotyObiekt = przedmiotyObiekt;
-    }
-
-    public Klasy() {
         try {
             przypiszListeKlas();
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("działa konstruktor Klasy");
+    }
+
+    public Klasy() {
+
     }
 
     public U getUczniowieObiekt() {

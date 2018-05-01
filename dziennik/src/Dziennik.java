@@ -22,6 +22,7 @@ public class Dziennik<N, K> {
     }
 
     public Dziennik() {
+        System.out.println("działa konstr. Dziennik");
     }
 
     public N getNauczycieleObiekt() {

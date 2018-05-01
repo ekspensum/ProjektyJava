@@ -10,11 +10,7 @@ import java.io.IOException;
 
 
 public class AdministracjaTab extends JPanel {
-//    Uczniowie uczniowie = new Uczniowie();
-//    Nauczyciele nauczyciele = new Nauczyciele();
-//    Przedmioty przedmioty = new Przedmioty();
-    Klasy<Uczniowie, Przedmioty> klasy = new Klasy<>(new Uczniowie(), new Przedmioty());
-    Dziennik<Nauczyciele, Klasy<Uczniowie, Przedmioty>> dziennik = new Dziennik<>(new Nauczyciele(), new Klasy<>(new Uczniowie(), new Przedmioty()));
+    private Dziennik<Nauczyciele, Klasy<Uczniowie, Przedmioty>> dziennik = new Dziennik<>(new Nauczyciele(), new Klasy<>(new Uczniowie(), new Przedmioty()));
     private JPanel panelAdmin, dataUrodzenia, dataZatrudnienia;
     private JButton buttonDodajUcznia;
     private JButton buttonDodajNauczyciela;
@@ -47,9 +43,6 @@ public class AdministracjaTab extends JPanel {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-//                for (int i=0; i<uczniowie.getUczniowie().size(); i++)
-//                System.out.println(uczniowie.getUczniowie().get(i).getNazwiskoUcznia());
-//                System.out.println(uczniowie.getUczniowie().size());
             }
         });
         buttonDodajNauczyciela.addActionListener(new ActionListener() {
@@ -62,7 +55,6 @@ public class AdministracjaTab extends JPanel {
                 }
             }
         });
-
         buttonDodajPrzedmiot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,37 +69,32 @@ public class AdministracjaTab extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    klasy.dodajKlase(nowyIdKlasy(), textFieldKlasa.getText());
+                    dziennik.getKlasyObiekt().dodajKlase(nowyIdKlasy(), textFieldKlasa.getText());
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                System.out.println(dziennik.getKlasyObiekt().getKlasy().size());
             }
         });
         comboBoxKlasyPrzedmiot.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                for (int i = 0; i < klasy.getKlasy().size(); i++) {
-                    if (comboBoxKlasyPrzedmiot.getItemCount() < klasy.getKlasy().size())
-                        comboBoxKlasyPrzedmiot.addItem(klasy.getKlasy().get(i).getNazwaKlasy());
-                }
-//                comboBoxKlasyPrzedmiot.setSelectedIndex(0);
-                comboBoxKlasyPrzedmiot.setMaximumRowCount(10);
-                for (int i=0; i<klasy.getKlasy().size(); i++)
-                    System.out.println(klasy.getKlasy().get(i).getNazwaKlasy());
+                comboBoxKlasyPrzedmiot.removeAllItems();
+                for (int i = 0; i < dziennik.getKlasyObiekt().getKlasy().size(); i++)
+                        comboBoxKlasyPrzedmiot.addItem(dziennik.getKlasyObiekt().getKlasy().get(i).getNazwaKlasy());
+                comboBoxKlasyPrzedmiot.setSelectedIndex(0);
+                comboBoxKlasyPrzedmiot.setMaximumRowCount(comboBoxKlasyPrzedmiot.getItemCount());
             }
         });
         comboBoxKlasyUczniowie.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
-                for (int i = 0; i < dziennik.getKlasyObiekt().getKlasy().size(); i++) {
-                    if (comboBoxKlasyUczniowie.getItemCount() < dziennik.getKlasyObiekt().getKlasy().size())
+                comboBoxKlasyUczniowie.removeAllItems();
+                for (int i = 0; i < dziennik.getKlasyObiekt().getKlasy().size(); i++)
                         comboBoxKlasyUczniowie.addItem(dziennik.getKlasyObiekt().getKlasy().get(i).getNazwaKlasy());
-                }
                 comboBoxKlasyUczniowie.setSelectedIndex(0);
-                comboBoxKlasyUczniowie.setMaximumRowCount(10);
+                comboBoxKlasyUczniowie.setMaximumRowCount(comboBoxKlasyUczniowie.getItemCount());
             }
         });
     }
