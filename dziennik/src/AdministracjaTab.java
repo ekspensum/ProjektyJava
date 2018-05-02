@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class AdministracjaTab extends JPanel {
@@ -38,21 +39,26 @@ public class AdministracjaTab extends JPanel {
         buttonDodajUcznia.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    dziennik.getKlasyObiekt().getUczniowieObiekt().dodajUcznia(nowyIdUcznia(), comboBoxKlasyUczniowie.getSelectedIndex(), textFieldImieUcznia.getText(), textFieldNazwiskoUcznia.getText(), textFieldLoginUcznia.getText(), passwordField1Ucznia.getSelectedText(), wybierzDateUczen.getDate());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                if (Arrays.equals(passwordField1Ucznia.getPassword(), passwordField2Ucznia.getPassword())){
+                    try {
+                        dziennik.getKlasyObiekt().getUczniowieObiekt().dodajUcznia(nowyIdUcznia(), comboBoxKlasyUczniowie.getSelectedIndex(), textFieldImieUcznia.getText(), textFieldNazwiskoUcznia.getText(), textFieldLoginUcznia.getText(), passwordField1Ucznia.getPassword(), wybierzDateUczen.getDate());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else JOptionPane.showMessageDialog(null, "Niezgodne pola haseł.");
             }
         });
         buttonDodajNauczyciela.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    dziennik.getNauczycieleObiekt().dodajNauczyciela(nowyIdNauczyciela(), textFieldImieNauczyciela.getText(), textFieldNazwiskoNauczyciela.getText(), textFieldLoginNauczyciela.getText(), passwordField1Nauczyciela.getSelectedText(), wybierzDateNauczyciel.getDate());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                if (Arrays.equals(passwordField1Nauczyciela.getPassword(), passwordField2Nauczyciela.getPassword())){
+                    try {
+                        dziennik.getNauczycieleObiekt().dodajNauczyciela(nowyIdNauczyciela(), textFieldImieNauczyciela.getText(), textFieldNazwiskoNauczyciela.getText(), textFieldLoginNauczyciela.getText(), passwordField1Nauczyciela.getPassword(), wybierzDateNauczyciel.getDate());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else JOptionPane.showMessageDialog(null, "Niezgodne pola haseł.");
+
             }
         });
         buttonDodajPrzedmiot.addActionListener(new ActionListener() {
@@ -154,4 +160,5 @@ public class AdministracjaTab extends JPanel {
         }
         return max+1;
     }
+
 }

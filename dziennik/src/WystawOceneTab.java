@@ -20,7 +20,6 @@ public class WystawOceneTab extends JPanel {
     private LocalDateTime dataOperacji;
     private JTextField textFieldDataOperacji;
     private JTextField textFieldZalogowany;
-    private JTextField textFieldIdNauczyciela;
     private JDateChooser dataOceny;
     private JCalendar kalendarz;
     private Dziennik<Nauczyciele, Klasy<Uczniowie, Przedmioty>> dziennik = new Dziennik<>(new Nauczyciele(), new Klasy<>(new Uczniowie(), new Przedmioty()));
@@ -74,9 +73,9 @@ public class WystawOceneTab extends JPanel {
                 try {
                     bw.setWpisyDoDziennika(comboBoxKlasy.getSelectedIndex(),
                             comboBoxKlasy.getSelectedItem().toString(),
-                            Integer.valueOf(textFieldIdNauczyciela.getText()),
-                            getImieNauczyciela(Integer.valueOf(textFieldIdNauczyciela.getText())),
-                            getNazwiskoNauczyciela(Integer.valueOf(textFieldIdNauczyciela.getText())),
+                            LogowanieTab.idNauczyciel,
+                            getImieNauczyciela(LogowanieTab.idNauczyciel),
+                            getNazwiskoNauczyciela(LogowanieTab.idNauczyciel),
                             getIdUcznia(comboBoxUczniowie.getSelectedItem().toString()),
                             getImieUcznia(getIdUcznia(comboBoxUczniowie.getSelectedItem().toString())),
                             getNazwiskoUcznia(getIdUcznia(comboBoxUczniowie.getSelectedItem().toString())),
@@ -115,14 +114,14 @@ public class WystawOceneTab extends JPanel {
 
     private String getImieNauczyciela(Integer idNauczyciela){
         for (int i=0; i<dziennik.getNauczycieleObiekt().getNauczyciele().size(); i++)
-            if (idNauczyciela == dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getIdNauczyciela())
+            if (idNauczyciela.equals(dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getIdNauczyciela()))
                 return dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getImieNauczyciela();
         return "Nie znaleziono danych nauczyciela";
     }
     private String getNazwiskoNauczyciela(Integer idNauczyciela){
         for (int i=0; i<dziennik.getNauczycieleObiekt().getNauczyciele().size(); i++)
-            if (idNauczyciela == dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getIdNauczyciela())
-                return dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getNazwiskoNauczyciela();
+            if (idNauczyciela.equals(dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getIdNauczyciela()))
+            return dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getNazwiskoNauczyciela();
         return "Nie znaleziono danych nauczyciela";
     }
     private Integer getIdUcznia(String imieNazwiskoUcznia){
@@ -134,14 +133,18 @@ public class WystawOceneTab extends JPanel {
     }
     private String getImieUcznia(Integer idUcznia){
         for (int i=0; i<dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().size(); i++)
-            if (idUcznia == dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia())
+            if (idUcznia.equals(dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia()))
                 return dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getImieUcznia();
         return "Nie znaleziono danych Ucznia";
     }
     private String getNazwiskoUcznia(Integer idUcznia){
         for (int i=0; i<dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().size(); i++)
-            if (idUcznia == dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia())
+            if (idUcznia.equals(dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia()))
                 return dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getNazwiskoUcznia();
         return "Nie znaleziono danych Ucznia";
+    }
+
+    public void setTextFieldZalogowany(String daneNauczyciela) {
+        this.textFieldZalogowany.setText(daneNauczyciela);
     }
 }

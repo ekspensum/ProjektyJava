@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Uczniowie implements Serializable {
-    private String imieUcznia, nazwiskoUcznia, loginUcznia, hasloUcznia;
+    private String imieUcznia, nazwiskoUcznia, loginUcznia;
+    private char [] hasloUcznia;
     private Date dataUrodzenia;
     private Integer idUcznia;
     private Integer idKlasy;
@@ -14,7 +15,7 @@ public class Uczniowie implements Serializable {
     private FileInputStream fisU;
     private ObjectInputStream oisU;
 
-    public Uczniowie(Integer idUcznia, Integer idKlasy, String imieUcznia, String nazwiskoUcznia, String loginUcznia, String hasloUcznia, Date dataUrodzenia) {
+    public Uczniowie(Integer idUcznia, Integer idKlasy, String imieUcznia, String nazwiskoUcznia, String loginUcznia, char [] hasloUcznia, Date dataUrodzenia) {
         this.idUcznia = idUcznia;
         this.idKlasy = idKlasy;
         this.imieUcznia = imieUcznia;
@@ -53,11 +54,15 @@ public class Uczniowie implements Serializable {
         return loginUcznia;
     }
 
+    public char[] getHasloUcznia() {
+        return hasloUcznia;
+    }
+
     public Date getDataUrodzenia() {
         return dataUrodzenia;
     }
 
-    public void dodajUcznia(Integer idUcznia, Integer idKlasy, String imie, String nazwisko, String login, String haslo, Date dataUrodzenia) throws IOException {
+    public void dodajUcznia(Integer idUcznia, Integer idKlasy, String imie, String nazwisko, String login, char [] haslo, Date dataUrodzenia) throws IOException {
         uczniowie.add(new Uczniowie(idUcznia, idKlasy, imie, nazwisko, login, haslo, dataUrodzenia));
         try {
             fosU = new FileOutputStream("uczniowie.dz");

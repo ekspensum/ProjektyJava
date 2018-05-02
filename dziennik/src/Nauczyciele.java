@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Nauczyciele implements Serializable {
-    private String imieNauczyciela, nazwiskoNauczyciela, loginNauczyciela, haslowNauczyciela;
+    private String imieNauczyciela, nazwiskoNauczyciela, loginNauczyciela;
+    private char [] haslowNauczyciela;
     private Date dataZatrudnienia;
     private Integer idNauczyciela;
     private static ArrayList<Nauczyciele> nauczyciele = new ArrayList<>();
@@ -13,7 +14,7 @@ public class Nauczyciele implements Serializable {
     private FileInputStream fisN;
     private ObjectInputStream oisN;
 
-    public Nauczyciele(Integer idNauczyciela, String imieNauczyciela, String nazwiskoNauczyciela, String loginNauczyciela, String haslowNauczyciela, Date dataZatrudnienia) {
+    public Nauczyciele(Integer idNauczyciela, String imieNauczyciela, String nazwiskoNauczyciela, String loginNauczyciela, char [] haslowNauczyciela, Date dataZatrudnienia) {
         this.idNauczyciela = idNauczyciela;
         this.imieNauczyciela = imieNauczyciela;
         this.nazwiskoNauczyciela = nazwiskoNauczyciela;
@@ -51,7 +52,11 @@ public class Nauczyciele implements Serializable {
         return dataZatrudnienia;
     }
 
-    public void dodajNauczyciela(Integer idNauczyciela, String imieNauczyciela, String nazwiskoNauczyciela, String loginNauczyciela, String haslowNauczyciela, Date dataZatrudnienia)throws IOException {
+    public char[] getHaslowNauczyciela() {
+        return haslowNauczyciela;
+    }
+
+    public void dodajNauczyciela(Integer idNauczyciela, String imieNauczyciela, String nazwiskoNauczyciela, String loginNauczyciela, char [] haslowNauczyciela, Date dataZatrudnienia)throws IOException {
         nauczyciele.add(new Nauczyciele(idNauczyciela, imieNauczyciela, nazwiskoNauczyciela, loginNauczyciela, haslowNauczyciela, dataZatrudnienia));
         try {
             fosN = new FileOutputStream("nauczyciele.dz");
