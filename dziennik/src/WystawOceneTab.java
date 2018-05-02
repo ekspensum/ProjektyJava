@@ -1,14 +1,30 @@
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class WystawOceneTab extends JPanel {
-    JPanel panelWO;
-    Double[] oceny;
-    JComboBox comboBoxOceny;
+    private JPanel panelWO;
+    private JPanel panelDataOceny;
+    private Double[] oceny;
+    private JComboBox comboBoxOceny;
     private JComboBox comboBoxKlasy;
     private JComboBox comboBoxPrzedmioty;
     private JComboBox comboBoxUczniowie;
+    private JButton wystawOcenęButton;
+    private JTextArea textAreaKomentarz;
+    private LocalDateTime dataOperacji;
+    private JTextField textFieldDataOperacji;
+    private JTextField textFieldZalogowany;
+    private JTextField textFieldIdNauczyciela;
+    private JDateChooser dataOceny;
+    private JCalendar kalendarz;
     private Dziennik<Nauczyciele, Klasy<Uczniowie, Przedmioty>> dziennik = new Dziennik<>(new Nauczyciele(), new Klasy<>(new Uczniowie(), new Przedmioty()));
+    private BazaWpisow bw = new BazaWpisow();
 
     public WystawOceneTab() {
 
@@ -22,7 +38,7 @@ public class WystawOceneTab extends JPanel {
                         comboBoxUczniowie.addItem(dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getImieUcznia()+" "+dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getNazwiskoUcznia());
                 }
                 comboBoxUczniowie.setSelectedIndex(0);
-                comboBoxUczniowie.setMaximumRowCount(comboBoxUczniowie.getItemCount());
+                comboBoxUczniowie.setMaximumRowCount(comboBoxUczniowie.getItemCount()+1);
             }
         });
         comboBoxPrzedmioty.addFocusListener(new FocusAdapter() {
@@ -35,7 +51,7 @@ public class WystawOceneTab extends JPanel {
                             comboBoxPrzedmioty.addItem(dziennik.getKlasyObiekt().getPrzedmiotyObiekt().getPrzedmioty().get(i).getNazwaPrzedmiotu());
                 }
                 comboBoxPrzedmioty.setSelectedIndex(0);
-                comboBoxPrzedmioty.setMaximumRowCount(comboBoxPrzedmioty.getItemCount());
+                comboBoxPrzedmioty.setMaximumRowCount(comboBoxPrzedmioty.getItemCount()+1);
             }
         });
         comboBoxKlasy.addFocusListener(new FocusAdapter() {
@@ -52,6 +68,28 @@ public class WystawOceneTab extends JPanel {
                 comboBoxKlasy.setMaximumRowCount(comboBoxKlasy.getItemCount());
             }
         });
+        wystawOcenęButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    bw.setWpisyDoDziennika(comboBoxKlasy.getSelectedIndex(),
+                            comboBoxKlasy.getSelectedItem().toString(),
+                            Integer.valueOf(textFieldIdNauczyciela.getText()),
+                            getImieNauczyciela(Integer.valueOf(textFieldIdNauczyciela.getText())),
+                            getNazwiskoNauczyciela(Integer.valueOf(textFieldIdNauczyciela.getText())),
+                            getIdUcznia(comboBoxUczniowie.getSelectedItem().toString()),
+                            getImieUcznia(getIdUcznia(comboBoxUczniowie.getSelectedItem().toString())),
+                            getNazwiskoUcznia(getIdUcznia(comboBoxUczniowie.getSelectedItem().toString())),
+                            comboBoxPrzedmioty.getSelectedItem().toString(),
+                            LocalDateTime.now(),
+                            dataOceny.getDate(),
+                            Double.valueOf(comboBoxOceny.getSelectedItem().toString()),
+                            textAreaKomentarz.getText());
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -64,7 +102,46 @@ public class WystawOceneTab extends JPanel {
         comboBoxKlasy = new JComboBox();
         comboBoxPrzedmioty = new JComboBox();
         comboBoxUczniowie = new JComboBox();
-
+        textFieldDataOperacji = new JTextField(dataOperacji.now().toString());
+        kalendarz = new JCalendar();
+        dataOceny = new JDateChooser(kalendarz.getDate());
+        dataOceny.setPreferredSize(new Dimension(120, 26));
+        dataOceny.setDateFormatString("yyyy-MM-dd");
+        panelDataOceny = new JPanel();
+        panelDataOceny.add(dataOceny);
+        panelDataOceny.setSize(120, 26);
+        textAreaKomentarz = new JTextArea();
     }
 
+    private String getImieNauczyciela(Integer idNauczyciela){
+        for (int i=0; i<dziennik.getNauczycieleObiekt().getNauczyciele().size(); i++)
+            if (idNauczyciela == dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getIdNauczyciela())
+                return dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getImieNauczyciela();
+        return "Nie znaleziono danych nauczyciela";
+    }
+    private String getNazwiskoNauczyciela(Integer idNauczyciela){
+        for (int i=0; i<dziennik.getNauczycieleObiekt().getNauczyciele().size(); i++)
+            if (idNauczyciela == dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getIdNauczyciela())
+                return dziennik.getNauczycieleObiekt().getNauczyciele().get(i).getNazwiskoNauczyciela();
+        return "Nie znaleziono danych nauczyciela";
+    }
+    private Integer getIdUcznia(String imieNazwiskoUcznia){
+        String [] temp = imieNazwiskoUcznia.split("\\s");
+        for (int i=0; i<dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().size(); i++)
+            if (temp[0].equals(dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getImieUcznia()) && temp[1].equals(dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getNazwiskoUcznia()))
+                return dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia();
+        return -1;
+    }
+    private String getImieUcznia(Integer idUcznia){
+        for (int i=0; i<dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().size(); i++)
+            if (idUcznia == dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia())
+                return dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getImieUcznia();
+        return "Nie znaleziono danych Ucznia";
+    }
+    private String getNazwiskoUcznia(Integer idUcznia){
+        for (int i=0; i<dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().size(); i++)
+            if (idUcznia == dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getIdUcznia())
+                return dziennik.getKlasyObiekt().getUczniowieObiekt().getUczniowie().get(i).getNazwiskoUcznia();
+        return "Nie znaleziono danych Ucznia";
+    }
 }
