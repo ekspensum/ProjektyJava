@@ -24,7 +24,6 @@ public class Przedmioty implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("działa konstr. Przedmioty");
     }
 
     public String getNazwaPrzedmiotu() {

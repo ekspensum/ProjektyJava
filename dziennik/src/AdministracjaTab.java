@@ -39,13 +39,15 @@ public class AdministracjaTab extends JPanel {
         buttonDodajUcznia.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Arrays.equals(passwordField1Ucznia.getPassword(), passwordField2Ucznia.getPassword())){
-                    try {
-                        dziennik.getKlasyObiekt().getUczniowieObiekt().dodajUcznia(nowyIdUcznia(), comboBoxKlasyUczniowie.getSelectedIndex(), textFieldImieUcznia.getText(), textFieldNazwiskoUcznia.getText(), textFieldLoginUcznia.getText(), passwordField1Ucznia.getPassword(), wybierzDateUczen.getDate());
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                } else JOptionPane.showMessageDialog(null, "Niezgodne pola haseł.");
+                if (comboBoxKlasyUczniowie.getItemCount() != 0){
+                    if (Arrays.equals(passwordField1Ucznia.getPassword(), passwordField2Ucznia.getPassword())){
+                        try {
+                            dziennik.getKlasyObiekt().getUczniowieObiekt().dodajUcznia(nowyIdUcznia(), comboBoxKlasyUczniowie.getSelectedIndex(), textFieldImieUcznia.getText(), textFieldNazwiskoUcznia.getText(), textFieldLoginUcznia.getText(), passwordField1Ucznia.getPassword(), wybierzDateUczen.getDate());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    } else JOptionPane.showMessageDialog(null, "Niezgodne pola haseł.");
+                } else JOptionPane.showMessageDialog(null, "Proszę o wybranie klasy ucznia.");
             }
         });
         buttonDodajNauczyciela.addActionListener(new ActionListener() {
@@ -58,17 +60,18 @@ public class AdministracjaTab extends JPanel {
                         e1.printStackTrace();
                     }
                 } else JOptionPane.showMessageDialog(null, "Niezgodne pola haseł.");
-
             }
         });
         buttonDodajPrzedmiot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    dziennik.getKlasyObiekt().getPrzedmiotyObiekt().dodajPrzedmiot(textFieldPrzedmiot.getText(), nowyIdPrzedmiotu(), comboBoxKlasyPrzedmiot.getSelectedIndex());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                if (comboBoxKlasyPrzedmiot.getItemCount() != 0){
+                    try {
+                        dziennik.getKlasyObiekt().getPrzedmiotyObiekt().dodajPrzedmiot(textFieldPrzedmiot.getText(), nowyIdPrzedmiotu(), comboBoxKlasyPrzedmiot.getSelectedIndex());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else JOptionPane.showMessageDialog(null, "Proszę o wybranie klasy.");
             }
         });
         buttonDodajKlase.addActionListener(new ActionListener() {

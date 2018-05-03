@@ -54,8 +54,6 @@ public class OknoStartowe extends JFrame {
         setTitle("Dziennik nauczycielski");
         setSize(tabbedPane.getPreferredSize().width + 20, tabbedPane.getPreferredSize().height + 45);
         setVisible(true);
-
-
     }
 
     public static void main(String[] args) {

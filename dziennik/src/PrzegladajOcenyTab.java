@@ -1,10 +1,14 @@
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 
 public class PrzegladajOcenyTab extends JPanel {
@@ -20,6 +24,8 @@ public class PrzegladajOcenyTab extends JPanel {
     private JDateChooser chooserDataDo;
     private JButton buttonWyswietl;
     private JTextField textFieldZalogowany;
+    private JButton drukujButton;
+    private LocalDateTime dataWydruku;
     private BazaWpisow bw;
 
 
@@ -56,6 +62,18 @@ public class PrzegladajOcenyTab extends JPanel {
             }
         });
 
+        drukujButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (modelTabeliOceny.getRowCount() != 0)
+                        tableOceny.print(JTable.PrintMode.FIT_WIDTH, new MessageFormat("Uczeń: " + textFieldZalogowany.getText()), new MessageFormat("Data wydruku: " + LocalDateTime.now().toString()));
+                    else JOptionPane.showMessageDialog(null, "Brak rekordów do drukowania.");
+                } catch (PrinterException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     private void createUIComponents() {

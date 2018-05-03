@@ -29,7 +29,6 @@ public class Nauczyciele implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("działa konstr. Nauczyciele");
     }
 
     public Integer getIdNauczyciela() {

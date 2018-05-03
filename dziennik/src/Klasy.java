@@ -26,7 +26,6 @@ public class Klasy<U, P> implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("działa konstruktor Klasy");
     }
 
     public Klasy() {
