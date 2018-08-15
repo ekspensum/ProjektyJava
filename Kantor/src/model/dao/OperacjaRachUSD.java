@@ -1,4 +1,4 @@
-package encje;
+package model.dao;
 
 public class OperacjaRachUSD implements Operacja {
 

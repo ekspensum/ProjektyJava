@@ -1,4 +1,4 @@
-package encje;
+package model.dao;
 
 import java.time.LocalDateTime;
 

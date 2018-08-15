@@ -1,4 +1,4 @@
-package dao;
+package model.dao;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -26,15 +27,22 @@ public class Kursy {
 	private Double chf_usd;
 	private Double eur_chf;	
 	
-	public Kursy() throws JSONException {
-		JSONObject obECB = getKursyECB();
-		JSONObject obFreeApi = getKursyFreeApi();
-		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
-		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
-		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
-		this.eur_usd = obECB.getDouble("USD");
-		this.chf_usd = obFreeApi.getDouble("val");	
-		this.eur_chf = obECB.getDouble("CHF");		
+	public Kursy() {
+
+			try {
+				JSONObject obECB = getKursyECB();
+				JSONObject obFreeApi = getKursyFreeApi();
+				this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
+				this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
+				this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
+				this.eur_usd = obECB.getDouble("USD");
+				this.chf_usd = obFreeApi.getDouble("val");	
+				this.eur_chf = obECB.getDouble("CHF");
+			} catch (NumberFormatException | DOMException | JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
 	}
 	
 	public Double getPln_usd() {

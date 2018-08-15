@@ -1,6 +1,6 @@
-package encje;
+package model.dao;
 
-import dao.Kursy;
+import model.dao.Kursy;
 
 public class Euro implements Waluta {
 

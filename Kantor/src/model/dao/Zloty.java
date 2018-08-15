@@ -1,33 +1,33 @@
-package encje;
+package model.dao;
 
-import dao.Kursy;
+import model.dao.Kursy;
 
-public class Dolar implements Waluta {
-	
-	private String znakKlasyBazowej = "USD";
+public class Zloty implements Waluta {
+
+	private String znakKlasyBazowej = "PLN";
 	private Double mnoznikBid;
 	private Double mnoznikAsk;
 	private Kursy kursy;
-	private Zloty zloty;
+	private Dolar dolar;
 	private Euro euro;
 	private Frank frank;
-
-	public Dolar(Double mnoznikBid, Double mnoznikAsk, Kursy kursy) {
+	
+	public Zloty(Double mnoznikBid, Double mnoznikAsk, Kursy kursy) {
 		this.mnoznikBid = mnoznikBid;
 		this.mnoznikAsk = mnoznikAsk;
 		this.kursy = kursy;
 	}
 
-	public Dolar(Frank frank) {
-		this.frank = frank;
+	public Zloty(Dolar dolar) {
+		this.dolar = dolar;
 	}
-
-	public Dolar(Euro euro) {
+	
+	public Zloty(Euro euro) {
 		this.euro = euro;
 	}
 
-	public Dolar(Zloty zloty) {
-		this.zloty = zloty;
+	public Zloty(Frank frank) {
+		this.frank = frank;
 	}
 
 	public Double getMnoznikBid() {
@@ -44,30 +44,29 @@ public class Dolar implements Waluta {
 
 	@Override
 	public Double getBid() {
-		if(zloty instanceof Zloty)
-			return zloty.getMnoznikBid() * (1 / zloty.getKursy().getPln_usd());
+		if(dolar instanceof Dolar)
+			return dolar.getMnoznikBid() * dolar.getKursy().getPln_usd();
 		else if(euro instanceof Euro)
-			return euro.getMnoznikBid() * (1 / euro.getKursy().getEur_usd());
+			return euro.getMnoznikBid() * euro.getKursy().getPln_eur();
 		else if(frank instanceof Frank)
-			return frank.getMnoznikBid() * (1 / frank.getKursy().getChf_usd());
+			return frank.getMnoznikBid() * frank.getKursy().getPln_chf();
 		return null;
 	}
-
 	@Override
 	public Double getAsk() {
-		if(zloty instanceof Zloty)
-			return zloty.getMnoznikAsk() * (1 / zloty.getKursy().getPln_usd());
+		if(dolar instanceof Dolar)
+			return dolar.getMnoznikAsk() * dolar.getKursy().getPln_usd();
 		else if(euro instanceof Euro)
-			return euro.getMnoznikAsk() * (1 / euro.getKursy().getEur_usd());
+			return euro.getMnoznikAsk() * euro.getKursy().getPln_eur();
 		else if(frank instanceof Frank)
-			return frank.getMnoznikAsk() * (1/ frank.getKursy().getChf_usd());
+			return frank.getMnoznikAsk() * frank.getKursy().getPln_chf();
 		return null;
 	}
 
 	@Override
 	public String getZnakKlasyKonwersji() {
-		if(zloty instanceof Zloty)
-			return zloty.getZnakKlasyBazowej();
+		if(dolar instanceof Dolar)
+			return dolar.getZnakKlasyBazowej();
 		else if(euro instanceof Euro)
 			return euro.getZnakKlasyBazowej();
 		else if(frank instanceof Frank)
@@ -79,6 +78,5 @@ public class Dolar implements Waluta {
 	public String getZnakKlasyBazowej() {
 		return znakKlasyBazowej;
 	}
-
-
+	
 }
