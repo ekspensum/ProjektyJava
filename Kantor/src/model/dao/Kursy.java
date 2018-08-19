@@ -120,6 +120,7 @@ public class Kursy {
 		return null;
 	}
 	
+//	Aktulizacja danych odbywa siê co 60 min. Dostêpnych jest wiele walut w tym PLN
 	private JSONObject getKursyFreeApi() {
 		try {
 			URL url = new URL("http://free.currencyconverterapi.com/api/v5/convert?q=CHF_USD&compact=y");

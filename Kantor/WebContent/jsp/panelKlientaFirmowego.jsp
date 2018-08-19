@@ -10,13 +10,12 @@
 <title>Kantor walutowy</title>
 </head>
 <body bgcolor="gray">
-<!-- <a href="http://localhost:8080/Kantor/logowanie">Zaloguj</a> -->
+<a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
 <br/>
 <p>Witamy w kantorze walutowym</p>
-<p>Aktualne kursy walut:</p>
-<b>USD kupno: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.bid }"  minFractionDigits="4" maxFractionDigits="4" /></b><br/>
-<b>USD sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.ask }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
-<b>EUR: ${1 / kurs.pln_eur }</b><br/><br/>
+<p>Panel Klienta Firmowego</p>
+<jsp:include page="index.jsp"></jsp:include>
+
 
 </body>
 </html>

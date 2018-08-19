@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,13 +17,13 @@ import model.dao.ObslugaBD;
 import model.encje.DaneDolar;
 
 
-@WebServlet(urlPatterns= {"/kantor", "/index"})
-public class Kantor extends HttpServlet {
+@WebServlet("/panelAdministratora")
+public class PanelAdministratora extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 
 	public void init(ServletConfig config) throws ServletException {
-
+		// TODO Auto-generated method stub
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -41,14 +40,12 @@ public class Kantor extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		response.setContentType("text/html;charset=UTF-8");
-		request.getRequestDispatcher("jsp/logowanie.jsp").include(request, response);
-		request.getRequestDispatcher("jsp/index.jsp").include(request, response);
+		response.setContentType("text/html;charset=UTF-8");	
+		request.getRequestDispatcher("jsp/panelAdministratora.jsp").forward(request, response);
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

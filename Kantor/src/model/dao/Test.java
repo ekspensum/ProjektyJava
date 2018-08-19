@@ -43,6 +43,7 @@ public class Test {
 		
 		Operacja opRachPLN = new OperacjaRachPLN();
 		OperacjaRachPLN op = (OperacjaRachPLN) opRachPLN.kupuj(100.0, usd_pln);
+		
 		System.out.println(op.getKwotaWaluty());
 		System.out.println(op.getDataOperacji());
 		System.out.println(op.getTytulOperacji());
@@ -71,8 +72,7 @@ public class Test {
 		System.out.println(kursy.getPln_eur());
 		System.out.println(kursy.getPln_usd());
 		
-		ObslugaBD bd = new ObslugaBD();
-		bd.pobierzDane();
+
 	}
 
 }
