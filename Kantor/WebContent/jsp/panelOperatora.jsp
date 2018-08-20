@@ -33,12 +33,13 @@ table, th, td {
 	<th>Bid</th>
 	<th>Ask</th>
 	<th>Data</th>
-	<th>Operator</th>
+	<th>Imię Operatora</th>
+	<th>Nazwisko Operatora</th>
 	</tr>
 
 <c:forEach items="${listaDaneDolar}" var="ldd" begin="0">
 <tr>
-<td>${ldd.znak}</td>	<td>${ldd.idDolar}</td>  <td>${ldd.bid }</td> <td>${ldd.ask }</td> <td>${ldd.dataDodania }</td> <td>${ldd.idOperator }</td>	
+<td>${ldd.znak}</td>	<td>${ldd.idDolar}</td>  <td>${ldd.bid }</td> <td>${ldd.ask }</td> <td>${ldd.dataDodania }</td> <td>${ldd.imieOperatora }</td>	<td>${ldd.nazwiskoOperatora }</td>	
 </tr>
 </c:forEach>
 </table>
@@ -54,12 +55,35 @@ table, th, td {
 	<th>Bid</th>
 	<th>Ask</th>
 	<th>Data</th>
-	<th>Operator</th>
+	<th>Imię Operatora</th>
+	<th>Nazwisko Operatora</th>
 	</tr>
 
 <c:forEach items="${listaDaneEuro}" var="lde" begin="0">
 <tr>
-<td>${lde.znak}</td> <td>${lde.idEuro}</td>  <td>${lde.bid }</td> <td>${lde.ask }</td> <td>${lde.dataDodania }</td> <td>${lde.idOperator }</td>	
+<td>${lde.znak}</td> <td>${lde.idEuro}</td>  <td>${lde.bid }</td> <td>${lde.ask }</td> <td>${lde.dataDodania }</td> <td>${lde.imieOperatora }</td>	<td>${lde.nazwiskoOperatora }</td>
+</tr>
+</c:forEach>
+</table>
+<br>
+<form method="POST" name="daneCHF" action="http://localhost:8080/Kantor/panelOperatora">
+<b>CHF		Bid: <input type="text" name="frankBid" /> Ask: <input type="text" name="frankAsk" />	<input type="submit" value="Dodaj" /></b>
+</form>
+<br>
+<table>
+	<tr>
+	<th>Znak</th>
+	<th>id</th>
+	<th>Bid</th>
+	<th>Ask</th>
+	<th>Data</th>
+	<th>Imię Operatora</th>
+	<th>Nazwisko Operatora</th>
+	</tr>
+
+<c:forEach items="${listaDaneFrank}" var="ldf" begin="0">
+<tr>
+<td>${ldf.znak}</td> <td>${ldf.idFrank}</td>  <td>${ldf.bid }</td> <td>${ldf.ask }</td> <td>${ldf.dataDodania }</td> <td>${ldf.imieOperatora }</td>	<td>${ldf.nazwiskoOperatora }</td>
 </tr>
 </c:forEach>
 </table>

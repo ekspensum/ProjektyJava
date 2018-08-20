@@ -10,7 +10,8 @@ public class DaneDolar {
 	private Double ask;
 	private LocalDateTime dataDodania;
 	private int idOperator;
-	private int idUzytkownik;
+	private String imieOperatora;
+	private String nazwiskoOperatora;
 	
 	public int getIdDolar() {
 		return idDolar;
@@ -27,14 +28,14 @@ public class DaneDolar {
 	public Double getBid() {
 		return bid;
 	}
-	public void setBid(Double mnoznikBid) {
-		this.bid = mnoznikBid;
+	public void setBid(Double bid) {
+		this.bid = bid;
 	}
 	public Double getAsk() {
 		return ask;
 	}
-	public void setAsk(Double mnoznikAsk) {
-		this.ask = mnoznikAsk;
+	public void setAsk(Double ask) {
+		this.ask = ask;
 	}
 	public LocalDateTime getDataDodania() {
 		return dataDodania;
@@ -48,11 +49,17 @@ public class DaneDolar {
 	public void setIdOperator(int idOperator) {
 		this.idOperator = idOperator;
 	}
-	public int getIdUzytkownik() {
-		return idUzytkownik;
+	public String getImieOperatora() {
+		return imieOperatora;
 	}
-	public void setIdUzytkownik(int idUzytkownik) {
-		this.idUzytkownik = idUzytkownik;
+	public void setImieOperatora(String imieOperatora) {
+		this.imieOperatora = imieOperatora;
+	}
+	public String getNazwiskoOperatora() {
+		return nazwiskoOperatora;
+	}
+	public void setNazwiskoOperatora(String nazwiskoOperatora) {
+		this.nazwiskoOperatora = nazwiskoOperatora;
 	}
 		
 }

@@ -2,9 +2,9 @@ package model.encje;
 
 import java.time.LocalDateTime;
 
-public class DaneEuro {
+public class DaneFrank {
 	
-	private int idEuro;
+	private int idFrank;
 	private String znak;
 	private Double bid;
 	private Double ask;
@@ -13,11 +13,11 @@ public class DaneEuro {
 	private String imieOperatora;
 	private String nazwiskoOperatora;
 	
-	public int getIdEuro() {
-		return idEuro;
+	public int getIdFrank() {
+		return idFrank;
 	}
-	public void setIdEuro(int idEuro) {
-		this.idEuro = idEuro;
+	public void setIdFrank(int idFrank) {
+		this.idFrank = idFrank;
 	}
 	public String getZnak() {
 		return znak;

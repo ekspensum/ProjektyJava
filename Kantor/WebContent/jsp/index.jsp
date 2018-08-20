@@ -14,9 +14,16 @@
 <br/>
 <p>Witamy w kantorze walutowym</p>
 <p>Aktualne kursy walut:</p>
-<b>USD kupno: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.bid }"  minFractionDigits="4" maxFractionDigits="4" /></b><br/>
-<b>USD sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.ask }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
-<b>EUR: ${1 / kurs.pln_eur }</b><br/><br/>
-
+<br>
+<b>USD kupno: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.dolarBid }"  minFractionDigits="4" maxFractionDigits="4" /></b><br/>
+<b>USD sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.dolarAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
+<br>
+<b>EUR kupno: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_eur * mnoznik.euroBid }"  minFractionDigits="4" maxFractionDigits="4" /></b><br/>
+<b>EUR sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_eur * mnoznik.euroAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
+<br>
+<b>CHF kupno: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankBid }"  minFractionDigits="4" maxFractionDigits="4" /></b><br/>
+<b>CHF sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
+<br>
+<br>
 </body>
 </html>
