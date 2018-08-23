@@ -6,11 +6,10 @@ public class ZapisyRachUSD {
 	
 	private int idOperacji;
 	private String tytulOperacji;
-	private String znakKlasyBazowej;
-	private String znakKlasyKonwersji;
-	private Double kwotaUSD;
-	private Double kwotaWaluty;
-	private Double kurs;
+	private String znakWaluty;
+	private double kwotaUSD;
+	private double kwotaWaluty;
+	private double kurs;
 	private LocalDateTime dataOperacji;
 	private int idRachunekPLN;
 }

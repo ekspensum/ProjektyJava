@@ -2,8 +2,8 @@ package model.dao;
 
 public interface Waluta {
 	
-	public Double getBid();
-	public Double getAsk();
+	public double getBid();
+	public double getAsk();
 	public String getZnakKlasyKonwersji();
 	public String getZnakKlasyBazowej();
 }

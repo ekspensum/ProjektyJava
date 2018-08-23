@@ -2,15 +2,28 @@ package model.dao;
 
 public class OperacjaRachUSD implements Operacja {
 
+	
+	
+	
+	
+	
 	@Override
-	public Operacja kupuj(Double kwota, Waluta waluta) {
-		// TODO Auto-generated method stub
+	public Operacja kup(DaneTransakcji dane) {
+		ObslugaBD bd = new ObslugaBD();
+		
+		System.out.println("kup USD");
+		
+		
 		return null;
 	}
 
 	@Override
-	public Operacja sprzedaj(Double kwota, Waluta waluta) {
-		// TODO Auto-generated method stub
+	public Operacja sprzedaj(DaneTransakcji dane) {
+		
+		System.out.println("sprzedaj USD");
+		
+		
+		
 		return null;
 	}
 

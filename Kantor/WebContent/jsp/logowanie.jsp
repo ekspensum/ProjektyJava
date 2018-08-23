@@ -18,5 +18,7 @@
 </form>
 <br/>
 <b>${komunikat }</b>
+<br/>
+
 </body>
 </html>

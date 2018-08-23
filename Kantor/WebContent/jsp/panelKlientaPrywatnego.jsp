@@ -12,8 +12,8 @@
 <body bgcolor="gray">
 <a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
 <br/>
-<p>Witamy w kantorze walutowym</p>
 <p>Panel Klienta Prywatnego</p>
+<p>Zalogowany: ${userZalogowany.imieKlienta } ${userZalogowany.nazwiskoKlienta }</p>
 <jsp:include page="index.jsp"></jsp:include>
 
 </body>

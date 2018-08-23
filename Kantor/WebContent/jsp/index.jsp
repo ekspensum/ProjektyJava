@@ -10,7 +10,6 @@
 <title>Kantor walutowy</title>
 </head>
 <body bgcolor="gray">
-<!-- <a href="http://localhost:8080/Kantor/logowanie">Zaloguj</a> -->
 <br/>
 <p>Witamy w kantorze walutowym</p>
 <p>Aktualne kursy walut:</p>

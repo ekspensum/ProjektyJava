@@ -10,16 +10,16 @@ public class OperacjaRachPLN implements Operacja {
 	private String tytulOperacji;
 	private String znakKlasyBazowej;
 	private String znakKlasyKonwersji;
-	private Double kwotaPLN;
-	private Double kwotaWaluty;
-	private Double kurs;
+	private double kwotaPLN;
+	private double kwotaWaluty;
+	private double kurs;
 	private LocalDateTime dataOperacji;
 	
 	public OperacjaRachPLN() {
 	}
 
 	public OperacjaRachPLN(int idKlienta, String rola, String tytulOperacji, String znakKlasyBazowej, String znakKlasyKonwersji,
-			Double kwotaPLN, Double kwotaWaluty, Double kurs, LocalDateTime dataOperacji) {
+			double kwotaPLN, double kwotaWaluty, double kurs, LocalDateTime dataOperacji) {
 		this.idKlienta = idKlienta;
 		this.rola = rola;
 		this.tytulOperacji = tytulOperacji;
@@ -51,11 +51,11 @@ public class OperacjaRachPLN implements Operacja {
 		return znakKlasyKonwersji;
 	}
 
-	public Double getKwotaPLN() {
+	public double getKwotaPLN() {
 		return kwotaPLN;
 	}
 
-	public Double getKurs() {
+	public double getKurs() {
 		return kurs;
 	}
 
@@ -63,12 +63,12 @@ public class OperacjaRachPLN implements Operacja {
 		return dataOperacji;
 	}
 
-	public Double getKwotaWaluty() {
+	public double getKwotaWaluty() {
 		return kwotaWaluty;
 	}
 
 	@Override
-	public Operacja kupuj(Double kwota, Waluta waluta) {
+	public Operacja kup(double kwota, Waluta waluta) {
 		if(waluta instanceof Dolar) {
 			idKlienta = 1;
 			rola = "Klient firmowy";
@@ -87,7 +87,7 @@ public class OperacjaRachPLN implements Operacja {
 	}
 
 	@Override
-	public Operacja sprzedaj(Double kwota, Waluta waluta) {
+	public Operacja sprzedaj(double kwota, Waluta waluta) {
 		// TODO Auto-generated method stub
 		return null;
 	}

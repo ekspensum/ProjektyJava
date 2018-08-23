@@ -30,7 +30,7 @@ public class ObslugaBD {
 		}
 	}
 
-	public Boolean dodajRekordDaneDolar(Double bid, Double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
+	public Boolean dodajRekordDaneDolar(double bid, double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
 					"INSERT INTO daneDolar(bid, ask, imieOperatora, nazwiskoOperatora, dataDodania, operator_idOperator) VALUES(?, ?, ?, ?, ?, ?)");
@@ -85,7 +85,7 @@ public class ObslugaBD {
 		return null;
 	}
 	
-	public Boolean dodajRekordDaneEuro(Double bid, Double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
+	public Boolean dodajRekordDaneEuro(double bid, double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
 					"INSERT INTO daneEuro(bid, ask, imieOperatora, nazwiskoOperatora, dataDodania, operator_idOperator) VALUES(?, ?, ?, ?, ?, ?)");
@@ -139,7 +139,7 @@ public class ObslugaBD {
 		return null;
 	}
 
-	public Boolean dodajRekordDaneFrank(Double bid, Double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
+	public Boolean dodajRekordDaneFrank(double bid, double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
 					"INSERT INTO daneFrank(bid, ask, imieOperatora, nazwiskoOperatora, dataDodania, operator_idOperator) VALUES(?, ?, ?, ?, ?, ?)");
@@ -233,6 +233,7 @@ public class ObslugaBD {
 				if (rs.next()) {
 					UserZalogowany uz = new UserZalogowany();
 					uz.setIdUzytkownik(rs.getInt(1));
+//					System.out.println(rs.getInt(1));
 					uz.setIdRola(rs.getInt(2));
 					uz.setIdOperator(rs.getInt(3));
 					uz.setRola(rs.getString(4));

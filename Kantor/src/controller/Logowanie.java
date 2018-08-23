@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,28 +24,29 @@ public class Logowanie extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.getRequestDispatcher("jsp/logowanie.jsp").forward(request, response);
+		request.getRequestDispatcher("/kantor").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+			
 			ObslugaBD bd = new ObslugaBD();
 			UserZalogowany uz = bd.logowanie(request.getParameter("login"), request.getParameter("haslo"));
 			HttpSession sesja = request.getSession();
 			sesja.setAttribute("userZalogowany", uz);
-			sesja.setMaxInactiveInterval(20);
+			sesja.setMaxInactiveInterval(2000);
 			if(uz == null) {
 				request.setAttribute("komunikat", "Nieprawid³owe dane logowania");
 				doGet(request, response);				
 			}
 			else if(uz.getIdRola() == 1)
-				response.sendRedirect("/Kantor/panelAdministratora");
+				request.getRequestDispatcher("/panelAdministratora").forward(request, response);
 			else if(uz.getIdRola() == 2)
-				response.sendRedirect("/Kantor/panelOperatora");
+				request.getRequestDispatcher("/panelOperatora").forward(request, response);
 			else if(uz.getIdRola() == 3)
-				response.sendRedirect("/Kantor/panelKlientaFirmowego");
+//				request.getRequestDispatcher("/panelKlientaFirmowego").forward(request, response);
+				response.sendRedirect("http://localhost:8080/Kantor/panelKlientaFirmowego");
 			else if(uz.getIdRola() == 4)
-				response.sendRedirect("/Kantor/panelKlientaPrywatnego");
+				request.getRequestDispatcher("/panelKlientaPrywatnego").forward(request, response);
 
 	}
 

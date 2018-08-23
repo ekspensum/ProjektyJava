@@ -5,14 +5,14 @@ import model.dao.Kursy;
 public class Frank implements Waluta {
 
 	private String znakKlasyBazowej = "CHF";
-	private Double mnoznikBid;
-	private Double mnoznikAsk;
+	private double mnoznikBid;
+	private double mnoznikAsk;
 	private Kursy kursy;
 	private Dolar dolar;
 	private Euro euro;
 	private Zloty zloty;
 
-	public Frank(Double mnoznikBid, Double mnoznikAsk, Kursy kursy) {
+	public Frank(double mnoznikBid, double mnoznikAsk, Kursy kursy) {
 		this.mnoznikBid = mnoznikBid;
 		this.mnoznikAsk = mnoznikAsk;
 		this.kursy = kursy;
@@ -30,11 +30,11 @@ public class Frank implements Waluta {
 		this.dolar = dolar;
 	}
 
-	public Double getMnoznikBid() {
+	public double getMnoznikBid() {
 		return mnoznikBid;
 	}
 
-	public Double getMnoznikAsk() {
+	public double getMnoznikAsk() {
 		return mnoznikAsk;
 	}
 
@@ -43,13 +43,13 @@ public class Frank implements Waluta {
 	}
 
 	@Override
-	public Double getBid() {
+	public double getBid() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Double getAsk() {
+	public double getAsk() {
 		// TODO Auto-generated method stub
 		return null;
 	}

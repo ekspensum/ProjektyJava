@@ -2,47 +2,47 @@ package model.dao;
 
 public class KoszykDaneWalut {
 	
-	private Double dolarBid;
-	private Double dolarAsk;
-	private Double euroBid;
-	private Double euroAsk;
-	private Double frankBid;
-	private Double frankAsk;
+	private double dolarBid;
+	private double dolarAsk;
+	private double euroBid;
+	private double euroAsk;
+	private double frankBid;
+	private double frankAsk;
 	
-	public Double getDolarBid() {
+	public double getDolarBid() {
 		return dolarBid;
 	}
-	public void setDolarBid(Double dolarBid) {
+	public void setDolarBid(double dolarBid) {
 		this.dolarBid = dolarBid;
 	}
-	public Double getDolarAsk() {
+	public double getDolarAsk() {
 		return dolarAsk;
 	}
-	public void setDolarAsk(Double dolarAsk) {
+	public void setDolarAsk(double dolarAsk) {
 		this.dolarAsk = dolarAsk;
 	}
-	public Double getEuroBid() {
+	public double getEuroBid() {
 		return euroBid;
 	}
-	public void setEuroBid(Double euroBid) {
+	public void setEuroBid(double euroBid) {
 		this.euroBid = euroBid;
 	}
-	public Double getEuroAsk() {
+	public double getEuroAsk() {
 		return euroAsk;
 	}
-	public void setEuroAsk(Double euroAsk) {
+	public void setEuroAsk(double euroAsk) {
 		this.euroAsk = euroAsk;
 	}
-	public Double getFrankBid() {
+	public double getFrankBid() {
 		return frankBid;
 	}
-	public void setFrankBid(Double frankBid) {
+	public void setFrankBid(double frankBid) {
 		this.frankBid = frankBid;
 	}
-	public Double getFrankAsk() {
+	public double getFrankAsk() {
 		return frankAsk;
 	}
-	public void setFrankAsk(Double frankAsk) {
+	public void setFrankAsk(double frankAsk) {
 		this.frankAsk = frankAsk;
 	}
 

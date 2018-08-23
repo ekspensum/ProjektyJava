@@ -29,6 +29,7 @@ public class PanelOperatora extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		try {
 			ServletContext sc = request.getServletContext();
 			ObslugaBD bdd = new ObslugaBD();

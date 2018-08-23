@@ -6,8 +6,8 @@ public class DaneFrank {
 	
 	private int idFrank;
 	private String znak;
-	private Double bid;
-	private Double ask;
+	private double bid;
+	private double ask;
 	private LocalDateTime dataDodania;
 	private int idOperator;
 	private String imieOperatora;
@@ -25,16 +25,16 @@ public class DaneFrank {
 	public void setZnak(String znak) {
 		this.znak = znak;
 	}
-	public Double getBid() {
+	public double getBid() {
 		return bid;
 	}
-	public void setBid(Double bid) {
+	public void setBid(double bid) {
 		this.bid = bid;
 	}
-	public Double getAsk() {
+	public double getAsk() {
 		return ask;
 	}
-	public void setAsk(Double ask) {
+	public void setAsk(double ask) {
 		this.ask = ask;
 	}
 	public LocalDateTime getDataDodania() {

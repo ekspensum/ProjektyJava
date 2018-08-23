@@ -5,14 +5,14 @@ import model.dao.Kursy;
 public class Dolar implements Waluta {
 	
 	private String znakKlasyBazowej = "USD";
-	private Double mnoznikBid;
-	private Double mnoznikAsk;
+	private double mnoznikBid;
+	private double mnoznikAsk;
 	private Kursy kursy;
 	private Zloty zloty;
 	private Euro euro;
 	private Frank frank;
 
-	public Dolar(Double mnoznikBid, Double mnoznikAsk, Kursy kursy) {
+	public Dolar(double mnoznikBid, double mnoznikAsk, Kursy kursy) {
 		this.mnoznikBid = mnoznikBid;
 		this.mnoznikAsk = mnoznikAsk;
 		this.kursy = kursy;
@@ -30,11 +30,11 @@ public class Dolar implements Waluta {
 		this.zloty = zloty;
 	}
 
-	public Double getMnoznikBid() {
+	public double getMnoznikBid() {
 		return mnoznikBid;
 	}
 
-	public Double getMnoznikAsk() {
+	public double getMnoznikAsk() {
 		return mnoznikAsk;
 	}
 
@@ -43,7 +43,7 @@ public class Dolar implements Waluta {
 	}
 
 	@Override
-	public Double getBid() {
+	public double getBid() {
 		if(zloty instanceof Zloty)
 			return zloty.getMnoznikBid() * (1 / zloty.getKursy().getPln_usd());
 		else if(euro instanceof Euro)
@@ -54,7 +54,7 @@ public class Dolar implements Waluta {
 	}
 
 	@Override
-	public Double getAsk() {
+	public double getAsk() {
 		if(zloty instanceof Zloty)
 			return zloty.getMnoznikAsk() * (1 / zloty.getKursy().getPln_usd());
 		else if(euro instanceof Euro)
