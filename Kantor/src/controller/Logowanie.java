@@ -40,17 +40,12 @@ public class Logowanie extends HttpServlet {
 			}
 			else if(uz.getIdRola() == 1)
 				response.sendRedirect("http://localhost:8080/Kantor/panelAdministratora");
-//				request.getRequestDispatcher("/panelAdministratora").forward(request, response);
 			else if(uz.getIdRola() == 2)
 				response.sendRedirect("http://localhost:8080/Kantor/panelOperatora");
-//				request.getRequestDispatcher("/panelOperatora").forward(request, response);
 			else if(uz.getIdRola() == 3)
-//				request.getRequestDispatcher("/panelKlientaFirmowego").forward(request, response);
 				response.sendRedirect("http://localhost:8080/Kantor/panelKlientaFirmowego");
 			else if(uz.getIdRola() == 4)
 				response.sendRedirect("http://localhost:8080/Kantor/panelKlientaPrywatnego");
-//				request.getRequestDispatcher("/panelKlientaPrywatnego").forward(request, response);
-
 	}
 
 }

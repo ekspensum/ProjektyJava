@@ -3,23 +3,16 @@ package model.dao;
 public class OperacjaRachCHF implements Operacja {
 
 	@Override
-	public Operacja kup(DaneTransakcji dane) {
-		
-		
-		System.out.println("Kup CHF");
-		
-		
-		return null;
+	public boolean kup(DaneTransakcji dane) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
-	public Operacja sprzedaj(DaneTransakcji dane) {
-		
-		System.out.println("Sprzdaj CHF");
-		
-		
-		
-		return null;
+	public boolean sprzedaj(DaneTransakcji dane) {
+		// TODO Auto-generated method stub
+		return false;
 	}
+
 
 }

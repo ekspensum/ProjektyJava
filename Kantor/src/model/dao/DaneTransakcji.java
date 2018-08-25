@@ -4,6 +4,10 @@ public class DaneTransakcji {
 	
 	private int index;
 	private int idUzytkownika;
+	private int idRachunkuPLN;
+	private int idRachunkuUSD;
+	private int idRachunkuEUR;
+	private int idRachunkuCHF;
 	private double kwota;
 	private double cena;
 	private String znak;
@@ -20,6 +24,30 @@ public class DaneTransakcji {
 	}
 	public void setIdUzytkownika(int idUzytkownika) {
 		this.idUzytkownika = idUzytkownika;
+	}
+	public int getIdRachunkuPLN() {
+		return idRachunkuPLN;
+	}
+	public void setIdRachunkuPLN(int idRachunkuPLN) {
+		this.idRachunkuPLN = idRachunkuPLN;
+	}
+	public int getIdRachunkuUSD() {
+		return idRachunkuUSD;
+	}
+	public void setIdRachunkuUSD(int idRachunkuUSD) {
+		this.idRachunkuUSD = idRachunkuUSD;
+	}
+	public int getIdRachunkuEUR() {
+		return idRachunkuEUR;
+	}
+	public void setIdRachunkuEUR(int idRachunkuEUR) {
+		this.idRachunkuEUR = idRachunkuEUR;
+	}
+	public int getIdRachunkuCHF() {
+		return idRachunkuCHF;
+	}
+	public void setIdRachunkuCHF(int idRachunkuCHF) {
+		this.idRachunkuCHF = idRachunkuCHF;
 	}
 	public double getKwota() {
 		return kwota;
@@ -45,5 +73,5 @@ public class DaneTransakcji {
 	public void setRodzaj(String rodzaj) {
 		this.rodzaj = rodzaj;
 	}
-
+	
 }

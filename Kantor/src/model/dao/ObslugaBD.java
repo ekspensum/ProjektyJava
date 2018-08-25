@@ -30,7 +30,8 @@ public class ObslugaBD {
 		}
 	}
 
-	public Boolean dodajRekordDaneDolar(double bid, double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
+	public Boolean dodajRekordDaneDolar(double bid, double ask, int idOperatora, String imieOperatora,
+			String nazwiskoOperatora) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
 					"INSERT INTO daneDolar(bid, ask, imieOperatora, nazwiskoOperatora, dataDodania, operator_idOperator) VALUES(?, ?, ?, ?, ?, ?)");
@@ -60,7 +61,8 @@ public class ObslugaBD {
 			DaneDolar dd = null;
 			List<DaneDolar> listaDaneDolar = new ArrayList<>();
 			Statement query = conn.createStatement();
-			ResultSet rs = query.executeQuery("SELECT idDolar, znak, bid, ask, daneDolar.dataDodania, opImie, opNazwisko FROM daneDolar INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneDolar.dataDodania DESC LIMIT 10");
+			ResultSet rs = query.executeQuery(
+					"SELECT idDolar, znak, bid, ask, daneDolar.dataDodania, opImie, opNazwisko FROM daneDolar INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneDolar.dataDodania DESC LIMIT 10");
 			while (rs.next()) {
 				dd = new DaneDolar();
 				dd.setIdDolar(rs.getInt(1));
@@ -84,8 +86,9 @@ public class ObslugaBD {
 		}
 		return null;
 	}
-	
-	public Boolean dodajRekordDaneEuro(double bid, double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
+
+	public Boolean dodajRekordDaneEuro(double bid, double ask, int idOperatora, String imieOperatora,
+			String nazwiskoOperatora) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
 					"INSERT INTO daneEuro(bid, ask, imieOperatora, nazwiskoOperatora, dataDodania, operator_idOperator) VALUES(?, ?, ?, ?, ?, ?)");
@@ -109,12 +112,14 @@ public class ObslugaBD {
 		return false;
 
 	}
+
 	public List<DaneEuro> odczytListaDaneEuro() {
 		try {
 			DaneEuro de = null;
 			List<DaneEuro> listaDaneEuro = new ArrayList<>();
 			Statement query = conn.createStatement();
-			ResultSet rs = query.executeQuery("SELECT idEuro, znak, bid, ask, daneEuro.dataDodania, opImie, opNazwisko FROM daneEuro INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneEuro.dataDodania DESC LIMIT 10");
+			ResultSet rs = query.executeQuery(
+					"SELECT idEuro, znak, bid, ask, daneEuro.dataDodania, opImie, opNazwisko FROM daneEuro INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneEuro.dataDodania DESC LIMIT 10");
 			while (rs.next()) {
 				de = new DaneEuro();
 				de.setIdEuro(rs.getInt(1));
@@ -139,7 +144,8 @@ public class ObslugaBD {
 		return null;
 	}
 
-	public Boolean dodajRekordDaneFrank(double bid, double ask, int idOperatora, String imieOperatora, String nazwiskoOperatora) {
+	public Boolean dodajRekordDaneFrank(double bid, double ask, int idOperatora, String imieOperatora,
+			String nazwiskoOperatora) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
 					"INSERT INTO daneFrank(bid, ask, imieOperatora, nazwiskoOperatora, dataDodania, operator_idOperator) VALUES(?, ?, ?, ?, ?, ?)");
@@ -163,12 +169,14 @@ public class ObslugaBD {
 		return false;
 
 	}
+
 	public List<DaneFrank> odczytListaDaneFrank() {
 		try {
 			DaneFrank df = null;
 			List<DaneFrank> listaDaneFrank = new ArrayList<>();
 			Statement query = conn.createStatement();
-			ResultSet rs = query.executeQuery("SELECT idFrank, znak, bid, ask, daneFrank.dataDodania, opImie, opNazwisko FROM daneFrank INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneFrank.dataDodania DESC LIMIT 10");
+			ResultSet rs = query.executeQuery(
+					"SELECT idFrank, znak, bid, ask, daneFrank.dataDodania, opImie, opNazwisko FROM daneFrank INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneFrank.dataDodania DESC LIMIT 10");
 			while (rs.next()) {
 				df = new DaneFrank();
 				df.setIdFrank(rs.getInt(1));
@@ -192,7 +200,7 @@ public class ObslugaBD {
 		}
 		return null;
 	}
-	
+
 	public KoszykDaneWalut daneBidAskWalut() {
 		try {
 			try {
@@ -211,7 +219,7 @@ public class ObslugaBD {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} 
+			}
 		} finally {
 			try {
 				conn.close();
@@ -221,7 +229,7 @@ public class ObslugaBD {
 		}
 		return null;
 	}
-	
+
 	public UserZalogowany logowanie(String login, String haslo) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
@@ -233,7 +241,6 @@ public class ObslugaBD {
 				if (rs.next()) {
 					UserZalogowany uz = new UserZalogowany();
 					uz.setIdUzytkownik(rs.getInt(1));
-//					System.out.println(rs.getInt(1));
 					uz.setIdRola(rs.getInt(2));
 					uz.setIdOperator(rs.getInt(3));
 					uz.setRola(rs.getString(4));
@@ -249,6 +256,46 @@ public class ObslugaBD {
 				}
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public StanyRachunkow odcztRachunkow(int idUzytkownia) {
+
+		StanyRachunkow sr = new StanyRachunkow();
+		try {
+			PreparedStatement queryPLN = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanPLN, idRachunekPLN, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = ? INNER JOIN rachunekPLN ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyRachPLN ON idRachunekPLN = rachunekPLN_idRachunekPLN");
+			queryPLN.setInt(1, idUzytkownia);
+			if (queryPLN.execute()) {
+				ResultSet rs = queryPLN.executeQuery();
+				if (rs.first()) {
+				sr.setStanPLN(rs.getDouble(1));
+				sr.setIdRachunkuPLN(rs.getInt(2));
+				sr.setNrRachunkuPLN(rs.getString(3));					
+				}
+			}
+			PreparedStatement queryUSD = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanUSD, idRachunekUSD, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = ? INNER JOIN rachunekUSD ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyrachUSD ON idRachunekUSD = rachunekUSD_idRachunekUSD");
+			queryUSD.setInt(1, idUzytkownia);
+			if (queryUSD.execute()) {
+				ResultSet rs = queryUSD.executeQuery();
+				if (rs.first()) {
+				sr.setStanUSD(rs.getDouble(1));
+				sr.setIdRachunkuUSD(rs.getInt(2));
+				sr.setNrRachunkuUSD(rs.getString(3));					
+				}
+			}
+			return sr;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {

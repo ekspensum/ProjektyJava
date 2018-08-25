@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.dao.DaneTransakcji;
+import model.dao.ObslugaBD;
 import model.dao.Operacja;
 import model.dao.OperacjaRachCHF;
 import model.dao.OperacjaRachEUR;
 import model.dao.OperacjaRachUSD;
+import model.dao.StanyRachunkow;
+import model.dao.UserZalogowany;
 
 @WebServlet("/panelKlientaFirmowego")
 public class PanelKlientaFirmowego extends HttpServlet {
@@ -24,8 +27,12 @@ public class PanelKlientaFirmowego extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
+		
+		UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
+		ObslugaBD bd = new ObslugaBD();
+		StanyRachunkow sr = bd.odcztRachunkow(uz.getIdUzytkownik());
+		request.getServletContext().setAttribute("rachunki", sr);
 
 		request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 	}

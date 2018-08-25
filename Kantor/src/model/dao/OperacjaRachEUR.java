@@ -2,26 +2,19 @@ package model.dao;
 
 public class OperacjaRachEUR implements Operacja {
 
-	
-	
 	@Override
-	public Operacja kup(DaneTransakcji dane) {
-		
-		
-		System.out.println("Kup EUR");
-		
-		return null;
+	public boolean kup(DaneTransakcji dane) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
-	public Operacja sprzedaj(DaneTransakcji dane) {
-		
-		
-		
-		System.out.println("Sprzdaj EUR");
-		
-		
-		return null;
+	public boolean sprzedaj(DaneTransakcji dane) {
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+	
+
 
 }

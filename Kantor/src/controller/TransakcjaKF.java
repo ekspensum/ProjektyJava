@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.dao.DaneTransakcji;
 import model.dao.KoszykDaneWalut;
 import model.dao.Kursy;
+import model.dao.StanyRachunkow;
 import model.dao.UserZalogowany;
 
 /**
@@ -57,15 +58,17 @@ public class TransakcjaKF extends HttpServlet {
 			cena /= 10000;
 
 			DaneTransakcji dt = new DaneTransakcji();
+			ServletContext sc = request.getServletContext();
+			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunki");
 			dt.setIndex(0);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("USD");
 			dt.setCena(cena);
 			dt.setKwota(Double.valueOf(request.getParameter("sprzedajUSD")));
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
-			ServletContext sc = request.getServletContext();
+			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
+			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
 			sc.setAttribute("transakcja", dt);
-
 		} else if (request.getParameter("kupUSD") != null) {
 			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 
@@ -77,13 +80,16 @@ public class TransakcjaKF extends HttpServlet {
 			cena /= 10000;
 
 			DaneTransakcji dt = new DaneTransakcji();
+			ServletContext sc = request.getServletContext();
+			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunki");			
 			dt.setIndex(0);
 			dt.setRodzaj("Kup");
 			dt.setZnak("USD");
 			dt.setCena(cena);
 			dt.setKwota(Double.valueOf(request.getParameter("kupUSD")));
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
-			ServletContext sc = request.getServletContext();
+			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
+			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
 			sc.setAttribute("transakcja", dt);
 		}
 
