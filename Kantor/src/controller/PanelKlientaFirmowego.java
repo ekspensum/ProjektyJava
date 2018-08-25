@@ -33,8 +33,6 @@ public class PanelKlientaFirmowego extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		System.out.println("doPostPKF");
-		
 		DaneTransakcji dt = (DaneTransakcji) request.getServletContext().getAttribute("transakcja");
 		if (dt != null) {
 			Operacja[] op = new Operacja[3];
@@ -46,7 +44,6 @@ public class PanelKlientaFirmowego extends HttpServlet {
 				op[dt.getIndex()].sprzedaj(dt);
 			else if ("Kup".equals(dt.getRodzaj()))
 				op[dt.getIndex()].kup(dt);
-			System.out.println("transakcja na PKF doPost");
 		}
 
 		doGet(request, response);

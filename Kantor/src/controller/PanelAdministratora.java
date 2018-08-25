@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import model.dao.UserZalogowany;
-
-
 
 @WebServlet("/panelAdministratora")
 public class PanelAdministratora extends HttpServlet {

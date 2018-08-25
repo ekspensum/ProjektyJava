@@ -9,6 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.dao.UserZalogowany;
@@ -16,7 +17,7 @@ import model.dao.UserZalogowany;
 /**
  * Servlet Filter implementation class FiltrPanelAdmin
  */
-@WebFilter("/panelAdministratora")
+@WebFilter(urlPatterns= {"/panelAdministratora", "/jsp/panelAdministratora.jsp"})
 public class FiltrPanelAdmin implements Filter {
 
     /**
@@ -38,13 +39,15 @@ public class FiltrPanelAdmin implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
+		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpSession sesja = req.getSession();
 		UserZalogowany uz = (UserZalogowany) sesja.getAttribute("userZalogowany");
 
 		if(uz == null || uz.getIdRola() != 1) {
 			sesja.invalidate();
-			request.getRequestDispatcher("/logowanie").forward(request, response);			
+			resp.sendRedirect("http://localhost:8080/Kantor/logowanie");
+			return;
 		}
 
 		chain.doFilter(request, response);

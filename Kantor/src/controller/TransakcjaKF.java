@@ -12,17 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import model.dao.DaneTransakcji;
 import model.dao.KoszykDaneWalut;
 import model.dao.Kursy;
-import model.dao.Operacja;
-import model.dao.OperacjaRachCHF;
-import model.dao.OperacjaRachEUR;
-import model.dao.OperacjaRachUSD;
 import model.dao.UserZalogowany;
 
 /**
- * Servlet implementation class Transakcja
+ * Servlet implementation class TransakcjaKF
  */
-@WebServlet("/transakcja")
-public class Transakcja extends HttpServlet {
+@WebServlet("/transakcjaKF")
+public class TransakcjaKF extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -39,7 +35,7 @@ public class Transakcja extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.getRequestDispatcher("jsp/transakcja.jsp").forward(request, response);
+		request.getRequestDispatcher("jsp/transakcjaKF.jsp").forward(request, response);
 	}
 
 	/**
@@ -69,10 +65,26 @@ public class Transakcja extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			ServletContext sc = request.getServletContext();
 			sc.setAttribute("transakcja", dt);
-			System.err.println("doPostTransakcja");
 
 		} else if (request.getParameter("kupUSD") != null) {
+			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 
+			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
+			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
+			double cena = 1 / kurs.getPln_usd() * kdw.getDolarAsk();
+			cena *= 10000;
+			cena = (double) Math.round(cena);
+			cena /= 10000;
+
+			DaneTransakcji dt = new DaneTransakcji();
+			dt.setIndex(0);
+			dt.setRodzaj("Kup");
+			dt.setZnak("USD");
+			dt.setCena(cena);
+			dt.setKwota(Double.valueOf(request.getParameter("kupUSD")));
+			dt.setIdUzytkownika(uz.getIdUzytkownik());
+			ServletContext sc = request.getServletContext();
+			sc.setAttribute("transakcja", dt);
 		}
 
 		doGet(request, response);

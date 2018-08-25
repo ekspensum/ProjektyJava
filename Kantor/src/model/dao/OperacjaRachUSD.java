@@ -9,7 +9,6 @@ public class OperacjaRachUSD implements Operacja {
 	
 	@Override
 	public Operacja kup(DaneTransakcji dane) {
-		ObslugaBD bd = new ObslugaBD();
 		
 		System.out.println("kup USD");
 		

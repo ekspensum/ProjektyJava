@@ -1,7 +1,5 @@
 package controller;
 
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextAttributeEvent;
