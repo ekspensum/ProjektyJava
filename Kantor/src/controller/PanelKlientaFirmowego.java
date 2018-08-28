@@ -31,8 +31,8 @@ public class PanelKlientaFirmowego extends HttpServlet {
 		
 		UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 		ObslugaBD bd = new ObslugaBD();
-		StanyRachunkow sr = bd.odcztRachunkow(uz.getIdUzytkownik());
-		request.getServletContext().setAttribute("rachunki", sr);
+		StanyRachunkow sr = bd.odcztRachKlientFirmowy(uz.getIdUzytkownik());
+		request.getServletContext().setAttribute("rachunkiKF", sr);
 
 		request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 	}
@@ -40,20 +40,27 @@ public class PanelKlientaFirmowego extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		DaneTransakcji dt = (DaneTransakcji) request.getServletContext().getAttribute("transakcja");
+		DaneTransakcji dt = (DaneTransakcji) request.getServletContext().getAttribute("transakcjaKF");
 		if (dt != null) {
 			Operacja[] op = new Operacja[3];
 			op[0] = new OperacjaRachUSD();
 			op[1] = new OperacjaRachEUR();
 			op[2] = new OperacjaRachCHF();
 
-			if ("Sprzedaj".equals(dt.getRodzaj()))
-				op[dt.getIndex()].sprzedaj(dt);
-			else if ("Kup".equals(dt.getRodzaj()))
-				op[dt.getIndex()].kup(dt);
-		}
-
+			if ("Sprzedaj".equals(dt.getRodzaj())) {
+				if(op[dt.getIndex()].sprzedaj(dt))
+					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzeda¿y zakoñczona powodzeniem.");
+				else
+					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzeda¿y nie powiod³a siê.");
+			}
+			else if ("Kup".equals(dt.getRodzaj())) {
+				if(op[dt.getIndex()].kup(dt))
+					request.setAttribute("komunikatKupUSD", "Transakcja kupna zakoñczona powodzeniem.");
+				else
+					request.setAttribute("komunikatKupUSD", "Transakcja kupna nie powiod³a siê.");	
+			}
+		} else 
+			request.setAttribute("komunikat", "Transakcja nie powiod³a siê.");	
 		doGet(request, response);
 	}
-
 }

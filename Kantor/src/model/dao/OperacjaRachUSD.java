@@ -16,7 +16,10 @@ public class OperacjaRachUSD implements Operacja {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",	"1234");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",
+					"1234");
+
+			conn.setAutoCommit(false);
 			PreparedStatement queryUSD = conn.prepareStatement(
 					"INSERT INTO zapisyRachUSD(idOperacji, tytulOperacji, kwotaWN, kurs, dataOperacji, rachunekUSD_idRachunekUSD) VALUES(null, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
@@ -35,8 +38,18 @@ public class OperacjaRachUSD implements Operacja {
 				queryPLN.setObject(3, LocalDateTime.now());
 				queryPLN.setInt(4, dane.getIdRachunkuPLN());
 				queryPLN.setInt(5, rs.getInt(1));
-				if (queryPLN.executeUpdate() > 0)
+				if (queryPLN.executeUpdate() > 0) {
+					conn.commit();
 					return true;
+				} else {
+					queryUSD.close();
+					queryPLN.close();
+					conn.rollback();
+				}
+
+			} else {
+				queryUSD.close();
+				conn.rollback();
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
@@ -57,7 +70,10 @@ public class OperacjaRachUSD implements Operacja {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",	"1234");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",
+					"1234");
+
+			conn.setAutoCommit(false);
 			PreparedStatement queryUSD = conn.prepareStatement(
 					"INSERT INTO zapisyRachUSD(idOperacji, tytulOperacji, kwotaMA, kurs, dataOperacji, rachunekUSD_idRachunekUSD) VALUES(null, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
@@ -76,8 +92,12 @@ public class OperacjaRachUSD implements Operacja {
 				queryPLN.setObject(3, LocalDateTime.now());
 				queryPLN.setInt(4, dane.getIdRachunkuPLN());
 				queryPLN.setInt(5, rs.getInt(1));
-				if (queryPLN.executeUpdate() > 0)
-					return true;
+				if (queryPLN.executeUpdate() > 0) {
+					queryPLN.close();
+					queryUSD.close();
+					conn.commit();
+				}
+				return true;
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block

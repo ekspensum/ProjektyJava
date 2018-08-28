@@ -267,12 +267,12 @@ public class ObslugaBD {
 		return null;
 	}
 
-	public StanyRachunkow odcztRachunkow(int idUzytkownia) {
+	public StanyRachunkow odcztRachKlientFirmowy(int idUzytkownia) {
 
 		StanyRachunkow sr = new StanyRachunkow();
 		try {
 			PreparedStatement queryPLN = conn.prepareStatement(
-					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanPLN, idRachunekPLN, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = ? INNER JOIN rachunekPLN ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyRachPLN ON idRachunekPLN = rachunekPLN_idRachunekPLN");
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanPLN, idRachunekPLN, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekPLN ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyRachPLN ON idRachunekPLN = rachunekPLN_idRachunekPLN WHERE uzytkownik.idUzytkownik = ?");
 			queryPLN.setInt(1, idUzytkownia);
 			if (queryPLN.execute()) {
 				ResultSet rs = queryPLN.executeQuery();
@@ -283,7 +283,47 @@ public class ObslugaBD {
 				}
 			}
 			PreparedStatement queryUSD = conn.prepareStatement(
-					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanUSD, idRachunekUSD, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = ? INNER JOIN rachunekUSD ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyrachUSD ON idRachunekUSD = rachunekUSD_idRachunekUSD");
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanUSD, idRachunekUSD, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekUSD ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyrachUSD ON idRachunekUSD = rachunekUSD_idRachunekUSD WHERE uzytkownik.idUzytkownik = ?");
+			queryUSD.setInt(1, idUzytkownia);
+			if (queryUSD.execute()) {
+				ResultSet rs = queryUSD.executeQuery();
+				if (rs.first()) {
+				sr.setStanUSD(rs.getDouble(1));
+				sr.setIdRachunkuUSD(rs.getInt(2));
+				sr.setNrRachunkuUSD(rs.getString(3));					
+				}
+			}
+			return sr;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public StanyRachunkow odcztRachKlientPrywatny(int idUzytkownia) {
+
+		StanyRachunkow sr = new StanyRachunkow();
+		try {
+			PreparedStatement queryPLN = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanPLN, idRachunekPLN, nrRachunku, idUzytkownik FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekPLN ON idKlientPrywatny = klientPrywatny_idKlientPrywatny INNER JOIN zapisyrachPLN ON idRachunekPLN = rachunekPLN_idRachunekPLN WHERE uzytkownik.idUzytkownik = ?");
+			queryPLN.setInt(1, idUzytkownia);
+			if (queryPLN.execute()) {
+				ResultSet rs = queryPLN.executeQuery();
+				if (rs.first()) {
+				sr.setStanPLN(rs.getDouble(1));
+				sr.setIdRachunkuPLN(rs.getInt(2));
+				sr.setNrRachunkuPLN(rs.getString(3));					
+				}
+			}
+			PreparedStatement queryUSD = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanUSD, idRachunekUSD, nrRachunku, idUzytkownik FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekUSD ON idKlientPrywatny = klientPrywatny_idKlientPrywatny INNER JOIN zapisyrachUSD ON idRachunekUSD = rachunekUSD_idRachunekUSD WHERE uzytkownik.idUzytkownik = ?");
 			queryUSD.setInt(1, idUzytkownia);
 			if (queryUSD.execute()) {
 				ResultSet rs = queryUSD.executeQuery();

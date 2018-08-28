@@ -15,6 +15,17 @@
 <p>Panel Klienta Prywatnego</p>
 <p>Zalogowany: ${userZalogowany.imieKlienta } ${userZalogowany.nazwiskoKlienta }</p>
 <jsp:include page="index.jsp"></jsp:include>
-
+<br>
+<b>Stan posiadanych rachunków:</b><br/>
+Rachunek PLN<br/>
+Nr rachunku: ${rachunkiKP.nrRachunkuPLN }<br/>
+Dostępne środki: PLN${rachunkiKP.stanPLN }<br/>
+<br/>
+Rachunek USD<br/>
+Nr rachunku: ${rachunkiKP.nrRachunkuUSD }<br/>
+Dostępne środki: USD${rachunkiKP.stanUSD }<br/>
+<br/>
+<b>Wykonaj transakcję:</b>
+<br>
 </body>
 </html>

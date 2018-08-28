@@ -59,7 +59,7 @@ public class TransakcjaKF extends HttpServlet {
 
 			DaneTransakcji dt = new DaneTransakcji();
 			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunki");
+			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(0);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("USD");
@@ -68,7 +68,7 @@ public class TransakcjaKF extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
 			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
-			sc.setAttribute("transakcja", dt);
+			sc.setAttribute("transakcjaKF", dt);
 		} else if (request.getParameter("kupUSD") != null) {
 			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 
@@ -81,7 +81,7 @@ public class TransakcjaKF extends HttpServlet {
 
 			DaneTransakcji dt = new DaneTransakcji();
 			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunki");			
+			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");			
 			dt.setIndex(0);
 			dt.setRodzaj("Kup");
 			dt.setZnak("USD");
@@ -90,7 +90,7 @@ public class TransakcjaKF extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
 			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
-			sc.setAttribute("transakcja", dt);
+			sc.setAttribute("transakcjaKF", dt);
 		}
 
 		doGet(request, response);
