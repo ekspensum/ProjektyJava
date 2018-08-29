@@ -64,12 +64,20 @@ public class Sluchacz implements ServletContextListener, ServletContextAttribute
     }
     
     public void requestInitialized(ServletRequestEvent sre)  { 
+    	Runnable kursy = new Kursy();
+    	Thread t = new Thread(kursy);
+    	t.start();
 		ObslugaBD bd = new ObslugaBD();
-		Kursy kursy = new Kursy();
 		KoszykDaneWalut kdw = bd.daneBidAskWalut();
 		ServletContext sc = sre.getServletContext();
-		sc.setAttribute("kurs", kursy);
 		sc.setAttribute("mnoznik", kdw);
+		try {
+			t.join();
+			sc.setAttribute("kurs", kursy);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
    } 
 	
 }

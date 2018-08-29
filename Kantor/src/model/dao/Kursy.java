@@ -18,7 +18,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public class Kursy {
+public class Kursy implements Runnable {
 
 	private double pln_usd;
 	private double pln_eur;
@@ -28,22 +28,6 @@ public class Kursy {
 	private double eur_chf;
 
 	public Kursy() {
-
-		try {
-			JSONObject obECB = getKursyECB();
-			JSONObject obFreeApi = getKursyFreeApi();
-			this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
-			this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
-			this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
-			if (obECB != null)
-				this.eur_usd = obECB.getDouble("USD");
-			this.chf_usd = obFreeApi.getDouble("val");
-			if (obECB != null)
-				this.eur_chf = obECB.getDouble("CHF");
-		} catch (NumberFormatException | DOMException | JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 
@@ -155,5 +139,25 @@ public class Kursy {
 
 		return null;
 	}
+
+@Override
+public void run() {
+	try {
+		JSONObject obECB = getKursyECB();
+		JSONObject obFreeApi = getKursyFreeApi();
+		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
+		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
+		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
+		if (obECB != null)
+			this.eur_usd = obECB.getDouble("USD");
+		this.chf_usd = obFreeApi.getDouble("val");
+		if (obECB != null)
+			this.eur_chf = obECB.getDouble("CHF");
+	} catch (NumberFormatException | DOMException | JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+}
 
 }
