@@ -17,7 +17,7 @@ import model.dao.UserZalogowany;
 /**
  * Servlet Filter implementation class FiltrPanelKP
  */
-@WebFilter(urlPatterns= { "/panelKlientaPrywatnego", "/jsp/panelKlientaPrywatnego.jsp"})
+@WebFilter(urlPatterns= { "/panelKlientaPrywatnego", "/transakcjaKP", "/jsp/panelKlientaPrywatnego.jsp", "/jsp/transakcjaKP.jsp"})
 public class FiltrPanelKP implements Filter {
 
     /**

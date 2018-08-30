@@ -10,7 +10,7 @@
 <title>Transakcja</title>
 </head>
 <body bgcolor="gray">
-<p>Zalogowany: ${userZalogowany.imieKlienta } ${userZalogowany.nazwiskoKlienta } ${userZalogowany.nazwaFirmy }</p>
+<p>Zalogowany: ${userZalogowany.nazwaFirmy }</p>
 <br>
 <b>Stan posiadanych rachunków:</b>
 <p>Rachunek PLN</p>

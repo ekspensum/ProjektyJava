@@ -1,7 +1,7 @@
 package controller;
 
 import java.io.IOException;
-import javax.servlet.ServletConfig;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,34 +16,24 @@ import model.dao.StanyRachunkow;
 import model.dao.UserZalogowany;
 
 /**
- * Servlet implementation class TransakcjaKF
+ * Servlet implementation class TransakcjaKP
  */
-@WebServlet("/transakcjaKF")
-public class TransakcjaKF extends HttpServlet {
+@WebServlet("/transakcjaKP")
+public class TransakcjaKP extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see Servlet#init(ServletConfig)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		request.getRequestDispatcher("jsp/transakcjaKP.jsp").forward(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.getRequestDispatcher("jsp/transakcjaKF.jsp").forward(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		if (request.getParameter("sprzedajUSD") != null) {
 
@@ -58,7 +48,7 @@ public class TransakcjaKF extends HttpServlet {
 
 			DaneTransakcji dt = new DaneTransakcji();
 			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
+			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKP");
 			dt.setIndex(0);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("USD");
@@ -67,7 +57,7 @@ public class TransakcjaKF extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
 			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
-			sc.setAttribute("transakcjaKF", dt);
+			sc.setAttribute("transakcjaKP", dt);
 		} else if (request.getParameter("kupUSD") != null) {
 			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 
@@ -80,7 +70,7 @@ public class TransakcjaKF extends HttpServlet {
 
 			DaneTransakcji dt = new DaneTransakcji();
 			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
+			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKP");
 			dt.setIndex(0);
 			dt.setRodzaj("Kup");
 			dt.setZnak("USD");
@@ -89,9 +79,9 @@ public class TransakcjaKF extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
 			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
-			sc.setAttribute("transakcjaKF", dt);
+			sc.setAttribute("transakcjaKP", dt);
 		}
-
+		
 		doGet(request, response);
 	}
 

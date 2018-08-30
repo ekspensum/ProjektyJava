@@ -27,5 +27,15 @@ Dostępne środki: USD${rachunkiKP.stanUSD }<br/>
 <br/>
 <b>Wykonaj transakcję:</b>
 <br>
+<br>
+<b>USD	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.dolarBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
+<form action="http://localhost:8080/Kantor/transakcjaKP" method="POST">	Kwota: <input type="text" name="sprzedajUSD" size="10" /><input type="submit" value="Sprzedaj" /></form>
+<b>${komunikatSprzedajUSD }</b>
+<br>
+<b>USD	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.dolarAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
+<form action="http://localhost:8080/Kantor/transakcjaKP" method="POST">	Kwota: <input type="text" name="kupUSD" size="10" /><input type="submit" value="Kup" /></form>
+<b>${komunikatKupUSD }</b>
+<br>
+<b>${komunikat }</b>
 </body>
 </html>

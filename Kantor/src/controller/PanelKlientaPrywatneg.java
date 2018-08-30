@@ -8,7 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.dao.DaneTransakcji;
 import model.dao.ObslugaBD;
+import model.dao.Operacja;
+import model.dao.OperacjaRachCHF;
+import model.dao.OperacjaRachEUR;
+import model.dao.OperacjaRachUSD;
 import model.dao.StanyRachunkow;
 import model.dao.UserZalogowany;
 
@@ -35,7 +40,28 @@ public class PanelKlientaPrywatneg extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
+		DaneTransakcji dt = (DaneTransakcji) request.getServletContext().getAttribute("transakcjaKP");
+		if (dt != null) {
+			Operacja[] op = new Operacja[3];
+			op[0] = new OperacjaRachUSD();
+			op[1] = new OperacjaRachEUR();
+			op[2] = new OperacjaRachCHF();
+
+			if ("Sprzedaj".equals(dt.getRodzaj())) {
+				if(op[dt.getIndex()].sprzedaj(dt))
+					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzeda¿y zakoñczona powodzeniem.");
+				else
+					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzeda¿y nie powiod³a siê.");
+			}
+			else if ("Kup".equals(dt.getRodzaj())) {
+				if(op[dt.getIndex()].kup(dt))
+					request.setAttribute("komunikatKupUSD", "Transakcja kupna zakoñczona powodzeniem.");
+				else
+					request.setAttribute("komunikatKupUSD", "Transakcja kupna nie powiod³a siê.");	
+			}
+		} else 
+			request.setAttribute("komunikat", "Transakcja nie powiod³a siê.");	
 		doGet(request, response);
 	}
 
