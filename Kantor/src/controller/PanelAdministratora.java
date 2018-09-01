@@ -24,13 +24,44 @@ public class PanelAdministratora extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		response.setContentType("text/html;charset=UTF-8");	
+		
 		request.getRequestDispatcher("jsp/panelAdministratora.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+
+		String wybor = request.getParameter("opcje");
+
+		switch (wybor) {
+		case "admin":
+			System.out.println("Admin");				
+			break;
+		case "klientFirmowy":
+			response.sendRedirect("http://localhost:8080/Kantor/dodajKlientaFirmowego");
+			break;
+		case "klientPrywatny":
+			System.out.println("klient prywatny");
+			break;
+		case "operator":
+			System.out.println("operator");
+			break;
+		default:
+			break;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		doGet(request, response);
 	}
 
 }

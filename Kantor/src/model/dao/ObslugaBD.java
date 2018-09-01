@@ -233,7 +233,7 @@ public class ObslugaBD {
 	public UserZalogowany logowanie(String login, String haslo) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
-					"SELECT idUzytkownik, rola_idRola, idOperator, rola, nazwa, imie, nazwisko, opImie, opNazwisko, adminImie, adminNazwisko FROM uzytkownik LEFT JOIN administrator ON idUzytkownik = administrator.uzytkownik_idUzytkownik LEFT JOIN operator ON idUzytkownik = operator.uzytkownik_idUzytkownik LEFT JOIN klientfirmowy ON idUzytkownik = klientfirmowy.uzytkownik_idUzytkownik LEFT JOIN klientprywatny ON idUzytkownik = klientprywatny.uzytkownik_idUzytkownik LEFT JOIN rola ON rola_idRola = idRola WHERE login = ? AND haslo = ?");
+					"SELECT idUzytkownik, rola_idRola, idOperator, rola, nazwa, imie, nazwisko, opImie, opNazwisko, adminImie, adminNazwisko, idAdministrator FROM uzytkownik LEFT JOIN administrator ON idUzytkownik = administrator.uzytkownik_idUzytkownik LEFT JOIN operator ON idUzytkownik = operator.uzytkownik_idUzytkownik LEFT JOIN klientfirmowy ON idUzytkownik = klientfirmowy.uzytkownik_idUzytkownik LEFT JOIN klientprywatny ON idUzytkownik = klientprywatny.uzytkownik_idUzytkownik LEFT JOIN rola ON rola_idRola = idRola WHERE login = ? AND haslo = ?");
 			query.setString(1, login);
 			query.setString(2, haslo);
 			if (query.execute()) {
@@ -251,6 +251,7 @@ public class ObslugaBD {
 					uz.setNazwiskoOperatora(rs.getString(9));
 					uz.setImieAdministratora(rs.getString(10));
 					uz.setNazwiskoAdministratora(rs.getString(11));
+					uz.setIdAdministrator(rs.getInt(12));
 					uz.setDataLogowania(LocalDateTime.now());
 					return uz;
 				}

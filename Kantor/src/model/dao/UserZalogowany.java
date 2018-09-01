@@ -6,6 +6,7 @@ public class UserZalogowany {
 	private int idUzytkownik;
 	private int idRola;
 	private int idOperator;
+	private int idAdministrator;
 	private String rola;
 	private String nazwaFirmy;
 	private String imieKlienta;
@@ -33,6 +34,12 @@ public class UserZalogowany {
 	}
 	public void setIdOperator(int idOperator) {
 		this.idOperator = idOperator;
+	}
+	public int getIdAdministrator() {
+		return idAdministrator;
+	}
+	public void setIdAdministrator(int idAdministrator) {
+		this.idAdministrator = idAdministrator;
 	}
 	public String getRola() {
 		return rola;

@@ -17,7 +17,7 @@ import model.dao.UserZalogowany;
 /**
  * Servlet Filter implementation class FiltrPanelAdmin
  */
-@WebFilter(urlPatterns= {"/panelAdministratora", "/jsp/panelAdministratora.jsp"})
+@WebFilter(urlPatterns= {"/panelAdministratora", "/jsp/panelAdministratora.jsp", "/dodajKlientaFirmowego", "/jsp/dodajKlientaFirmowego.jsp"})
 public class FiltrPanelAdmin implements Filter {
 
     /**

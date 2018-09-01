@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -26,6 +26,16 @@
 <b>CHF kupno: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankBid }"  minFractionDigits="4" maxFractionDigits="4" /></b><br/>
 <b>CHF sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
 <br>
-
+<p>Dodaj użytkownika</p>
+<form action="http://localhost:8080/Kantor/panelAdministratora" method="POST">
+<select name="opcje">
+<option value="wybor">Wybierz opcję</option>
+<option value="admin">Nowy administrator</option>
+<option value="klientFirmowy">Nowy klient firmowy</option>
+<option value="klientPrywatny">Nowy klient prywatny</option>
+<option value="operator">Nowy operator</option>
+</select>
+<input type="submit" value="Wybierz" />
+</form>
 </body>
 </html>

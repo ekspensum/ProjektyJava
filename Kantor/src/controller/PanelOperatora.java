@@ -18,7 +18,6 @@ import model.encje.DaneDolar;
 import model.encje.DaneEuro;
 import model.encje.DaneFrank;
 
-
 @WebServlet("/panelOperatora")
 public class PanelOperatora extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -35,7 +34,8 @@ public class PanelOperatora extends HttpServlet {
 			ObslugaBD bdd = new ObslugaBD();
 			List<DaneDolar> listaDaneDolar = bdd.odczytListaDaneDolar();
 			sc.setAttribute("listaDaneDolar", listaDaneDolar);
-			ObslugaBD bde = new ObslugaBD(); // otwarcie nowego po³¹czenie z baz¹ (konstruktor) - poprzednie zamkniête jak wy¿ej "bdd"
+			ObslugaBD bde = new ObslugaBD(); // otwarcie nowego po³¹czenie z baz¹ (konstruktor) - poprzednie zamkniête
+												// jak wy¿ej "bdd"
 			List<DaneEuro> listaDaneEuro = bde.odczytListaDaneEuro();
 			sc.setAttribute("listaDaneEuro", listaDaneEuro);
 			ObslugaBD bdf = new ObslugaBD(); // jak wy¿ej
@@ -56,23 +56,23 @@ public class PanelOperatora extends HttpServlet {
 			ObslugaBD bd = new ObslugaBD();
 			if (request.getParameter("dolarBid") != null && request.getParameter("dolarAsk") != null) {
 				if (bd.dodajRekordDaneDolar(Double.valueOf(request.getParameter("dolarBid")),
-						Double.valueOf(request.getParameter("dolarAsk")), s.getIdOperator(), s.getImieOperatora(), s.getNazwiskoOperatora())) {
-					ServletContext sc = request.getServletContext();
-					sc.setAttribute("komunikat", "Dodano nowe dane waluty USD");
+						Double.valueOf(request.getParameter("dolarAsk")), s.getIdOperator(), s.getImieOperatora(),
+						s.getNazwiskoOperatora())) {
+					request.setAttribute("komunikat", "Dodano nowe dane waluty USD");
 				}
 			}
 			if (request.getParameter("euroBid") != null && request.getParameter("euroAsk") != null) {
 				if (bd.dodajRekordDaneEuro(Double.valueOf(request.getParameter("euroBid")),
-						Double.valueOf(request.getParameter("euroAsk")), s.getIdOperator(), s.getImieOperatora(), s.getNazwiskoOperatora())) {
-					ServletContext sc = request.getServletContext();
-					sc.setAttribute("komunikat", "Dodano nowe dane waluty EUR");
+						Double.valueOf(request.getParameter("euroAsk")), s.getIdOperator(), s.getImieOperatora(),
+						s.getNazwiskoOperatora())) {
+					request.setAttribute("komunikat", "Dodano nowe dane waluty EUR");
 				}
 			}
 			if (request.getParameter("frankBid") != null && request.getParameter("frankAsk") != null) {
 				if (bd.dodajRekordDaneFrank(Double.valueOf(request.getParameter("frankBid")),
-						Double.valueOf(request.getParameter("frankAsk")), s.getIdOperator(), s.getImieOperatora(), s.getNazwiskoOperatora())) {
-					ServletContext sc = request.getServletContext();
-					sc.setAttribute("komunikat", "Dodano nowe dane waluty CHF");
+						Double.valueOf(request.getParameter("frankAsk")), s.getIdOperator(), s.getImieOperatora(),
+						s.getNazwiskoOperatora())) {
+					request.setAttribute("komunikat", "Dodano nowe dane waluty CHF");
 				}
 			}
 		} catch (NumberFormatException e) {

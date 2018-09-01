@@ -16,4 +16,5 @@ public class KlientPrywatny {
 	private String telefon;
 	private LocalDateTime dataDodania;
 	private int idUzytkownik;
+	private int idAdministrator;
 }
