@@ -50,7 +50,7 @@ public class WalidacjaKodowanie {
     }
 
 	public boolean walidujNazwy(String nazwa) {
-		Pattern patt = Pattern.compile("^[^|'\":%^#~}{][;=<>`]{3,100}$");
+		Pattern patt = Pattern.compile("^[^|'\":%^#~}{\\]\\[;=<>`]{3,100}$");
 		Matcher mat = patt.matcher(nazwa);
 		return mat.find();
 	}
@@ -82,6 +82,12 @@ public class WalidacjaKodowanie {
 	public boolean walidujNrRachunku(String nrRachunku) {
 		Pattern patt = Pattern.compile("^[0-9]{26}$");
 		Matcher mat = patt.matcher(nrRachunku);
+		return mat.find();
+	}
+	
+	public boolean walidujNrLokalizacji(String nazwa) {
+		Pattern patt = Pattern.compile("^[^|'\":%^#~}{\\]\\[;=<>`]{1,20}$");
+		Matcher mat = patt.matcher(nazwa);
 		return mat.find();
 	}
 }

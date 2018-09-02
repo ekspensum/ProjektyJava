@@ -1,5 +1,7 @@
 package model.dao;
 
+import java.math.BigInteger;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +15,9 @@ import java.util.List;
 import model.encje.DaneDolar;
 import model.encje.DaneEuro;
 import model.encje.DaneFrank;
+import model.encje.KlientFirmowy;
+import model.encje.RachunekPLN;
+import model.encje.Uzytkownik;
 
 public class ObslugaBD {
 
@@ -278,9 +283,9 @@ public class ObslugaBD {
 			if (queryPLN.execute()) {
 				ResultSet rs = queryPLN.executeQuery();
 				if (rs.first()) {
-				sr.setStanPLN(rs.getDouble(1));
-				sr.setIdRachunkuPLN(rs.getInt(2));
-				sr.setNrRachunkuPLN(rs.getString(3));					
+					sr.setStanPLN(rs.getDouble(1));
+					sr.setIdRachunkuPLN(rs.getInt(2));
+					sr.setNrRachunkuPLN(rs.getString(3));
 				}
 			}
 			PreparedStatement queryUSD = conn.prepareStatement(
@@ -289,9 +294,9 @@ public class ObslugaBD {
 			if (queryUSD.execute()) {
 				ResultSet rs = queryUSD.executeQuery();
 				if (rs.first()) {
-				sr.setStanUSD(rs.getDouble(1));
-				sr.setIdRachunkuUSD(rs.getInt(2));
-				sr.setNrRachunkuUSD(rs.getString(3));					
+					sr.setStanUSD(rs.getDouble(1));
+					sr.setIdRachunkuUSD(rs.getInt(2));
+					sr.setNrRachunkuUSD(rs.getString(3));
 				}
 			}
 			return sr;
@@ -307,7 +312,7 @@ public class ObslugaBD {
 		}
 		return null;
 	}
-	
+
 	public StanyRachunkow odcztRachKlientPrywatny(int idUzytkownia) {
 
 		StanyRachunkow sr = new StanyRachunkow();
@@ -318,9 +323,9 @@ public class ObslugaBD {
 			if (queryPLN.execute()) {
 				ResultSet rs = queryPLN.executeQuery();
 				if (rs.first()) {
-				sr.setStanPLN(rs.getDouble(1));
-				sr.setIdRachunkuPLN(rs.getInt(2));
-				sr.setNrRachunkuPLN(rs.getString(3));					
+					sr.setStanPLN(rs.getDouble(1));
+					sr.setIdRachunkuPLN(rs.getInt(2));
+					sr.setNrRachunkuPLN(rs.getString(3));
 				}
 			}
 			PreparedStatement queryUSD = conn.prepareStatement(
@@ -329,9 +334,9 @@ public class ObslugaBD {
 			if (queryUSD.execute()) {
 				ResultSet rs = queryUSD.executeQuery();
 				if (rs.first()) {
-				sr.setStanUSD(rs.getDouble(1));
-				sr.setIdRachunkuUSD(rs.getInt(2));
-				sr.setNrRachunkuUSD(rs.getString(3));					
+					sr.setStanUSD(rs.getDouble(1));
+					sr.setIdRachunkuUSD(rs.getInt(2));
+					sr.setNrRachunkuUSD(rs.getString(3));
 				}
 			}
 			return sr;
@@ -344,6 +349,52 @@ public class ObslugaBD {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		return null;
+	}
+
+	public WynikiDodajUzytkownika dodajKlientaFirmowego(Uzytkownik u, KlientFirmowy kf, RachunekPLN pln) {
+
+		CallableStatement proc = null;
+		try {
+			proc = conn.prepareCall("{call dodajKlientaFirmowego(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+			proc.setString(1, u.getLogin());
+			proc.setString(2, u.getHaslo());
+			proc.setInt(3, u.getIdRola());
+			proc.setString(4, kf.getNazwa());
+			proc.setInt(5, kf.getRegon());
+			proc.setObject(6, kf.getNip());
+			proc.setString(7, kf.getKod());
+			proc.setString(8, kf.getMiasto());
+			proc.setString(9, kf.getUlica());
+			proc.setString(10, kf.getNrDomu());
+			proc.setString(11, kf.getNrLokalu());
+			proc.setString(12, kf.getImiePracownika());
+			proc.setString(13, kf.getNazwiskoPracownika());
+			proc.setString(14, kf.getTelefonPracownika());
+			proc.setObject(15, LocalDateTime.now());
+			proc.setInt(16, kf.getIdAdministrator());
+			proc.setString(17, pln.getNrRachunku());
+			proc.executeQuery();
+			ResultSet rs = proc.getResultSet();
+			if (rs.next()) {
+				WynikiDodajUzytkownika wdu = new WynikiDodajUzytkownika();
+				if (rs.getBoolean(1)) {
+					wdu.setDodano(rs.getBoolean(1));
+					return wdu;
+				} else {
+					wdu.setDodano(rs.getBoolean(1));
+					wdu.setNazwa(rs.getString(2));
+					wdu.setLogin(rs.getString(3));
+					wdu.setRegon(rs.getInt(4));
+					wdu.setNip(BigInteger.valueOf(rs.getLong(5)));
+					wdu.setNrRachunku(rs.getString(6));
+					return wdu;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}

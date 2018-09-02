@@ -111,7 +111,7 @@ public class Kursy implements Runnable {
 		return null;
 	}
 
-//	Aktulizacja danych odbywa siê co 60 min. Dostêpnych jest wiele walut w tym PLN
+//	Aktulizacja danych odbywa siï¿½ co 60 min. Dostï¿½pnych jest wiele walut w tym PLN
 	private JSONObject getKursyFreeApi() {
 		try {
 			URL url = new URL("http://free.currencyconverterapi.com/api/v5/convert?q=CHF_USD&compact=y");
@@ -143,17 +143,20 @@ public class Kursy implements Runnable {
 @Override
 public void run() {
 	try {
-		JSONObject obECB = getKursyECB();
-		JSONObject obFreeApi = getKursyFreeApi();
+//		JSONObject obECB = getKursyECB();
+//		JSONObject obFreeApi = getKursyFreeApi();
 		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
 		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
 		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
-		if (obECB != null)
-			this.eur_usd = obECB.getDouble("USD");
-		this.chf_usd = obFreeApi.getDouble("val");
-		if (obECB != null)
-			this.eur_chf = obECB.getDouble("CHF");
-	} catch (NumberFormatException | DOMException | JSONException e) {
+//		if (obECB != null)
+//			this.eur_usd = obECB.getDouble("USD");
+		this.eur_usd = 1.2234;
+//		this.chf_usd = obFreeApi.getDouble("val");
+		this.chf_usd = 0.99;
+//		if (obECB != null)
+//			this.eur_chf = obECB.getDouble("CHF");
+		this.eur_chf = 1.1798;
+	} catch (NumberFormatException | DOMException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}

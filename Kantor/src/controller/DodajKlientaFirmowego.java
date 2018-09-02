@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.dao.ObslugaBD;
 import model.dao.UserZalogowany;
+import model.dao.WynikiDodajUzytkownika;
 import model.encje.KlientFirmowy;
 import model.encje.RachunekPLN;
 import model.encje.Uzytkownik;
@@ -54,7 +56,7 @@ public class DodajKlientaFirmowego extends HttpServlet {
 		if(request.getParameter("nip") == "")
 			kf.setNip(null);
 		else
-			kf.setNip(BigInteger.valueOf(Integer.toUnsignedLong(Integer.parseInt(request.getParameter("nip")))));
+			kf.setNip(new BigInteger(request.getParameter("nip")));
 		kf.setKod(request.getParameter("kod"));
 		kf.setMiasto(request.getParameter("miasto"));
 		kf.setUlica(request.getParameter("ulica"));
@@ -107,13 +109,13 @@ public class DodajKlientaFirmowego extends HttpServlet {
 			walidacjaOK = false;
 			request.setAttribute("ulica", "Pole Ulica jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
-		if(kf.getNrDomu() == "" || !kw.walidujNazwy(kf.getNrDomu())) {
+		if(kf.getNrDomu() == "" || !kw.walidujNrLokalizacji(kf.getNrDomu())) {
 			walidacjaOK = false;
 			request.setAttribute("nrDomu", "Pole Nr Domu jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
 		
 		if(kf.getNrLokalu() != "") {
-			if(!kw.walidujNazwy(kf.getNrLokalu())) {
+			if(!kw.walidujNrLokalizacji(kf.getNrLokalu())) {
 				walidacjaOK = false;
 				request.setAttribute("nrLokalu", "Pole Nr Lokalu jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 			}					
@@ -138,8 +140,17 @@ public class DodajKlientaFirmowego extends HttpServlet {
 		
 		if(walidacjaOK) {
 			u.setHaslo(kw.hasloZakodowane(u.getHaslo()));
-			System.out.println("Walidacja OK");
-			System.out.println(u.getHaslo());
+			ObslugaBD bd = new ObslugaBD();
+			WynikiDodajUzytkownika wynik = bd.dodajKlientaFirmowego(u, kf, pln);
+			if(wynik.isDodano()) {
+				request.setAttribute("komunikat", "Dodano nowego klienta firmowego.");
+				request.setAttribute("user", null);
+				request.setAttribute("firma", null);
+				request.setAttribute("pln", null);
+			} else {
+				request.setAttribute("komunikat", "NIE udało się dodać nowego klienta firmowego. Użytkownik, którego próbowano wprowadzić jest już zapisany w bazie danych!");
+				request.setAttribute("wynik", wynik);
+			}
 		}
 	 
 		doGet(request, response);

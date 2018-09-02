@@ -46,6 +46,10 @@
 <p>Nr rachunku PLN: <input name="pln" type="text" value="${pln.nrRachunku }" /></p>
 <b>${nrRachunku }</b>
 <p><input type="submit" value="Dodaj" /></p>
+<b>${komunikat }</b><br/>
+<c:if test="${wynik.dodano eq false }">
+<b>Nazwa firmy: ${wynik.nazwa }, Login:	${wynik.login }, Regon:	${wynik.regon }, NIP:	${wynik.nip }, Nr rachunku bakowego:	${wynik.nrRachunku }</b>
+</c:if>	
 </form>
 </body>
 </html>
