@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dodwanie klienta firmowego</title>
+<title>Dodawanie klienta firmowego</title>
 </head>
 <body bgcolor="gray">
 <a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
@@ -15,11 +15,15 @@
 <p>Panel Administratora</p>
 <p>Zalogowany: ${userZalogowany.imieAdministratora } ${userZalogowany.nazwiskoAdministratora }</p>
 <br>
-<form action="http://localhost:8080/Kantor/dodajKlientaFirmowego" method="POST">
+<a href="http://localhost:8080/Kantor/panelAdministratora">Powrót</a>
+<br/>
+<form action="http://localhost:8080/Kantor/dodajOperatora" method="POST">
 <p>Login: <input name="login" type="text" value="${user.login }" /></p>
 <b>${login }</b>
 <p>Hasło: <input name="haslo" type="password" value="${user.haslo }"></p>
 <b>${haslo }</b>
+<p>Powtórz hasło: <input name="haslo2" type="password" value="${haslo2wartosc }" /></p>
+<b>${haslo2 }</b>
 <p>Nazwa firmy: <input name="nazwa" type="text" value="${firma.nazwa}"/></p>
 <b>${nazwa }</b>
 <p>REGON: <input name="regon" type="text" value="${firma.regon }" /></p>

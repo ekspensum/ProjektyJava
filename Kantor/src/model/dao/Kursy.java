@@ -28,7 +28,7 @@ public class Kursy implements Runnable {
 	private double eur_chf;
 
 	public Kursy() {
-
+//		Kod przesunięto do metody run
 	}
 
 	public double getPln_usd() {
@@ -140,6 +140,7 @@ public class Kursy implements Runnable {
 		return null;
 	}
 
+//Przekzanie do osobnego wątku
 @Override
 public void run() {
 	try {

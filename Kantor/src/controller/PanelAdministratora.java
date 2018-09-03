@@ -40,27 +40,16 @@ public class PanelAdministratora extends HttpServlet {
 			response.sendRedirect("http://localhost:8080/Kantor/dodajKlientaFirmowego");
 			break;
 		case "klientPrywatny":
-			System.out.println("klient prywatny");
+			response.sendRedirect("http://localhost:8080/Kantor/dodajKlientaPrywatnego");
 			break;
 		case "operator":
-			System.out.println("operator");
+			response.sendRedirect("http://localhost:8080/Kantor/dodajOperatora");
 			break;
 		default:
 			break;
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+			
 //		doGet(request, response);
 	}
 

@@ -13,7 +13,7 @@
 
 <form method="POST" name="logowanie" action="http://localhost:8080/Kantor/logowanie">
 <p>Login:	<input type="text" name="login" /></p>
-<p>Hasło:	<input type="text" name="haslo" /></p>
+<p>Hasło:	<input type="password" name="haslo" /></p>
 <p><input type="submit" value="Zaloguj"></p>
 </form>
 <br/>

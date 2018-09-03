@@ -1,6 +1,5 @@
 package model.dao;
 
-import java.math.BigInteger;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +15,8 @@ import model.encje.DaneDolar;
 import model.encje.DaneEuro;
 import model.encje.DaneFrank;
 import model.encje.KlientFirmowy;
+import model.encje.KlientPrywatny;
+import model.encje.Operator;
 import model.encje.RachunekPLN;
 import model.encje.Uzytkownik;
 
@@ -67,7 +68,7 @@ public class ObslugaBD {
 			List<DaneDolar> listaDaneDolar = new ArrayList<>();
 			Statement query = conn.createStatement();
 			ResultSet rs = query.executeQuery(
-					"SELECT idDolar, znak, bid, ask, daneDolar.dataDodania, opImie, opNazwisko FROM daneDolar INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneDolar.dataDodania DESC LIMIT 10");
+					"SELECT idDolar, znak, bid, ask, daneDolar.dataDodania, imie, nazwisko FROM daneDolar INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneDolar.dataDodania DESC LIMIT 10");
 			while (rs.next()) {
 				dd = new DaneDolar();
 				dd.setIdDolar(rs.getInt(1));
@@ -124,7 +125,7 @@ public class ObslugaBD {
 			List<DaneEuro> listaDaneEuro = new ArrayList<>();
 			Statement query = conn.createStatement();
 			ResultSet rs = query.executeQuery(
-					"SELECT idEuro, znak, bid, ask, daneEuro.dataDodania, opImie, opNazwisko FROM daneEuro INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneEuro.dataDodania DESC LIMIT 10");
+					"SELECT idEuro, znak, bid, ask, daneEuro.dataDodania, imie, nazwisko FROM daneEuro INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneEuro.dataDodania DESC LIMIT 10");
 			while (rs.next()) {
 				de = new DaneEuro();
 				de.setIdEuro(rs.getInt(1));
@@ -181,7 +182,7 @@ public class ObslugaBD {
 			List<DaneFrank> listaDaneFrank = new ArrayList<>();
 			Statement query = conn.createStatement();
 			ResultSet rs = query.executeQuery(
-					"SELECT idFrank, znak, bid, ask, daneFrank.dataDodania, opImie, opNazwisko FROM daneFrank INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneFrank.dataDodania DESC LIMIT 10");
+					"SELECT idFrank, znak, bid, ask, daneFrank.dataDodania, imie, nazwisko FROM daneFrank INNER JOIN operator ON operator_idOperator = idOperator ORDER BY daneFrank.dataDodania DESC LIMIT 10");
 			while (rs.next()) {
 				df = new DaneFrank();
 				df.setIdFrank(rs.getInt(1));
@@ -238,7 +239,7 @@ public class ObslugaBD {
 	public UserZalogowany logowanie(String login, String haslo) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
-					"SELECT idUzytkownik, rola_idRola, idOperator, rola, nazwa, imie, nazwisko, opImie, opNazwisko, adminImie, adminNazwisko, idAdministrator FROM uzytkownik LEFT JOIN administrator ON idUzytkownik = administrator.uzytkownik_idUzytkownik LEFT JOIN operator ON idUzytkownik = operator.uzytkownik_idUzytkownik LEFT JOIN klientfirmowy ON idUzytkownik = klientfirmowy.uzytkownik_idUzytkownik LEFT JOIN klientprywatny ON idUzytkownik = klientprywatny.uzytkownik_idUzytkownik LEFT JOIN rola ON rola_idRola = idRola WHERE login = ? AND haslo = ?");
+					"SELECT idUzytkownik, rola_idRola, idOperator, rola, nazwa, KlientPrywatny.imie, KlientPrywatny.nazwisko, operator.imie, operator.nazwisko, administrator.imie, administrator.nazwisko, idAdministrator FROM uzytkownik LEFT JOIN administrator ON idUzytkownik = administrator.uzytkownik_idUzytkownik LEFT JOIN operator ON idUzytkownik = operator.uzytkownik_idUzytkownik LEFT JOIN klientfirmowy ON idUzytkownik = klientfirmowy.uzytkownik_idUzytkownik LEFT JOIN klientprywatny ON idUzytkownik = klientprywatny.uzytkownik_idUzytkownik LEFT JOIN rola ON rola_idRola = idRola WHERE login = ? AND haslo = ?");
 			query.setString(1, login);
 			query.setString(2, haslo);
 			if (query.execute()) {
@@ -362,8 +363,8 @@ public class ObslugaBD {
 			proc.setString(2, u.getHaslo());
 			proc.setInt(3, u.getIdRola());
 			proc.setString(4, kf.getNazwa());
-			proc.setInt(5, kf.getRegon());
-			proc.setObject(6, kf.getNip());
+			proc.setString(5, kf.getRegon());
+			proc.setString(6, kf.getNip());
 			proc.setString(7, kf.getKod());
 			proc.setString(8, kf.getMiasto());
 			proc.setString(9, kf.getUlica());
@@ -386,8 +387,8 @@ public class ObslugaBD {
 					wdu.setDodano(rs.getBoolean(1));
 					wdu.setNazwa(rs.getString(2));
 					wdu.setLogin(rs.getString(3));
-					wdu.setRegon(rs.getInt(4));
-					wdu.setNip(BigInteger.valueOf(rs.getLong(5)));
+					wdu.setRegon(rs.getString(4));
+					wdu.setNip(rs.getString(5));
 					wdu.setNrRachunku(rs.getString(6));
 					return wdu;
 				}
@@ -396,6 +397,89 @@ public class ObslugaBD {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	public WynikiDodajUzytkownika dodajKlientaPrywatnego(Uzytkownik u, KlientPrywatny kp, RachunekPLN pln) {
+		
+		CallableStatement proc = null;
+		try {
+			proc = conn.prepareCall("{call dodajKlientaPrywatnego(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+			proc.setString(1, u.getLogin());
+			proc.setString(2, u.getHaslo());
+			proc.setInt(3, u.getIdRola());
+			proc.setString(4, kp.getImie());
+			proc.setString(5, kp.getNazwisko());
+			proc.setString(6, kp.getPesel());
+			proc.setString(7, kp.getKod());
+			proc.setString(8, kp.getMiasto());
+			proc.setString(9, kp.getUlica());
+			proc.setString(10, kp.getNrDomu());
+			proc.setString(11, kp.getNrLokalu());
+			proc.setString(12, kp.getTelefon());
+			proc.setObject(13, LocalDateTime.now());
+			proc.setInt(14, kp.getIdAdministrator());
+			proc.setString(15, pln.getNrRachunku());
+			proc.executeQuery();
+			ResultSet rs = proc.getResultSet();
+			if (rs.next()) {
+				WynikiDodajUzytkownika wdu = new WynikiDodajUzytkownika();
+				if (rs.getBoolean(1)) {
+					wdu.setDodano(rs.getBoolean(1));
+					return wdu;
+				} else {
+					wdu.setDodano(rs.getBoolean(1));
+					wdu.setImie(rs.getString(2));
+					wdu.setNazwisko(rs.getString(3));
+					wdu.setLogin(rs.getString(4));
+					wdu.setPesel(rs.getString(5));
+					wdu.setNrRachunku(rs.getString(6));
+					return wdu;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public WynikiDodajUzytkownika dodajOperatora(Uzytkownik u, Operator o) {
+		
+		CallableStatement proc = null;
+		try {
+			proc = conn.prepareCall("{call dodajOperatora(?,?,?,?,?,?,?,?,?)}");
+			proc.setString(1, u.getLogin());
+			proc.setString(2, u.getHaslo());
+			proc.setInt(3, u.getIdRola());
+			proc.setString(4, o.getImie());
+			proc.setString(5, o.getNazwisko());
+			proc.setString(6, o.getPesel());
+			proc.setString(7, o.getTelefon());
+			proc.setObject(8, LocalDateTime.now());
+			proc.setInt(9, o.getIdAdministrator());
+			proc.executeQuery();
+			ResultSet rs = proc.getResultSet();
+			if (rs.next()) {
+				WynikiDodajUzytkownika wdu = new WynikiDodajUzytkownika();
+				if (rs.getBoolean(1)) {
+					wdu.setDodano(rs.getBoolean(1));
+					return wdu;
+				} else {
+					wdu.setDodano(rs.getBoolean(1));
+					wdu.setImie(rs.getString(2));
+					wdu.setNazwisko(rs.getString(3));
+					wdu.setLogin(rs.getString(4));
+					wdu.setPesel(rs.getString(5));
+					return wdu;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
 		return null;
 	}
 }

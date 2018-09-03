@@ -1,15 +1,16 @@
 package model.dao;
 
-import java.math.BigInteger;
-
 public class WynikiDodajUzytkownika {
 	
 	private boolean dodano;
 	private String nazwa;
 	private String login;
-	private Integer regon;
-	private BigInteger nip;
+	private String regon;
+	private String nip;
 	private String nrRachunku;
+	private String imie;
+	private String nazwisko;
+	private String pesel;
 	
 	public boolean isDodano() {
 		return dodano;
@@ -29,16 +30,16 @@ public class WynikiDodajUzytkownika {
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	public Integer getRegon() {
+	public String getRegon() {
 		return regon;
 	}
-	public void setRegon(Integer regon) {
+	public void setRegon(String regon) {
 		this.regon = regon;
 	}
-	public BigInteger getNip() {
+	public String getNip() {
 		return nip;
 	}
-	public void setNip(BigInteger nip) {
+	public void setNip(String nip) {
 		this.nip = nip;
 	}
 	public String getNrRachunku() {
@@ -47,5 +48,22 @@ public class WynikiDodajUzytkownika {
 	public void setNrRachunku(String nrRachunku) {
 		this.nrRachunku = nrRachunku;
 	}
-
+	public String getImie() {
+		return imie;
+	}
+	public void setImie(String imie) {
+		this.imie = imie;
+	}
+	public String getNazwisko() {
+		return nazwisko;
+	}
+	public void setNazwisko(String nazwisko) {
+		this.nazwisko = nazwisko;
+	}
+	public String getPesel() {
+		return pesel;
+	}
+	public void setPesel(String pesel) {
+		this.pesel = pesel;
+	}
 }

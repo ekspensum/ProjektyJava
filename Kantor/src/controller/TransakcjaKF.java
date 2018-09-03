@@ -46,7 +46,6 @@ public class TransakcjaKF extends HttpServlet {
 			throws ServletException, IOException {
 
 		if (request.getParameter("sprzedajUSD") != null) {
-
 			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 
 			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");

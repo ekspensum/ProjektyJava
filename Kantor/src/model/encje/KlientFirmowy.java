@@ -1,13 +1,12 @@
 package model.encje;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 public class KlientFirmowy {
 	private int idKlientFirmowy;
 	private String nazwa;
-	private Integer regon;
-	private BigInteger nip;
+	private String regon;
+	private String nip;
 	private String kod;
 	private String miasto;
 	private String ulica;
@@ -32,16 +31,16 @@ public class KlientFirmowy {
 	public void setNazwa(String nazwa) {
 		this.nazwa = nazwa;
 	}
-	public Integer getRegon() {
+	public String getRegon() {
 		return regon;
 	}
-	public void setRegon(Integer regon) {
+	public void setRegon(String regon) {
 		this.regon = regon;
 	}
-	public BigInteger getNip() {
+	public String getNip() {
 		return nip;
 	}
-	public void setNip(BigInteger nip) {
+	public void setNip(String nip) {
 		this.nip = nip;
 	}
 	public String getKod() {
@@ -110,4 +109,5 @@ public class KlientFirmowy {
 	public void setIdAdministrator(int idAdministrator) {
 		this.idAdministrator = idAdministrator;
 	}
+
 }

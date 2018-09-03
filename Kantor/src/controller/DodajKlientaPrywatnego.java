@@ -12,30 +12,29 @@ import javax.servlet.http.HttpServletResponse;
 import model.dao.ObslugaBD;
 import model.dao.UserZalogowany;
 import model.dao.WynikiDodajUzytkownika;
-import model.encje.KlientFirmowy;
+import model.encje.KlientPrywatny;
 import model.encje.RachunekPLN;
 import model.encje.Uzytkownik;
 
 /**
- * Servlet implementation class DodajKlientaFirmowego
+ * Servlet implementation class DodajKlientaPrywatnego
  */
-@WebServlet("/dodajKlientaFirmowego")
-public class DodajKlientaFirmowego extends HttpServlet {
+@WebServlet("/dodajKlientaPrywatnego")
+public class DodajKlientaPrywatnego extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		request.getRequestDispatcher("jsp/dodajKlientaFirmowego.jsp").forward(request, response);
+		request.getRequestDispatcher("jsp/dodajKlientaPrywatnego.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 		WalidacjaKodowanie kw = new WalidacjaKodowanie();
 		
@@ -43,24 +42,22 @@ public class DodajKlientaFirmowego extends HttpServlet {
 		Uzytkownik u = new Uzytkownik();
 		u.setLogin(request.getParameter("login"));
 		u.setHaslo(request.getParameter("haslo"));	
-		u.setIdRola(3);
+		u.setIdRola(4);
 		request.setAttribute("user", u);
 		
-		KlientFirmowy kf = new KlientFirmowy();
-		kf.setNazwa(request.getParameter("nazwa"));	
-		kf.setRegon(request.getParameter("regon"));
-		kf.setNip(request.getParameter("nip"));
-		kf.setKod(request.getParameter("kod"));
-		kf.setMiasto(request.getParameter("miasto"));
-		kf.setUlica(request.getParameter("ulica"));
-		kf.setNrDomu(request.getParameter("nrDomu"));
-		kf.setNrLokalu(request.getParameter("nrLokalu"));
-		kf.setImiePracownika(request.getParameter("imie"));
-		kf.setNazwiskoPracownika(request.getParameter("nazwisko"));
-		kf.setTelefonPracownika(request.getParameter("telefon"));
-		kf.setDataDodania(LocalDateTime.now());
-		kf.setIdAdministrator(uz.getIdAdministrator());
-		request.setAttribute("firma", kf);
+		KlientPrywatny kp = new KlientPrywatny();
+		kp.setImie(request.getParameter("imie"));	
+		kp.setNazwisko(request.getParameter("nazwisko"));
+		kp.setPesel(request.getParameter("pesel"));
+		kp.setKod(request.getParameter("kod"));
+		kp.setMiasto(request.getParameter("miasto"));
+		kp.setUlica(request.getParameter("ulica"));
+		kp.setNrDomu(request.getParameter("nrDomu"));
+		kp.setNrLokalu(request.getParameter("nrLokalu"));
+		kp.setTelefon(request.getParameter("telefon"));
+		kp.setDataDodania(LocalDateTime.now());
+		kp.setIdAdministrator(uz.getIdAdministrator());
+		request.setAttribute("prywatny", kp);
 		
 		RachunekPLN pln = new RachunekPLN();
 		pln.setNrRachunku(request.getParameter("pln"));
@@ -84,53 +81,45 @@ public class DodajKlientaFirmowego extends HttpServlet {
 			walidacjaOK = false;
 			request.setAttribute("haslo2", "Brak zgodności haseł!");
 		}
-		if(kf.getNazwa() == "" || !kw.walidujNazwy(kf.getNazwa())) {
+		if(kp.getImie() == "" || !kw.walidujNazwy(kp.getImie())) {
 			walidacjaOK = false;
-			request.setAttribute("nazwa", "Pole Nazwa firmy jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
+			request.setAttribute("imie", "Pole Imię jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
-		if(kf.getRegon() == "" || !kw.walidujRegon(kf.getRegon())) {
+		if(kp.getNazwisko() == "" || !kw.walidujNazwy(kp.getNazwisko())) {
 			walidacjaOK = false;
-			request.setAttribute("regon", "Pole REGON jest puste bądz ilość cyfr jest różna od 9");				
+			request.setAttribute("nazwisko", "Pole Nazwisko jest puste bądz ilość cyfr jest różna od 9");				
 		}
-		if(kf.getNip() == "" || !kw.walidujNip(kf.getNip())) {
+		if(kp.getPesel() == "" || !kw.walidujPesel(kp.getPesel())) {
 			walidacjaOK = false;
-			request.setAttribute("nip", "Pole NIP jest puste bądz ilość cyfr jest różna od 10");				
+			request.setAttribute("pesel", "Pole PESEL jest puste bądz ilość cyfr jest różna od 11");				
 		}
-		if(kf.getKod() == "" || !kw.walidujKodPocztowy(kf.getKod())) {
+		if(kp.getKod() == "" || !kw.walidujKodPocztowy(kp.getKod())) {
 			walidacjaOK = false;
 			request.setAttribute("kod", "Pole Kod Pocztowy jest puste bądz ilość znaków lub ich forma są niepoprawne (00-000)");				
 		}
-		if(kf.getMiasto() == "" || !kw.walidujNazwy(kf.getMiasto())) {
+		if(kp.getMiasto() == "" || !kw.walidujNazwy(kp.getMiasto())) {
 			walidacjaOK = false;
 			request.setAttribute("miasto", "Pole Miasto jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
-		if(kf.getUlica() == "" || !kw.walidujNazwy(kf.getUlica())) {
+		if(kp.getUlica() == "" || !kw.walidujNazwy(kp.getUlica())) {
 			walidacjaOK = false;
 			request.setAttribute("ulica", "Pole Ulica jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
-		if(kf.getNrDomu() == "" || !kw.walidujNrLokalizacji(kf.getNrDomu())) {
+		if(kp.getNrDomu() == "" || !kw.walidujNrLokalizacji(kp.getNrDomu())) {
 			walidacjaOK = false;
 			request.setAttribute("nrDomu", "Pole Nr Domu jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
 		
-		if(kf.getNrLokalu() != "") {
-			if(!kw.walidujNrLokalizacji(kf.getNrLokalu())) {
+		if(kp.getNrLokalu() != "") {
+			if(!kw.walidujNrLokalizacji(kp.getNrLokalu())) {
 				walidacjaOK = false;
 				request.setAttribute("nrLokalu", "Pole Nr Lokalu jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 			}					
 		} 
 		
-		if(kf.getImiePracownika() == "" || !kw.walidujNazwy(kf.getImiePracownika())) {
+		if(kp.getTelefon() == "" || !kw.walidujNrTelefonu(kp.getTelefon())) {
 			walidacjaOK = false;
-			request.setAttribute("imiePracownika", "Pole Imię Przedstawiciela jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
-		}
-		if(kf.getNazwiskoPracownika() == "" || !kw.walidujNazwy(kf.getNazwiskoPracownika())) {
-			walidacjaOK = false;
-			request.setAttribute("nazwiskoPracownika", "Pole Nazwisko Przedstawiciela jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
-		}
-		if(kf.getTelefonPracownika() == "" || !kw.walidujNrTelefonu(kf.getTelefonPracownika())) {
-			walidacjaOK = false;
-			request.setAttribute("telefonPracownika", "Pole Nr Telefonu Przedstawiciela jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
+			request.setAttribute("telefon", "Pole Nr Telefonu jest puste bądz ilość znaków lub ich forma są niepoprawne (viede Polityka Bezpieczeństwa)");				
 		}
 		if(pln.getNrRachunku() == "" || !kw.walidujNrRachunku(pln.getNrRachunku())) {
 			walidacjaOK = false;
@@ -140,21 +129,20 @@ public class DodajKlientaFirmowego extends HttpServlet {
 		if(walidacjaOK) {
 			u.setHaslo(kw.hasloZakodowane(u.getHaslo()));
 			ObslugaBD bd = new ObslugaBD();
-			WynikiDodajUzytkownika wynik = bd.dodajKlientaFirmowego(u, kf, pln);
+			WynikiDodajUzytkownika wynik = bd.dodajKlientaPrywatnego(u, kp, pln);
 			if(wynik.isDodano()) {
-				request.setAttribute("komunikat", "Dodano nowego klienta firmowego.");
+				request.setAttribute("komunikat", "Dodano nowego klienta prywatnego.");
 				request.setAttribute("user", null);
-				request.setAttribute("firma", null);
+				request.setAttribute("prywatny", null);
 				request.setAttribute("pln", null);
 				request.setAttribute("haslo2", "");
 				request.setAttribute("haslo2wartosc", "");
 			} else {
-				request.setAttribute("komunikat", "NIE udało się dodać nowego klienta firmowego. Użytkownik, którego próbowano wprowadzić jest już zapisany w bazie danych!");
+				request.setAttribute("komunikat", "NIE udało się dodać nowego klienta prywatnego. Użytkownik, którego próbowano wprowadzić jest już zapisany w bazie danych!");
 				request.setAttribute("wynik", wynik);
 			}
 		}
-	 
+			
 		doGet(request, response);
 	}
-
 }

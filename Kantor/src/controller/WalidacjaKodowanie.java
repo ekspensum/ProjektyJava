@@ -1,6 +1,5 @@
 package controller;
 
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
@@ -55,15 +54,21 @@ public class WalidacjaKodowanie {
 		return mat.find();
 	}
 	
-	public boolean walidujRegon(int regon) {
+	public boolean walidujRegon(String regon) {
 		Pattern patt = Pattern.compile("^[0-9]{9}$");
-		Matcher mat = patt.matcher(String.valueOf(regon));
+		Matcher mat = patt.matcher(regon);
 		return mat.find();
 	}
 	
-	public boolean walidujNip(BigInteger nip) {
+	public boolean walidujNip(String nip) {
 		Pattern patt = Pattern.compile("^[0-9]{10}$");
-		Matcher mat = patt.matcher(String.valueOf(nip));
+		Matcher mat = patt.matcher(nip);
+		return mat.find();
+	}
+
+	public boolean walidujPesel(String pesel) {
+		Pattern patt = Pattern.compile("^[0-9]{11}$");
+		Matcher mat = patt.matcher(pesel);
 		return mat.find();
 	}
 	

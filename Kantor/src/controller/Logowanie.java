@@ -30,12 +30,13 @@ public class Logowanie extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
 			ObslugaBD bd = new ObslugaBD();
-			UserZalogowany uz = bd.logowanie(request.getParameter("login"), request.getParameter("haslo"));
+			WalidacjaKodowanie wk = new WalidacjaKodowanie();
+			UserZalogowany uz = bd.logowanie(request.getParameter("login"), wk.hasloZakodowane(request.getParameter("haslo")));
 			HttpSession sesja = request.getSession();
 			sesja.setAttribute("userZalogowany", uz);
 			sesja.setMaxInactiveInterval(2000);
 			if(uz == null) {
-				request.setAttribute("komunikat", "Nieprawid≥owe dane logowania");
+				request.setAttribute("komunikat", "Nieprawid≈Çowe dane logowania");
 				doGet(request, response);				
 			}
 			else if(uz.getIdRola() == 1)
