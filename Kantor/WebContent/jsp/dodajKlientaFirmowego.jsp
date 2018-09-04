@@ -17,6 +17,9 @@
 <br>
 <a href="http://localhost:8080/Kantor/panelAdministratora">Powrót</a>
 <br/>
+<br/>
+<b>Dodawanie klienta firmowego</b>
+<br/>
 <form action="http://localhost:8080/Kantor/dodajOperatora" method="POST">
 <p>Login: <input name="login" type="text" value="${user.login }" /></p>
 <b>${login }</b>

@@ -36,6 +36,9 @@
 <option value="operator">Nowy operator</option>
 </select>
 <input type="submit" value="Wybierz" />
+<br/>
+<br/>
+<a href="http://localhost:8080/Kantor/dodajRachunek">Dodaj rachunek walutowy klienta</a>
 </form>
 </body>
 </html>

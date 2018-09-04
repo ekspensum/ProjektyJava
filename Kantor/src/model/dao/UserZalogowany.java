@@ -16,6 +16,9 @@ public class UserZalogowany {
 	private String imieAdministratora;
 	private String nazwiskoAdministratora;
 	private LocalDateTime dataLogowania;
+	private boolean usd;
+	private boolean eur;
+	private boolean chf;
 	
 	public int getIdUzytkownik() {
 		return idUzytkownik;
@@ -95,5 +98,22 @@ public class UserZalogowany {
 	public void setDataLogowania(LocalDateTime dataLogowania) {
 		this.dataLogowania = dataLogowania;
 	}
-		
+	public boolean isUsd() {
+		return usd;
+	}
+	public void setUsd(boolean usd) {
+		this.usd = usd;
+	}
+	public boolean isEur() {
+		return eur;
+	}
+	public void setEur(boolean eur) {
+		this.eur = eur;
+	}
+	public boolean isChf() {
+		return chf;
+	}
+	public void setChf(boolean chf) {
+		this.chf = chf;
+	}
 }

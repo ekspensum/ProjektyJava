@@ -23,6 +23,7 @@ Rachunek PLN<br/>
 Nr rachunku: ${rachunkiKF.nrRachunkuPLN }<br/>
 Dostępne środki: PLN${rachunkiKF.stanPLN }<br/>
 <br/>
+<c:if test="${userZalogowany.usd eq true }">
 Rachunek USD<br/>
 Nr rachunku: ${rachunkiKF.nrRachunkuUSD }<br/>
 Dostępne środki: USD${rachunkiKF.stanUSD }<br/>
@@ -39,5 +40,6 @@ Dostępne środki: USD${rachunkiKF.stanUSD }<br/>
 <b>${komunikatKupUSD }</b>
 <br>
 <b>${komunikat }</b>
+</c:if>
 </body>
 </html>

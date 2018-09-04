@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.encje.Administrator;
 import model.encje.DaneDolar;
 import model.encje.DaneEuro;
 import model.encje.DaneFrank;
@@ -239,7 +240,7 @@ public class ObslugaBD {
 	public UserZalogowany logowanie(String login, String haslo) {
 		try {
 			PreparedStatement query = conn.prepareStatement(
-					"SELECT idUzytkownik, rola_idRola, idOperator, rola, nazwa, KlientPrywatny.imie, KlientPrywatny.nazwisko, operator.imie, operator.nazwisko, administrator.imie, administrator.nazwisko, idAdministrator FROM uzytkownik LEFT JOIN administrator ON idUzytkownik = administrator.uzytkownik_idUzytkownik LEFT JOIN operator ON idUzytkownik = operator.uzytkownik_idUzytkownik LEFT JOIN klientfirmowy ON idUzytkownik = klientfirmowy.uzytkownik_idUzytkownik LEFT JOIN klientprywatny ON idUzytkownik = klientprywatny.uzytkownik_idUzytkownik LEFT JOIN rola ON rola_idRola = idRola WHERE login = ? AND haslo = ?");
+					"SELECT idUzytkownik, rola_idRola, idOperator, rola, nazwa, KlientPrywatny.imie, KlientPrywatny.nazwisko, operator.imie, operator.nazwisko, administrator.imie, administrator.nazwisko, idAdministrator, usd, eur, chf FROM uzytkownik LEFT JOIN administrator ON idUzytkownik = administrator.uzytkownik_idUzytkownik LEFT JOIN operator ON idUzytkownik = operator.uzytkownik_idUzytkownik LEFT JOIN klientfirmowy ON idUzytkownik = klientfirmowy.uzytkownik_idUzytkownik LEFT JOIN klientprywatny ON idUzytkownik = klientprywatny.uzytkownik_idUzytkownik LEFT JOIN rola ON rola_idRola = idRola WHERE login = ? AND haslo = ?");
 			query.setString(1, login);
 			query.setString(2, haslo);
 			if (query.execute()) {
@@ -258,6 +259,9 @@ public class ObslugaBD {
 					uz.setImieAdministratora(rs.getString(10));
 					uz.setNazwiskoAdministratora(rs.getString(11));
 					uz.setIdAdministrator(rs.getInt(12));
+					uz.setUsd(rs.getBoolean(13));
+					uz.setEur(rs.getBoolean(14));
+					uz.setChf(rs.getBoolean(15));
 					uz.setDataLogowania(LocalDateTime.now());
 					return uz;
 				}
@@ -481,5 +485,113 @@ public class ObslugaBD {
 		}		
 		
 		return null;
+	}
+	
+	public WynikiDodajUzytkownika dodajAdministratora(Uzytkownik u, Administrator a) {
+		
+		CallableStatement proc = null;
+		try {
+			proc = conn.prepareCall("{call dodajAdministratora(?,?,?,?,?,?,?,?,?)}");
+			proc.setString(1, u.getLogin());
+			proc.setString(2, u.getHaslo());
+			proc.setInt(3, u.getIdRola());
+			proc.setString(4, a.getImie());
+			proc.setString(5, a.getNazwisko());
+			proc.setString(6, a.getPesel());
+			proc.setString(7, a.getTelefon());
+			proc.setObject(8, LocalDateTime.now());
+			proc.setInt(9, a.getIdAdministrator());
+			proc.executeQuery();
+			ResultSet rs = proc.getResultSet();
+			if (rs.next()) {
+				WynikiDodajUzytkownika wdu = new WynikiDodajUzytkownika();
+				if (rs.getBoolean(1)) {
+					wdu.setDodano(rs.getBoolean(1));
+					return wdu;
+				} else {
+					wdu.setDodano(rs.getBoolean(1));
+					wdu.setImie(rs.getString(2));
+					wdu.setNazwisko(rs.getString(3));
+					wdu.setLogin(rs.getString(4));
+					wdu.setPesel(rs.getString(5));
+					return wdu;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<KlientWyszukaj> wyszukajKlientaFirmowego(String login, String nazwa, String regon, String nip) {
+		
+		KlientWyszukaj kw = null;
+		List<KlientWyszukaj> listaKF = new ArrayList<>();
+		String sql = "SELECT login, nazwa, regon, nip, idUzytkownik FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik WHERE login LIKE '%"+login+"%' AND nazwa LIKE '%"+nazwa+"%' AND regon LIKE '%"+regon+"%' AND nip LIKE '%"+nip+"%' LIMIT 20";
+		try {
+			Statement stm = conn.createStatement();
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()) {
+				kw = new KlientWyszukaj();
+				kw.setLogin(rs.getString(1));
+				kw.setNazwa(rs.getString(2));
+				kw.setRegon(rs.getString(3));
+				kw.setNip(rs.getString(4));
+				kw.setIdUzytkownik(rs.getInt(5));
+				listaKF.add(kw);
+			}			
+			return listaKF;		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return null;		
+	}
+	
+	public List<KlientWyszukaj> wyszukajKlientaPrywatnego(String login, String nazwisko, String pesel) {
+		
+		KlientWyszukaj kw = null;
+		List<KlientWyszukaj> listaKP = new ArrayList<>();
+		String sql = "SELECT login, imie, nazwisko, pesel, idUzytkownik FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik WHERE login LIKE '%"+login+"%' AND nazwisko LIKE '%"+nazwisko+"%' AND pesel LIKE '%"+pesel+"%' LIMIT 20";
+		try {
+			Statement stm = conn.createStatement();
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()) {
+				kw = new KlientWyszukaj();
+				kw.setLogin(rs.getString(1));
+				kw.setImie(rs.getString(2));
+				kw.setNazwisko(rs.getString(3));
+				kw.setPesel(rs.getString(4));
+				kw.setIdUzytkownik(rs.getInt(5));
+				listaKP.add(kw);
+			}			
+			return listaKP;		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return null;		
+	}
+	
+	public boolean ustawWaluteKlienta(String waluta, int idUzytkownika) {
+		
+		Statement stm;
+		try {		
+		String sql = "";
+		if(waluta.equals("usd"))
+			sql = "UPDATE uzytkownik SET usd = 1 WHERE idUzytkownik = "+idUzytkownika+"";
+		else if(waluta.equals("eur"))
+			sql = "UPDATE uzytkownik SET eur = 1 WHERE idUzytkownik = "+idUzytkownika+"";
+		else if(waluta.equals("chf"))
+			sql = "UPDATE uzytkownik SET chf = 1 WHERE idUzytkownik = "+idUzytkownika+"";
+			stm = conn.createStatement();
+			if(stm.executeUpdate(sql) > 0)
+				return true;				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

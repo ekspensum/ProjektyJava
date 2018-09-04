@@ -17,6 +17,9 @@
 <br>
 <a href="http://localhost:8080/Kantor/panelAdministratora">Powrót</a>
 <br/>
+<br/>
+<b>Dodawanie klienta prywatnego</b>
+<br/>
 <form action="http://localhost:8080/Kantor/dodajKlientaPrywatnego" method="POST">
 <p>Login: <input name="login" type="text" value="${user.login }" /></p>
 <b>${login }</b>

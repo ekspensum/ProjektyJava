@@ -8,7 +8,7 @@ public class Administrator {
 	private String nazwisko;
 	private String pesel;
 	private String telefon;
-	private LocalDateTime dataDodnia;
+	private LocalDateTime dataDodania;
 	private int idUzytkownik;
 	
 	public int getIdAdministrator() {
@@ -41,11 +41,11 @@ public class Administrator {
 	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 	}
-	public LocalDateTime getDataDodnia() {
-		return dataDodnia;
+	public LocalDateTime getDataDodania() {
+		return dataDodania;
 	}
-	public void setDataDodnia(LocalDateTime dataDodnia) {
-		this.dataDodnia = dataDodnia;
+	public void setDataDodania(LocalDateTime dataDodania) {
+		this.dataDodania = dataDodania;
 	}
 	public int getIdUzytkownik() {
 		return idUzytkownik;

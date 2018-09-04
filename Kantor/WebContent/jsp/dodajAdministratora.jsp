@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dodawanie operatora</title>
+<title>Dodawanie administratora</title>
 </head>
 <body bgcolor="gray">
 <a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
@@ -18,22 +18,22 @@
 <a href="http://localhost:8080/Kantor/panelAdministratora">Powrót</a>
 <br/>
 <br/>
-<b>Dodawanie operatora</b>
+<b>Dodawanie administratora</b>
 <br/>
-<form action="http://localhost:8080/Kantor/dodajOperatora" method="POST">
+<form action="http://localhost:8080/Kantor/dodajAdministratora" method="POST">
 <p>Login: <input name="login" type="text" value="${user.login }" /></p>
 <b>${login }</b>
 <p>Hasło: <input name="haslo" type="password" value="${user.haslo }"></p>
 <b>${haslo }</b>
 <p>Powtórz hasło: <input name="haslo2" type="password" value="${haslo2wartosc }" /></p>
 <b>${haslo2 }</b>
-<p>Imię: <input name="imie" type="text" value="${operator.imie}"/></p>
+<p>Imię: <input name="imie" type="text" value="${admin.imie}"/></p>
 <b>${imie }</b>
-<p>Nazwisko: <input name="nazwisko" type="text" value="${operator.nazwisko }" /></p>
+<p>Nazwisko: <input name="nazwisko" type="text" value="${admin.nazwisko }" /></p>
 <b>${nazwisko }</b>
-<p>Pesel: <input name="pesel" type="text" value="${operator.pesel }" /></p>
+<p>Pesel: <input name="pesel" type="text" value="${admin.pesel }" /></p>
 <b>${pesel }</b>
-<p>Nr telefonu: <input name="telefon" type="text" value="${operator.telefon }" /></p>
+<p>Nr telefonu: <input name="telefon" type="text" value="${admin.telefon }" /></p>
 <b>${telefon }</b>
 <p><input type="submit" value="Dodaj" /></p>
 <b>${komunikat }</b><br/>

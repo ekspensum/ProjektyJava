@@ -34,7 +34,7 @@ public class PanelAdministratora extends HttpServlet {
 
 		switch (wybor) {
 		case "admin":
-			System.out.println("Admin");				
+			response.sendRedirect("http://localhost:8080/Kantor/dodajAdministratora");				
 			break;
 		case "klientFirmowy":
 			response.sendRedirect("http://localhost:8080/Kantor/dodajKlientaFirmowego");

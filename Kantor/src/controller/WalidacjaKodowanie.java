@@ -26,7 +26,6 @@ public class WalidacjaKodowanie {
 		Matcher mat = patt.matcher(login);
 		return mat.find();
 	}
-
     public boolean walidujHaslo(String haslo) {
         boolean hasloOK = true;
         if (haslo.length() < 6 || haslo.length() > 15)

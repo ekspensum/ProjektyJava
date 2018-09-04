@@ -31,7 +31,10 @@ public class Logowanie extends HttpServlet {
 			
 			ObslugaBD bd = new ObslugaBD();
 			WalidacjaKodowanie wk = new WalidacjaKodowanie();
-			UserZalogowany uz = bd.logowanie(request.getParameter("login"), wk.hasloZakodowane(request.getParameter("haslo")));
+			String login="";
+			if(wk.walidujLogin(request.getParameter("login")))
+					login = request.getParameter("login");
+			UserZalogowany uz = bd.logowanie(login, wk.hasloZakodowane(request.getParameter("haslo")));
 			HttpSession sesja = request.getSession();
 			sesja.setAttribute("userZalogowany", uz);
 			sesja.setMaxInactiveInterval(2000);
@@ -48,5 +51,4 @@ public class Logowanie extends HttpServlet {
 			else if(uz.getIdRola() == 4)
 				response.sendRedirect("http://localhost:8080/Kantor/panelKlientaPrywatnego");
 	}
-
 }

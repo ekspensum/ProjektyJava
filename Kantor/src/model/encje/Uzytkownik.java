@@ -6,6 +6,9 @@ public class Uzytkownik {
 	private String login;
 	private String haslo;
 	private int idRola;
+	private boolean usd;
+	private boolean eur;
+	private boolean chf;
 	
 	public int getIdUzytkownik() {
 		return idUzytkownik;
@@ -30,5 +33,23 @@ public class Uzytkownik {
 	}
 	public void setIdRola(int idRola) {
 		this.idRola = idRola;
-	}	
+	}
+	public boolean isUsd() {
+		return usd;
+	}
+	public void setUsd(boolean usd) {
+		this.usd = usd;
+	}
+	public boolean isEur() {
+		return eur;
+	}
+	public void setEur(boolean eur) {
+		this.eur = eur;
+	}
+	public boolean isChf() {
+		return chf;
+	}
+	public void setChf(boolean chf) {
+		this.chf = chf;
+	}
 }
