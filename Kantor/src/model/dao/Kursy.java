@@ -146,9 +146,12 @@ public void run() {
 	try {
 //		JSONObject obECB = getKursyECB();
 //		JSONObject obFreeApi = getKursyFreeApi();
-		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
-		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
-		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
+//		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
+		this.pln_usd = 1/3.7;
+//		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
+		this.pln_eur = 1/4.3;
+//		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
+		this.pln_chf = 1/3.67;
 //		if (obECB != null)
 //			this.eur_usd = obECB.getDouble("USD");
 		this.eur_usd = 1.2234;

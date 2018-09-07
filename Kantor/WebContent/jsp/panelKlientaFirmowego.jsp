@@ -41,5 +41,24 @@ Dostępne środki: USD${rachunkiKF.stanUSD }<br/>
 <br>
 <b>${komunikat }</b>
 </c:if>
+<br><br>
+<c:if test="${userZalogowany.eur eq true }">
+Rachunek EUR<br/>
+Nr rachunku: ${rachunkiKF.nrRachunkuEUR }<br/>
+Dostępne środki: EUR${rachunkiKF.stanEUR }<br/>
+<br/>
+<b>Wykonaj transakcję:</b>
+<br>
+<br>
+<b>EUR	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_eur * mnoznik.euroBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
+<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajEUR" size="10" /><input type="submit" value="Sprzedaj" /></form>
+<b>${komunikatSprzedajEUR }</b>
+<br>
+<b>EUR	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_eur * mnoznik.euroAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
+<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupEUR" size="10" /><input type="submit" value="Kup" /></form>
+<b>${komunikatKupEUR }</b>
+<br>
+<b>${komunikat }</b>
+</c:if>
 </body>
 </html>

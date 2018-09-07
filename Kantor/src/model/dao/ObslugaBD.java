@@ -37,6 +37,17 @@ public class ObslugaBD {
 		}
 	}
 
+	public Connection connectDB() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			return DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",	"1234");
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public Boolean dodajRekordDaneDolar(double bid, double ask, int idOperatora, String imieOperatora,
 			String nazwiskoOperatora) {
 		try {
@@ -400,12 +411,18 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
-	
+
 	public WynikiDodajUzytkownika dodajKlientaPrywatnego(Uzytkownik u, KlientPrywatny kp, RachunekPLN pln) {
-		
+
 		CallableStatement proc = null;
 		try {
 			proc = conn.prepareCall("{call dodajKlientaPrywatnego(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -444,13 +461,19 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public WynikiDodajUzytkownika dodajOperatora(Uzytkownik u, Operator o) {
-		
+
 		CallableStatement proc = null;
 		try {
 			proc = conn.prepareCall("{call dodajOperatora(?,?,?,?,?,?,?,?,?)}");
@@ -482,13 +505,19 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 		return null;
 	}
-	
+
 	public WynikiDodajUzytkownika dodajAdministratora(Uzytkownik u, Administrator a) {
-		
+
 		CallableStatement proc = null;
 		try {
 			proc = conn.prepareCall("{call dodajAdministratora(?,?,?,?,?,?,?,?,?)}");
@@ -520,78 +549,151 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
-	
+
 	public List<KlientWyszukaj> wyszukajKlientaFirmowego(String login, String nazwa, String regon, String nip) {
-		
+
 		KlientWyszukaj kw = null;
 		List<KlientWyszukaj> listaKF = new ArrayList<>();
-		String sql = "SELECT login, nazwa, regon, nip, idUzytkownik FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik WHERE login LIKE '%"+login+"%' AND nazwa LIKE '%"+nazwa+"%' AND regon LIKE '%"+regon+"%' AND nip LIKE '%"+nip+"%' LIMIT 20";
+		String sql = "SELECT login, nazwa, regon, nip, idUzytkownik, usd, eur, chf, idRachunekUSD, idRachunekEUR, idRachunekCHF FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik LEFT JOIN rachunekUSD ON idKlientFirmowy = rachunekUSD.klientFirmowy_idKlientFirmowy LEFT JOIN rachunekEUR ON idKlientFirmowy = rachunekEUR.klientFirmowy_idKlientFirmowy LEFT JOIN rachunekCHF ON idKlientFirmowy = rachunekCHF.klientFirmowy_idKlientFirmowy WHERE login LIKE '%"
+				+ login + "%' AND nazwa LIKE '%" + nazwa + "%' AND regon LIKE '%" + regon + "%' AND nip LIKE '%" + nip
+				+ "%' LIMIT 20";
 		try {
 			Statement stm = conn.createStatement();
 			ResultSet rs = stm.executeQuery(sql);
-			while(rs.next()) {
+			while (rs.next()) {
 				kw = new KlientWyszukaj();
 				kw.setLogin(rs.getString(1));
 				kw.setNazwa(rs.getString(2));
 				kw.setRegon(rs.getString(3));
 				kw.setNip(rs.getString(4));
 				kw.setIdUzytkownik(rs.getInt(5));
+				kw.setUsd(rs.getInt(6));
+				kw.setEur(rs.getInt(7));
+				kw.setChf(rs.getInt(8));
+				kw.setIdRachunekUSD(rs.getInt(9));
+				kw.setIdRachunekEUR(rs.getInt(10));
+				kw.setIdRachunekCHF(rs.getInt(11));
 				listaKF.add(kw);
-			}			
-			return listaKF;		
+			}
+			return listaKF;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		return null;		
+		} finally {
+//			try {
+//				conn.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+		}
+		return null;
 	}
-	
+
 	public List<KlientWyszukaj> wyszukajKlientaPrywatnego(String login, String nazwisko, String pesel) {
+
 		
 		KlientWyszukaj kw = null;
 		List<KlientWyszukaj> listaKP = new ArrayList<>();
-		String sql = "SELECT login, imie, nazwisko, pesel, idUzytkownik FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik WHERE login LIKE '%"+login+"%' AND nazwisko LIKE '%"+nazwisko+"%' AND pesel LIKE '%"+pesel+"%' LIMIT 20";
+		String sql = "SELECT login, imie, nazwisko, pesel, idUzytkownik, usd, eur, chf, idRachunekUSD, idRachunekEUR, idRachunekCHF FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik LEFT JOIN rachunekUSD ON idKlientPrywatny = rachunekUSD.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekEUR ON idKlientPrywatny = rachunekEUR.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekCHF ON idKlientPrywatny = rachunekCHF.klientPrywatny_idKlientPrywatny WHERE login LIKE '%"
+				+ login + "%' AND nazwisko LIKE '%" + nazwisko + "%' AND pesel LIKE '%" + pesel + "%' LIMIT 20";
 		try {
+//			// konieczne wywołanie drugiego połączenia ponieważ pierwsze jest zamykane przy wyszukiwaniu klienta firmowego
+//			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",
+//					"1234");
 			Statement stm = conn.createStatement();
 			ResultSet rs = stm.executeQuery(sql);
-			while(rs.next()) {
+			while (rs.next()) {
 				kw = new KlientWyszukaj();
 				kw.setLogin(rs.getString(1));
 				kw.setImie(rs.getString(2));
 				kw.setNazwisko(rs.getString(3));
 				kw.setPesel(rs.getString(4));
 				kw.setIdUzytkownik(rs.getInt(5));
+				kw.setUsd(rs.getInt(6));
+				kw.setEur(rs.getInt(7));
+				kw.setChf(rs.getInt(8));
+				kw.setIdRachunekUSD(rs.getInt(9));
+				kw.setIdRachunekEUR(rs.getInt(10));
+				kw.setIdRachunekCHF(rs.getInt(11));
 				listaKP.add(kw);
-			}			
-			return listaKP;		
+			}
+			return listaKP;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		return null;		
+		} finally {
+//			try {
+//				conn.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+		}
+		return null;
 	}
-	
-	public boolean ustawWaluteKlienta(String waluta, int idUzytkownika) {
+
+	public boolean czyPosiadaRachunekKF(String waluta, int idUzytkownika) {
 		
-		Statement stm;
-		try {		
-		String sql = "";
-		if(waluta.equals("usd"))
-			sql = "UPDATE uzytkownik SET usd = 1 WHERE idUzytkownik = "+idUzytkownika+"";
-		else if(waluta.equals("eur"))
-			sql = "UPDATE uzytkownik SET eur = 1 WHERE idUzytkownik = "+idUzytkownika+"";
-		else if(waluta.equals("chf"))
-			sql = "UPDATE uzytkownik SET chf = 1 WHERE idUzytkownik = "+idUzytkownika+"";
-			stm = conn.createStatement();
-			if(stm.executeUpdate(sql) > 0)
-				return true;				
+		try {
+			if(waluta != null) {
+				Statement stm = conn.createStatement();
+				ResultSet rs = stm.executeQuery("SELECT idRachunekUSD, idRachunekEUR, idRachunekCHF FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik LEFT JOIN rachunekUSD ON idKlientFirmowy = rachunekUSD.klientFirmowy_idKlientFirmowy LEFT JOIN rachunekEUR ON idKlientFirmowy = rachunekEUR.klientFirmowy_idKlientFirmowy LEFT JOIN rachunekCHF ON idKlientFirmowy = rachunekCHF.klientFirmowy_idKlientFirmowy WHERE idUzytkownik = "+idUzytkownika+"");
+				if(rs.first()) {
+					if(waluta.equals("0") && rs.getInt(1) > 0) // 0 == USD
+						return true;	
+					if(waluta.equals("1") && rs.getInt(2) > 0) // 1 == EUR
+						return true;
+					if(waluta.equals("2") && rs.getInt(3) > 0) // 2 == CHF
+						return true;		
+				}				
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+//			try {
+//				conn.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
 		}
 		return false;
 	}
+	
+	public boolean czyPosiadaRachunekKP(String waluta, int idUzytkownika) {
+		
+		try {
+			if(waluta != null) {
+				Statement stm = conn.createStatement();
+				ResultSet rs = stm.executeQuery("SELECT idRachunekUSD, idRachunekEUR, idRachunekCHF FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik LEFT JOIN rachunekUSD ON idKlientPrywatny = rachunekUSD.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekEUR ON idKlientPrywatny = rachunekEUR.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekCHF ON idKlientPrywatny = rachunekCHF.klientPrywatny_idKlientPrywatny WHERE idUzytkownik = "+idUzytkownika+"");
+				if(rs.first()) {
+					if(waluta.equals("0") && rs.getInt(1) > 0) // 0 == USD
+						return true;	
+					if(waluta.equals("1") && rs.getInt(2) > 0) // 1 == EUR
+						return true;
+					if(waluta.equals("2") && rs.getInt(3) > 0) // 2 == CHF
+						return true;		
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+//			try {
+//				conn.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+		}
+		return false;
+	}
+
 }
