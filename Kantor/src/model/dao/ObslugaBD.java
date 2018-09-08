@@ -315,6 +315,28 @@ public class ObslugaBD {
 					sr.setNrRachunkuUSD(rs.getString(3));
 				}
 			}
+			PreparedStatement queryEUR = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanEUR, idRachunekEUR, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekEUR ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyrachEUR ON idRachunekEUR = rachunekEUR_idRachunekEUR WHERE uzytkownik.idUzytkownik = ?");
+			queryEUR.setInt(1, idUzytkownia);
+			if (queryEUR.execute()) {
+				ResultSet rs = queryEUR.executeQuery();
+				if (rs.first()) {
+					sr.setStanEUR(rs.getDouble(1));
+					sr.setIdRachunkuEUR(rs.getInt(2));
+					sr.setNrRachunkuEUR(rs.getString(3));
+				}
+			}
+			PreparedStatement queryCHF = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanCHF, idRachunekCHF, nrRachunku FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekCHF ON idKlientFirmowy = klientFirmowy_idKlientFirmowy INNER JOIN zapisyrachCHF ON idRachunekCHF = rachunekCHF_idRachunekCHF WHERE uzytkownik.idUzytkownik = ?");
+			queryCHF.setInt(1, idUzytkownia);
+			if (queryCHF.execute()) {
+				ResultSet rs = queryCHF.executeQuery();
+				if (rs.first()) {
+					sr.setStanCHF(rs.getDouble(1));
+					sr.setIdRachunkuCHF(rs.getInt(2));
+					sr.setNrRachunkuCHF(rs.getString(3));
+				}
+			}
 			return sr;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -353,6 +375,28 @@ public class ObslugaBD {
 					sr.setStanUSD(rs.getDouble(1));
 					sr.setIdRachunkuUSD(rs.getInt(2));
 					sr.setNrRachunkuUSD(rs.getString(3));
+				}
+			}
+			PreparedStatement queryEUR = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanEUR, idRachunekEUR, nrRachunku, idUzytkownik FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekEUR ON idKlientPrywatny = klientPrywatny_idKlientPrywatny INNER JOIN zapisyrachEUR ON idRachunekEUR = rachunekEUR_idRachunekEUR WHERE uzytkownik.idUzytkownik = ?");
+			queryEUR.setInt(1, idUzytkownia);
+			if (queryEUR.execute()) {
+				ResultSet rs = queryEUR.executeQuery();
+				if (rs.first()) {
+					sr.setStanEUR(rs.getDouble(1));
+					sr.setIdRachunkuEUR(rs.getInt(2));
+					sr.setNrRachunkuEUR(rs.getString(3));
+				}
+			}
+			PreparedStatement queryCHF = conn.prepareStatement(
+					"SELECT SUM(kwotaWN) - SUM(kwotaMA) AS stanCHF, idRachunekCHF, nrRachunku, idUzytkownik FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekCHF ON idKlientPrywatny = klientPrywatny_idKlientPrywatny INNER JOIN zapisyrachCHF ON idRachunekCHF = rachunekCHF_idRachunekCHF WHERE uzytkownik.idUzytkownik = ?");
+			queryCHF.setInt(1, idUzytkownia);
+			if (queryCHF.execute()) {
+				ResultSet rs = queryCHF.executeQuery();
+				if (rs.first()) {
+					sr.setStanCHF(rs.getDouble(1));
+					sr.setIdRachunkuCHF(rs.getInt(2));
+					sr.setNrRachunkuCHF(rs.getString(3));
 				}
 			}
 			return sr;

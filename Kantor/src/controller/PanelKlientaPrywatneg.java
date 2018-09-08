@@ -50,18 +50,18 @@ public class PanelKlientaPrywatneg extends HttpServlet {
 
 			if ("Sprzedaj".equals(dt.getRodzaj())) {
 				if(op[dt.getIndex()].sprzedaj(dt))
-					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzeda¿y zakoñczona powodzeniem.");
+					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzedaÅ¼y zakoÅ„czona powodzeniem.");
 				else
-					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzeda¿y nie powiod³a siê.");
+					request.setAttribute("komunikatSprzedajUSD", "Transakcja sprzedaÅ¼y nie powiodÅ‚a siÄ™.");
 			}
 			else if ("Kup".equals(dt.getRodzaj())) {
 				if(op[dt.getIndex()].kup(dt))
-					request.setAttribute("komunikatKupUSD", "Transakcja kupna zakoñczona powodzeniem.");
+					request.setAttribute("komunikatKupUSD", "Transakcja kupna zakoÅ„czona powodzeniem.");
 				else
-					request.setAttribute("komunikatKupUSD", "Transakcja kupna nie powiod³a siê.");	
+					request.setAttribute("komunikatKupUSD", "Transakcja kupna nie powiodÅ‚a siÄ™.");	
 			}
 		} else 
-			request.setAttribute("komunikat", "Transakcja nie powiod³a siê.");	
+			request.setAttribute("komunikat", "Transakcja nie powiodÅ‚a siÄ™.");	
 		doGet(request, response);
 	}
 

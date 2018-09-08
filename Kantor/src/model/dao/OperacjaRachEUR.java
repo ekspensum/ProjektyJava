@@ -11,13 +11,110 @@ public class OperacjaRachEUR implements Operacja {
 
 	@Override
 	public boolean kup(DaneTransakcji dane) {
-		// TODO Auto-generated method stub
+
+		ObslugaBD bd = new ObslugaBD();
+		Connection conn = bd.connectDB();
+		try {
+
+			conn.setAutoCommit(false);
+			PreparedStatement queryEUR = conn.prepareStatement(
+					"INSERT INTO zapisyRachEUR(idOperacji, tytulOperacji, kwotaWN, kurs, dataOperacji, rachunekEUR_idRachunekEUR) VALUES(null, ?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			queryEUR.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+			queryEUR.setDouble(2, dane.getKwota());
+			queryEUR.setDouble(3, dane.getCena());
+			queryEUR.setObject(4, LocalDateTime.now());
+			queryEUR.setInt(5, dane.getIdRachunkuEUR());
+			if (queryEUR.executeUpdate() > 0) {
+				ResultSet rs = queryEUR.getGeneratedKeys();
+				rs.next();
+				PreparedStatement queryPLN = conn.prepareStatement(
+						"INSERT INTO zapisyRachPLN(tytulOperacji, kwotaMA, dataOperacji, rachunekPLN_idRachunekPLN, zapisyRachEUR_idOperacji) VALUES(?, ?, ?, ?, ?)");
+				queryPLN.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+				queryPLN.setDouble(2, dane.getKwota() * dane.getCena());
+				queryPLN.setObject(3, LocalDateTime.now());
+				queryPLN.setInt(4, dane.getIdRachunkuPLN());
+				queryPLN.setInt(5, rs.getInt(1));
+				if (queryPLN.executeUpdate() > 0) {
+					queryPLN.close();
+					queryEUR.close();
+					conn.commit();
+					return true;
+				} else {
+					queryEUR.close();
+					queryPLN.close();
+					conn.rollback();
+				}
+
+			} else {
+				queryEUR.close();
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean sprzedaj(DaneTransakcji dane) {
-		// TODO Auto-generated method stub
+
+		ObslugaBD bd = new ObslugaBD();
+		Connection conn = bd.connectDB();
+		try {
+
+			conn.setAutoCommit(false);
+			PreparedStatement queryEUR = conn.prepareStatement(
+					"INSERT INTO zapisyRachEUR(idOperacji, tytulOperacji, kwotaMA, kurs, dataOperacji, rachunekEUR_idRachunekEUR) VALUES(null, ?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			queryEUR.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+			queryEUR.setDouble(2, dane.getKwota());
+			queryEUR.setDouble(3, dane.getCena());
+			queryEUR.setObject(4, LocalDateTime.now());
+			queryEUR.setInt(5, dane.getIdRachunkuEUR());
+			if (queryEUR.executeUpdate() > 0) {
+				ResultSet rs = queryEUR.getGeneratedKeys();
+				rs.next();
+				PreparedStatement queryPLN = conn.prepareStatement(
+						"INSERT INTO zapisyRachPLN(tytulOperacji, kwotaWN, dataOperacji, rachunekPLN_idRachunekPLN, zapisyRachEUR_idOperacji) VALUES(?, ?, ?, ?, ?)");
+				queryPLN.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+				queryPLN.setDouble(2, dane.getKwota() * dane.getCena());
+				queryPLN.setObject(3, LocalDateTime.now());
+				queryPLN.setInt(4, dane.getIdRachunkuPLN());
+				queryPLN.setInt(5, rs.getInt(1));
+				if (queryPLN.executeUpdate() > 0) {
+					queryPLN.close();
+					queryEUR.close();
+					conn.commit();
+					return true;
+				} else {
+					queryEUR.close();
+					queryPLN.close();
+					conn.rollback();
+				} 
+			} else {
+				queryEUR.close();
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 

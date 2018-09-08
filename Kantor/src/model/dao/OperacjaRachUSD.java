@@ -36,6 +36,8 @@ public class OperacjaRachUSD implements Operacja {
 				queryPLN.setInt(4, dane.getIdRachunkuPLN());
 				queryPLN.setInt(5, rs.getInt(1));
 				if (queryPLN.executeUpdate() > 0) {
+					queryPLN.close();
+					queryUSD.close();
 					conn.commit();
 					return true;
 				} else {
@@ -91,8 +93,15 @@ public class OperacjaRachUSD implements Operacja {
 					queryPLN.close();
 					queryUSD.close();
 					conn.commit();
-				}
-				return true;
+					return true;
+				} else {
+					queryUSD.close();
+					queryPLN.close();
+					conn.rollback();
+				} 
+			} else {
+				queryUSD.close();
+				conn.rollback();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -145,11 +154,26 @@ public class OperacjaRachUSD implements Operacja {
 										+ "";
 								stm = conn.createStatement();
 								if (stm.executeUpdate(sqlUp) > 0) {
+									query.close();
+									aktywacja.close();
 									conn.commit();
 									return true;
+								} else {
+									query.close();
+									aktywacja.close();
+									conn.rollback();
 								}
+							} else {
+								query.close();
+								aktywacja.close();
+								conn.rollback();
 							}
+						} else {
+							query.close();
+							conn.rollback();
 						}
+					} else {
+						conn.rollback();
 					}
 
 				} else if (srRola.getInt(1) == 4) {
@@ -179,10 +203,25 @@ public class OperacjaRachUSD implements Operacja {
 								stm = conn.createStatement();
 								if (stm.executeUpdate(sqlUp) > 0) {
 									conn.commit();
+									query.close();
+									aktywacja.close();
 									return true;
+								} else {
+									query.close();
+									aktywacja.close();
+									conn.rollback();
 								}
+							} else {
+								query.close();
+								aktywacja.close();
+								conn.rollback();
 							}
+						} else {
+							query.close();
+							conn.rollback();
 						}
+					} else {
+						conn.rollback();
 					}
 				}
 			}

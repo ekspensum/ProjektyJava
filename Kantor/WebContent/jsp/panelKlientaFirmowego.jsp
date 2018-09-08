@@ -60,5 +60,24 @@ Dostępne środki: EUR${rachunkiKF.stanEUR }<br/>
 <br>
 <b>${komunikat }</b>
 </c:if>
+<br><br>
+<c:if test="${userZalogowany.chf eq true }">
+Rachunek CHF<br/>
+Nr rachunku: ${rachunkiKF.nrRachunkuCHF }<br/>
+Dostępne środki: CHF${rachunkiKF.stanCHF }<br/>
+<br/>
+<b>Wykonaj transakcję:</b>
+<br>
+<br>
+<b>CHF	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
+<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajCHF" size="10" /><input type="submit" value="Sprzedaj" /></form>
+<b>${komunikatSprzedajCHF }</b>
+<br>
+<b>CHF	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
+<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupCHF" size="10" /><input type="submit" value="Kup" /></form>
+<b>${komunikatKupCHF }</b>
+<br>
+<b>${komunikat }</b>
+</c:if>
 </body>
 </html>

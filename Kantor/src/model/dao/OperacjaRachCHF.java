@@ -11,13 +11,110 @@ public class OperacjaRachCHF implements Operacja {
 
 	@Override
 	public boolean kup(DaneTransakcji dane) {
-		// TODO Auto-generated method stub
+
+		ObslugaBD bd = new ObslugaBD();
+		Connection conn = bd.connectDB();
+		try {
+
+			conn.setAutoCommit(false);
+			PreparedStatement queryCHF = conn.prepareStatement(
+					"INSERT INTO zapisyRachCHF(idOperacji, tytulOperacji, kwotaWN, kurs, dataOperacji, rachunekCHF_idRachunekCHF) VALUES(null, ?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			queryCHF.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+			queryCHF.setDouble(2, dane.getKwota());
+			queryCHF.setDouble(3, dane.getCena());
+			queryCHF.setObject(4, LocalDateTime.now());
+			queryCHF.setInt(5, dane.getIdRachunkuCHF());
+			if (queryCHF.executeUpdate() > 0) {
+				ResultSet rs = queryCHF.getGeneratedKeys();
+				rs.next();
+				PreparedStatement queryPLN = conn.prepareStatement(
+						"INSERT INTO zapisyRachPLN(tytulOperacji, kwotaMA, dataOperacji, rachunekPLN_idRachunekPLN, zapisyRachCHF_idOperacji) VALUES(?, ?, ?, ?, ?)");
+				queryPLN.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+				queryPLN.setDouble(2, dane.getKwota() * dane.getCena());
+				queryPLN.setObject(3, LocalDateTime.now());
+				queryPLN.setInt(4, dane.getIdRachunkuPLN());
+				queryPLN.setInt(5, rs.getInt(1));
+				if (queryPLN.executeUpdate() > 0) {
+					queryPLN.close();
+					queryCHF.close();
+					conn.commit();
+					return true;
+				} else {
+					queryCHF.close();
+					queryPLN.close();
+					conn.rollback();
+				}
+
+			} else {
+				queryCHF.close();
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean sprzedaj(DaneTransakcji dane) {
-		// TODO Auto-generated method stub
+
+		ObslugaBD bd = new ObslugaBD();
+		Connection conn = bd.connectDB();
+		try {
+
+			conn.setAutoCommit(false);
+			PreparedStatement queryCHF = conn.prepareStatement(
+					"INSERT INTO zapisyRachCHF(idOperacji, tytulOperacji, kwotaMA, kurs, dataOperacji, rachunekCHF_idRachunekCHF) VALUES(null, ?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			queryCHF.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+			queryCHF.setDouble(2, dane.getKwota());
+			queryCHF.setDouble(3, dane.getCena());
+			queryCHF.setObject(4, LocalDateTime.now());
+			queryCHF.setInt(5, dane.getIdRachunkuCHF());
+			if (queryCHF.executeUpdate() > 0) {
+				ResultSet rs = queryCHF.getGeneratedKeys();
+				rs.next();
+				PreparedStatement queryPLN = conn.prepareStatement(
+						"INSERT INTO zapisyRachPLN(tytulOperacji, kwotaWN, dataOperacji, rachunekPLN_idRachunekPLN, zapisyRachCHF_idOperacji) VALUES(?, ?, ?, ?, ?)");
+				queryPLN.setString(1, dane.getRodzaj() + " " + dane.getZnak());
+				queryPLN.setDouble(2, dane.getKwota() * dane.getCena());
+				queryPLN.setObject(3, LocalDateTime.now());
+				queryPLN.setInt(4, dane.getIdRachunkuPLN());
+				queryPLN.setInt(5, rs.getInt(1));
+				if (queryPLN.executeUpdate() > 0) {
+					queryPLN.close();
+					queryCHF.close();
+					conn.commit();
+					return true;
+				} else {
+					queryCHF.close();
+					queryPLN.close();
+					conn.rollback();
+				} 
+			} else {
+				queryCHF.close();
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 
