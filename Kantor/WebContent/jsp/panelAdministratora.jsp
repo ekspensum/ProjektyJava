@@ -38,7 +38,7 @@
 <input type="submit" value="Wybierz" />
 <br/>
 <br/>
-<a href="http://localhost:8080/Kantor/dodajRachunek">Dodaj/usuń rachunek walutowy klienta</a>
+<a href="http://localhost:8080/Kantor/dodajRachunek">Dodaj/aktywuj/deaktywuj rachunek walutowy klienta</a>
 </form>
 </body>
 </html>

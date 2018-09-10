@@ -18,6 +18,8 @@
 Zalogowany: ${userZalogowany.nazwaFirmy }
 <jsp:include page="index.jsp"></jsp:include>
 <br>
+<a href="http://localhost:8080/Kantor/statystykaKF">Statystyka wykonanych transakcji</a>
+<br><br>
 <b>Stan posiadanych rachunków:</b><br/>
 Rachunek PLN<br/>
 Nr rachunku: ${rachunkiKF.nrRachunkuPLN }<br/>

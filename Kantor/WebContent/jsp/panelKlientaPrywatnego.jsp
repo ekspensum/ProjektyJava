@@ -16,6 +16,8 @@
 <p>Zalogowany: ${userZalogowany.imieKlienta } ${userZalogowany.nazwiskoKlienta }</p>
 <jsp:include page="index.jsp"></jsp:include>
 <br>
+<a href="http://localhost:8080/Kantor/statystykaKP">Statystyka wykonanych transakcji</a>
+<br><br>
 <b>Stan posiadanych rachunków:</b><br/>
 Rachunek PLN<br/>
 Nr rachunku: ${rachunkiKP.nrRachunkuPLN }<br/>
@@ -69,7 +71,7 @@ Dostępne środki: CHF${rachunkiKP.stanCHF }<br/>
 <br>
 <b>CHF	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
 <form action="http://localhost:8080/Kantor/transakcjaKP" method="POST">	Kwota: <input type="text" name="sprzedajCHF" size="10" /><input type="submit" value="Sprzedaj" /></form>
-<b>${komunikatSprzedajUSD }</b>
+<b>${komunikatSprzedajCHF }</b>
 <br>
 <b>CHF	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
 <form action="http://localhost:8080/Kantor/transakcjaKP" method="POST">	Kwota: <input type="text" name="kupCHF" size="10" /><input type="submit" value="Kup" /></form>

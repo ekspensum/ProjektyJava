@@ -45,19 +45,20 @@ public class TransakcjaKF extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
+		Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
+		KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
+		DaneTransakcji dt = new DaneTransakcji();
+		ServletContext sc = request.getServletContext();
+		StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
+		
 		if (request.getParameter("sprzedajUSD") != "" && request.getParameter("sprzedajUSD") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
 
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_usd() * kdw.getDolarBid();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(0);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("USD");
@@ -74,18 +75,11 @@ public class TransakcjaKF extends HttpServlet {
 				request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 			}
 		} else if (request.getParameter("kupUSD") != "" && request.getParameter("kupUSD") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_usd() * kdw.getDolarAsk();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(0);
 			dt.setRodzaj("Kup");
 			dt.setZnak("USD");
@@ -102,18 +96,11 @@ public class TransakcjaKF extends HttpServlet {
 				request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 			}
 		} else if (request.getParameter("sprzedajEUR") != "" && request.getParameter("sprzedajEUR") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_eur() * kdw.getEuroBid();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(1);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("EUR");
@@ -130,18 +117,11 @@ public class TransakcjaKF extends HttpServlet {
 				request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 			}
 		} else if (request.getParameter("kupEUR") != "" && request.getParameter("kupEUR") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_eur() * kdw.getEuroAsk();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(1);
 			dt.setRodzaj("Kup");
 			dt.setZnak("EUR");
@@ -158,18 +138,11 @@ public class TransakcjaKF extends HttpServlet {
 				request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 			}
 		} else if (request.getParameter("sprzedajCHF") != "" && request.getParameter("sprzedajCHF") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_chf() * kdw.getFrankBid();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(2);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("CHF");
@@ -186,18 +159,11 @@ public class TransakcjaKF extends HttpServlet {
 				request.getRequestDispatcher("jsp/panelKlientaFirmowego.jsp").forward(request, response);
 			}
 		} else if (request.getParameter("kupCHF") != "" && request.getParameter("kupCHF") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_chf() * kdw.getFrankAsk();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKF");
 			dt.setIndex(2);
 			dt.setRodzaj("Kup");
 			dt.setZnak("CHF");

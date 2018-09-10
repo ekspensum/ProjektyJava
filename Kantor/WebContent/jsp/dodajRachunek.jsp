@@ -58,7 +58,7 @@ Wyszukaj klienta firmowego:
 <br><br>
 Wprowadz numer rchunku banowego: <input type="text" name="rachunekKF" />
 <br><br>
-<input type="submit" value="Wybierz zaznaczone">
+<input type="submit" value="Wykonaj wybraną opcję">
 </form>
 <br/>
 Wyszukaj klienta prywatnego:
@@ -93,7 +93,7 @@ Wyszukaj klienta prywatnego:
 <br><br>
 Wprowadz numer rchunku banowego: <input type="text" name="rachunekKP" />
 <br><br> 
-<input type="submit" value="Wybierz zaznaczone">
+<input type="submit" value="Wykonaj wybraną opcję">
 </form>
 <br/>
 <b>${komunikat }</b><br/>

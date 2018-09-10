@@ -30,7 +30,6 @@ public class ObslugaBD {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",
 					"1234");
-
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 
 			e.printStackTrace();
@@ -632,13 +631,7 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-//			try {
-//				conn.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-		}
+		} 
 		return null;
 	}
 
@@ -650,9 +643,6 @@ public class ObslugaBD {
 		String sql = "SELECT login, imie, nazwisko, pesel, idUzytkownik, usd, eur, chf, idRachunekUSD, idRachunekEUR, idRachunekCHF FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik LEFT JOIN rachunekUSD ON idKlientPrywatny = rachunekUSD.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekEUR ON idKlientPrywatny = rachunekEUR.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekCHF ON idKlientPrywatny = rachunekCHF.klientPrywatny_idKlientPrywatny WHERE login LIKE '%"
 				+ login + "%' AND nazwisko LIKE '%" + nazwisko + "%' AND pesel LIKE '%" + pesel + "%' LIMIT 20";
 		try {
-//			// konieczne wywołanie drugiego połączenia ponieważ pierwsze jest zamykane przy wyszukiwaniu klienta firmowego
-//			conn = DriverManager.getConnection("jdbc:mysql://localhost/kantor?serverTimezone=Europe/Warsaw", "andrzej",
-//					"1234");
 			Statement stm = conn.createStatement();
 			ResultSet rs = stm.executeQuery(sql);
 			while (rs.next()) {
@@ -674,13 +664,7 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-//			try {
-//				conn.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-		}
+		} 
 		return null;
 	}
 
@@ -702,13 +686,7 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-//			try {
-//				conn.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-		}
+		} 
 		return false;
 	}
 	
@@ -730,14 +708,99 @@ public class ObslugaBD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-//			try {
-//				conn.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
 		}
 		return false;
 	}
+	
+	public List<Statystyka> wyszukajTransakcjeKF(int idUzytkownika, String dataOd, String doataDo, String waluta) {
+		
+		Statystyka stat = null;
+		List<Statystyka> listaStat = new ArrayList<>();
+		String sqlStat = "SELECT idUzytkownik, rachunekPLN.nrRachunku, zapisyRachPLN.tytulOperacji, zapisyRachPLN.kwotaWN, zapisyRachPLN.kwotaMA, zapisyRachPLN.dataOperacji, rachunekUSD.nrRachunku, zapisyRachUSD.kwotaWN, zapisyRachUSD.kwotaMA, zapisyRachUSD.kurs, rachunekEUR.nrRachunku, zapisyRachEUR.kwotaWN, zapisyRachEUR.kwotaMA, zapisyRachEUR.kurs, rachunekCHF.nrRachunku, zapisyRachCHF.kwotaWN, zapisyRachCHF.kwotaMA, zapisyRachCHF.kurs FROM uzytkownik INNER JOIN klientFirmowy ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekPLN ON idKlientFirmowy = rachunekPLN.klientFirmowy_idKlientFirmowy INNER JOIN zapisyRachPLN ON idRachunekPLN = rachunekPLN_idRachunekPLN LEFT JOIN rachunekUSD ON idKlientFirmowy = rachunekUSD.klientFirmowy_idKlientFirmowy LEFT JOIN rachunekEUR ON idKlientFirmowy = rachunekEUR.klientFirmowy_idKlientFirmowy  LEFT JOIN rachunekCHF ON idKlientFirmowy = rachunekCHF.klientFirmowy_idKlientFirmowy LEFT JOIN zapisyRachUSD ON zapisyRachUSD_idOperacji = zapisyRachUSD.idOperacji LEFT JOIN zapisyRachEUR ON zapisyRachEUR_idOperacji = zapisyRachEUR.idOperacji LEFT JOIN zapisyRachCHF ON zapisyRachCHF_idOperacji = zapisyRachCHF.idOperacji WHERE idUzytkownik = "+idUzytkownika+" AND zapisyRachPLN.dataOperacji >= '"+dataOd+"' AND zapisyRachPLN.dataOperacji <= '"+doataDo+" 24:00:00"+"' "+(waluta.equals("wszystkie") ? "" : "AND zapisyRachPLN.tytulOperacji LIKE '%"+waluta+"'")+" ORDER BY dataOperacji DESC";
+		try {
+			Statement stm = conn.createStatement();
+			ResultSet rs = stm.executeQuery(sqlStat);
 
+			while(rs.next()) {
+				stat = new Statystyka();
+				stat.setIdUzytkownika(rs.getInt(1));
+				stat.setNrRachunkuPLN(rs.getString(2));
+				stat.setTytulOperacji(rs.getString(3));
+				stat.setKwotaWN_PLN(rs.getDouble(4));
+				stat.setKwotaMA_PLN(rs.getDouble(5));
+				stat.setDataOperacji(rs.getObject(6, LocalDateTime.class));
+				stat.setNrRachunkuUSD(rs.getString(7));
+				stat.setKwotaWN_USD(rs.getDouble(8));
+				stat.setKwotaMA_USD(rs.getDouble(9));
+				stat.setKursUSD(rs.getDouble(10));
+				stat.setNrRachunkuEUR(rs.getString(11));
+				stat.setKwotaWN_EUR(rs.getDouble(12));
+				stat.setKwotaMA_EUR(rs.getDouble(13));
+				stat.setKursEUR(rs.getDouble(14));
+				stat.setNrRachunkuCHF(rs.getString(15));
+				stat.setKwotaWN_CHF(rs.getDouble(16));
+				stat.setKwotaMA_CHF(rs.getDouble(17));
+				stat.setKursCHF(rs.getDouble(18));
+				listaStat.add(stat);
+			}
+			return listaStat;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+			
+		return null;
+	}
+	
+	public List<Statystyka> wyszukajTransakcjeKP(int idUzytkownika, String dataOd, String doataDo, String waluta) {
+		
+		Statystyka stat = null;
+		List<Statystyka> listaStat = new ArrayList<>();
+		String sqlStat = "SELECT idUzytkownik, rachunekPLN.nrRachunku, zapisyRachPLN.tytulOperacji, zapisyRachPLN.kwotaWN, zapisyRachPLN.kwotaMA, zapisyRachPLN.dataOperacji, rachunekUSD.nrRachunku, zapisyRachUSD.kwotaWN, zapisyRachUSD.kwotaMA, zapisyRachUSD.kurs, rachunekEUR.nrRachunku, zapisyRachEUR.kwotaWN, zapisyRachEUR.kwotaMA, zapisyRachEUR.kurs, rachunekCHF.nrRachunku, zapisyRachCHF.kwotaWN, zapisyRachCHF.kwotaMA, zapisyRachCHF.kurs FROM uzytkownik INNER JOIN klientPrywatny ON idUzytkownik = uzytkownik_idUzytkownik INNER JOIN rachunekPLN ON idKlientPrywatny = rachunekPLN.klientPrywatny_idKlientPrywatny INNER JOIN zapisyRachPLN ON idRachunekPLN = rachunekPLN_idRachunekPLN LEFT JOIN rachunekUSD ON idKlientPrywatny = rachunekUSD.klientPrywatny_idKlientPrywatny LEFT JOIN rachunekEUR ON idKlientPrywatny = rachunekEUR.klientPrywatny_idKlientPrywatny  LEFT JOIN rachunekCHF ON idKlientPrywatny = rachunekCHF.klientPrywatny_idKlientPrywatny LEFT JOIN zapisyRachUSD ON zapisyRachUSD_idOperacji = zapisyRachUSD.idOperacji LEFT JOIN zapisyRachEUR ON zapisyRachEUR_idOperacji = zapisyRachEUR.idOperacji LEFT JOIN zapisyRachCHF ON zapisyRachCHF_idOperacji = zapisyRachCHF.idOperacji WHERE idUzytkownik = "+idUzytkownika+" AND zapisyRachPLN.dataOperacji >= '"+dataOd+"' AND zapisyRachPLN.dataOperacji <= '"+doataDo+" 24:00:00"+"' "+(waluta.equals("wszystkie") ? "" : "AND zapisyRachPLN.tytulOperacji LIKE '%"+waluta+"'")+" ORDER BY dataOperacji DESC";
+		try {
+			Statement stm = conn.createStatement();
+			ResultSet rs = stm.executeQuery(sqlStat);
+
+			while(rs.next()) {
+				stat = new Statystyka();
+				stat.setIdUzytkownika(rs.getInt(1));
+				stat.setNrRachunkuPLN(rs.getString(2));
+				stat.setTytulOperacji(rs.getString(3));
+				stat.setKwotaWN_PLN(rs.getDouble(4));
+				stat.setKwotaMA_PLN(rs.getDouble(5));
+				stat.setDataOperacji(rs.getObject(6, LocalDateTime.class));
+				stat.setNrRachunkuUSD(rs.getString(7));
+				stat.setKwotaWN_USD(rs.getDouble(8));
+				stat.setKwotaMA_USD(rs.getDouble(9));
+				stat.setKursUSD(rs.getDouble(10));
+				stat.setNrRachunkuEUR(rs.getString(11));
+				stat.setKwotaWN_EUR(rs.getDouble(12));
+				stat.setKwotaMA_EUR(rs.getDouble(13));
+				stat.setKursEUR(rs.getDouble(14));
+				stat.setNrRachunkuCHF(rs.getString(15));
+				stat.setKwotaWN_CHF(rs.getDouble(16));
+				stat.setKwotaMA_CHF(rs.getDouble(17));
+				stat.setKursCHF(rs.getDouble(18));
+				listaStat.add(stat);
+			}
+			return listaStat;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+			
+		return null;
+	}
 }

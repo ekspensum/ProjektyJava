@@ -10,6 +10,7 @@
 <title>Transakcja</title>
 </head>
 <body bgcolor="gray">
+<a href="http://localhost:8080/Kantor/panelKlientaPrywatnego">Powrót</a>
 <p>Zalogowany: ${userZalogowany.imieKlienta } ${userZalogowany.nazwiskoKlienta }</p>
 <br>
 <b>Stan posiadanych rachunków:</b>
@@ -17,9 +18,23 @@
 <p>Nr rachunku: ${rachunkiKP.nrRachunkuPLN }</p>
 <p>Dostępne środki: PLN${rachunkiKP.stanPLN }</p>
 <br>
+<c:if test="${userZalogowany.usd eq true }">
 <p>Rachunek USD</p>
 <p>Nr rachunku: ${rachunkiKP.nrRachunkuUSD }</p>
 <p>Dostępne środki: USD${rachunkiKP.stanUSD }</p>
+</c:if>
+<br>
+<c:if test="${userZalogowany.eur eq true }">
+<p>Rachunek EUR</p>
+<p>Nr rachunku: ${rachunkiKP.nrRachunkuEUR }</p>
+<p>Dostępne środki: EUR${rachunkiKP.stanEUR }</p>
+</c:if>
+<br>
+<c:if test="${userZalogowany.chf eq true }">
+<p>Rachunek CHF</p>
+<p>Nr rachunku: ${rachunkiKP.nrRachunkuCHF }</p>
+<p>Dostępne środki: CHF${rachunkiKP.stanCHF }</p>
+</c:if>
 <br>
 <br>
 <form method="POST" action="http://localhost:8080/Kantor/panelKlientaPrywatnego" >

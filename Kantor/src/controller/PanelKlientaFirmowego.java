@@ -12,10 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.dao.DaneTransakcji;
 import model.dao.ObslugaBD;
-import model.dao.Operacja;
-import model.dao.OperacjaRachCHF;
-import model.dao.OperacjaRachEUR;
-import model.dao.OperacjaRachUSD;
 import model.dao.StanyRachunkow;
 import model.dao.UserZalogowany;
 
@@ -42,62 +38,9 @@ public class PanelKlientaFirmowego extends HttpServlet {
 			throws ServletException, IOException {
 
 		DaneTransakcji dt = (DaneTransakcji) request.getServletContext().getAttribute("transakcjaKF");
-		if (dt != null) {
-			Operacja[] op = new Operacja[3];
-			op[0] = new OperacjaRachUSD();
-			op[1] = new OperacjaRachEUR();
-			op[2] = new OperacjaRachCHF();
-
-			if ("Sprzedaj".equals(dt.getRodzaj()) && dt.getZnak().equals("USD")) {
-				if (op[dt.getIndex()].sprzedaj(dt))
-					request.setAttribute("komunikatSprzedajUSD",
-							"Transakcja sprzedaży waluty " + dt.getZnak() + " zakończona powodzeniem.");
-				else
-					request.setAttribute("komunikatSprzedajUSD",
-							"Transakcja sprzedaży waluty " + dt.getZnak() + " nie powiodła się.");
-
-			} else if ("Kup".equals(dt.getRodzaj()) && dt.getZnak().equals("USD")) {
-				if (op[dt.getIndex()].kup(dt))
-					request.setAttribute("komunikatKupUSD",
-							"Transakcja kupna waluty " + dt.getZnak() + " zakończona powodzeniem.");
-				else
-					request.setAttribute("komunikatKupUSD",
-							"Transakcja kupna waluty " + dt.getZnak() + " nie powiodła się.");
-			} else if ("Sprzedaj".equals(dt.getRodzaj()) && dt.getZnak().equals("EUR")) {
-				if (op[dt.getIndex()].sprzedaj(dt))
-					request.setAttribute("komunikatSprzedajEUR",
-							"Transakcja sprzedaży waluty " + dt.getZnak() + " zakończona powodzeniem.");
-				else
-					request.setAttribute("komunikatSprzedajEUR",
-							"Transakcja sprzedaży waluty " + dt.getZnak() + " nie powiodła się.");
-
-			} else if ("Kup".equals(dt.getRodzaj()) && dt.getZnak().equals("EUR")) {
-				if (op[dt.getIndex()].kup(dt))
-					request.setAttribute("komunikatKupEUR",
-							"Transakcja kupna waluty " + dt.getZnak() + " zakończona powodzeniem.");
-				else
-					request.setAttribute("komunikatKupEUR",
-							"Transakcja kupna waluty " + dt.getZnak() + " nie powiodła się.");
-			} else if ("Sprzedaj".equals(dt.getRodzaj()) && dt.getZnak().equals("CHF")) {
-				if (op[dt.getIndex()].sprzedaj(dt))
-					request.setAttribute("komunikatSprzedajCHF",
-							"Transakcja sprzedaży waluty " + dt.getZnak() + " zakończona powodzeniem.");
-				else
-					request.setAttribute("komunikatSprzedajCHF",
-							"Transakcja sprzedaży waluty " + dt.getZnak() + " nie powiodła się.");
-
-			} else if ("Kup".equals(dt.getRodzaj()) && dt.getZnak().equals("CHF")) {
-				if (op[dt.getIndex()].kup(dt))
-					request.setAttribute("komunikatKupCHF",
-							"Transakcja kupna waluty " + dt.getZnak() + " zakończona powodzeniem.");
-				else
-					request.setAttribute("komunikatKupCHF",
-							"Transakcja kupna waluty " + dt.getZnak() + " nie powiodła się.");
-			} else
-				request.setAttribute("komunikat", "Transakcja nie powiodła się.");
-
-		} else
-			request.setAttribute("komunikat", "Transakcja nie powiodła się.");
+		
+		dt.wykonajTransakcje(dt, request, response);
+		
 		doGet(request, response);
 	}
 }

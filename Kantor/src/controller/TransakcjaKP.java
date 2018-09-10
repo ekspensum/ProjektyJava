@@ -35,20 +35,20 @@ public class TransakcjaKP extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		if (request.getParameter("sprzedajUSD") != null) {
+		UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
+		Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
+		KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
+		DaneTransakcji dt = new DaneTransakcji();
+		ServletContext sc = request.getServletContext();
+		StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKP");
+		
+		if (request.getParameter("sprzedajUSD") != "" && request.getParameter("sprzedajUSD") != null) {
 
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
 			double cena = 1 / kurs.getPln_usd() * kdw.getDolarBid();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKP");
 			dt.setIndex(0);
 			dt.setRodzaj("Sprzedaj");
 			dt.setZnak("USD");
@@ -57,20 +57,19 @@ public class TransakcjaKP extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
 			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
-			sc.setAttribute("transakcjaKP", dt);
-		} else if (request.getParameter("kupUSD") != null) {
-			UserZalogowany uz = (UserZalogowany) request.getSession().getAttribute("userZalogowany");
-
-			Kursy kurs = (Kursy) request.getServletContext().getAttribute("kurs");
-			KoszykDaneWalut kdw = (KoszykDaneWalut) request.getServletContext().getAttribute("mnoznik");
+			if (dt.getKwota() <= sr.getStanUSD()) {
+				sc.setAttribute("transakcjaKP", dt);
+				doGet(request, response);
+			} else {
+				request.setAttribute("komunikatSprzedajUSD", "Nie masz wystarczających środków do tej trnsakcji.");
+				request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
+			}
+		} else if (request.getParameter("kupUSD") != "" && request.getParameter("kupUSD") != null) {
 			double cena = 1 / kurs.getPln_usd() * kdw.getDolarAsk();
 			cena *= 10000;
 			cena = (double) Math.round(cena);
 			cena /= 10000;
 
-			DaneTransakcji dt = new DaneTransakcji();
-			ServletContext sc = request.getServletContext();
-			StanyRachunkow sr = (StanyRachunkow) sc.getAttribute("rachunkiKP");
 			dt.setIndex(0);
 			dt.setRodzaj("Kup");
 			dt.setZnak("USD");
@@ -79,10 +78,103 @@ public class TransakcjaKP extends HttpServlet {
 			dt.setIdUzytkownika(uz.getIdUzytkownik());
 			dt.setIdRachunkuUSD(sr.getIdRachunkuUSD());
 			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
-			sc.setAttribute("transakcjaKP", dt);
+			if (dt.getKwota() * dt.getCena() <= sr.getStanPLN()) {
+				sc.setAttribute("transakcjaKP", dt);
+				doGet(request, response);
+			} else {
+				request.setAttribute("komunikatKupUSD", "Nie masz wystarczających środków do tej trnsakcji.");
+				request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
+			}
+		} else if (request.getParameter("sprzedajEUR") != "" && request.getParameter("sprzedajEUR") != null) {
+			double cena = 1 / kurs.getPln_eur() * kdw.getEuroBid();
+			cena *= 10000;
+			cena = (double) Math.round(cena);
+			cena /= 10000;
+
+			dt.setIndex(1);
+			dt.setRodzaj("Sprzedaj");
+			dt.setZnak("EUR");
+			dt.setCena(cena);
+			dt.setKwota(Double.valueOf(request.getParameter("sprzedajEUR")));
+			dt.setIdUzytkownika(uz.getIdUzytkownik());
+			dt.setIdRachunkuEUR(sr.getIdRachunkuEUR());
+			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
+			if (dt.getKwota() <= sr.getStanEUR()) {
+				sc.setAttribute("transakcjaKP", dt);
+				doGet(request, response);
+			} else {
+				request.setAttribute("komunikatSprzedajEUR", "Nie masz wystarczających środków do tej trnsakcji.");
+				request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
+			}
+		} else if (request.getParameter("kupEUR") != "" && request.getParameter("kupEUR") != null) {
+			double cena = 1 / kurs.getPln_eur() * kdw.getEuroAsk();
+			cena *= 10000;
+			cena = (double) Math.round(cena);
+			cena /= 10000;
+
+			dt.setIndex(1);
+			dt.setRodzaj("Kup");
+			dt.setZnak("EUR");
+			dt.setCena(cena);
+			dt.setKwota(Double.valueOf(request.getParameter("kupEUR")));
+			dt.setIdUzytkownika(uz.getIdUzytkownik());
+			dt.setIdRachunkuEUR(sr.getIdRachunkuEUR());
+			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
+			if (dt.getKwota() * dt.getCena() <= sr.getStanPLN()) {
+				sc.setAttribute("transakcjaKP", dt);
+				doGet(request, response);
+			} else {
+				request.setAttribute("komunikatKupEUR", "Nie masz wystarczających środków do tej trnsakcji.");
+				request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
+			}
+		} else if (request.getParameter("sprzedajCHF") != "" && request.getParameter("sprzedajCHF") != null) {
+			double cena = 1 / kurs.getPln_chf() * kdw.getFrankBid();
+			cena *= 10000;
+			cena = (double) Math.round(cena);
+			cena /= 10000;
+
+			dt.setIndex(2);
+			dt.setRodzaj("Sprzedaj");
+			dt.setZnak("CHF");
+			dt.setCena(cena);
+			dt.setKwota(Double.valueOf(request.getParameter("sprzedajCHF")));
+			dt.setIdUzytkownika(uz.getIdUzytkownik());
+			dt.setIdRachunkuCHF(sr.getIdRachunkuCHF());
+			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
+			if (dt.getKwota() <= sr.getStanCHF()) {
+				sc.setAttribute("transakcjaKP", dt);
+				doGet(request, response);
+			} else {
+				request.setAttribute("komunikatSprzedajCHF", "Nie masz wystarczających środków do tej trnsakcji.");
+				request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
+			}
+		} else if (request.getParameter("kupCHF") != "" && request.getParameter("kupCHF") != null) {
+			double cena = 1 / kurs.getPln_chf() * kdw.getFrankAsk();
+			cena *= 10000;
+			cena = (double) Math.round(cena);
+			cena /= 10000;
+
+			dt.setIndex(2);
+			dt.setRodzaj("Kup");
+			dt.setZnak("CHF");
+			dt.setCena(cena);
+			dt.setKwota(Double.valueOf(request.getParameter("kupCHF")));
+			dt.setIdUzytkownika(uz.getIdUzytkownik());
+			dt.setIdRachunkuCHF(sr.getIdRachunkuCHF());
+			dt.setIdRachunkuPLN(sr.getIdRachunkuPLN());
+			if (dt.getKwota() * dt.getCena() <= sr.getStanPLN()) {
+				sc.setAttribute("transakcjaKP", dt);
+				doGet(request, response);
+			} else {
+				request.setAttribute("komunikatKupCHF", "Nie masz wystarczających środków do tej trnsakcji.");
+				request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
+			}
+		} else {
+			request.setAttribute("komunikat", "Transakcja nie powiodła się.");
+			request.getRequestDispatcher("jsp/panelKlientaPrywatnego.jsp").forward(request, response);
 		}
 		
-		doGet(request, response);
+//		doGet(request, response);
 	}
 
 }
