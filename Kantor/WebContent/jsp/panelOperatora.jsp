@@ -8,14 +8,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Panel Operatora</title>
-<style>
-table, th, td {
-    border: 1px solid black;
-}
-</style>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
-<body bgcolor="gray">
-<a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
+<body>
+<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <p>Panel Administratora</p>
 <p>Zalogowany: ${userZalogowany.imieOperatora } ${userZalogowany.nazwiskoOperatora }</p>

@@ -8,8 +8,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Kantor walutowy</title>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
-<body bgcolor="gray">
+<body>
 <p>Witamy w kantorze walutowym</p>
 <p>Aktualne kursy walut:</p>
 

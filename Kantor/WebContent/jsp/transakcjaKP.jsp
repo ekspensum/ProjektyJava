@@ -8,8 +8,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Transakcja</title>
+<script type="text/javascript" src="skrypt.js"></script>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
-<body bgcolor="gray">
+<body bgcolor="gray" onload="odliczKP();">
 <a href="http://localhost:8080/Kantor/panelKlientaPrywatnego">Powrót</a>
 <p>Zalogowany: ${userZalogowany.imieKlienta } ${userZalogowany.nazwiskoKlienta }</p>
 <br>
@@ -36,7 +38,8 @@
 <p>Dostępne środki: CHF${rachunkiKP.stanCHF }</p>
 </c:if>
 <br>
-<br>
+<b>Pozostały czas do pojęcia decyzji: </b><b id="zegarKP"></b><b> sekund.</b>
+<br><br>
 <form method="POST" action="http://localhost:8080/Kantor/panelKlientaPrywatnego" >
 <b>${transakcjaKP.rodzaj }:</b>	<input type="text" name="kwota" value="${transakcjaKP.kwota }" disabled="disabled"/> <b>${transakcjaKP.znak } po cenie: </b><input type="text" name="cena" value="${transakcjaKP.cena }" disabled="disabled" />
 	<input type="submit" value="ZATWIERDŹ" />

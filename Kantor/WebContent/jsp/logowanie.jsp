@@ -8,8 +8,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Kantor walutowy - logowanie</title>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
-<body bgcolor="gray">
+<body>
 
 <form method="POST" name="logowanie" action="http://localhost:8080/Kantor/logowanie">
 <p>Login:	<input type="text" name="login" /></p>

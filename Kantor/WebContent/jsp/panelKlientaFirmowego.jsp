@@ -8,9 +8,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Kantor walutowy</title>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
-<body bgcolor="gray">
-<a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
+<body>
+<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <br/>
 <b>Panel Klienta Firmowego</b>

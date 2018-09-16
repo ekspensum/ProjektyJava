@@ -8,14 +8,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Kantor walutowy</title>
-<style>
-table, th, td {
-    border: 1px solid black;
-}
-</style>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body bgcolor="gray">
-<a href="http://localhost:8080/Kantor/wylogowanie">Wyloguj</a>
+<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <br/>
 <b>Statystyka Klienta Prywatnego</b>
