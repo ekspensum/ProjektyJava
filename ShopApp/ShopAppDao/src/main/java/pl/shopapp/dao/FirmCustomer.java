@@ -1,11 +1,11 @@
-package pl.shopapp.entites;
+package pl.shopapp.dao;
 
 import java.io.Serializable;
 import java.lang.String;
 import javax.persistence.*;
 
 /**
- * Entity implementation class for Entity: FirmCustomer
+ * Entity implementation class for Entity: Customer
  *
  */
 @Entity

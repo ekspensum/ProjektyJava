@@ -8,20 +8,27 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import pl.shopapp.entites.FirmCustomer;
-import pl.shopapp.entites.PrivateCustomer;
+import pl.shopapp.dao.FirmCustomer;
+import pl.shopapp.dao.PrivateCustomer;
 
 /**
- * Session Bean implementation class CustomerDao
+ * Session Bean implementation class Customer
  */
 @Stateful
 @LocalBean
-public class CustomerDao implements CustomerDaoRemote, CustomerDaoLocal {
-	
+public class Customer implements CustomerRemote, CustomerLocal {
+
 	List<PrivateCustomer> listPC; 
 	
 	@PersistenceContext
 	EntityManager em;
+	
+    /**
+     * Default constructor. 
+     */
+    public Customer() {
+        // TODO Auto-generated constructor stub
+    }
 
 	@Override
 	public void addPrivateCustomer(PrivateCustomer pc) {
@@ -43,6 +50,7 @@ public class CustomerDao implements CustomerDaoRemote, CustomerDaoLocal {
 			
 		}
 		return listPC;
+//		return null;
 	}
 
 	@Override
@@ -59,11 +67,10 @@ public class CustomerDao implements CustomerDaoRemote, CustomerDaoLocal {
 
 	@Override
 	public List<FirmCustomer> findFirmCustomer(String firmName, String taxNo, String regon) {
-
+		// TODO Auto-generated method stub
 		return null;
 	}
-
     
-	
-	
+    
+
 }

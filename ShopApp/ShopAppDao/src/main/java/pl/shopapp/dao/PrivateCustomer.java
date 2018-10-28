@@ -1,7 +1,7 @@
-package pl.shopapp.entites;
+package pl.shopapp.dao;
 
 import java.io.Serializable;
-
+import java.lang.String;
 import javax.persistence.*;
 
 /**
@@ -19,6 +19,9 @@ public class PrivateCustomer implements Serializable {
 	private String zipCode;
 	private String City;
 	private String pesel;
+	private String street;
+	private String streetNo;
+	private String unitNo;
 	private static final long serialVersionUID = 1L;
 
 	public PrivateCustomer() {
@@ -65,6 +68,27 @@ public class PrivateCustomer implements Serializable {
 
 	public void setPesel(String pesel) {
 		this.pesel = pesel;
+	}   
+	public String getStreet() {
+		return this.street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}   
+	public String getStreetNo() {
+		return this.streetNo;
+	}
+
+	public void setStreetNo(String streetNo) {
+		this.streetNo = streetNo;
+	}   
+	public String getUnitNo() {
+		return this.unitNo;
+	}
+
+	public void setUnitNo(String unitNo) {
+		this.unitNo = unitNo;
 	}
    
 }

@@ -4,16 +4,16 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 
 /**
- * Session Bean implementation class CommercialGoodsDao
+ * Session Bean implementation class CommercialGoods
  */
 @Stateful
 @LocalBean
-public class CommercialGoodsDao implements CommercialGoodsDaoRemote, CommercialGoodsDaoLocal {
+public class CommercialGoods implements CommercialGoodsRemote, CommercialGoodsLocal {
 
     /**
      * Default constructor. 
      */
-    public CommercialGoodsDao() {
+    public CommercialGoods() {
         // TODO Auto-generated constructor stub
     }
 
