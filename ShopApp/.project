@@ -6,6 +6,8 @@
 		<project>ShopAppBeans</project>
 		<project>ShopAppDao</project>
 		<project>ShopAppWeb</project>
+		<project>ShopAppEntites</project>
+		<project>ShopAppClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

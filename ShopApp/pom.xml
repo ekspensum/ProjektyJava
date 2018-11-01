@@ -6,8 +6,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>ShopAppBeans</module>
-		<module>ShopAppDao</module>
 		<module>ShopAppWeb</module>
+		<module>ShopAppEntites</module>
+		<module>ShopAppClient</module>
 	</modules>
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>

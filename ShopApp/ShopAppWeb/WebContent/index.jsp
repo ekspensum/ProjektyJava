@@ -5,9 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Sklep internetowy</title>
+<link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
 <p>Witamy w sklepie internetowym</p>
-<a href="/ShopAppWeb/AddPrivateCustomer" >Dodaj klienta prywatnego</a>
+<a href="/ShopAppWeb/AddCustomer" >Dodaj klienta</a>
 </body>
 </html>
