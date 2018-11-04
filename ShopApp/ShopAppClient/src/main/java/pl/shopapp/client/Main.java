@@ -1,3 +1,4 @@
+package pl.shopapp.client;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -5,18 +6,22 @@ import javax.ejb.EJB;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.spi.PersistenceUnitTransactionType;
 
-import pl.shopapp.beans.CustomerOperationsRemote;
+import pl.shopapp.beans.CustomerBeanRemote;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.User;
 
 public class Main {
 	
-	@EJB
-	private static CustomerOperationsRemote cor; 
+	private static CustomerBeanRemote cor; 
 	
 	public static void main(String[] args) {
 		
+
 		Context context;
 		Hashtable<String, String> env = new Hashtable<>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
@@ -31,19 +36,24 @@ public class Main {
         
         try {
 			context = new InitialContext(env);
+			cor = (CustomerBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/CustomerBean!pl.shopapp.beans.CustomerBeanRemote?stateful");
 		} catch (NamingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+//		
+//		
+//		try {
+//			context = new InitialContext();
+//			cor = (CustomerBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/CustomerBean!pl.shopapp.beans.CustomerBeanRemote?stateful");
+//		} catch (NamingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
-		
-		try {
-			context = new InitialContext(env);
-			cor = (CustomerOperationsRemote) context.lookup("ejb:ShopApp/ShopAppBeans/CustomerOperations!pl.shopapp.beans.CustomerOperationsRemote");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ShopAppClient");
+//        EntityManager em = emf.createEntityManager();
+        
 		User u = new User();
 		u.setLogin("jkowalski");
 		u.setPassword("jkowalski");
@@ -53,6 +63,12 @@ public class Main {
 		c.setFirstName("Jan");
 		c.setLastName("Kowalski");
 		c.setCompany(false);
+		c.setUser(u);
+		
+//		em.getTransaction().begin();
+//		em.persist(u);
+//		em.persist(c);
+//		em.getTransaction().commit();
 		
 		cor.addCustomer(c, u);
 	}

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 
 import pl.shopapp.entites.Product;
 
@@ -11,13 +13,14 @@ import pl.shopapp.entites.Product;
  * Session Bean implementation class ProductOperations
  */
 @Stateful
+//@TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
-public class ProductOperations implements ProductOperationsRemote, ProductOperationsLocal {
+public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 
     /**
      * Default constructor. 
      */
-    public ProductOperations() {
+    public ProductBean() {
         // TODO Auto-generated constructor stub
     }
 

@@ -15,18 +15,11 @@ public class UserRole implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name="userId", insertable=false, updatable=false)
-	private int userId;
-	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinColumn(name="userId")
 	private User user;
 	
-	@Column(name="roleId", insertable=false, updatable=false)
-	private int roleId;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinColumn(name="roleId")
 	private Role role;
 	
 	private static final long serialVersionUID = 1L;
@@ -43,14 +36,6 @@ public class UserRole implements Serializable {
 		this.id = id;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -59,20 +44,14 @@ public class UserRole implements Serializable {
 		this.user = user;
 	}
 
-	public int getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(int roleId) {
-		this.roleId = roleId;
-	}
-
 	public Role getRole() {
 		return role;
 	}
 
 	public void setRole(Role role) {
 		this.role = role;
-	}   
+	}
+
+	
 
 }

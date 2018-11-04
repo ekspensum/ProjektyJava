@@ -3,8 +3,12 @@ package pl.shopapp.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,37 +25,43 @@ import pl.shopapp.entites.User;
 /**
  * Session Bean implementation class CustomerOperations
  */
-@Stateless
+@Stateful
+@TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
-public class CustomerOperations implements CustomerOperationsRemote, CustomerOperationsLocal {
+public class CustomerBean implements CustomerBeanRemote, CustomerBeanLocal {
 
 	@PersistenceContext(unitName="ShopAppEntites")
 	EntityManager em;
 	
-//	@Inject
-//	UserTransaction ut;
+	@Resource
+	UserTransaction ut;
 	
 	List<Customer> cl;
     
 	/**
      * Default constructor. 
      */
-    public CustomerOperations() {
+    public CustomerBean() {
         // TODO Auto-generated constructor stub
     }
 
 	@Override
 	public void addCustomer(Customer c, User u) {
-//		try {
-//			ut.begin();
-			em.persist(u);
-			em.persist(c);
-//			ut.commit();
-//		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-//				| HeuristicMixedException | HeuristicRollbackException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
+			try {
+				ut.begin();
+
+				em.persist(u);
+				em.persist(c);
+
+				ut.commit();
+
+			} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException
+					| RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 	}
 
 	@Override

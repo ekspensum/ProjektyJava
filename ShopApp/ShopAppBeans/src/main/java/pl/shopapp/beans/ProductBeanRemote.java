@@ -7,7 +7,7 @@ import javax.ejb.Remote;
 import pl.shopapp.entites.Product;
 
 @Remote
-public interface ProductOperationsRemote {
+public interface ProductBeanRemote {
 	
 	public void addProduct(Product p);
 	public void updateProduct(Product p, int id);

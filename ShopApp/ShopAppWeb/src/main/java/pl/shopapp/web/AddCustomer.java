@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pl.shopapp.beans.CustomerOperationsLocal;
+import pl.shopapp.beans.CustomerBeanLocal;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.User;
 
@@ -22,7 +22,7 @@ public class AddCustomer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@EJB
-	CustomerOperationsLocal col;
+	CustomerBeanLocal col;
 	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -53,11 +53,13 @@ public class AddCustomer extends HttpServlet {
 		c.setStreetNo(request.getParameter("streetNo"));
 		c.setUnitNo(request.getParameter("unitNo"));
 		c.setEmail(request.getParameter("email"));
-		c.setCompany(request.getParameter("isCompany") == "yes" ? true : false);
+		c.setCompany(request.getParameter("isCompany").equals("yes") ? true : false);
 		c.setCompanyName(request.getParameter("companyName"));
 		c.setTaxNo(request.getParameter("taxNo"));
 		c.setRegon(request.getParameter("regon"));
 		c.setDateRegistration(LocalDateTime.now());
+		c.setUser(u);
+		System.out.println("Firma?"+request.getParameter("isCompany"));
 		col.addCustomer(c, u);
 			
 		doGet(request, response);

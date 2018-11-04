@@ -8,7 +8,7 @@ import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.User;
 
 @Remote
-public interface CustomerOperationsRemote {
+public interface CustomerBeanRemote {
 	public void addCustomer(Customer c, User u);
 	public void updateCustomer(Customer c, int id);
 	public List<Customer> findCustomer(String lastName, String pesel, String companyName, String taxNo, String regon);
