@@ -8,6 +8,7 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
+<p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p> 
 <form action="/ShopAppWeb/AddCustomer" method="POST" >
 <p>Login: <input type="text" name="login" /></p>
 <p>Hasło: <input type="password" name="password" /></p>

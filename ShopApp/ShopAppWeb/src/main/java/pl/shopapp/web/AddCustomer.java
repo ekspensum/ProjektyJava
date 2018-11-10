@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pl.shopapp.beans.CustomerBeanLocal;
+import pl.shopapp.beans.SessionData;
+import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.User;
 
@@ -22,7 +23,7 @@ public class AddCustomer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@EJB
-	CustomerBeanLocal col;
+	UserBeanLocal ubl;
 	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -59,9 +60,12 @@ public class AddCustomer extends HttpServlet {
 		c.setRegon(request.getParameter("regon"));
 		c.setDateRegistration(LocalDateTime.now());
 		c.setUser(u);
-		System.out.println("Firma?"+request.getParameter("isCompany"));
-		col.addCustomer(c, u);
-			
+		
+		ubl.addCustomer(c, u);
+		
+		SessionData sd = ubl.loginCustomer(u.getLogin(), u.getPassword());
+		request.getSession().setAttribute("SessionData", sd);
+		
 		doGet(request, response);
 	}
 

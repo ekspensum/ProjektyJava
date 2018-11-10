@@ -5,20 +5,21 @@ import java.lang.String;
 import javax.persistence.*;
 
 /**
- * Entity implementation class for Entity: Role
+ * Entity implementation class for Entity: Category
  *
  */
 @Entity
-public class Role implements Serializable {
+
+public class Category implements Serializable {
 
 	   
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	private String roleName;
+	private String name;
 	private static final long serialVersionUID = 1L;
 
-	public Role() {
+	public Category() {
 		super();
 	}   
 	public int getId() {
@@ -27,14 +28,13 @@ public class Role implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-	
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
 	}   
+	public String getName() {
+		return this.name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
    
 }

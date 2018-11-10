@@ -11,13 +11,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 
-import pl.shopapp.beans.CustomerBeanRemote;
+import pl.shopapp.beans.UserBeanRemote;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.User;
 
 public class Main {
 	
-	private static CustomerBeanRemote cor; 
+	private static UserBeanRemote ubr; 
 	
 	public static void main(String[] args) {
 		
@@ -36,7 +36,7 @@ public class Main {
         
         try {
 			context = new InitialContext(env);
-			cor = (CustomerBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/CustomerBean!pl.shopapp.beans.CustomerBeanRemote?stateful");
+			ubr = (UserBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote?stateful");
 		} catch (NamingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -70,7 +70,7 @@ public class Main {
 //		em.persist(c);
 //		em.getTransaction().commit();
 		
-		cor.addCustomer(c, u);
+		ubr.addCustomer(c, u);
 	}
 
 	/* (non-Java-doc)

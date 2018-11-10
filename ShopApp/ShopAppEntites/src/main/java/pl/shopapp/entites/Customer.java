@@ -10,6 +10,9 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name="customerQuery", query="SELECT c FROM Customer c WHERE c.user = :user")
+})
 public class Customer implements Serializable {
 
 	   
@@ -36,7 +39,7 @@ public class Customer implements Serializable {
 //	private int userId;
 	
 	@OneToOne
-	@JoinColumn(name="userId")
+//	@JoinColumn(name="userId")
 	private User user;
 	
 	private static final long serialVersionUID = 1L;

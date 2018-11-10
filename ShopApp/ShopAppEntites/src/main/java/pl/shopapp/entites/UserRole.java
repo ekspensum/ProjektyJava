@@ -8,6 +8,9 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name="userRoleQuery", query="SELECT ur FROM UserRole ur WHERE ur.user = :user")
+})
 public class UserRole implements Serializable {
 
 	   

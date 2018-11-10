@@ -9,6 +9,6 @@
 </head>
 <body>
 <p>Witamy w sklepie internetowym</p>
-<a href="/ShopAppWeb/AddCustomer" >Dodaj klienta</a>
+<a href="/ShopAppWeb/AddCustomer" >Rejestracja</a>
 </body>
 </html>

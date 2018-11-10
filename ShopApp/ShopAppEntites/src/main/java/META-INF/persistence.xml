@@ -8,6 +8,11 @@
 		<class>pl.shopapp.entites.Role</class>
 		<class>pl.shopapp.entites.Customer</class>
 		<class>pl.shopapp.entites.Product</class>
+		<class>pl.shopapp.entites.Category</class>
+		<class>pl.shopapp.entites.ProductCategory</class>
+		<class>pl.shopapp.entites.Admin</class>
+		<class>pl.shopapp.entites.Basket</class>
+		<class>pl.shopapp.entites.Transaction</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
