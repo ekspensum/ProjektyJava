@@ -37,10 +37,12 @@ public class AddCustomer extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+		Validation valid = new Validation();
+		
 		User u = new User();
 		u.setLogin(request.getParameter("login"));
-		u.setPassword(request.getParameter("password"));
+		u.setPassword(valid.passwordToCode(request.getParameter("password")));
 		u.setActive(true);
 		
 		Customer c = new Customer();

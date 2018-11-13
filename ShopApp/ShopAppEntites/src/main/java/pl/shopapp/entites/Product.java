@@ -16,7 +16,6 @@ public class Product implements Serializable {
 	private int id;
 	private String name;
 	private String description;
-	private String category;
 	private double price;
 	private int unitsInStock;
 	
@@ -43,12 +42,6 @@ public class Product implements Serializable {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
 	}
 	public double getPrice() {
 		return price;

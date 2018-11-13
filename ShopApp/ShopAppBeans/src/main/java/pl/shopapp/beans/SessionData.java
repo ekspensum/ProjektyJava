@@ -1,5 +1,6 @@
 package pl.shopapp.beans;
 
+import pl.shopapp.entites.Basket;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.UserRole;
 
@@ -10,6 +11,7 @@ public class SessionData {
 	private String firstName;
 	private String lastName;
 	private boolean active;
+	private Basket basket;
 	
 	public SessionData getSessionData(Customer c, UserRole ur) {
 		this.idCustomer = ur.getUser().getId();
@@ -65,6 +67,14 @@ public class SessionData {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public Basket getBasket() {
+		return basket;
+	}
+
+	public void setBasket(Basket basket) {
+		this.basket = basket;
 	}
 	
 }

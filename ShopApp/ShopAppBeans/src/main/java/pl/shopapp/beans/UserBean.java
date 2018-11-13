@@ -10,9 +10,11 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -29,7 +31,7 @@ import pl.shopapp.entites.UserRole;
 /**
  * Session Bean implementation class CustomerOperations
  */
-@Stateful
+@Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
 //@DeclareRoles({"customer", "admin"})
@@ -43,8 +45,8 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	
 	List<Customer> cl;
     
-	@Resource 
-	private SessionContext sc;
+//	@Resource 
+//	private SessionContext sc;
 	
 	/**
      * Default constructor. 
@@ -122,7 +124,13 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	@Override
 	public SessionData loginCustomer(String login, String password) {
-		User user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
+		User user = null; 		
+		try {
+			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
+		} catch (NoResultException e) {
+//			e.printStackTrace();
+			return null;
+		}
 		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
 		Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
 		SessionData data = new SessionData();

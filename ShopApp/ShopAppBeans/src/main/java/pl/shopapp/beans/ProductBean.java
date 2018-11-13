@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 
@@ -12,7 +13,7 @@ import pl.shopapp.entites.Product;
 /**
  * Session Bean implementation class ProductOperations
  */
-@Stateful
+@Stateless
 //@TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
 public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
