@@ -23,7 +23,9 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import pl.shopapp.entites.Admin;
 import pl.shopapp.entites.Customer;
+import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Role;
 import pl.shopapp.entites.User;
 import pl.shopapp.entites.UserRole;
@@ -143,4 +145,70 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return data;
 	}
 
+	@Override
+	public boolean addOperator(Operator o, User u) {
+		
+		try {
+			ut.begin();
+			UserRole ur = addUserRole(u, 3);
+			em.persist(u);
+			em.persist(o);
+			em.persist(ur);
+			ut.commit();
+			return true;
+		} catch (NotSupportedException | SystemException | HeuristicRollbackException | HeuristicMixedException | RollbackException | IllegalStateException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}	
+	}
+
+	@Override
+	public SessionData loginOperator(String login, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean addAdmin(Admin a, User u) {
+		try {
+			ut.begin();
+			UserRole ur = addUserRole(u, 1);
+			em.persist(u);
+			em.persist(a);
+			em.persist(ur);
+			ut.commit();
+			return true;
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public SessionData loginAdmin(String login, String password) {
+		User user = null; 		
+		try {
+			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
+		} catch (NoResultException e) {
+//			e.printStackTrace();
+			return null;
+		}
+		System.out.println("Przejscie 1");
+		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
+		System.out.println("Przejscie 2");
+		Admin a = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+		System.out.println("Przejscie 3");
+		SessionData data = new SessionData();
+		data.setFirstName(a.getFirstName());
+		data.setLastName(a.getLastName());
+		data.setIdRole(ur.getRole().getId());
+		data.setRoleName(ur.getRole().getRoleName());
+		data.setActive(user.getActive());
+		return data;
+	}
+
+	
 }

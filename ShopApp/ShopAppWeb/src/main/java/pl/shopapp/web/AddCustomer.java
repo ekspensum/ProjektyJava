@@ -56,17 +56,18 @@ public class AddCustomer extends HttpServlet {
 		c.setStreetNo(request.getParameter("streetNo"));
 		c.setUnitNo(request.getParameter("unitNo"));
 		c.setEmail(request.getParameter("email"));
-		c.setCompany(request.getParameter("isCompany").equals("yes") ? true : false);
+		if(request.getParameter("isCompany") != null)
+			c.setCompany(request.getParameter("isCompany").equals("yes") ? true : false);
 		c.setCompanyName(request.getParameter("companyName"));
 		c.setTaxNo(request.getParameter("taxNo"));
 		c.setRegon(request.getParameter("regon"));
 		c.setDateRegistration(LocalDateTime.now());
 		c.setUser(u);
 		
-		ubl.addCustomer(c, u);
-		
-		SessionData sd = ubl.loginCustomer(u.getLogin(), u.getPassword());
-		request.getSession().setAttribute("SessionData", sd);
+//		ubl.addCustomer(c, u);
+		System.out.println("Button"+request.getParameter("buttonAddCustomer"));
+//		SessionData sd = ubl.loginCustomer(u.getLogin(), u.getPassword());
+//		request.getSession().setAttribute("SessionData", sd);
 		
 		doGet(request, response);
 	}

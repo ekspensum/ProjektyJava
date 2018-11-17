@@ -10,18 +10,16 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" media="all" />
 </head>
 <body>
-<p>Witamy w sklepie internetowym</p>
+<p id="pageHeader">Witamy w sklepie internetowym</p>
 <c:if test="${SessionData != null }">
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
 </c:if>
-<a href="/ShopAppWeb/AddCustomer" >Rejestracja</a><br/>
-<form action="/ShopAppWeb/LoginServlet" method="POST" name="loginForm">
-<p id="login">Login: <input type="text" name="login" /></p>
+<a href="/ShopAppWeb/AddCustomer" id="registrationButtonId" class="buttonClass">Rejestracja</a><br/>
+<form action="/ShopAppWeb/LoginServlet" method="POST" name="loginForm" >
+<p id="login">Login: <input type="text" name="login"/></p>
 <p id="password">Hasło: <input type="password" name="password" /></p>
 <p id="loginButtonId"><input  type="submit" name="loginButton" value="Zaloguj"  /></p>
-<p id="registrationButtonId"><input  type="submit" name="registrationButton" value="Rejestruj"  /></p>
 </form>
-
 <b id="message">${message }</b>
 </body>
 </html>

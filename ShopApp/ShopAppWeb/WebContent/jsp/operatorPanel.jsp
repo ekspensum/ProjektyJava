@@ -26,7 +26,7 @@
 <p id="compnyName">Nazwa firmy: <input type="text" name="compnyName" /></p>
 <p id="taxNo">NIP: <input type="text" name="taxNo" /></p>
 <p id="regon">REGON: <input type="text" name="regon" /></p>
-<p id="buttonAddCustomer"><input type="submit" value="Dodaj" name="buttonAddCustomer"/></p>
+<p id="buttonAddCustomer"><input type="submit" value="Dodaj" /></p>
 </form>
 </body>
 </html>

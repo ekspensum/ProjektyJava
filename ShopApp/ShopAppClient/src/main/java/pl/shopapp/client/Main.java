@@ -36,7 +36,7 @@ public class Main {
         
         try {
 			context = new InitialContext(env);
-			ubr = (UserBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote?stateful");
+			ubr = (UserBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote");
 		} catch (NamingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -1,4 +1,4 @@
-package pl.shopapp.web;
+package pl.shopapp.beans;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +26,7 @@ public class Validation {
 		Matcher mat = patt.matcher(login);
 		return mat.find();
 	}
+	
     public boolean passwordValidation(String pass) {
         boolean passOK = true;
         if (pass.length() < 6 || pass.length() > 15)

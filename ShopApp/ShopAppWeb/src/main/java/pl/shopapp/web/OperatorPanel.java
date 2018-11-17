@@ -8,26 +8,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class OpenAccount
+ * Servlet implementation class OperatorPanel
  */
-@WebServlet("/OpenAccount")
-public class OpenAccount extends HttpServlet {
+@WebServlet("/OperatorPanel")
+public class OperatorPanel extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-    /**
-     * Default constructor. 
-     */
-    public OpenAccount() {
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
+		request.getRequestDispatcher("jsp/operatorPanel.jsp").forward(request, response);
 	}
 
 	/**

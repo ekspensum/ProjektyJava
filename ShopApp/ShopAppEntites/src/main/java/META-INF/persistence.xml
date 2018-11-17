@@ -13,6 +13,7 @@
 		<class>pl.shopapp.entites.Admin</class>
 		<class>pl.shopapp.entites.Basket</class>
 		<class>pl.shopapp.entites.Transaction</class>
+		<class>pl.shopapp.entites.Operator</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.show_sql" value="true" />

@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.shopapp.beans.SessionData;
-import pl.shopapp.beans.UserBean;
 import pl.shopapp.beans.UserBeanLocal;
+import pl.shopapp.beans.Validation;
 
 /**
  * Servlet implementation class LoginServlet
@@ -31,6 +31,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		onLoadPage();
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 
@@ -38,8 +39,7 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 
 		if (request.getParameter("loginButton") != null) {
 			Validation valid = new Validation();
@@ -61,6 +61,10 @@ public class LoginServlet extends HttpServlet {
 		}
 
 		doGet(request, response);
+	}
+	
+	public void onLoadPage(){
+		
 	}
 
 }
