@@ -16,7 +16,7 @@ import pl.shopapp.beans.SessionData;
 /**
  * Servlet Filter implementation class FilterOperator
  */
-@WebFilter(urlPatterns= {"/OperatorPanel"})
+@WebFilter(urlPatterns= {"/OperatorPanel", "/jsp/operatorPanel.jsp"})
 public class FilterOperator implements Filter {
 
     /**
@@ -44,7 +44,7 @@ public class FilterOperator implements Filter {
 			SessionData sd = (SessionData) req.getSession().getAttribute("SessionData");
 			if(sd == null || sd.getIdRole() != 3) {
 				req.getSession().invalidate();
-				resp.sendRedirect("http://localhost:8080/ShopAppWeb");
+				resp.sendRedirect("http://localhost:8080/ShopAppWeb/LoginServlet");
 				return;
 			}
 		// pass the request along the filter chain

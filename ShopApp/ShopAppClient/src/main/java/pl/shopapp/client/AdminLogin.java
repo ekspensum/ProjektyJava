@@ -5,9 +5,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.text.AbstractDocument.Content;
-
-import org.wildfly.security.sasl.util.DisposedCallbackSaslClientFactory;
 
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanRemote;
@@ -21,14 +18,14 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class AdminLogin {
 
 	private JFrame frame;
 	private JTextField textFieldLogin;
-	private JTextField textFieldPassword;
 	private static UserBeanRemote ubr;
-	private LoginAdminData loginAdminData;
+	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -91,11 +88,10 @@ public class AdminLogin {
 		textFieldLogin.setBounds(193, 90, 120, 20);
 		frame.getContentPane().add(textFieldLogin);
 		textFieldLogin.setColumns(10);
-
-		textFieldPassword = new JTextField();
-		textFieldPassword.setBounds(193, 115, 120, 20);
-		frame.getContentPane().add(textFieldPassword);
-		textFieldPassword.setColumns(10);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(193, 115, 120, 20);
+		frame.getContentPane().add(passwordField);
 
 		JLabel lblMsg = new JLabel("");
 		lblMsg.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -103,26 +99,21 @@ public class AdminLogin {
 		frame.getContentPane().add(lblMsg);
 
 		JButton btnZaloguj = new JButton("Zaloguj");
+		
 		btnZaloguj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
 				ubr = contextAppUserBean();
 				if (!textFieldLogin.getText().equals("")) {
-					if (!textFieldPassword.getText().equals("")) {
+					if (passwordField.getPassword().length != 0) {
 						Validation valid = new Validation();
-						String pass = valid.passwordToCode(textFieldPassword.getText());
+						String pass = valid.passwordToCode(passwordField.getText());
 						if (valid.loginValidation(textFieldLogin.getText())) {
 							if (ubr.loginAdmin(textFieldLogin.getText(), pass) != null) {
 								SessionData sd = ubr.loginAdmin(textFieldLogin.getText(), pass);
 								if(sd.getRoleName().equals("admin")) {
-									LoginAdminData lad = new LoginAdminData();
-									lad.setActive(sd.isActive());
-									lad.setFirstName(sd.getFirstName());
-									lad.setLastName(sd.getLastName());
-									lad.setIdRole(sd.getIdRole());
-									lad.setRoleName(sd.getRoleName());
-									setLoginAdminData(lad);
 									frame.dispose();
-									AdminPanel ap = new AdminPanel();
+									AdminPanel ap = new AdminPanel(ubr, sd);
 									ap.setLocationRelativeTo(null);
 									ap.setVisible(true);									
 								} else
@@ -137,6 +128,7 @@ public class AdminLogin {
 					lblMsg.setText("Nieprawidłowe dane logowania! 1");
 			}
 		});
+		
 		btnZaloguj.setBounds(234, 146, 79, 23);
 		frame.getContentPane().add(btnZaloguj);
 
@@ -144,15 +136,8 @@ public class AdminLogin {
 		lblLogowanieDoPanelu.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblLogowanieDoPanelu.setBounds(119, 51, 213, 14);
 		frame.getContentPane().add(lblLogowanieDoPanelu);
+		
+
 
 	}
-
-	public LoginAdminData getLoginAdminData() {
-		return loginAdminData;
-	}
-
-	public void setLoginAdminData(LoginAdminData loginAdminData) {
-		this.loginAdminData = loginAdminData;
-	}
-
 }

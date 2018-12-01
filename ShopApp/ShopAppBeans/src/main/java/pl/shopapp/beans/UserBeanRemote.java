@@ -16,10 +16,9 @@ public interface UserBeanRemote {
 	public boolean updateCustomer(Customer c, int id);
 	public List<Customer> findCustomer(String lastName, String pesel, String companyName, String taxNo, String regon);
 	public boolean deleteCustomer(Customer c, int id);
-	public SessionData loginCustomer(String login, String password);
+	public SessionData loginUser(String login, String password);
 	
-	public boolean addOperator(Operator o, User u);
-	public SessionData loginOperator(String login, String password);
+	public boolean addOperator(Operator o, User u, int idAdmin);
 	
 	public boolean addAdmin(Admin a, User u);
 	public SessionData loginAdmin(String login, String password);

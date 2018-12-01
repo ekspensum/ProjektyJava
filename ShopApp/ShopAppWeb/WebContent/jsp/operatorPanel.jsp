@@ -1,32 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Dodawanie klienta</title>
+<meta http-equiv="Content-Type" content="text/html" >
+<title>Panel operatora</title>
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
-<p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p> 
-<form action="/ShopAppWeb/AddCustomer" method="POST" name="loginForm" >
-<p id="loginAddCustomer">Login: <input type="text" name="login" /></p>
-<p id="passwordAddCustomer">Hasło: <input type="password" name="password" /></p>
-<p id="firstName">Imię: <input type="text" name="firstName" /></p>
-<p id="lastName">Nazwisko: <input type="text" name="lastName" /></p>
-<p id="pesel">Pesel: <input type="text" name="pesel" /></p>
-<p id="country">Kraj: <input type="text" name="country" /></p>
-<p id="zipCode">Kod pocztowy: <input type="text" name="zipCode" /></p>
-<p id="city">Miasto: <input type="text" name="city" /></p>
-<p id="street">Ulica: <input type="text" name="street" /></p>
-<p id="streetNo">Nr domu: <input type="text" name="streetNo" /></p>
-<p id="unitNo">Nr lokalu: <input type="text" name="unitNo" /></p>
-<p id="email">E-mail: <input type="email" name="email" /></p>
-<p id="isCompany">Czy firma?: <input type="checkbox" name="isCompany" value="yes" /></p>
-<p id="compnyName">Nazwa firmy: <input type="text" name="compnyName" /></p>
-<p id="taxNo">NIP: <input type="text" name="taxNo" /></p>
-<p id="regon">REGON: <input type="text" name="regon" /></p>
-<p id="buttonAddCustomer"><input type="submit" value="Dodaj" /></p>
+<p id="pageHeader">Panel operatora</p>
+<p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
+<a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
+<br>
+<br>
+<p id="optionHeader">Dodawanie produktu</p>
+<form action="/ShopAppWeb/OperatorPanel" method="POST" id="addProductForm" enctype="multipart/form-data">
+<p id="productName">Nazwa produktu: <input type="text" name="productName" value="${RequestAttribute.productName }" /></p>
+<p id="productDescription">Opis produktu: <textarea name="productDescription" rows="10" cols="50" form="addProductForm" >${RequestAttribute.productDescription }</textarea></p>
+<p id="productPrice">Cena: <input type="text" name="productPrice" value="${RequestAttribute.productPrice }" /></p>
+<p id="productUnitsInStock">Dostępna ilość: <input type="text" name="productUnitsInStock" value="${RequestAttribute.productUnitsInStock }" /></p>
+<p>Wybierz kategorię 1: <select id="category1" name="category1">
+<c:forEach items="${listCat}" var="cat" begin="0" >
+	<option value="${cat.id }">${cat.name }</option>
+</c:forEach>
+</select></p>
+<p>Wybierz kategorię 2: <select id="category2" name="category2">
+<c:forEach items="${listCat}" var="cat" begin="0" >
+	<option value="${cat.id }">${cat.name }</option>
+</c:forEach>
+</select></p>
+<p id="productAddFile">Dodaj plik: <input type="file" name="imageProduct" required="required" accept="image/*"/></p>
+<p id="buttonAddProduct"><input type="submit" name="buttonAddProduct" value="Dodaj produkt" /></p>
 </form>
+<br>
+<br>
+<p id="optionHeader">Dodawanie kategorii</p>
+<form action="/ShopAppWeb/OperatorPanel" method="POST" id="addCategoryForm" enctype="multipart/form-data">
+<p id="categoryName">Nazwa kategorii: <input type="text" name="categoryName" value="${RequestAttribute.categoryName }" /></p>
+<p id="categoryAddFile">Dodaj plik: <input type="file" name="imageCategory" required="required" accept="image/*"/></p>
+<p id="buttonAddCategory"><input type="submit" name="buttonAddCategory" value="Dodaj kategorię" /></p>
+</form>
+<b id="message">${message }</b>
+<a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 </body>
 </html>

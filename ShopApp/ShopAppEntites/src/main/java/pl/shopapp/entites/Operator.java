@@ -11,9 +11,9 @@ import javax.persistence.*;
  *
  */
 @Entity
-//@NamedQueries({
-//	@NamedQuery(name="addOperator", query="")
-//})
+@NamedQueries({
+	@NamedQuery(name="operatorQuery", query="SELECT op FROM Operator op WHERE op.user = :user")
+})
 public class Operator implements Serializable {
 
 	   

@@ -47,4 +47,54 @@ public class Validation {
             passOK = false;
         return passOK;
     }
+	
+    public boolean telephoneNoValidation(String telephon) {
+		Pattern patt = Pattern.compile("^[0-9+\\s]{9,16}$");
+		Matcher mat = patt.matcher(telephon);
+		return mat.find();
+	}
+    
+	public boolean nameValidation(String name) {
+		Pattern patt = Pattern.compile("^[^|'\":%^#~}{\\]\\[;=<>`]{3,100}$");
+		Matcher mat = patt.matcher(name);
+		return mat.find();
+	}
+	
+	public boolean emailValidation(String email) {
+		Pattern patt = Pattern.compile("^[a-zA-Z.]{3,20}@[a-zA-Z.]{4,100}$");
+		Matcher mat = patt.matcher(email);
+		return mat.find();
+	}
+	public boolean numberValidation(String number) {
+		Pattern patt = Pattern.compile("^[0-9.]{1,10}$");
+		Matcher mat = patt.matcher(number);
+		return mat.find();
+	}
+	public boolean nipValidation(String nip) {
+		Pattern patt = Pattern.compile("^[0-9]{10}$");
+		Matcher mat = patt.matcher(nip);
+		return mat.find();
+	}
+
+	public boolean peselValidation(String pesel) {
+		Pattern patt = Pattern.compile("^[0-9]{11}$");
+		Matcher mat = patt.matcher(pesel);
+		return mat.find();
+	}
+	
+	public boolean zipCodeValidation(String zipCode) {
+		Pattern patt = Pattern.compile("^[0-9]{2}-[0-9]{3}$");
+		Matcher mat = patt.matcher(zipCode);
+		return mat.find();
+	}
+	public boolean locationValidation(String location) {
+		Pattern patt = Pattern.compile("^[^|'\":%^#~}{\\]\\[;=<>`]{1,20}$");
+		Matcher mat = patt.matcher(location);
+		return mat.find();
+	}
+	public boolean regonValidation(String regon) {
+		Pattern patt = Pattern.compile("^[0-9]{9}$");
+		Matcher mat = patt.matcher(regon);
+		return mat.find();
+	}
 }

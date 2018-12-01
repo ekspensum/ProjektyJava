@@ -1,15 +1,11 @@
 package pl.shopapp.beans;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.LocalBean;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
@@ -36,17 +32,16 @@ import pl.shopapp.entites.UserRole;
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
-//@DeclareRoles({"customer", "admin"})
 public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	@PersistenceContext(unitName="ShopAppEntites")
-	EntityManager em;
+	private EntityManager em;
 	
 	@Resource
-	UserTransaction ut;
+	private UserTransaction ut;
 	
-	List<Customer> cl;
-    
+	private List<Customer> cl;
+	
 //	@Resource 
 //	private SessionContext sc;
 	
@@ -58,7 +53,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
     }
 
 	@Override
-//	@RolesAllowed({"customer"})
 	public boolean addCustomer(Customer c, User u) {
 
 			try {
@@ -125,7 +119,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public SessionData loginCustomer(String login, String password) {
+	public SessionData loginUser(String login, String password) {
 		User user = null; 		
 		try {
 			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
@@ -134,22 +128,40 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			return null;
 		}
 		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
-		Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
-		SessionData data = new SessionData();
-		data.setIdCustomer(c.getId());
-		data.setFirstName(c.getFirstName());
-		data.setLastName(c.getLastName());
-		data.setIdRole(ur.getRole().getId());
-		data.setRoleName(ur.getRole().getRoleName());
-		data.setActive(user.getActive());
-		return data;
+		if(ur.getRole().getId() == 2) {
+			Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
+			SessionData data = new SessionData();
+			data.setIdUser(user.getId());
+			data.setFirstName(c.getFirstName());
+			data.setLastName(c.getLastName());
+			data.setIdRole(ur.getRole().getId());
+			data.setRoleName(ur.getRole().getRoleName());
+			data.setActive(user.getActive());
+			return data;			
+		}
+		else if(ur.getRole().getId() == 3) {
+			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user).getSingleResult();
+			SessionData data = new SessionData();
+			data.setIdUser(user.getId());
+			data.setFirstName(op.getFirstName());
+			data.setLastName(op.getLastName());
+			data.setIdRole(ur.getRole().getId());
+			data.setRoleName(ur.getRole().getRoleName());
+			data.setActive(user.getActive());
+			return data;			
+		}
+		return null;
 	}
 
 	@Override
-	public boolean addOperator(Operator o, User u) {
+	public boolean addOperator(Operator o, User u, int idUser) {
 		
 		try {
 			ut.begin();
+			User user = em.find(User.class, idUser);
+			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+			o.setAdmin(adm);
+			o.setDate(LocalDateTime.now());
 			UserRole ur = addUserRole(u, 3);
 			em.persist(u);
 			em.persist(o);
@@ -161,12 +173,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			e.printStackTrace();
 			return false;
 		}	
-	}
-
-	@Override
-	public SessionData loginOperator(String login, String password) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -196,12 +202,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 //			e.printStackTrace();
 			return null;
 		}
-		System.out.println("Przejscie 1");
 		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
-		System.out.println("Przejscie 2");
 		Admin a = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
-		System.out.println("Przejscie 3");
 		SessionData data = new SessionData();
+		data.setIdUser(user.getId());
 		data.setFirstName(a.getFirstName());
 		data.setLastName(a.getLastName());
 		data.setIdRole(ur.getRole().getId());
@@ -209,6 +213,5 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		data.setActive(user.getActive());
 		return data;
 	}
-
 	
 }

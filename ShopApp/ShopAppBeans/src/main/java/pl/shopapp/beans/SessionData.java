@@ -1,34 +1,20 @@
 package pl.shopapp.beans;
 
-import pl.shopapp.entites.Basket;
-import pl.shopapp.entites.Customer;
-import pl.shopapp.entites.UserRole;
+import java.io.Serializable;
 
-public class SessionData {
-	private int idCustomer;
+public class SessionData implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int idUser;
 	private int idRole;
 	private String roleName;	
 	private String firstName;
 	private String lastName;
 	private boolean active;
-	private Basket basket;
+	private BasketBeanLocal basketBeanLocal;
 	
-	public SessionData getSessionData(Customer c, UserRole ur) {
-		this.idCustomer = ur.getUser().getId();
-		this.idRole = ur.getRole().getId();
-		
-		return this;
-		
-	}
-
-	public int getIdCustomer() {
-		return idCustomer;
-	}
-
-	public void setIdCustomer(int idCustomer) {
-		this.idCustomer = idCustomer;
-	}
-
 	public int getIdRole() {
 		return idRole;
 	}
@@ -69,12 +55,20 @@ public class SessionData {
 		this.roleName = roleName;
 	}
 
-	public Basket getBasket() {
-		return basket;
+	public BasketBeanLocal getBasketBeanLocal() {
+		return basketBeanLocal;
 	}
 
-	public void setBasket(Basket basket) {
-		this.basket = basket;
+	public void setBasketBeanLocal(BasketBeanLocal basketBeanLocal) {
+		this.basketBeanLocal = basketBeanLocal;
+	}
+
+	public int getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
 	}
 	
 }

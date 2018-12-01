@@ -11,73 +11,85 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 
+import pl.shopapp.beans.SessionData;
+import pl.shopapp.beans.UserBean;
 import pl.shopapp.beans.UserBeanRemote;
+import pl.shopapp.beans.Validation;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.User;
 
 public class Main {
 	
+
 	private static UserBeanRemote ubr; 
 	
-	public static void main(String[] args) {
-		
-
-		Context context;
-		Hashtable<String, String> env = new Hashtable<>();
-		env.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-		env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-		env.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
-		
+//	public static void main(String[] args) throws NamingException {
+//		
+//
+//		InitialContext context;
+////		Hashtable<String, String> env = new Hashtable<>();
+////		env.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
+////		env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+////		env.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
+//		
 //        Properties props = new Properties();  
 //        props.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");  
 //        props.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");   // NOTICE: "http-remoting" and port "8080"  
 //        props.put("jboss.naming.client.ejb.context", true);
 //        props.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-        
-        try {
-			context = new InitialContext(env);
-			ubr = (UserBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote");
-		} catch (NamingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-//		
-//		
-//		try {
-//			context = new InitialContext();
-//			cor = (CustomerBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/CustomerBean!pl.shopapp.beans.CustomerBeanRemote?stateful");
-//		} catch (NamingException e) {
+////		UserBeanRemote ubr = null;
+//        try {
+//			context = new InitialContext(props);
+//			ubr = (UserBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote");
+//		} catch (NamingException e1) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			e1.printStackTrace();
 //		}
-		
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ShopAppClient");
-//        EntityManager em = emf.createEntityManager();
-        
-		User u = new User();
-		u.setLogin("jkowalski");
-		u.setPassword("jkowalski");
-		u.setActive(true);
-		
-		Customer c = new Customer();
-		c.setFirstName("Jan");
-		c.setLastName("Kowalski");
-		c.setCompany(false);
-		c.setUser(u);
-		
-//		em.getTransaction().begin();
-//		em.persist(u);
-//		em.persist(c);
-//		em.getTransaction().commit();
-		
-		ubr.addCustomer(c, u);
-	}
+////		
+////		
+////		try {
+////			context = new InitialContext();
+////			cor = (CustomerBeanRemote) context.lookup("ejb:ShopApp/ShopAppBeans/CustomerBean!pl.shopapp.beans.CustomerBeanRemote?stateful");
+////		} catch (NamingException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+//		
+////        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ShopAppClient");
+////        EntityManager em = emf.createEntityManager();
+//        
+//		
+//		Validation valid = new Validation();
+//		String pass = valid.passwordToCode("Admin22");
+//        System.out.println("Przed");
+//        SessionData ub = ubr.loginAdmin("admin2", pass);
+//        System.out.println("Sesja "+ub.getFirstName());
+//        
+////		User u = new User();
+////		u.setLogin("jkowalski");
+////		u.setPassword("jkowalski");z
+////		u.setActive(true);
+////		
+////		Customer c = new Customer();
+////		c.setFirstName("Jan");
+////		c.setLastName("Kowalski");
+////		c.setCompany(false);
+////		c.setUser(u);
+//		
+////		em.getTransaction().begin();
+////		em.persist(u);
+////		em.persist(c);
+////		em.getTransaction().commit();
+//		
+////		ubr.addCustomer(c, u);
+//	}
+//
+//	/* (non-Java-doc)
+//	 * @see java.lang.Object#Object()
+//	 */
+//	public Main() {
+//		super();
+//	}
 
-	/* (non-Java-doc)
-	 * @see java.lang.Object#Object()
-	 */
-	public Main() {
-		super();
-	}
-
+	
 }
