@@ -14,6 +14,7 @@
 <b id="message">${message }</b>
 <c:if test="${SessionData != null }">
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
+<a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 </c:if>
 <a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
 <br>
@@ -22,16 +23,25 @@
 <p>Cena: ${pd.price } Dostępna ilość: ${pd.unitsInStock }</p>
 <p>Dodaj do koszyka: <input type="number" name="quantity${pd.id }" min="1" max="${pl.unitsInStock }" value="1" style="width: 3em;" />	<button type="submit" name="buttonToBasketFromDetails" value="${pd.id }" form="ProductDetails">Dodaj do koszyka</button>
 </form>
-<c:if test="${SessionData != null }">
-<a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
-</c:if>
 
 <c:if test="${SessionData != null}">
 <form action="/ShopAppWeb/ProductDetails" method="POST" id="basket">
 <b>Zawartość koszyka:</b>
+<table>
+<tr><th>Usuń</th><th>Nazwa produktu</th><th>Ilość</th><th>Cana</th><th>Wartość</th></tr>
 <c:forEach items="${SessionData.basketBeanLocal.basketData}" var="br" begin="0">
-	<p><input type="submit" name="buttonDeleteRow" value="Usuń">	<input type="checkbox" name="chbxDeleteRow" value="${br.productId }">	${br.productName }	Ilość: ${br.quantity }	Cena: ${br.price }</p>
+<tr><td><input type="checkbox" name="chbxDeleteRow" value="${br.productId }" /></td><td>${br.productName }</td>	<td>${br.quantity }</td>	<td>${br.price }</td><td>${br.price * br.quantity}</td></tr>
 </c:forEach>
+</table>
+<%
+pl.shopapp.beans.SessionData sd = (pl.shopapp.beans.SessionData) session.getAttribute("SessionData");
+double total = 0.0;
+for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
+	total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
+} 
+%>
+<p><b>Wartość koszyka: <%=total %></b></p>
+<button type="submit" name="buttonDeleteRowBasket" value="${pd.id }" >Usuń zazanaczone</button>
 </form>
 </c:if>
 

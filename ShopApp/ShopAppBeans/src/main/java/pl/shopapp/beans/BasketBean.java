@@ -49,7 +49,12 @@ public class BasketBean implements BasketBeanRemote, BasketBeanLocal {
 		this.basketDataList.add(basketData);
 	}
 
-    @PostConstruct
+    @Override
+	public void deleteBasketRow(int index, List<BasketData> basketDataList) {
+		basketDataList.remove(index);
+	}
+
+	@PostConstruct
     private void initSession(){
         //generationg session id
         setSessionUUID(UUID.randomUUID());

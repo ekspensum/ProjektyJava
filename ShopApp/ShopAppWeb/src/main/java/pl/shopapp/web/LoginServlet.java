@@ -74,7 +74,24 @@ public class LoginServlet extends HttpServlet {
 			} else
 				request.setAttribute("message", "Niepoprawne dane logowania");
 		}
-
+		
+//		allows delete product from basket
+		if (request.getParameter("buttonDeleteRowBasket") != null) {
+			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
+			bbl = sd.getBasketBeanLocal();
+			String[] deletedId = request.getParameterValues("chbxDeleteRow");
+			if (deletedId != null) {
+				for (int i = 0; i < deletedId.length; i++) {
+					for (int j = 0; j < bbl.getBasketData().size(); j++)
+						if (bbl.getBasketData().get(j).getProductId() == Integer.valueOf(deletedId[i])) {
+							bbl.getBasketData().remove(j);
+							break;
+						}
+				}
+			} else
+				request.setAttribute("message", "Proszę zaznaczyć co njmniej jeden produkt do usunięcia!");
+		}
+		
 		doGet(request, response);
 	}
 
