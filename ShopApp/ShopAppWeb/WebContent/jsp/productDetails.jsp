@@ -33,15 +33,9 @@
 <tr><td><input type="checkbox" name="chbxDeleteRow" value="${br.productId }" /></td><td>${br.productName }</td>	<td>${br.quantity }</td>	<td>${br.price }</td><td>${br.price * br.quantity}</td></tr>
 </c:forEach>
 </table>
-<%
-pl.shopapp.beans.SessionData sd = (pl.shopapp.beans.SessionData) session.getAttribute("SessionData");
-double total = 0.0;
-for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
-	total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
-} 
-%>
-<p><b>Wartość koszyka: <%=total %></b></p>
-<button type="submit" name="buttonDeleteRowBasket" value="${pd.id }" >Usuń zazanaczone</button>
+<p><b>Wartość koszyka: ${ total }</b></p>
+<button type="submit" name="buttonDeleteRowBasket" value="${pd.id }" ${ total > 0 ? "" : "disabled" } >Usuń zazanaczone</button><br><br>
+<button type="submit" formaction="/ShopAppWeb/Transaction" ${ total > 0 ? "" : "disabled" } >Dokonaj zakupu</button>
 </form>
 </c:if>
 

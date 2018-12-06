@@ -9,7 +9,8 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="userRoleQuery", query="SELECT ur FROM UserRole ur WHERE ur.user = :user")
+	@NamedQuery(name="userRoleQuery", query="SELECT ur FROM UserRole ur WHERE ur.user = :user"),
+	@NamedQuery(name="getUserOperatorQuery", query="SELECT u FROM UserRole ur INNER JOIN ur.user u WHERE ur.role.id = 3")
 })
 public class UserRole implements Serializable {
 

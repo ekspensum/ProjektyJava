@@ -30,6 +30,14 @@ public class ProductDetails extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
+		if(sd != null) {
+			double total = 0.0;
+			for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
+				total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
+			}
+			request.setAttribute("total", total);			
+		}
 		request.getRequestDispatcher("/jsp/productDetails.jsp").forward(request, response);
 	}
 

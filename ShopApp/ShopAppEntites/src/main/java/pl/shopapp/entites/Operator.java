@@ -12,7 +12,8 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="operatorQuery", query="SELECT op FROM Operator op WHERE op.user = :user")
+	@NamedQuery(name="operatorQuery", query="SELECT op FROM Operator op WHERE op.user = :user"),
+	@NamedQuery(name="getAllOperatorsQuery", query="SELECT op FROM Operator op")
 })
 public class Operator implements Serializable {
 
@@ -22,7 +23,7 @@ public class Operator implements Serializable {
 	private int id;
 	private String firstName;
 	private String lastName;
-	private String telNo;
+	private String phoneNo;
 	private String email;
 	@OneToOne
 	private User user;
@@ -56,12 +57,12 @@ public class Operator implements Serializable {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}   
-	public String getTelNo() {
-		return this.telNo;
+	public String getPhoneNo() {
+		return this.phoneNo;
 	}
 
-	public void setTelNo(String telNo) {
-		this.telNo = telNo;
+	public void setPhoneNo(String telNo) {
+		this.phoneNo = telNo;
 	}   
 	public String getEmail() {
 		return this.email;

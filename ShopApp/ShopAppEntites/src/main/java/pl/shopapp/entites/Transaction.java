@@ -1,6 +1,8 @@
 package pl.shopapp.entites;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
 /**
@@ -19,6 +21,7 @@ public class Transaction implements Serializable {
 	@OneToOne
 	private Customer customer;
 	private int quantity;
+	private LocalDateTime dateTime;
 	private static final long serialVersionUID = 1L;
 
 	public Transaction() {
@@ -51,6 +54,12 @@ public class Transaction implements Serializable {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	public LocalDateTime getDateTime() {
+		return dateTime;
+	}
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
 	}
    
 }

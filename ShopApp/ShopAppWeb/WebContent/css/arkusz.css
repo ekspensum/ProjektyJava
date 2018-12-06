@@ -49,6 +49,12 @@ table, th, td {
 	right: 100px;
 	color: red;
 }
+#messageTransaction {
+	position: absolute;
+	top: 400px;
+	left: 10px;
+	color: blue;
+}
 #buttonLogOut {
 	position: absolute;
 	top: 15px;

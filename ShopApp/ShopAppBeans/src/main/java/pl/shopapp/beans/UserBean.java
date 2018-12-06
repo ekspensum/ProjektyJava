@@ -41,6 +41,8 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	private UserTransaction ut;
 	
 	private List<Customer> cl;
+	private List<Operator> ol;
+	private List<User> ul;
 	
 //	@Resource 
 //	private SessionContext sc;
@@ -154,6 +156,14 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
+	public List<User> getUsersData() {
+		// TODO Auto-generated method stub
+		ul = new ArrayList<>();
+		ul = em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
+		return ul;
+	}
+
+	@Override
 	public boolean addOperator(Operator o, User u, int idUser) {
 		
 		try {
@@ -173,6 +183,23 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			e.printStackTrace();
 			return false;
 		}	
+	}
+	
+	@Override
+	public List<Operator> getOperatorsData() {
+		// TODO Auto-generated method stub
+		ol = new ArrayList<>();
+		ol = em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
+		return ol;
+	}
+
+	@Override
+	public boolean updateOperatorData(int idOperator, String login, boolean active, String firtName, String lastName, String phoneNo, String email) {
+		// TODO Auto-generated method stub
+		
+		System.out.println(login);
+		
+		return false;
 	}
 
 	@Override
@@ -213,5 +240,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		data.setActive(user.getActive());
 		return data;
 	}
+
 	
 }

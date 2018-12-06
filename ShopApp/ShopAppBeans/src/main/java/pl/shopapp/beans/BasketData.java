@@ -1,7 +1,13 @@
 package pl.shopapp.beans;
 
-public class BasketData {
+import java.io.Serializable;
 
+public class BasketData implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int productId;
 	private int quantity;
 	private String productName;
