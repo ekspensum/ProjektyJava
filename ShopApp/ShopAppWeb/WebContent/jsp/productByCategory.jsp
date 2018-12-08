@@ -24,11 +24,11 @@
 <p> <button type="submit" name="buttonToProductDetails" value="${pl.id}" form="ProductByCategory"><img src="data:image;base64,${pl.base64Image}"></button></p>
 <p>${pl.name } Cena: ${pl.price } Dostępna ilość: ${pl.unitsInStock }</p>
 <input type="hidden" name="${curentCategory.id }" value="${curentCategory.id }">
-<input type="number" name="quantity${pl.id }" min="1" max="${pl.unitsInStock }" value="1" style="width: 3em;">	<button type="submit" name="buttonToBasketFromCategory" value="${pl.id }" formaction="/ShopAppWeb/ProductByCategory">Dodaj do koszyka</button>
+<input type="number" name="quantity${pl.id }" min="1" max="${pl.unitsInStock }" value="1" style="width: 3em;" ${ SessionData.idRole == 3 ? "disabled" : ""} >	<button type="submit" name="buttonToBasketFromCategory" value="${pl.id }" formaction="/ShopAppWeb/ProductByCategory" ${ SessionData.idRole == 3 ? "disabled" : ""} >Dodaj do koszyka</button>
 </c:forEach>
 </form>
 
-<c:if test="${SessionData != null}">
+<c:if test="${SessionData != null && SessionData.idRole == 2}">
 <form action="/ShopAppWeb/ProductByCategory" method="POST" id="basket">
 <b>Zawartość koszyka:</b>
 <table>

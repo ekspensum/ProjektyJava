@@ -12,17 +12,17 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="adminLoginQuery", query="SELECT a FROM Admin a WHERE a.user = :user")
+	@NamedQuery(name="adminLoginQuery", query="SELECT a FROM Admin a WHERE a.user = :user"),
+	@NamedQuery(name="getAllAdminsQuery", query="SELECT ad FROM Admin ad")
 })
 public class Admin implements Serializable {
-
 	   
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	private String firstName;
 	private String lastName;
-	private String telNo;
+	private String phoneNo;
 	private String email;
 	@OneToOne
 	private User user;
@@ -60,11 +60,19 @@ public class Admin implements Serializable {
 	}
 
 	public String getTelNo() {
-		return telNo;
+		return getPhoneNo();
+	}
+
+	public String getPhoneNo() {
+		return phoneNo;
 	}
 
 	public void setTelNo(String telNo) {
-		this.telNo = telNo;
+		setPhoneNo(telNo);
+	}
+
+	public void setPhoneNo(String telNo) {
+		this.phoneNo = telNo;
 	}
 
 	public String getEmail() {

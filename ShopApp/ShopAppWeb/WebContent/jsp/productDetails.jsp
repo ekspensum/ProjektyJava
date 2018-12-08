@@ -21,10 +21,10 @@
 <form action="/ShopAppWeb/ProductDetails" method="POST" id="ProductDetails">
 <p>${pd.name } <img src="data:image;base64,${pd.base64Image}">	${pd.description }</p>
 <p>Cena: ${pd.price } Dostępna ilość: ${pd.unitsInStock }</p>
-<p>Dodaj do koszyka: <input type="number" name="quantity${pd.id }" min="1" max="${pl.unitsInStock }" value="1" style="width: 3em;" />	<button type="submit" name="buttonToBasketFromDetails" value="${pd.id }" form="ProductDetails">Dodaj do koszyka</button>
+<p>Dodaj do koszyka: <input type="number" name="quantity${pd.id }" min="1" max="${pl.unitsInStock }" value="1" style="width: 3em;" ${ SessionData.idRole == 3 ? "disabled" : ""} />	<button type="submit" name="buttonToBasketFromDetails" value="${pd.id }" form="ProductDetails" ${ SessionData.idRole == 3 ? "disabled" : ""} >Dodaj do koszyka</button>
 </form>
 
-<c:if test="${SessionData != null}">
+<c:if test="${SessionData != null && SessionData.idRole == 2}">
 <form action="/ShopAppWeb/ProductDetails" method="POST" id="basket">
 <b>Zawartość koszyka:</b>
 <table>

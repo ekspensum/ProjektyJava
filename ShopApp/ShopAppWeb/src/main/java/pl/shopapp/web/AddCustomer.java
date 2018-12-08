@@ -77,6 +77,10 @@ public class AddCustomer extends HttpServlet {
 				validOK = false;
 				request.setAttribute("message", "Pole login jest puste lub zawiera niepoprawne znaki!");
 			}
+			if(ubl.findUserLogin(request.getParameter("login"))) {
+				validOK = false;
+				request.setAttribute("message", "Login o nazwie: "+request.getParameter("login")+" jest już w użyciu. Proszę podać inny login!");
+			}
 			if (request.getParameter("password").equals("")
 					|| !valid.passwordValidation(request.getParameter("password"))) {
 				validOK = false;

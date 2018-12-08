@@ -20,11 +20,15 @@ public interface UserBeanRemote {
 	
 	public boolean addOperator(Operator o, User u, int idAdmin);
 	public List<Operator> getOperatorsData();
-	public boolean updateOperatorData(int idOperator, String login, boolean active, String firtName, String lastName, String phoneNo, String email);
+	public boolean updateOperatorData(int idUser, int idOperator, String login, boolean active, String firstName, String lastName, String phoneNo, String email);
 	
-	public boolean addAdmin(Admin a, User u);
+	public boolean addAdmin(Admin a, User u, int idUser);
 	public SessionData loginAdmin(String login, String password);
+	public List<Admin> getAdminsData();
+	public boolean updateAdminData(int idUser, int idAdmin, String login, boolean active, String firstName, String lastName, String phoneNo, String email);
 	
+	public boolean findUserLogin(String login);
 	public UserRole addUserRole(User u, int idRole);
-	public List<User> getUsersData();
+	public List<User> getUsersOperatorData();
+	public List<User> getUsersAdminData();
 }

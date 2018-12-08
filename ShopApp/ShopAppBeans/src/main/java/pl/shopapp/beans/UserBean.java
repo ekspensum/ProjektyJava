@@ -42,7 +42,9 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	
 	private List<Customer> cl;
 	private List<Operator> ol;
-	private List<User> ul;
+	private List<Admin> al;
+	private List<User> uol;
+	private List<User> ual;
 	
 //	@Resource 
 //	private SessionContext sc;
@@ -112,6 +114,15 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
+	public boolean findUserLogin(String login) {
+		// TODO examine whether the login is in use
+		if(em.createNamedQuery("findUserLoginQuery", User.class).setParameter("login",login).getResultList().size() > 0)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
 	public UserRole addUserRole(User u, int idRole) {
 			Role r = em.find(Role.class, idRole);		
 			UserRole ur = new UserRole();
@@ -156,11 +167,11 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public List<User> getUsersData() {
+	public List<User> getUsersOperatorData() {
 		// TODO Auto-generated method stub
-		ul = new ArrayList<>();
-		ul = em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
-		return ul;
+		uol = new ArrayList<>();
+		uol = em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
+		return uol;
 	}
 
 	@Override
@@ -194,18 +205,35 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean updateOperatorData(int idOperator, String login, boolean active, String firtName, String lastName, String phoneNo, String email) {
-		// TODO Auto-generated method stub
-		
-		System.out.println(login);
-		
+	public boolean updateOperatorData(int idUser, int idOperator, String login, boolean active, String firstName, String lastName, String phoneNo, String email) {
+		// TODO update User & Operator from ShopAppClient AdminPanel
+		String updateUserQuery = "UPDATE User SET login = '"+login+"', active = "+active+" WHERE id = "+idUser+"";
+		String updateOperatorQuery = "UPDATE Operator SET firstName = '"+firstName+"', lastName = '"+lastName+"', phoneNo = '"+phoneNo+"', email = '"+email+"', date = '"+LocalDateTime.now()+"' WHERE id = "+idOperator+"";	
+		try {
+			ut.begin();
+			int uuq = em.createQuery(updateUserQuery).executeUpdate();
+			int uoq = em.createQuery(updateOperatorQuery).executeUpdate();
+			ut.commit();
+			if(uuq == 1 && uoq == 1)
+				return true;
+			else
+				ut.rollback();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		return false;
 	}
 
 	@Override
-	public boolean addAdmin(Admin a, User u) {
+	public boolean addAdmin(Admin a, User u, int idUser) {
 		try {
 			ut.begin();
+			User user = em.find(User.class, idUser);
+			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+			adm.setAdmin(adm);
+			adm.setDate(LocalDateTime.now());
 			UserRole ur = addUserRole(u, 1);
 			em.persist(u);
 			em.persist(a);
@@ -239,6 +267,43 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		data.setRoleName(ur.getRole().getRoleName());
 		data.setActive(user.getActive());
 		return data;
+	}
+
+	@Override
+	public List<Admin> getAdminsData() {
+		// TODO get current admins list
+		al = new ArrayList<>();
+		al = em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
+		return al;
+	}
+
+	@Override
+	public List<User> getUsersAdminData() {
+		// TODO get current users list which role is admin
+		ual = new ArrayList<>();
+		ual = em.createNamedQuery("getUserAdminQuery", User.class).getResultList();
+		return ual;
+	}
+
+	@Override
+	public boolean updateAdminData(int idUser, int idAdmin, String login, boolean active, String firstName,	String lastName, String phoneNo, String email) {
+		// TODO update User & Admin from ShopAppClient AdminPanel. Only first Admin have privileges for update other admins. 
+		String updateUserQuery = "UPDATE User SET login = '"+login+"', active = "+active+" WHERE id = "+idUser+"";
+		String updateAdminQuery = "UPDATE Admin SET firstName = '"+firstName+"', lastName = '"+lastName+"', phoneNo = '"+phoneNo+"', email = '"+email+"', date = '"+LocalDateTime.now()+"' WHERE id = "+idAdmin+"";	
+		try {
+			ut.begin();
+			int uuq = em.createQuery(updateUserQuery).executeUpdate();
+			int uaq = em.createQuery(updateAdminQuery).executeUpdate();
+			ut.commit();
+			if(uuq == 1 && uaq == 1)
+				return true;
+			else
+				ut.rollback();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	

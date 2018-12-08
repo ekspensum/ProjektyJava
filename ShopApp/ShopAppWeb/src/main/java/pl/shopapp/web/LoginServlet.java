@@ -78,9 +78,9 @@ public class LoginServlet extends HttpServlet {
 					if (sd.getIdRole() == 3)
 						response.sendRedirect("http://localhost:8080/ShopAppWeb/OperatorPanel");
 				} else
-					request.setAttribute("message", "Niepoprawne dane logowania");
+					request.setAttribute("message", "Niepoprawne dane logowania lub użytkownik nie jest aktywny!");
 			} else
-				request.setAttribute("message", "Niepoprawne dane logowania");
+				request.setAttribute("message", "Niepoprawne dane logowania!");
 		}
 		
 //		allows delete product from basket

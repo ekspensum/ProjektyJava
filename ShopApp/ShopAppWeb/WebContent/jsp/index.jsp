@@ -43,7 +43,7 @@
 </c:forEach>
 </form>
 
-<c:if test="${SessionData != null}">
+<c:if test="${SessionData != null && SessionData.idRole == 2}">
 <form action="/ShopAppWeb/LoginServlet" method="POST" id="basket">
 <b>Zawartość koszyka:</b>
 <table>

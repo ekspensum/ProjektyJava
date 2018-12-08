@@ -10,7 +10,8 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="loginQuery", query="SELECT u FROM User u WHERE u.login = :login AND u.password = :password")
+	@NamedQuery(name="loginQuery", query="SELECT u FROM User u WHERE u.login = :login AND u.password = :password AND u.active = true"),
+	@NamedQuery(name="findUserLoginQuery", query="SELECT u FROM User u WHERE u.login = :login")
 })
 public class User implements Serializable {
 
