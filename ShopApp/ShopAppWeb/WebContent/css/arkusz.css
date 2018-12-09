@@ -39,7 +39,7 @@ table, th, td {
 
 #registrationButtonId {
 	position: absolute;
-	top: 136px;
+	top: 15px;
 	right: 175px;
 }
 
@@ -61,25 +61,38 @@ table, th, td {
 	right: 100px;
 }
 
-#loginAddCustomer,
-#passwordAddCustomer,
-#firstName,
-#lastName,
-#pesel,
-#country,
-#zipCode,
-#city,
-#street,
-#streetNo,
-#unitNo,
-#email,
-#isCompany,
-#compnyName,
-#taxNo,
-#regon,
-#buttonAddCustomer {
-	position: relative;
-	left: 30px;
+#customerDataForm {
+	position: absolute;
+	left: 3%;
+	top: 100px;
+	text-align: right;
+}
+
+#customerLoginUpdateForm {
+	position: absolute;
+	left: 20%;
+	top: 100px;
+	text-align: right;
+}
+
+#customerTransactionForm {
+	position: absolute;
+	left: 40%;
+	top: 100px;
+}
+
+#addProductForm {
+	position: absolute;
+	left: 3%;
+	top: 14%;
+	text-align: left;
+}
+
+#addCategoryForm {
+	position: absolute;
+	left: 3%;
+	top: 67%;
+	text-align: left;
 }
 
 #pageHeader{

@@ -44,6 +44,7 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 
 	@Override
 	public boolean newTransaction(int idUser, List<BasketData> basketList) {
+		// TODO Auto-generated method stub
 		int newUnitInStock = 0;		
 		try {
 			ut.begin();
@@ -71,6 +72,15 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public List<Transaction> getTransactionsData(int idUser, LocalDateTime dateFrom, LocalDateTime dateTo) {
+		// TODO Auto-generated method stub
+		User u = em.find(User.class, idUser);
+		Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", u).getSingleResult();
+		List<Transaction> tl = em.createNamedQuery("findTransactionsQuery", Transaction.class).setParameter("customer", c).setParameter("dateFrom", dateFrom).setParameter("dateTo", dateTo).getResultList();
+		return tl;
 	}
 
 }

@@ -13,14 +13,13 @@
 <p id="pageHeader">Panel operatora</p>
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
 <a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
-<br>
-<br>
-<p id="optionHeader">Dodawanie produktu</p>
+
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="addProductForm" enctype="multipart/form-data">
-<p id="productName">Nazwa produktu: <input type="text" name="productName" value="${RequestAttribute.productName }" /></p>
-<p id="productDescription">Opis produktu: <textarea name="productDescription" rows="10" cols="50" form="addProductForm" >${RequestAttribute.productDescription }</textarea></p>
-<p id="productPrice">Cena: <input type="text" name="productPrice" value="${RequestAttribute.productPrice }" /></p>
-<p id="productUnitsInStock">Dostępna ilość: <input type="text" name="productUnitsInStock" value="${RequestAttribute.productUnitsInStock }" /></p>
+<p id="optionHeader">Dodawanie produktu</p>
+<p id="productName">Nazwa produktu: <input type="text" name="productName" value="${param['productName'] }" /></p>
+<p id="productDescription">Opis produktu: <textarea name="productDescription" rows="10" cols="50" form="addProductForm" >${param['productDescription'] }</textarea></p>
+<p id="productPrice">Cena: <input type="text" name="productPrice" value="${param['productPrice'] }" /></p>
+<p id="productUnitsInStock">Dostępna ilość: <input type="text" name="productUnitsInStock" value="${param['productUnitsInStock'] }" /></p>
 <p>Wybierz kategorię 1: <select id="category1" name="category1">
 <c:forEach items="${listCat}" var="cat" begin="0" >
 	<option value="${cat.id }">${cat.name }</option>
@@ -34,11 +33,10 @@
 <p id="productAddFile">Dodaj plik: <input type="file" name="imageProduct" required="required" accept="image/*"/></p>
 <p id="buttonAddProduct"><input type="submit" name="buttonAddProduct" value="Dodaj produkt" /></p>
 </form>
-<br>
-<br>
-<p id="optionHeader">Dodawanie kategorii</p>
+
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="addCategoryForm" enctype="multipart/form-data">
-<p id="categoryName">Nazwa kategorii: <input type="text" name="categoryName" value="${RequestAttribute.categoryName }" /></p>
+<p id="optionHeader">Dodawanie kategorii</p>
+<p id="categoryName">Nazwa kategorii: <input type="text" name="categoryName" value="${param['categoryName'] }" /></p>
 <p id="categoryAddFile">Dodaj plik: <input type="file" name="imageCategory" required="required" accept="image/*"/></p>
 <p id="buttonAddCategory"><input type="submit" name="buttonAddCategory" value="Dodaj kategorię" /></p>
 </form>

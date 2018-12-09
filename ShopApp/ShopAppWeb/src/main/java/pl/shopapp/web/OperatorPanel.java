@@ -55,14 +55,8 @@ public class OperatorPanel extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		List<Integer> helperListCat = new ArrayList<>();
-		RequestAttribute ra = new RequestAttribute();
-		ra.setProductName(request.getParameter("productName"));
-		ra.setProductDescription(request.getParameter("productDescription"));
-		ra.setProductPrice(request.getParameter("productPrice"));
-		ra.setProductUnitsInStock(request.getParameter("productUnitsInStock"));
-		ra.setCategoryName(request.getParameter("categoryName"));
-		request.setAttribute("RequestAttribute", ra);
 
+		//validation
 		if (request.getParameter("buttonAddProduct") != null) {
 			boolean validOK = true;
 			Validation valid = new Validation();

@@ -2,17 +2,19 @@ package pl.shopapp.entites;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
 import javax.persistence.*;
+
 
 /**
  * Entity implementation class for Entity: Order
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name="findTransactionsQuery", query="SELECT tr FROM Transaction tr WHERE tr.customer = :customer AND tr.dateTime BETWEEN :dateFrom AND :dateTo")
+})
 public class Transaction implements Serializable {
-
-	   
+   
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;

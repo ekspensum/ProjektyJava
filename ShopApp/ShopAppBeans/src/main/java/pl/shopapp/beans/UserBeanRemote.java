@@ -13,8 +13,8 @@ import pl.shopapp.entites.UserRole;
 @Remote
 public interface UserBeanRemote {
 	public boolean addCustomer(Customer c, User u);
-	public boolean updateCustomer(Customer c, int id);
-	public List<Customer> findCustomer(String lastName, String pesel, String companyName, String taxNo, String regon);
+	public boolean updateCustomer(User u, Customer c, int idUser);
+	public Customer findCustomer(User u);
 	public boolean deleteCustomer(Customer c, int id);
 	public SessionData loginUser(String login, String password);
 	
@@ -27,6 +27,7 @@ public interface UserBeanRemote {
 	public List<Admin> getAdminsData();
 	public boolean updateAdminData(int idUser, int idAdmin, String login, boolean active, String firstName, String lastName, String phoneNo, String email);
 	
+	public User findUser(int idUser);
 	public boolean findUserLogin(String login);
 	public UserRole addUserRole(User u, int idRole);
 	public List<User> getUsersOperatorData();
