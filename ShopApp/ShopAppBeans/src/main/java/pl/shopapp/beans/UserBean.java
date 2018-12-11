@@ -1,7 +1,6 @@
 package pl.shopapp.beans;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -191,7 +190,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<User> getUsersOperatorData() {
 		// TODO Auto-generated method stub
-		uol = new ArrayList<>();
 		uol = em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
 		return uol;
 	}
@@ -223,7 +221,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<Operator> getOperatorsData() {
 		// TODO Auto-generated method stub
-		ol = new ArrayList<>();
 		ol = em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
 		return ol;
 	}
@@ -302,7 +299,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<Admin> getAdminsData() {
 		// TODO get current admins list
-		al = new ArrayList<>();
+//		al = new ArrayList<>();
 		al = em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
 		return al;
 	}
@@ -310,7 +307,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<User> getUsersAdminData() {
 		// TODO get current users list which role is admin
-		ual = new ArrayList<>();
 		ual = em.createNamedQuery("getUserAdminQuery", User.class).getResultList();
 		return ual;
 	}

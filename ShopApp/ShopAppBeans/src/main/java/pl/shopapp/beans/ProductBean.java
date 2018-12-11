@@ -1,8 +1,6 @@
 package pl.shopapp.beans;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -39,6 +37,7 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	
 	private List<Category> listCat;
 	private List<Product> listProductByCat;
+	private List<Product> listProductByName;
 
 	/**
 	 * Default constructor.
@@ -79,9 +78,10 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public List<Product> findProduct(String name, String description) {
+	public List<Product> findProduct(String name) {
 		// TODO Auto-generated method stub
-		return null;
+		listProductByName = em.createNamedQuery("productsByName", Product.class).setParameter("name", "%"+name+"%").getResultList();
+		return listProductByName;
 	}
 
 	@Override
@@ -110,14 +110,12 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 
 	@Override
 	public List<Category> listCategory() {
-		listCat = new ArrayList<>();
 		listCat = (List<Category>) em.createNamedQuery("listCategory", Category.class).getResultList();
 		return listCat;
 	}
 
 	@Override
 	public List<Product> listProductByCategory(int idCategory) {
-		listProductByCat = new ArrayList<>();
 		listProductByCat = em.createNamedQuery("productsByCategory", Product.class).setParameter(1, idCategory).getResultList();
 		return listProductByCat;
 	}
@@ -125,6 +123,13 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	@Override
 	public Product getProduct(int idProduct) {
 		return em.find(Product.class, idProduct);
+	}
+
+	@Override
+	public List<Category> getProductCategories(Product p) {
+		// TODO Auto-generated method stub
+		List<Category> catList = em.createNamedQuery("productCategoriesQuery", Category.class).setParameter("product", p).getResultList();
+		return catList;
 	}
 
 

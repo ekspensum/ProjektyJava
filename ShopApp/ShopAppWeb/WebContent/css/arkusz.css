@@ -47,7 +47,7 @@ table, th, td {
 	position: absolute;
 	top: 40px;
 	right: 100px;
-	color: red;
+	color: blue;
 }
 #messageTransaction {
 	position: absolute;
@@ -92,6 +92,13 @@ table, th, td {
 	position: absolute;
 	left: 3%;
 	top: 67%;
+	text-align: left;
+}
+
+#searchProductForm {
+		position: absolute;
+	left: 35%;
+	top: 14%;
 	text-align: left;
 }
 

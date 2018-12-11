@@ -11,12 +11,12 @@ public interface ProductBeanRemote {
 	
 	public boolean addProduct(Product p, List<Integer> helperListCat, int idUser);
 	public void updateProduct(Product p, int id);
-	public List<Product> findProduct(String name, String description);
+	public List<Product> findProduct(String name);
 	public void deleteProduct(Product p, int idUser);
 	public List<Product> listProductByCategory(int idCategory);
 	public Product getProduct(int idProduct);
-	
+		
 	public boolean addCategory(Category cat, int userId);
 	public List<Category> listCategory();
-
+	public List<Category> getProductCategories(Product p);
 }
