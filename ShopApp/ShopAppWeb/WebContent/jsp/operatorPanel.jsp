@@ -17,7 +17,7 @@
 <a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="addProductForm" enctype="multipart/form-data">
-<p id="optionHeader">Dodawanie produktu</p>
+<p id="optionHeader">Dodawanie /edycja produktu</p>
 <p id="productName">Nazwa produktu: <input type="text" name="productName" value="${productToEdit != null ? productToEdit.name : clear == 'yes' ? '' : param['productName'] }" /></p>
 <p id="productDescription">Opis produktu: <textarea name="productDescription" rows="10" cols="50" form="addProductForm" >${productToEdit != null ? productToEdit.description : clear == 'yes' ? '' :  param['productDescription'] }</textarea></p>
 <p id="productPrice">Cena: <input type="text" name="productPrice" value="${productToEdit != null ? productToEdit.price : clear == 'yes' ? '' : param['productPrice'] }" /></p>
@@ -44,13 +44,14 @@
 </form>
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="searchProductForm">
+<p>Wyszukaj produkty o ilości mniejszej lub równej niż: <input type="number" name="searchPruductByQuantity" min="1" value="5" style="width: 3em;" />	<button type="submit" name="searchQuantityButton" value="yes" form="searchProductForm">Wyszukaj</button></p>
 <p>Wyszukaj produkt wg fragmentu nazwy: <input type="text" name="searchPruductByName" value="${param['searchPruductByName'] }" />	<button type="submit" name="searchPruductButton" value="yes" form="searchProductForm">Wyszukaj</button></p>
 <table><tr><th>Lp</th><th>Nazwa produktu</th><th>Cena</th><th>Ilość na stanie</th><th>Edytuj</th></tr>
 <c:forEach items="${Products }" var="pr" begin="0" varStatus="lp">
 <tr><td>${lp.count }</td><td>${pr.name }</td><td>${pr.price }</td><td>${pr.unitsInStock }</td><td><input type="checkbox" name="idProduct" value="${pr.id }"></td></tr>
 </c:forEach>
 </table>
-<p>Wybierz do edycji zaznaczony produkt: <button type="submit" name="editButton" value="yes" form="searchProductForm" ${param['searchPruductByName'] != null && param['searchPruductByName'] != '' ? '' : 'disabled' }>Wybierz</button></p>
+<p>Wybierz do edycji zaznaczony produkt: <button type="submit" name="editButton" value="yes" form="searchProductForm" ${param['searchPruductByName'] != null && param['searchPruductByName'] != '' || param['searchPruductByQuantity'] != null ? '' : 'disabled' }>Wybierz</button></p>
 <p>Zapisz zmiany w wybranym produkcie: <button type="submit" name="saveButton" value="yes" form="addProductForm" ${productToEdit != null ? '' : 'disabled' }>Zapisz zmiany</button></p>
 </form>
 

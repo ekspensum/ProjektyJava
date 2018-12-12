@@ -10,8 +10,9 @@ import pl.shopapp.entites.Product;
 public interface ProductBeanRemote {
 	
 	public boolean addProduct(Product p, List<Integer> helperListCat, int idUser);
-	public void updateProduct(Product p, int id);
+	public boolean updateProduct(Product p, int sizeFileImage);
 	public List<Product> findProduct(String name);
+	public List<Product> findProduct(int quantity);
 	public void deleteProduct(Product p, int idUser);
 	public List<Product> listProductByCategory(int idCategory);
 	public Product getProduct(int idProduct);

@@ -15,7 +15,7 @@
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
 <a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 <form action="/ShopAppWeb/CustomerPanel" method="POST" id="customerLoginUpdateForm">
-<p>Zaloguj się w celu edycji swoich danych:</p>
+<p>Potwierdź swoje dane w celu edycji:</p>
 <p>Login: <input type="text" name="login"/></p>
 <p>Hasło: <input type="password" name="password" /></p>
 <p><button type="submit" name="buttonOpenEdit" value="yes" form="customerLoginUpdateForm">Otwórz dane do edycji</button>
@@ -54,7 +54,7 @@
 <table>
 <tr><th>Lp</th><th>Data</th><th>Nazwa produktu</th><th>Cena</th><th>Zakupiona ilość</th><th>Wartość zakupu</th></tr>
 <c:forEach items="${transactionsDataList}" var="tr" begin="0" varStatus="loop">
-<tr><td>${loop.count }</td><td>${tr.dateTime }</td><td>${tr.product.name }</td><td>${tr.product.price }</td><td>${tr.quantity }</td><td>${tr.product.price * tr.quantity }</td></tr>
+<tr><td>${loop.count }</td><td>${tr.dateTime }</td><td>${tr.productName }</td><td>${tr.price }</td><td>${tr.quantity }</td><td>${tr.price * tr.quantity }</td></tr>
 </c:forEach>
 </table>
 </form>

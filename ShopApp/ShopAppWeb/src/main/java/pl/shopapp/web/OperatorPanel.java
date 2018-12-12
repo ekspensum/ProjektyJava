@@ -32,7 +32,8 @@ public class OperatorPanel extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@EJB
-	ProductBeanLocal pbl;
+	private ProductBeanLocal pbl;
+	private int productIdToEdit;
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -100,9 +101,16 @@ public class OperatorPanel extends HttpServlet {
 		if(request.getParameter("searchPruductButton") != null) {
 			if(!request.getParameter("searchPruductByName").equals("")) {
 				List<Product> products = pbl.findProduct(request.getParameter("searchPruductByName"));
-				request.setAttribute("Products", products);				
+				request.setAttribute("Products", products);	
+				request.getServletContext().setAttribute("button", "searchPruductButton");
 			} else
 				request.setAttribute("message", "Proszę wprowadzić fragment nazwy wyszukiwanego produktu!");
+		}
+		
+		if(request.getParameter("searchQuantityButton") != null) {
+				List<Product> products = pbl.findProduct(Integer.valueOf(request.getParameter("searchPruductByQuantity")));
+				request.setAttribute("Products", products);	
+				request.getServletContext().setAttribute("button", "searchQuantityButton");
 		}
 		
 		if(request.getParameter("editButton") != null) {
@@ -111,22 +119,35 @@ public class OperatorPanel extends HttpServlet {
 					Product pr = pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")));
 					List<Category> catList = pbl.getProductCategories(pr);
 					request.setAttribute("productToEdit", pr);
-					request.setAttribute("categoryToEdit", catList);					
+					request.setAttribute("categoryToEdit", catList);
+					productIdToEdit = pr.getId();
 				} else
 					request.setAttribute("message", "Proszę zaznaczyć jeden produkt!");
 			} else
-				request.setAttribute("message", "Proszę zaznaczyć jeden produkt!");		
-			List<Product> products = pbl.findProduct(request.getParameter("searchPruductByName"));
-			request.setAttribute("Products", products);
+				request.setAttribute("message", "Proszę zaznaczyć jeden produkt!");	
+			
+			if(request.getServletContext().getAttribute("button").equals("searchPruductButton")) {
+				List<Product> products = pbl.findProduct(request.getParameter("searchPruductByName"));
+				request.setAttribute("Products", products);				
+			} 
+			if(request.getServletContext().getAttribute("button").equals("searchQuantityButton")) {
+				List<Product> products = pbl.findProduct(Integer.valueOf(request.getParameter("searchPruductByQuantity")));
+				request.setAttribute("Products", products);	
+			}
 		}
 		
 		if(request.getParameter("saveButton") != null) {
 			if(validationAndSetup(request, p, helperListCat)) {
-				
-				
-				request.setAttribute("clear", "yes");
-			}
+				p.setId(productIdToEdit);
+				if(pbl.updateProduct(p, (int)request.getPart("imageProduct").getSize())) {
+					request.setAttribute("clear", "yes");	
+					request.setAttribute("message", "Aktualizacja danych produktu zakończona powodzeniem!");
+					productIdToEdit = 0;
+				}
 
+				else
+					request.setAttribute("message", "Nie udało się zaktualizować produktu!");
+			}
 		}
 
 		doGet(request, response);

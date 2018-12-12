@@ -51,14 +51,17 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 			User u = em.find(User.class, idUser);
 			Customer c = (Customer) em.createNamedQuery("customerQuery", Customer.class).setParameter("user", u).getSingleResult();
 			Transaction t;
+			Product p;
 			for(int i=0; i<basketList.size(); i++) {
-				t = new Transaction();
-				t.setCustomer(c);
-				t.setQuantity(basketList.get(i).getQuantity());
-				Product p = em.find(Product.class, basketList.get(i).getProductId());
+				p = em.find(Product.class, basketList.get(i).getProductId());
 				newUnitInStock = p.getUnitsInStock() - basketList.get(i).getQuantity();
 				String queryUpdate = "UPDATE Product SET unitsInStock = "+newUnitInStock+" WHERE id = "+p.getId()+"";
 				em.createQuery(queryUpdate).executeUpdate();
+				t = new Transaction();
+				t.setQuantity(basketList.get(i).getQuantity());
+				t.setCustomer(c);
+				t.setProductName(p.getName());
+				t.setPrice(p.getPrice());
 				t.setProduct(p);
 				t.setDateTime(LocalDateTime.now());
 				em.persist(t);		

@@ -22,7 +22,9 @@ public class Transaction implements Serializable {
 	private Product product;
 	@OneToOne
 	private Customer customer;
+	private String productName;
 	private int quantity;
+	private double price;
 	private LocalDateTime dateTime;
 	private static final long serialVersionUID = 1L;
 
@@ -50,12 +52,24 @@ public class Transaction implements Serializable {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}   
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 	public int getQuantity() {
 		return this.quantity;
 	}
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
 	}
 	public LocalDateTime getDateTime() {
 		return dateTime;

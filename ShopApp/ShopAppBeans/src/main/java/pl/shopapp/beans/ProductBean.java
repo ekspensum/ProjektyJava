@@ -8,6 +8,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -38,6 +39,7 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	private List<Category> listCat;
 	private List<Product> listProductByCat;
 	private List<Product> listProductByName;
+	private List<Product> listProductByQuantity;
 
 	/**
 	 * Default constructor.
@@ -72,9 +74,31 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public void updateProduct(Product p, int id) {
+	public boolean updateProduct(Product p, int sizeFileImage) {
 		// TODO Auto-generated method stub
-
+		int row = 0;
+		String updateQueryWithoutImage = "UPDATE Product SET name = '"+p.getName()+"', description = '"+p.getDescription()+"', price = "+p.getPrice()+", unitsInStock = "+p.getUnitsInStock()+", dateTime = '"+p.getDateTime()+"' WHERE id = "+p.getId()+"";
+		String updateQueryWithImage = "UPDATE Product SET name = '"+p.getName()+"', description = '"+p.getDescription()+"', price = "+p.getPrice()+", unitsInStock = "+p.getUnitsInStock()+", productImage = :productImage, dateTime = '"+p.getDateTime()+"' WHERE id = "+p.getId()+"";
+		try {
+			ut.begin();
+			if(sizeFileImage == 0)
+				row = em.createQuery(updateQueryWithoutImage).executeUpdate();
+			else {
+				Query query = em.createQuery(updateQueryWithImage);	
+				query.setParameter("productImage", p.getProductImage());
+				row = query.executeUpdate();
+			}
+			ut.commit();
+			if(row == 1)
+				return true;
+			else
+				ut.rollback();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
@@ -82,6 +106,13 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 		// TODO Auto-generated method stub
 		listProductByName = em.createNamedQuery("productsByName", Product.class).setParameter("name", "%"+name+"%").getResultList();
 		return listProductByName;
+	}
+
+	@Override
+	public List<Product> findProduct(int quantity) {
+		// TODO Auto-generated method stub
+		listProductByQuantity = em.createNamedQuery("productsByQuantity", Product.class).setParameter("quantity", quantity).getResultList();
+		return listProductByQuantity;
 	}
 
 	@Override
