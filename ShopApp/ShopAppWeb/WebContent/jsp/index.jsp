@@ -32,14 +32,14 @@
 <form action="/ShopAppWeb/ProductByCategory" method="POST" id="ProductByCategoryPlain">
 <p id="optionHeader">Wszystkie produkty według kategorii:</p>
 <c:forEach items="${catList}" var="cat" begin="1" end="4">
-<p>${cat.name } <button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryPlain"><img src="data:image;base64,${cat.base64Image}" height="50%" width="150"></button></p>
+<p>${cat.name } <button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryPlain"><img src="data:image;base64,${cat.base64Image}"></button></p>
 </c:forEach>
 </form>
 
 <form action="/ShopAppWeb/ProductByCategory" method="POST" id="ProductByCategoryFine">
 <p id="optionHeader">Produkty wysokiej wydajności według kategorii:</p>
 <c:forEach items="${catList}" var="cat" begin="5" end="8">
-<p>${cat.name } <button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryFine"><img src="data:image;base64,${cat.base64Image}" height="50%" width="150"></button></p>
+<p>${cat.name } <button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryFine"><img src="data:image;base64,${cat.base64Image}"></button></p>
 </c:forEach>
 </form>
 
@@ -57,20 +57,6 @@
 <button type="submit" formaction="/ShopAppWeb/Transaction" ${ total > 0 ? "" : "disabled" } >Dokonaj zakupu</button>
 </form>
 </c:if>
-
-<form action="/ShopAppWeb/LoginServlet" method="POST" id="searchFormMain">
-<input type="text" name="searchProductInput" value="${param['searchProductInput'] }" />	<input type="submit" name="searchProductButton" value="Szukaj">
-</form>
-
-<form action="/ShopAppWeb/LoginServlet" method="POST" id="resultSearchFormMain">
-<p><b>Wyniki wyszukiwania:</b></p>
-<table>
-<tr><th>Lp</th><th>Nazwa produktu</th><th>Dostępna ilość</th><th>Cana</th><th>Przejdz do szczegółów</th></tr>
-<c:forEach items="${resultSearchProducts}" var="res" varStatus="lp" begin="0">
-<tr><td>${lp.count }</td><td>${res.name }</td><td>${res.unitsInStock }</td><td>${res.price }</td><td><button type="submit" name="buttonToProductDetailsFromMain" value="${res.id }" formaction="/ShopAppWeb/ProductDetails">Szczegóły produktu</button></td></tr>
-</c:forEach>
-</table>
-</form>
 
 </body>
 </html>

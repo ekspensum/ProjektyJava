@@ -7,10 +7,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import pl.shopapp.beans.BasketBeanLocal;
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
+import pl.shopapp.entites.Product;
 
 /**
  * Servlet implementation class ProductDetail
@@ -48,28 +48,28 @@ public class ProductDetails extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		if (request.getParameter("buttonToProductDetailsFromCategory") != null) {
-			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonToProductDetailsFromCategory"))));
-		}
-		if (request.getParameter("buttonToProductDetailsFromMain") != null) {
-			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonToProductDetailsFromMain"))));
+		if (request.getParameter("buttonToProductDetails") != null) {
+			Product p = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToProductDetails")));
+			request.setAttribute("pd", p);
 		}
 		if (request.getParameter("buttonToBasketFromDetails") != null) {
 //			allows holds the same searching category result
-			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))));
+			Product p = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails")));
+			request.setAttribute("pd", p);
 
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			if (sd != null) {
 				bbl = sd.getBasketBeanLocal();
 				String quantity = "quantity" + request.getParameter("buttonToBasketFromDetails");
-				bbl.addBasketRow(pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))).getId(), Integer.valueOf(request.getParameter(quantity)), pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))).getName(), pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))).getPrice(),	bbl.getBasketData());
+				bbl.addBasketRow(p.getId(), Integer.valueOf(request.getParameter(quantity)), p.getName(), p.getPrice(),	bbl.getBasketData());
 			} else
 				request.setAttribute("message", "Aby dodać produkt do koszyka należy się zalogować!");
 		}
 
 		if (request.getParameter("buttonDeleteRowBasket") != null) {
 //			allows holds the same searching category result
-			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonDeleteRowBasket"))));
+			Product p = pbl.getProduct(Integer.valueOf(request.getParameter("buttonDeleteRowBasket")));
+			request.setAttribute("pd", p);
 
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			bbl = sd.getBasketBeanLocal();

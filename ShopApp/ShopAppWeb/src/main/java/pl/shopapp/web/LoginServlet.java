@@ -1,6 +1,7 @@
 package pl.shopapp.web;
 
 import java.io.IOException;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -15,6 +16,7 @@ import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.beans.Validation;
+import pl.shopapp.entites.Category;
 
 /**
  * Servlet implementation class LoginServlet
@@ -37,7 +39,8 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-	    request.setAttribute("catList", pbl.listCategory());
+		List<Category> catList = pbl.listCategory();
+	    request.setAttribute("catList", catList);
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		if(sd != null) {
 			double total = 0.0;
@@ -57,7 +60,7 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		if (request.getParameter("loginButton") != null) {
-			Validation valid = new Validation(ubl.getSettingsApp());
+			Validation valid = new Validation();
 			String pass = valid.passwordToCode(request.getParameter("password"));
 			if (valid.loginValidation(request.getParameter("login"))) {
 				if (ubl.loginUser(request.getParameter("login"), pass) != null) {
@@ -71,7 +74,7 @@ public class LoginServlet extends HttpServlet {
 					}
 					sd.setBasketBeanLocal(bbl);
 					request.getSession().setAttribute("SessionData", sd);
-					request.getSession().setMaxInactiveInterval(ubl.getSettingsApp().getSessionTime()*60);
+					request.getSession().setMaxInactiveInterval(1800);
 					if (sd.getIdRole() == 3)
 						response.sendRedirect("http://localhost:8080/ShopAppWeb/OperatorPanel");
 				} else
@@ -95,11 +98,6 @@ public class LoginServlet extends HttpServlet {
 				}
 			} else
 				request.setAttribute("message", "Proszę zaznaczyć co njmniej jeden produkt do usunięcia!");
-		}
-		
-//		for searching products
-		if(request.getParameter("searchProductButton") != null) {
-			request.setAttribute("resultSearchProducts", pbl.findProduct(request.getParameter("searchProductInput")));			
 		}
 		
 		doGet(request, response);

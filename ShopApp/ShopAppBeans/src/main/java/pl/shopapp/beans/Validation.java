@@ -4,21 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import pl.shopapp.entites.SettingsApp;
 
 public class Validation {
-	
-	private SettingsApp setting;
-
-	public Validation() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Validation(SettingsApp setting) {
-		super();
-		this.setting = setting;
-	}
 
 	public String passwordToCode(String password) {
 		try {
@@ -35,28 +22,28 @@ public class Validation {
 	}
 	
 	public boolean loginValidation(String login) {
-		Pattern patt = Pattern.compile("^[a-zA-Z0-9]{"+setting.getMinCharInLogin()+","+setting.getMaxCharInLogin()+"}$");
+		Pattern patt = Pattern.compile("^[a-zA-Z0-9]{3,15}$");
 		Matcher mat = patt.matcher(login);
 		return mat.find();
 	}
 	
     public boolean passwordValidation(String pass) {
         boolean passOK = true;
-        if (pass.length() < setting.getMinCharInPass() || pass.length() > setting.getMaxCharInPass())
+        if (pass.length() < 6 || pass.length() > 15)
             passOK = false;
         int occUpperCase = 0;
         for (int i = 0; i < pass.length(); i++) {
             if (pass.substring(i, i + 1).matches("[A-ZĄ-Ż]"))
                 occUpperCase++;
         }
-        if (occUpperCase < setting.getUpperCaseInPass())
+        if (occUpperCase < 1)
             passOK = false;
-        int howMuchNum = 0;
+        int ileLiczb = 0;
         for (int i = 0; i < pass.length(); i++) {
             if (pass.substring(i, i + 1).matches("[0-9]"))
-            	howMuchNum++;
+                ileLiczb++;
         }
-        if (howMuchNum < setting.getNumbersInPass())
+        if (ileLiczb < 2)
             passOK = false;
         return passOK;
     }
@@ -110,5 +97,4 @@ public class Validation {
 		Matcher mat = patt.matcher(regon);
 		return mat.find();
 	}
-
 }

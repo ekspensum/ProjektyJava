@@ -9,6 +9,9 @@ import javax.swing.table.DefaultTableModel;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanRemote;
 import pl.shopapp.beans.Validation;
+import pl.shopapp.entites.Admin;
+import pl.shopapp.entites.Operator;
+import pl.shopapp.entites.User;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -45,13 +48,6 @@ public class AdminPanel extends JFrame {
 	private JTextField textFieldLastNameAdmin;
 	private JTextField textFieldTelephoneAdmin;
 	private JTextField textFieldEmailAdmin;
-	private JTextField textFieldMinCharInPass;
-	private JTextField textFieldUpperCaseCharInPass;
-	private JTextField textFieldMaxCharInPass;
-	private JTextField textFieldSessionTime;
-	private JTextField textFieldNumbersInPass;
-	private JTextField textFieldMinCharInLogin;
-	private JTextField textFieldMaxCharInLogin;
 
 	/**
 	 * Create the frame.
@@ -123,7 +119,7 @@ public class AdminPanel extends JFrame {
 		btnAddOperator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean validOK = true;
-				Validation valid = new Validation(ubr.getSettingsApp());
+				Validation valid = new Validation();
 				if (textFieldLoginOperator.getText() == ""
 						|| !valid.loginValidation(textFieldLoginOperator.getText())) {
 					validOK = false;
@@ -161,7 +157,19 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.passwordToCode(textFieldPasswordOperator.getText()), sd.getIdUser());
+					User u = new User();
+					u.setLogin(textFieldLoginOperator.getText());
+					u.setPassword(valid.passwordToCode(textFieldPasswordOperator.getText()));
+					u.setActive(true);
+
+					Operator op = new Operator();
+					op.setFirstName(textFieldFirstNameOperator.getText());
+					op.setLastName(textFieldLastNameOperator.getText());
+					op.setPhoneNo(textFieldTelephoneOperator.getText());
+					op.setEmail(textFieldEmailOperator.getText());
+					op.setUser(u);
+
+					ubr.addOperator(op, u, sd.getIdUser());
 					lblMsgOperator.setText("<HTML>Dodano nowego operatora!</HTML>");
 					textFieldLoginOperator.setText("");
 					textFieldPasswordOperator.setText("");
@@ -362,6 +370,72 @@ public class AdminPanel extends JFrame {
 		lblMsgAdmin.setBounds(10, 277, 227, 55);
 		panelAddOtherAdmin.add(lblMsgAdmin);
 
+		JButton btnAddAdmin = new JButton("Dodaj");
+		btnAddAdmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean validOK = true;
+				Validation valid = new Validation();
+				if (textFieldLoginAdmin.getText() == "" || !valid.loginValidation(textFieldLoginAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Pole login jest puste lub zawiera niepoprawne znaki!1</HTML>");
+				}
+				if (ubr.findUserLogin(textFieldLoginAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Login o nazwie: " + textFieldLoginAdmin.getText()
+							+ " jest już w użyciu. Proszę podać inny login!</HTML>");
+				}
+				if (textFieldPasswordAdmin.getText() == ""
+						|| !valid.passwordValidation(textFieldPasswordAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Pole hasło jest puste lub zawiera niepoprawne znaki!2</HTML>");
+				}
+				if (textFieldFirstNameAdmin.getText() == ""
+						|| !valid.nameValidation(textFieldFirstNameAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Pole imię jest puste lub zawiera niepoprawne znaki!3</HTML>");
+				}
+				if (textFieldLastNameAdmin.getText() == "" || !valid.nameValidation(textFieldLastNameAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Pole nazwisko jest puste lub zawiera niepoprawne znaki!4</HTML>");
+				}
+				if (textFieldTelephoneAdmin.getText() == ""
+						|| !valid.telephoneNoValidation(textFieldTelephoneAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Pole telefon jest puste lub zawiera niepoprawne znaki!5</HTML>");
+				}
+				if (textFieldEmailAdmin.getText() == "" || !valid.emailValidation(textFieldEmailAdmin.getText())) {
+					validOK = false;
+					lblMsgAdmin.setText("<HTML>Pole email jest puste lub zawiera niepoprawne znaki!6</HTML>");
+				}
+
+				if (validOK) {
+					User u = new User();
+					u.setLogin(textFieldLoginAdmin.getText());
+					u.setPassword(valid.passwordToCode(textFieldPasswordAdmin.getText()));
+					u.setActive(true);
+
+					Admin admin = new Admin();
+					admin.setFirstName(textFieldFirstNameAdmin.getText());
+					admin.setLastName(textFieldLastNameAdmin.getText());
+					admin.setPhoneNo(textFieldTelephoneAdmin.getText());
+					admin.setEmail(textFieldEmailAdmin.getText());
+					admin.setUser(u);
+
+					ubr.addAdmin(admin, u, sd.getIdUser());
+					lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
+					textFieldLoginAdmin.setText("");
+					textFieldPasswordAdmin.setText("");
+					textFieldFirstNameAdmin.setText("");
+					textFieldLastNameAdmin.setText("");
+					textFieldTelephoneAdmin.setText("");
+					textFieldEmailAdmin.setText("");
+					loadTableAdminData(ubr);
+				}
+			}
+		});
+		btnAddAdmin.setBounds(148, 222, 89, 23);
+		panelAddOtherAdmin.add(btnAddAdmin);
+
 		JScrollPane scrollPaneAdmin = new JScrollPane();
 		scrollPaneAdmin.setBounds(272, 37, 573, 307);
 		panelAddOtherAdmin.add(scrollPaneAdmin);
@@ -407,60 +481,6 @@ public class AdminPanel extends JFrame {
 		scrollPaneAdmin.setViewportView(tableAdmin);
 		scrollPaneAdmin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[] { tableAdmin }));
 		loadTableAdminData(ubr);
-		
-		JButton btnAddAdmin = new JButton("Dodaj");
-		btnAddAdmin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				boolean validOK = true;
-				Validation valid = new Validation(ubr.getSettingsApp());
-				if (textFieldLoginAdmin.getText() == "" || !valid.loginValidation(textFieldLoginAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Pole login jest puste lub zawiera niepoprawne znaki!1</HTML>");
-				}
-				if (ubr.findUserLogin(textFieldLoginAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Login o nazwie: " + textFieldLoginAdmin.getText()
-							+ " jest już w użyciu. Proszę podać inny login!</HTML>");
-				}
-				if (textFieldPasswordAdmin.getText() == ""
-						|| !valid.passwordValidation(textFieldPasswordAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Pole hasło jest puste lub zawiera niepoprawne znaki!2</HTML>");
-				}
-				if (textFieldFirstNameAdmin.getText() == ""
-						|| !valid.nameValidation(textFieldFirstNameAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Pole imię jest puste lub zawiera niepoprawne znaki!3</HTML>");
-				}
-				if (textFieldLastNameAdmin.getText() == "" || !valid.nameValidation(textFieldLastNameAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Pole nazwisko jest puste lub zawiera niepoprawne znaki!4</HTML>");
-				}
-				if (textFieldTelephoneAdmin.getText() == ""
-						|| !valid.telephoneNoValidation(textFieldTelephoneAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Pole telefon jest puste lub zawiera niepoprawne znaki!5</HTML>");
-				}
-				if (textFieldEmailAdmin.getText() == "" || !valid.emailValidation(textFieldEmailAdmin.getText())) {
-					validOK = false;
-					lblMsgAdmin.setText("<HTML>Pole email jest puste lub zawiera niepoprawne znaki!6</HTML>");
-				}
-
-				if (validOK) {
-					ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.passwordToCode(textFieldPasswordAdmin.getText()), sd.getIdUser());
-					lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
-					textFieldLoginAdmin.setText("");
-					textFieldPasswordAdmin.setText("");
-					textFieldFirstNameAdmin.setText("");
-					textFieldLastNameAdmin.setText("");
-					textFieldTelephoneAdmin.setText("");
-					textFieldEmailAdmin.setText("");
-					loadTableAdminData(ubr);
-				}
-			}
-		});
-		btnAddAdmin.setBounds(148, 222, 89, 23);
-		panelAddOtherAdmin.add(btnAddAdmin);
 
 		JButton btnZapiszZmianyAdmin = new JButton("Zapisz zmiany");
 		btnZapiszZmianyAdmin.addActionListener(new ActionListener() {
@@ -511,144 +531,15 @@ public class AdminPanel extends JFrame {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Ustawienia", null, panel, null);
 		panel.setLayout(null);
-		
-		textFieldMinCharInPass = new JTextField();
-		textFieldMinCharInPass.setBounds(198, 30, 86, 20);
-		panel.add(textFieldMinCharInPass);
-		textFieldMinCharInPass.setColumns(10);
-		
-		textFieldUpperCaseCharInPass = new JTextField();
-		textFieldUpperCaseCharInPass.setBounds(198, 97, 86, 20);
-		panel.add(textFieldUpperCaseCharInPass);
-		textFieldUpperCaseCharInPass.setColumns(10);
-		
-		textFieldMaxCharInPass = new JTextField();
-		textFieldMaxCharInPass.setBounds(198, 63, 86, 20);
-		panel.add(textFieldMaxCharInPass);
-		textFieldMaxCharInPass.setColumns(10);
-		
-		JLabel lblMinCharInPass = new JLabel("Min znaków w haśle:");
-		lblMinCharInPass.setBounds(10, 33, 178, 14);
-		panel.add(lblMinCharInPass);
-		
-		JLabel lblMaxCharInPass = new JLabel("Max znaków w haśle:");
-		lblMaxCharInPass.setBounds(10, 66, 178, 14);
-		panel.add(lblMaxCharInPass);
-		
-		JLabel lblUpperCaseCharInPass = new JLabel("Ilość dużych liter w haśle:");
-		lblUpperCaseCharInPass.setBounds(10, 100, 178, 14);
-		panel.add(lblUpperCaseCharInPass);
-		
-		textFieldSessionTime = new JTextField();
-		textFieldSessionTime.setBounds(198, 232, 86, 20);
-		panel.add(textFieldSessionTime);
-		textFieldSessionTime.setColumns(10);
-		
-		JLabel lblTimeOffSession = new JLabel("Czas trwania sesji (minut):");
-		lblTimeOffSession.setBounds(10, 235, 178, 14);
-		panel.add(lblTimeOffSession);
-		
-		textFieldNumbersInPass = new JTextField();
-		textFieldNumbersInPass.setBounds(198, 131, 86, 20);
-		panel.add(textFieldNumbersInPass);
-		textFieldNumbersInPass.setColumns(10);
-		
-		JLabel lblNumbersInPass = new JLabel("Ilość liczb w haśle:");
-		lblNumbersInPass.setBounds(11, 134, 177, 14);
-		panel.add(lblNumbersInPass);
-		
-		textFieldMinCharInLogin = new JTextField();
-		textFieldMinCharInLogin.setBounds(198, 165, 86, 20);
-		panel.add(textFieldMinCharInLogin);
-		textFieldMinCharInLogin.setColumns(10);
-		
-		textFieldMaxCharInLogin = new JTextField();
-		textFieldMaxCharInLogin.setBounds(198, 198, 86, 20);
-		panel.add(textFieldMaxCharInLogin);
-		textFieldMaxCharInLogin.setColumns(10);
-		
-		JLabel lblMinCharInLogin = new JLabel("Min ilość znaków w loginie:");
-		lblMinCharInLogin.setBounds(12, 168, 176, 14);
-		panel.add(lblMinCharInLogin);
-		
-		JLabel lblMaxCharInLogin = new JLabel("Max ilość znaków w loginie:");
-		lblMaxCharInLogin.setBounds(10, 201, 178, 14);
-		panel.add(lblMaxCharInLogin);
-		
-		JLabel lblMsgSettings = new JLabel("");
-		lblMsgSettings.setBounds(10, 313, 274, 65);
-		panel.add(lblMsgSettings);
-		
-		loadSettingsApp(ubr);
-				
-		JButton btnSaveSettings = new JButton("Zapisz");
-		btnSaveSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				boolean validOK = true;
-				Validation valid = new Validation(ubr.getSettingsApp());
-				if (textFieldMinCharInPass.getText() == ""
-						|| !valid.numberValidation(textFieldMinCharInPass.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Min znaków w haśle\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				if (textFieldMaxCharInPass.getText() == ""
-						|| !valid.numberValidation(textFieldMaxCharInPass.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Max znaków w haśle\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				if (textFieldUpperCaseCharInPass.getText() == ""
-						|| !valid.numberValidation(textFieldUpperCaseCharInPass.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Ilość dużych liter w haśle\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				if (textFieldNumbersInPass.getText() == ""
-						|| !valid.numberValidation(textFieldNumbersInPass.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Ilość liczb w haśle\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				if (textFieldMinCharInLogin.getText() == ""
-						|| !valid.numberValidation(textFieldMinCharInLogin.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Min znaków w loginie\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				if (textFieldMaxCharInLogin.getText() == ""
-						|| !valid.numberValidation(textFieldMaxCharInLogin.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Max znaków w loginie\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				if (textFieldSessionTime.getText() == ""
-						|| !valid.numberValidation(textFieldSessionTime.getText())) {
-					validOK = false;
-					lblMsgSettings.setText("<HTML>Pole \"Czas trwania sesji\" jest puste lub zawiera niepoprawne znaki!</HTML>");
-				}
-				
-				if(validOK) {
-					if(ubr.setSettingsApp(Integer.valueOf(textFieldMinCharInPass.getText()), Integer.valueOf(textFieldMaxCharInPass.getText()), Integer.valueOf(textFieldUpperCaseCharInPass.getText()), Integer.valueOf(textFieldNumbersInPass.getText()), Integer.valueOf(textFieldMinCharInLogin.getText()), Integer.valueOf(textFieldMaxCharInLogin.getText()), Integer.valueOf(textFieldSessionTime.getText()), sd.getIdUser())) {
-						textFieldMinCharInLogin.setText("");
-						lblMsgSettings.setText("<HTML>Nowe ustawienia zostały zapisane!</HTML>");						
-					} else
-						lblMsgSettings.setText("<HTML>Nie udało się zapisać nowych ustawień!</HTML>");					
-				}
-				
-				loadSettingsApp(ubr);
-			}
-		});
-		btnSaveSettings.setBounds(212, 270, 72, 23);
-		panel.add(btnSaveSettings);
-		
-		JLabel lblDescriptionForSession = new JLabel("koresponduje z @StatefulTimeout, zmiana wymaga kompilacji. Można także ustawić w pliku ejb-jar.xml");
-		lblDescriptionForSession.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblDescriptionForSession.setBounds(294, 235, 551, 17);
-		panel.add(lblDescriptionForSession);
-	
+
 		JLabel lblZalogowanyJako = new JLabel("Zalogowany jako: ");
 		contentPane.add(lblZalogowanyJako, BorderLayout.NORTH);
-		lblZalogowanyJako.setText("Zalogowany jako: " + sd.getFirstName() + " " + sd.getLastName() + " " + sd.getRoleName());
+		lblZalogowanyJako
+				.setText("Zalogowany jako: " + sd.getFirstName() + " " + sd.getLastName() + " " + sd.getRoleName());
 
 	}
 
 	private void loadTableOperatorData(UserBeanRemote ubr) {
-		tableModelOperator.setRowCount(ubr.getOperatorsData().size());
 		for (int i = 0; i < ubr.getOperatorsData().size(); i++) {
 			tableOperator.setValueAt(ubr.getUsersOperatorData().get(i).getLogin(), i, 0);
 			tableOperator.setValueAt(ubr.getUsersOperatorData().get(i).getActive(), i, 1);
@@ -660,7 +551,6 @@ public class AdminPanel extends JFrame {
 	}
 
 	private void loadTableAdminData(UserBeanRemote ubr) {
-		tableModelAdmin.setRowCount(ubr.getAdminsData().size());
 		for (int i = 0; i < ubr.getAdminsData().size(); i++) {
 			tableAdmin.setValueAt(ubr.getUsersAdminData().get(i).getLogin(), i, 0);
 			tableAdmin.setValueAt(ubr.getUsersAdminData().get(i).getActive(), i, 1);
@@ -669,15 +559,5 @@ public class AdminPanel extends JFrame {
 			tableAdmin.setValueAt(ubr.getAdminsData().get(i).getPhoneNo(), i, 4);
 			tableAdmin.setValueAt(ubr.getAdminsData().get(i).getEmail(), i, 5);
 		}
-	}
-	
-	private void loadSettingsApp (UserBeanRemote ubr) {
-		textFieldMinCharInPass.setText(String.valueOf(ubr.getSettingsApp().getMinCharInPass()));
-		textFieldMaxCharInPass.setText(String.valueOf(ubr.getSettingsApp().getMaxCharInPass()));
-		textFieldUpperCaseCharInPass.setText(String.valueOf(ubr.getSettingsApp().getUpperCaseInPass()));
-		textFieldNumbersInPass.setText(String.valueOf(ubr.getSettingsApp().getNumbersInPass()));
-		textFieldMinCharInLogin.setText(String.valueOf(ubr.getSettingsApp().getMinCharInLogin()));
-		textFieldMaxCharInLogin.setText(String.valueOf(ubr.getSettingsApp().getMaxCharInLogin()));
-		textFieldSessionTime.setText(String.valueOf(ubr.getSettingsApp().getSessionTime()));
 	}
 }

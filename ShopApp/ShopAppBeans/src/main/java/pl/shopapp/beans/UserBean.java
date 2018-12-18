@@ -20,7 +20,6 @@ import pl.shopapp.entites.Admin;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Role;
-import pl.shopapp.entites.SettingsApp;
 import pl.shopapp.entites.User;
 import pl.shopapp.entites.UserRole;
 
@@ -42,7 +41,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	private List<Admin> al;
 	private List<User> uol;
 	private List<User> ual;
-	private SettingsApp setting;
 
 //	@Resource 
 //	private SessionContext sc;
@@ -55,36 +53,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon) {
+	public boolean addCustomer(Customer c, User u) {
 
 		try {
 			ut.begin();
-			User u = new User();
-			Customer c = new Customer();
-			Validation valid = new Validation();
-			
-			u.setLogin(login);
-			u.setPassword(valid.passwordToCode(password));
-			u.setActive(true);
-			c.setFirstName(firstName);
-			c.setLastName(lastName);
-			c.setPesel(pesel);
-			c.setZipCode(zipCode);
-			c.setCountry(country);
-			c.setCity(city);
-			c.setStreet(street);
-			c.setStreetNo(streetNo);
-			c.setUnitNo(unitNo);
-			c.setEmail(email);
-			if (isCompany) {
-				c.setCompany(isCompany);
-				c.setCompanyName(companyName);
-				c.setTaxNo(taxNo);
-				c.setRegon(regon);					
-			}
-			c.setDateRegistration(LocalDateTime.now());
-			c.setUser(u);		
-			
 			UserRole ur = addUserRole(u, 2);
 			em.persist(u);
 			em.persist(c);
@@ -99,21 +71,20 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean updateCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon, int idUser) {
+	public boolean updateCustomer(User u, Customer c, int idUser) {
 		// TODO Auto-generated method stub
 		try {
 			ut.begin();
-			Validation valid = new Validation();
-			password = valid.passwordToCode(password);
-			String updateUserQuery = "UPDATE User SET login = '" + login + "', password = '" + password + "' WHERE id = " + idUser + "";
+			String updateUserQuery = "UPDATE User SET login = '" + u.getLogin() + "', password = '" + u.getPassword() + "', active = " + u.getActive() + " WHERE id = " + idUser + "";
 			User user = em.find(User.class, idUser);
 			Customer customer = (Customer) em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
-			String updateCustomerQuery = "UPDATE Customer SET firstName = '" + firstName + "', lastName = '"
-					+ lastName + "', pesel = '" + pesel + "', country = '" + country
-					+ "', zipCode = '" + zipCode + "', city = '" + city + "', street = '" + street
-					+ "', streetNo = '" + streetNo + "', unitNo = '" + unitNo + "', email = '"
-					+ email + "', company = " + isCompany + ", companyName = '" + companyName
-					+ "', taxNo = '" + taxNo + "', regon = '" + regon + "' WHERE id = " + customer.getId()	+ "";
+			String updateCustomerQuery = "UPDATE Customer SET firstName = '" + c.getFirstName() + "', lastName = '"
+					+ c.getLastName() + "', pesel = '" + c.getPesel() + "', country = '" + c.getCountry()
+					+ "', zipCode = '" + c.getZipCode() + "', city = '" + c.getCity() + "', street = '" + c.getStreet()
+					+ "', streetNo = '" + c.getStreetNo() + "', unitNo = '" + c.getUnitNo() + "', email = '"
+					+ c.getEmail() + "', company = " + c.isCompany() + ", companyName = '" + c.getCompanyName()
+					+ "', taxNo = '" + c.getTaxNo() + "', regon = '" + c.getRegon() + "' WHERE id = " + customer.getId()
+					+ "";
 			int uuq = em.createQuery(updateUserQuery).executeUpdate();
 			int ucq = em.createQuery(updateCustomerQuery).executeUpdate();
 			ut.commit();
@@ -224,29 +195,16 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean addOperator(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) {
+	public boolean addOperator(Operator o, User u, int idUser) {
 
 		try {
 			ut.begin();
 			User user = em.find(User.class, idUser);
-			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
-			
-			User u = new User();
-			u.setLogin(login);
-			u.setPassword(password);
-			u.setActive(true);
-			
-			Operator o = new Operator();
-			o.setFirstName(firstName);
-			o.setLastName(lastName);
-			o.setPhoneNo(phoneNo);
-			o.setEmail(email);
+			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user)
+					.getSingleResult();
 			o.setAdmin(adm);
-			o.setUser(u);
 			o.setDate(LocalDateTime.now());
-			
 			UserRole ur = addUserRole(u, 3);
-			
 			em.persist(u);
 			em.persist(o);
 			em.persist(ur);
@@ -271,7 +229,8 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public boolean updateOperatorData(int idUser, int idOperator, String login, boolean active, String firstName,
 			String lastName, String phoneNo, String email) {
 		// TODO update User & Operator from ShopAppClient AdminPanel
-		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser+ "";
+		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser
+				+ "";
 		String updateOperatorQuery = "UPDATE Operator SET firstName = '" + firstName + "', lastName = '" + lastName
 				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now()
 				+ "' WHERE id = " + idOperator + "";
@@ -293,28 +252,15 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean addAdmin(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) {
+	public boolean addAdmin(Admin a, User u, int idUser) {
 		try {
 			ut.begin();
 			User user = em.find(User.class, idUser);
-			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
-			
-			User u = new User();
-			u.setLogin(login);
-			u.setPassword(password);
-			u.setActive(true);
-			
-			Admin a = new Admin();
-			a.setFirstName(firstName);
-			a.setLastName(lastName);
-			a.setPhoneNo(phoneNo);
-			a.setEmail(email);
-			a.setAdmin(adm);
-			a.setUser(u);
-			a.setDate(LocalDateTime.now());
-			
+			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user)
+					.getSingleResult();
+			adm.setAdmin(adm);
+			adm.setDate(LocalDateTime.now());
 			UserRole ur = addUserRole(u, 1);
-			
 			em.persist(u);
 			em.persist(a);
 			em.persist(ur);
@@ -353,6 +299,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<Admin> getAdminsData() {
 		// TODO get current admins list
+//		al = new ArrayList<>();
 		al = em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
 		return al;
 	}
@@ -380,34 +327,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			int uaq = em.createQuery(updateAdminQuery).executeUpdate();
 			ut.commit();
 			if (uuq == 1 && uaq == 1)
-				return true;
-			else
-				ut.rollback();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	@Override
-	public SettingsApp getSettingsApp() {
-		// TODO get current application setting like parameters password, login, session time
-		setting = em.find(SettingsApp.class, 1);
-		return setting;
-	}
-
-	@Override
-	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) {
-		// TODO update application setting like parameters password, login, session time
-		String updateSettingAppQuery = "UPDATE SettingsApp SET minCharInPass = "+minCharInPass+", maxCharInPass = "+maxCharInPass+", upperCaseInPass = "+upperCaseInPass+", "
-				+ "numbersInPass = "+numbersInPass+", minCharInLogin = "+minCharInLogin+", maxCharInLogin = "+maxCharInLogin+", sessionTime = "+sessionTime+", idUser = "+idUser+", dateTime = '"+LocalDateTime.now()+"' WHERE id = 1";
-		try {
-			ut.begin();
-			int usq = em.createQuery(updateSettingAppQuery).executeUpdate();
-			ut.commit();
-			if(usq == 1)
 				return true;
 			else
 				ut.rollback();

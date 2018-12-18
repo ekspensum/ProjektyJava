@@ -1,12 +1,15 @@
 package pl.shopapp.client;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanRemote;
 import pl.shopapp.beans.Validation;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -49,11 +52,11 @@ public class AdminLogin {
 
 	public UserBeanRemote contextAppUserBean() {
 		Context ctx;
-		Hashtable<String, String> env = new Hashtable<>();
-		env.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-		env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-		env.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
 		try {
+			Hashtable<String, String> env = new Hashtable<>();
+			env.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
+			env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+			env.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
 			ctx = new InitialContext(env);
 			ubr = (UserBeanRemote) ctx.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote");
 			return ubr;
@@ -64,24 +67,6 @@ public class AdminLogin {
 		}
 	}
 
-//	public UserBeanRemote contextAppUserBean() {
-//		Context ctx;
-//	    Properties props = new Properties();  
-//	    props.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");  
-//	    props.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");  
-//	    props.put("jboss.naming.client.ejb.context", true);
-//	    props.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-//		try {
-//			ctx = new InitialContext(props);
-//			ubr = (UserBeanRemote) ctx.lookup("ejb:ShopApp/ShopAppBeans/UserBean!pl.shopapp.beans.UserBeanRemote");
-//			return ubr;
-//		} catch (NamingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
-	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -121,7 +106,7 @@ public class AdminLogin {
 				ubr = contextAppUserBean();
 				if (!textFieldLogin.getText().equals("")) {
 					if (passwordField.getPassword().length != 0) {
-						Validation valid = new Validation(ubr.getSettingsApp());
+						Validation valid = new Validation();
 						String pass = valid.passwordToCode(passwordField.getText());
 						if (valid.loginValidation(textFieldLogin.getText())) {
 							if (ubr.loginAdmin(textFieldLogin.getText(), pass) != null) {

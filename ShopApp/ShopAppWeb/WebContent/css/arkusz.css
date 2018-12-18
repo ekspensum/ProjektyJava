@@ -96,23 +96,10 @@ table, th, td {
 }
 
 #searchProductForm {
-	position: absolute;
+		position: absolute;
 	left: 35%;
 	top: 14%;
 	text-align: left;
-}
-
-#searchFormMain {
-	position: absolute;
-	left: 35%;
-	top: 3%;
-	text-align: left;
-}
-
-#resultSearchFormMain {
-	position: absolute;
-	left: 30%;
-	top: 660px;
 }
 
 #pageHeader{
