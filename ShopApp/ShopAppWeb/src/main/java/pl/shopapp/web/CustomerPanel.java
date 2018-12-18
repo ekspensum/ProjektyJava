@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
-
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,9 +14,6 @@ import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.beans.Validation;
-import pl.shopapp.entites.Customer;
-import pl.shopapp.entites.Transaction;
-import pl.shopapp.entites.User;
 
 /**
  * Servlet implementation class AddPrivateCustomer
@@ -43,36 +38,60 @@ public class CustomerPanel extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("UTF-8");
+		
+		String login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, companyName, taxNo, regon;
+		boolean isCompany;
 
 		if (request.getParameter("buttonAddCustomer") != null) {
 			// TODO create new customer and add to database, also create session web with new customer data
-			User u = new User();
-			Customer c = new Customer();
-			if(validationAndSetup(request, u, c)) {
-				ubl.addCustomer(c, u);
-				SessionData sd = ubl.loginUser(u.getLogin(), u.getPassword());
+
+			login = request.getParameter("login");
+			password = request.getParameter("password");
+			firstName = request.getParameter("firstName");
+			lastName = request.getParameter("lastName");
+			pesel = request.getParameter("pesel");
+			zipCode = request.getParameter("zipCode");
+			country = request.getParameter("country");
+			city = request.getParameter("city");
+			street = request.getParameter("street");
+			streetNo = request.getParameter("streetNo");
+			unitNo = request.getParameter("unitNo");
+			email = request.getParameter("email");
+			if (request.getParameter("isCompany") != null) {
+				isCompany = request.getParameter("isCompany").equals("yes") ? true : false;
+				companyName = request.getParameter("companyName");
+				taxNo = request.getParameter("taxNo");
+				regon = request.getParameter("regon");					
+			} else {
+				isCompany = false;
+				companyName = "";
+				taxNo = "";
+				regon = "";	
+			}
+			
+			if(validation(request, login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, companyName, taxNo, regon)) {
+				ubl.addCustomer(login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, isCompany, companyName, taxNo, regon);
+				SessionData sd = ubl.loginUser(login, password);
 				request.getSession().setAttribute("SessionData", sd);
-				request.getSession().setMaxInactiveInterval(1800);
+				request.getSession().setMaxInactiveInterval(ubl.getSettingsApp().getSessionTime()*60);
 				request.setAttribute("message", "Klient został dodany do bazy danych!");			
 			}		
 		}
 		
 		if(request.getParameter("buttonOpenEdit") != null) {
 			// TODO Auto-generated method stub
-			Validation valid = new Validation();
+			Validation valid = new Validation(ubl.getSettingsApp());
 			String pass = valid.passwordToCode(request.getParameter("password"));
 			if (valid.loginValidation(request.getParameter("login"))) {
 				if (ubl.loginUser(request.getParameter("login"), pass) != null) {
 					SessionData loginSD = ubl.loginUser(request.getParameter("login"), pass);
 					SessionData currentSD = (SessionData) request.getSession().getAttribute("SessionData");
 					if(loginSD.getIdUser() == currentSD.getIdUser()) {
-						User u = ubl.findUser(currentSD.getIdUser());
-						Customer c = ubl.findCustomer(u);
 						request.setAttribute("openToEdit", "yes");
-						request.setAttribute("userData", u);
-						request.setAttribute("customerData", c);						
+						request.setAttribute("userData", ubl.findUser(currentSD.getIdUser()));
+						request.setAttribute("customerData", ubl.findCustomer(ubl.findUser(currentSD.getIdUser())));						
 					} else
 						request.setAttribute("message", "Dane logowania niezgodne z bieżącą sesją!");
 				} else
@@ -84,11 +103,34 @@ public class CustomerPanel extends HttpServlet {
 		if(request.getParameter("buttonSaveEdit") != null) {
 			// TODO Auto-generated method stub
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
-			User u = new User();
-			Customer c = new Customer();
+			
+			login = request.getParameter("login");
+			password = request.getParameter("password");
+			firstName = request.getParameter("firstName");
+			lastName = request.getParameter("lastName");
+			pesel = request.getParameter("pesel");
+			zipCode = request.getParameter("zipCode");
+			country = request.getParameter("country");
+			city = request.getParameter("city");
+			street = request.getParameter("street");
+			streetNo = request.getParameter("streetNo");
+			unitNo = request.getParameter("unitNo");
+			email = request.getParameter("email");
+			if (request.getParameter("isCompany") != null) {
+				isCompany = request.getParameter("isCompany").equals("yes") ? true : false;
+				companyName = request.getParameter("companyName");
+				taxNo = request.getParameter("taxNo");
+				regon = request.getParameter("regon");					
+			} else {
+				isCompany = false;
+				companyName = "";
+				taxNo = "";
+				regon = "";	
+			}
+					
 			request.setAttribute("saveEdit", "yes");
-			if(validationAndSetup(request, u, c)) {
-				if(ubl.updateCustomer(u, c, sd.getIdUser())) {
+			if(validation(request, login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, companyName, taxNo, regon)) {
+				if(ubl.updateCustomer(login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, isCompany, companyName, taxNo, regon, sd.getIdUser())) {
 					request.setAttribute("message", "Zaktualizowano dane klienta w bazie danych!");	
 					request.setAttribute("openToEdit", "no");
 					request.setAttribute("saveEdit", "no");					
@@ -104,8 +146,7 @@ public class CustomerPanel extends HttpServlet {
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
 			String dateTo = request.getParameter("searchProductDateTo")+" 23:59:59";
 			try {
-				List<Transaction> tr = tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter));
-				request.setAttribute("transactionsDataList", tr);
+				request.setAttribute("transactionsDataList", tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter)));
 			} catch (DateTimeParseException e) {
 				// TODO Auto-generated catch block
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
@@ -116,10 +157,10 @@ public class CustomerPanel extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private boolean validationAndSetup(HttpServletRequest request, User u, Customer c) {
+	private boolean validation(HttpServletRequest request, String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, String companyName, String taxNo, String regon) {
 		// TODO validation data entered by customer and setup objects User and Customer
 		boolean validOK = true;
-		Validation valid = new Validation();
+		Validation valid = new Validation(ubl.getSettingsApp());
 		if (request.getParameter("login").equals("")
 				|| !valid.loginValidation(request.getParameter("login"))) {
 			validOK = false;
@@ -205,31 +246,9 @@ public class CustomerPanel extends HttpServlet {
 			}					
 		}
 		
-		if (validOK) {
-			u.setLogin(request.getParameter("login"));
-			u.setPassword(valid.passwordToCode(request.getParameter("password")));
-			u.setActive(true);
-
-			c.setFirstName(request.getParameter("firstName"));
-			c.setLastName(request.getParameter("lastName"));
-			c.setPesel(request.getParameter("pesel"));
-			c.setZipCode(request.getParameter("zipCode"));
-			c.setCountry(request.getParameter("country"));
-			c.setCity(request.getParameter("city"));
-			c.setStreet(request.getParameter("street"));
-			c.setStreetNo(request.getParameter("streetNo"));
-			c.setUnitNo(request.getParameter("unitNo"));
-			c.setEmail(request.getParameter("email"));
-			if (request.getParameter("isCompany") != null) {
-				c.setCompany(request.getParameter("isCompany").equals("yes") ? true : false);
-				c.setCompanyName(request.getParameter("companyName"));
-				c.setTaxNo(request.getParameter("taxNo"));
-				c.setRegon(request.getParameter("regon"));					
-			}
-			c.setDateRegistration(LocalDateTime.now());
-			c.setUser(u);
+		if (validOK)
 			return true;
-		}
+
 		return false;
 	}
 

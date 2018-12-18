@@ -9,7 +9,8 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="productCategoriesQuery", query="SELECT c FROM ProductCategory pc INNER JOIN pc.category c INNER JOIN pc.product p WHERE p = :product")
+	@NamedQuery(name="productCategoriesQuery", query="SELECT c FROM ProductCategory pc INNER JOIN pc.category c INNER JOIN pc.product p WHERE p = :product"),
+	@NamedQuery(name="getProductCategoryQuery", query="SELECT pc FROM ProductCategory pc WHERE pc.category = :category AND pc.product = :product")
 })
 public class ProductCategory implements Serializable {
 
