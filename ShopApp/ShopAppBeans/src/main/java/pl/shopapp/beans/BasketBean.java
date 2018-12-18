@@ -17,7 +17,7 @@ import javax.ejb.TransactionManagementType;
  * Session Bean implementation class BasketBean
  */
 @Stateful
-@StatefulTimeout(unit=TimeUnit.MINUTES, value=30) //value must corresponding with web session interval. Is possibility set timeout SFSB on server  
+@StatefulTimeout(unit=TimeUnit.MINUTES, value=30) //value must corresponding with web session interval. Is possibility set timeout SFSB on server in the ejb-jar.xml file
 @TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
 public class BasketBean implements BasketBeanRemote, BasketBeanLocal {

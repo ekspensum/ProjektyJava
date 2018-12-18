@@ -37,11 +37,6 @@
 			<artifactId>ShopAppBeans</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>pl.shopapp</groupId>
-			<artifactId>ShopAppEntites</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/taglibs/standard -->
 		<dependency>

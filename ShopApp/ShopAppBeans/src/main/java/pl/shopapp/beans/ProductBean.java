@@ -1,5 +1,6 @@
 package pl.shopapp.beans;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -49,11 +50,18 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public boolean addProduct(Product p, List<Integer> helperListCat, int idUser) {
+	public boolean addProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, LocalDateTime dateTime, List<Integer> helperListCat, int idUser) {
 		try {
 			ut.begin();
 			User u = em.find(User.class, idUser);
 			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", u).getSingleResult();
+			Product p = new Product();
+			p.setName(productName);
+			p.setDescription(productDescription);
+			p.setPrice(productPrice);
+			p.setUnitsInStock(productUnitsInStock);
+			p.setProductImage(buffer);
+			p.setDateTime(dateTime);
 			p.setOp(op);
 			em.persist(p);	
 			for(int i = 0; i<helperListCat.size(); i++) {
@@ -74,22 +82,35 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public boolean updateProduct(Product p, int sizeFileImage) {
+	public boolean updateProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, LocalDateTime dateTime, int productIdToEdit, int [] categoryToEdit, int sizeFileImage, int idUser, List<Integer> helperListCat) {
 		// TODO Auto-generated method stub
-		int row = 0;
-		String updateQueryWithoutImage = "UPDATE Product SET name = '"+p.getName()+"', description = '"+p.getDescription()+"', price = "+p.getPrice()+", unitsInStock = "+p.getUnitsInStock()+", dateTime = '"+p.getDateTime()+"' WHERE id = "+p.getId()+"";
-		String updateQueryWithImage = "UPDATE Product SET name = '"+p.getName()+"', description = '"+p.getDescription()+"', price = "+p.getPrice()+", unitsInStock = "+p.getUnitsInStock()+", productImage = :productImage, dateTime = '"+p.getDateTime()+"' WHERE id = "+p.getId()+"";
+		int rowProduct = 0;
+		int rowCategory = 0;
 		try {
 			ut.begin();
+			Product p = em.find(Product.class, productIdToEdit);
+			User u = em.find(User.class, idUser);
+			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", u).getSingleResult();
+			String updateProductWithoutImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", dateTime = '"+dateTime+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
+			String updateProductWithImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", productImage = :productImage, dateTime = '"+dateTime+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
+
 			if(sizeFileImage == 0)
-				row = em.createQuery(updateQueryWithoutImage).executeUpdate();
+				rowProduct = em.createQuery(updateProductWithoutImage).executeUpdate();
 			else {
-				Query query = em.createQuery(updateQueryWithImage);	
-				query.setParameter("productImage", p.getProductImage());
-				row = query.executeUpdate();
+				Query query = em.createQuery(updateProductWithImage);	
+				query.setParameter("productImage", buffer);
+				rowProduct = query.executeUpdate();
 			}
+			
+			for(int i = 0; i<helperListCat.size(); i++) {
+				Category cat = em.find(Category.class, categoryToEdit[i]);
+				ProductCategory pc = em.createNamedQuery("getProductCategoryQuery", ProductCategory.class).setParameter("category", cat).setParameter("product", p).getSingleResult();
+				String updateProductCategory = "UPDATE ProductCategory SET category_id = "+helperListCat.get(i)+", product_id = "+p.getId()+" WHERE id = "+pc.getId()+"";
+				rowCategory = em.createQuery(updateProductCategory).executeUpdate();
+			}
+			
 			ut.commit();
-			if(row == 1)
+			if(rowProduct == 1 && rowCategory == 1)
 				return true;
 			else
 				ut.rollback();
@@ -116,17 +137,15 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public void deleteProduct(Product p, int id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean addCategory(Category cat, int idUser) {
+	public boolean addCategory(String categoryName, LocalDateTime dateTime, byte[] buffer, int idUser) {
 		try {
 			ut.begin();
 			User user = em.find(User.class, idUser);
 			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user).getSingleResult();
+			Category cat = new Category();
+			cat.setName(categoryName);
+			cat.setDateTime(dateTime);
+			cat.setCategoryImage(buffer);
 			cat.setOp(op);
 			em.persist(cat);
 			ut.commit();

@@ -6,17 +6,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>ShopAppClient</artifactId>
-<!-- <dependencyManagement> -->
-<!--    <dependencies> -->
-<!--       <dependency> -->
-<!--          <groupId>org.wildfly</groupId> -->
-<!--          <artifactId>wildfly-ejb-client-bom</artifactId> -->
-<!--          <version>13.0.0.Final</version> -->
-<!--          <type>pom</type> -->
-<!--          <scope>import</scope> -->
-<!--       </dependency> -->
-<!--    </dependencies> -->
-<!-- </dependencyManagement> -->
+
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.wildfly/wildfly-client-all -->
 		<dependency>
@@ -25,14 +15,6 @@
 			<version>13.0.0.Final</version>
 		</dependency>
 	
-		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-<!-- 		<dependency> -->
-<!-- 		    <groupId>org.hibernate</groupId> -->
-<!-- 		    <artifactId>hibernate-core</artifactId> -->
-<!-- 		    <version>5.3.6.Final</version> -->
-<!-- 		</dependency> -->
-		
-		<!-- https://mvnrepository.com/artifact/javax/javaee-api -->
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
@@ -52,12 +34,6 @@
 			<artifactId>ShopAppBeans</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>pl.shopapp</groupId>
-			<artifactId>ShopAppEntites</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
 
 	</dependencies>
 	<properties>
