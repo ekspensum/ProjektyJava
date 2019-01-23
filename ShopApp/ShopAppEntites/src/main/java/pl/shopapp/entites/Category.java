@@ -26,6 +26,7 @@ public class Category implements Serializable {
 	private byte[] categoryImage;
 	@OneToOne
 	private Operator op;
+	@Transient
 	private String base64Image;
 
 	private static final long serialVersionUID = 1L;
@@ -74,7 +75,6 @@ public class Category implements Serializable {
 		this.op = op;
 	}
 
-	@Transient
 	public String getBase64Image() {
 		return Base64.getEncoder().encodeToString(this.categoryImage);
 	}

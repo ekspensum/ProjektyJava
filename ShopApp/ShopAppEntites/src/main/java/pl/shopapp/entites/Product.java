@@ -27,6 +27,7 @@ public class Product implements Serializable {
 	private int unitsInStock;
 	@Lob
 	private byte[] productImage;
+	@Transient
 	private String base64Image;
 	private LocalDateTime dateTime;
 	

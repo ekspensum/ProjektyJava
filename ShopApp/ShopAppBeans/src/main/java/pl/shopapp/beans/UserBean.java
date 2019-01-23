@@ -7,6 +7,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -16,6 +17,8 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+
+import pl.shopapp.beans.interceptors.LoggingInterceptor;
 import pl.shopapp.entites.Admin;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.Operator;
@@ -53,6 +56,13 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public UserBean() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	//for tests
+	public UserBean(EntityManager em, UserTransaction ut) {
+	super();
+	this.em = em;
+	this.ut = ut;
+}
 
 	@Override
 	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon) {
@@ -94,6 +104,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			e.printStackTrace();
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return false;
 		}
 	}
@@ -138,19 +154,9 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean deleteCustomer(Customer c, int id) {
-		try {
-			ut.begin();
-			Customer cf = em.find(Customer.class, id);
-			em.remove(cf);
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+	public boolean setActiveCustomer(int idCustomer, boolean action) {
+		
+		return false;
 	}
 
 	@Override
@@ -163,8 +169,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public boolean findUserLogin(String login) {
 		// TODO examine whether the login is in use
-		if (em.createNamedQuery("findUserLoginQuery", User.class).setParameter("login", login).getResultList()
-				.size() > 0)
+		if (em.createNamedQuery("findUserLoginQuery", User.class).setParameter("login", login).getResultList().size() > 0)
 			return true;
 		else
 			return false;
@@ -180,6 +185,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
+	@Interceptors(LoggingInterceptor.class)
 	public SessionData loginUser(String login, String password) {
 		User user = null;
 		try {
@@ -256,6 +262,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 				| RollbackException | IllegalStateException | SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return false;
 		}
 	}
@@ -324,6 +336,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return false;
 		}
 	}
