@@ -57,7 +57,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//for tests
+	//for unit
 	public UserBean(EntityManager em, UserTransaction ut) {
 	super();
 	this.em = em;
@@ -350,8 +350,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public SessionData loginAdmin(String login, String password) {
 		User user = null;
 		try {
-			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login)
-					.setParameter("password", password).getSingleResult();
+			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
 		} catch (NoResultException e) {
 //			e.printStackTrace();
 			return null;

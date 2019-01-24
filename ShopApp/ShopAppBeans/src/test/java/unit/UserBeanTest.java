@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tests;
+package unit;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -27,9 +27,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBean;
 import pl.shopapp.beans.Validation;
+import pl.shopapp.entites.Admin;
 import pl.shopapp.entites.Customer;
+import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Role;
 import pl.shopapp.entites.User;
 import pl.shopapp.entites.UserRole;
@@ -46,6 +49,7 @@ public class UserBeanTest {
 	List<User> mockedUsers;
 	User user;
 	Customer customer;
+	Operator operator;
 
 	/**
 	 * @throws java.lang.Exception
@@ -71,6 +75,7 @@ public class UserBeanTest {
 		this.ub = new UserBean(em, ut);
 		user = new User();
 		customer = new Customer();
+		operator = new Operator();
 	}
 
 	/**
@@ -91,28 +96,6 @@ public class UserBeanTest {
 			Validation valid = new Validation();
 			String encryptionPass = valid.passwordToCode("Customer11");
 			assertEquals(expectedPass, encryptionPass);
-
-			user.setLogin("login");
-			user.setPassword(encryptionPass);
-			user.setId(6);
-			user.setActive(true);
-			customer.setFirstName("firstName");
-			customer.setLastName("lastName");
-			customer.setPesel("pesel");
-			customer.setZipCode("zipCode");
-			customer.setCountry("country");
-			customer.setCity("city");
-			customer.setStreet("street");
-			customer.setStreetNo("streetNo");
-			customer.setUnitNo("unitNo");
-			customer.setEmail("email");
-			customer.setCompany(true);
-			customer.setCompanyName("companyName");
-			customer.setTaxNo("taxNo");
-			customer.setRegon("regon");
-			customer.setId(2);
-			customer.setDateRegistration(LocalDateTime.now());
-			customer.setUser(user);
 			
 			UserRole ur = ub.addUserRole(user, 2);
 			em.persist(user);
@@ -296,7 +279,36 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testAddOperator() {
-		fail("Not yet implemented");
+
+		try {
+			ut.begin();
+			when(em.find(User.class, 3)).thenReturn(user);
+			
+			Admin admin = new Admin();
+			@SuppressWarnings("unchecked")
+			TypedQuery<Admin> mockedQueryAdmin = mock(TypedQuery.class);
+			when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedQueryAdmin);
+			when(mockedQueryAdmin.setParameter("user", user)).thenReturn(mockedQueryAdmin);
+			when(mockedQueryAdmin.getSingleResult()).thenReturn(admin);
+					
+			UserRole ur = ub.addUserRole(user, 2);
+			em.persist(user);
+			em.persist(operator);
+			em.persist(ur);
+			
+			ut.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		assertTrue(this.ub.addOperator("firstName", "lastName", "phoneNo", "email", "login", "password", 3));	
 	}
 
 	/**
@@ -304,7 +316,14 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testGetOperatorsData() {
-		fail("Not yet implemented");
+		List<Operator> operatorListExpected = new ArrayList<>();
+		operatorListExpected.add(operator);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Operator> mockedQuery = mock(TypedQuery.class);
+		when(mockedQuery.getResultList()).thenReturn(operatorListExpected);
+		when(em.createNamedQuery("getAllOperatorsQuery", Operator.class)).thenReturn(mockedQuery);
+		List<Operator> operatorListActual = em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
+		assertEquals(operatorListExpected, operatorListActual);
 	}
 
 	/**
@@ -312,7 +331,29 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testUpdateOperatorData() {
-		fail("Not yet implemented");
+		String updateUserQuery = "UPDATE User SET login = 'login', active = true WHERE id = 3";
+		String updateOperatorQuery = "UPDATE Operator SET firstName = 'firstName', lastName = 'lastName', phoneNo = 'phoneNo', email = 'email', date = '" + LocalDateTime.now()	+ "' WHERE id = 1";
+		try {
+			ut.begin();
+			Query mockedUserQuery = mock(Query.class);
+			when(em.createQuery(updateUserQuery)).thenReturn(mockedUserQuery);
+			when(mockedUserQuery.executeUpdate()).thenReturn(1);
+			Query mockedOperatorQuery = mock(Query.class);
+			when(em.createQuery(updateOperatorQuery)).thenReturn(mockedOperatorQuery);
+			when(mockedOperatorQuery.executeUpdate()).thenReturn(1);
+			ut.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		assertTrue(ub.updateOperatorData(3, 1, "login", true, "firstName", "lastName", "phoneNo", "email"));
 	}
 
 	/**
@@ -320,7 +361,34 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testAddAdmin() {
-		fail("Not yet implemented");
+		try {
+			ut.begin();
+			when(em.find(User.class, 2)).thenReturn(user);
+			
+			Admin admin = new Admin();
+			@SuppressWarnings("unchecked")
+			TypedQuery<Admin> mockedAdminQuery = mock(TypedQuery.class);
+			when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedAdminQuery);
+			when(mockedAdminQuery.setParameter("user", user)).thenReturn(mockedAdminQuery);
+			when(mockedAdminQuery.getSingleResult()).thenReturn(admin);
+			UserRole ur = ub.addUserRole(user, 1);
+			
+			em.persist(user);
+			em.persist(admin);
+			em.persist(ur);
+			ut.commit();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email", "login", "password", 2));
+		}	
 	}
 
 	/**
@@ -328,7 +396,43 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testLoginAdmin() {
-		fail("Not yet implemented");
+		user.setId(2);
+		@SuppressWarnings("unchecked")
+		TypedQuery<User> mockedUserQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("loginQuery", User.class)).thenReturn(mockedUserQuery);
+		when(mockedUserQuery.setParameter("login", "login")).thenReturn(mockedUserQuery);
+		when(mockedUserQuery.setParameter("password", "password")).thenReturn(mockedUserQuery);
+		when(mockedUserQuery.getSingleResult()).thenReturn(user);
+		
+		Role role = new Role();
+		role.setId(1);
+		UserRole ur = new UserRole();
+		ur.setRole(role);
+		@SuppressWarnings("unchecked")
+		TypedQuery<UserRole> mockedUserRoleQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("userRoleQuery", UserRole.class)).thenReturn(mockedUserRoleQuery);
+		when(mockedUserRoleQuery.setParameter("user", user)).thenReturn(mockedUserRoleQuery);
+		when(mockedUserRoleQuery.getSingleResult()).thenReturn(ur);
+		
+		Admin admin = new Admin();
+		admin.setFirstName("firstName");
+		admin.setLastName("lastName");
+		@SuppressWarnings("unchecked")
+		TypedQuery<Admin> mockedAdminQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedAdminQuery);
+		when(mockedAdminQuery.setParameter("user", user)).thenReturn(mockedAdminQuery);
+		when(mockedAdminQuery.getSingleResult()).thenReturn(admin);
+		
+		SessionData expectedData = new SessionData();
+		expectedData.setIdRole(1);
+		expectedData.setIdUser(2);
+		expectedData.setFirstName("firstName");
+		expectedData.setLastName("Name");
+		SessionData actualData = ub.loginAdmin("login", "password");
+		assertEquals(expectedData.getIdRole(), actualData.getIdRole());
+		assertEquals(expectedData.getIdUser(), actualData.getIdUser());
+		assertEquals(expectedData.getFirstName(), actualData.getFirstName());
+		assertNotEquals(expectedData.getLastName(), actualData.getLastName());
 	}
 
 	/**
@@ -336,7 +440,13 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testGetAdminsData() {
-		fail("Not yet implemented");
+		List<Admin> expected = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Admin> mockedQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllAdminsQuery", Admin.class)).thenReturn(mockedQuery);
+		when(mockedQuery.getResultList()).thenReturn(expected);
+		List<Admin> actual = ub.getAdminsData();
+		assertEquals(expected, actual);
 	}
 
 	/**
@@ -344,7 +454,13 @@ public class UserBeanTest {
 	 */
 	@Test
 	public void testGetUsersAdminData() {
-		fail("Not yet implemented");
+		List<User> expected = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		TypedQuery<User> mockedQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getUserAdminQuery", User.class)).thenReturn(mockedQuery);
+		when(mockedQuery.getResultList()).thenReturn(expected);
+		List<User> actual = ub.getUsersAdminData();
+		assertEquals(expected, actual);
 	}
 
 	/**
