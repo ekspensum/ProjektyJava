@@ -74,12 +74,12 @@ public class Validation {
 	}
 	
 	public boolean emailValidation(String email) {
-		Pattern patt = Pattern.compile("^[a-zA-Z.]{3,20}@[a-zA-Z.]{4,100}$");
+		Pattern patt = Pattern.compile("^[a-zA-Z]{3,20}[.]?[a-zA-Z]{0,20}@[a-zA-Z]{3,16}[.]{1}[a-zA-Z]{2,16}$");
 		Matcher mat = patt.matcher(email);
 		return mat.find();
 	}
 	public boolean numberValidation(String number) {
-		Pattern patt = Pattern.compile("^[0-9.]{1,10}$");
+		Pattern patt = Pattern.compile("^[0-9]{1}[0-9.]{0,9}$");
 		Matcher mat = patt.matcher(number);
 		return mat.find();
 	}

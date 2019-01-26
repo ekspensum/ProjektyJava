@@ -51,7 +51,7 @@ public class BasketBean implements BasketBeanRemote, BasketBeanLocal {
 
 	@PostConstruct
     private void initSession(){
-        //generationg session id
+        //generating session id
         setSessionUUID(UUID.randomUUID());
     }
 
