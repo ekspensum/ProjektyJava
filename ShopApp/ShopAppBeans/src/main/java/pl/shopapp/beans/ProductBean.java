@@ -1,6 +1,7 @@
 package pl.shopapp.beans;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -48,9 +49,15 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	public ProductBean() {
 		// TODO Auto-generated constructor stub
 	}
+//	for tests
+	public ProductBean(EntityManager em, UserTransaction ut) {
+		super();
+		this.em = em;
+		this.ut = ut;
+	}
 
 	@Override
-	public boolean addProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, LocalDateTime dateTime, List<Integer> helperListCat, int idUser) {
+	public boolean addProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, List<Integer> helperListCat, int idUser) {
 		try {
 			ut.begin();
 			User u = em.find(User.class, idUser);
@@ -61,7 +68,7 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 			p.setPrice(productPrice);
 			p.setUnitsInStock(productUnitsInStock);
 			p.setProductImage(buffer);
-			p.setDateTime(dateTime);
+			p.setDateTime(LocalDateTime.now());
 			p.setOp(op);
 			em.persist(p);	
 			for(int i = 0; i<helperListCat.size(); i++) {
@@ -76,13 +83,19 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			// TODO Auto-generated catch block
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			return false;
 		}
 	}
 
 	@Override
-	public boolean updateProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, LocalDateTime dateTime, int productIdToEdit, int [] categoryToEdit, int sizeFileImage, int idUser, List<Integer> helperListCat) {
+	public boolean updateProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, int productIdToEdit, int [] categoryToEdit, int sizeFileImage, int idUser, List<Integer> helperListCat) {
 		// TODO Auto-generated method stub
 		int rowProduct = 0;
 		int rowCategory = 0;
@@ -91,8 +104,8 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 			Product p = em.find(Product.class, productIdToEdit);
 			User u = em.find(User.class, idUser);
 			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", u).getSingleResult();
-			String updateProductWithoutImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", dateTime = '"+dateTime+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
-			String updateProductWithImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", productImage = :productImage, dateTime = '"+dateTime+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
+			String updateProductWithoutImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
+			String updateProductWithImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
 
 			if(sizeFileImage == 0)
 				rowProduct = em.createQuery(updateProductWithoutImage).executeUpdate();
@@ -137,14 +150,14 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public boolean addCategory(String categoryName, LocalDateTime dateTime, byte[] buffer, int idUser) {
+	public boolean addCategory(String categoryName, byte[] buffer, int idUser) {
 		try {
 			ut.begin();
 			User user = em.find(User.class, idUser);
 			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user).getSingleResult();
 			Category cat = new Category();
 			cat.setName(categoryName);
-			cat.setDateTime(dateTime);
+			cat.setDateTime(LocalDateTime.now());
 			cat.setCategoryImage(buffer);
 			cat.setOp(op);
 			em.persist(cat);

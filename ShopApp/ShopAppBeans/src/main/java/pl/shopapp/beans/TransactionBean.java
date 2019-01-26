@@ -41,6 +41,13 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
     public TransactionBean() {
         // TODO Auto-generated constructor stub
     }
+    
+    //for tests
+	public TransactionBean(EntityManager em, UserTransaction ut) {
+		super();
+		this.em = em;
+		this.ut = ut;
+	}
 
 	@Override
 	public boolean newTransaction(int idUser, List<BasketData> basketList) {
@@ -73,6 +80,12 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			try {
+				ut.rollback();
+			} catch (IllegalStateException | SecurityException | SystemException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		return false;
 	}

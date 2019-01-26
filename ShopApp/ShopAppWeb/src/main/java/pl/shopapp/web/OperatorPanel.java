@@ -3,7 +3,6 @@ package pl.shopapp.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,18 +56,16 @@ public class OperatorPanel extends HttpServlet {
 		double productPrice = 0;
 		int productUnitsInStock = 0;
 		byte[] buffer = null;
-		LocalDateTime dateTime = null;	
 		List<Integer> helperListCat = new ArrayList<>();
 
 		if (request.getParameter("buttonAddProduct") != null) {
-			if(validationAndSetup(request, productName, productDescription, productPrice, productUnitsInStock, buffer, dateTime, helperListCat)) {
+			if(validationAndSetup(request, productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat)) {
 				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 				
 				productName = request.getParameter("productName");
 				productDescription = request.getParameter("productDescription");
 				productPrice = Double.valueOf(request.getParameter("productPrice"));
 				productUnitsInStock = Integer.valueOf(request.getParameter("productUnitsInStock"));
-				dateTime = LocalDateTime.now();
 				
 				try {
 					Part filePart = request.getPart("imageProduct");
@@ -84,7 +81,7 @@ public class OperatorPanel extends HttpServlet {
 				helperListCat.add(Integer.valueOf(request.getParameter("category1")));
 				helperListCat.add(Integer.valueOf(request.getParameter("category2")));
 				
-				if (pbl.addProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, dateTime, helperListCat, sd.getIdUser())) {
+				if (pbl.addProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat, sd.getIdUser())) {
 					request.setAttribute("message", "Produkt został dodany!");
 					request.setAttribute("clear", "yes");
 					helperListCat.clear();
@@ -103,14 +100,13 @@ public class OperatorPanel extends HttpServlet {
 			}
 			if(validOK) {
 				categoryName = request.getParameter("categoryName");
-				dateTime = LocalDateTime.now();
 				Part part = request.getPart("imageCategory");
 				InputStream in = part.getInputStream();
 				try {
 					buffer = new byte[(int) part.getSize()];
 					in.read(buffer);
 					SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
-					if (pbl.addCategory(categoryName, dateTime, buffer, sd.getIdUser())) {
+					if (pbl.addCategory(categoryName, buffer, sd.getIdUser())) {
 						request.setAttribute("message", "Kategoria została dodana!");
 						request.setAttribute("RequestAttribute", null);
 					} 
@@ -158,14 +154,13 @@ public class OperatorPanel extends HttpServlet {
 		}
 		
 		if(request.getParameter("saveButton") != null) {
-			if(validationAndSetup(request, productName, productDescription, productPrice, productUnitsInStock, buffer, dateTime, helperListCat)) {
+			if(validationAndSetup(request, productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat)) {
 				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 				
 				productName = request.getParameter("productName");
 				productDescription = request.getParameter("productDescription");
 				productPrice = Double.valueOf(request.getParameter("productPrice"));
 				productUnitsInStock = Integer.valueOf(request.getParameter("productUnitsInStock"));
-				dateTime = LocalDateTime.now();
 
 				try {
 					Part filePart = request.getPart("imageProduct");
@@ -181,7 +176,7 @@ public class OperatorPanel extends HttpServlet {
 				helperListCat.add(Integer.valueOf(request.getParameter("category1")));
 				helperListCat.add(Integer.valueOf(request.getParameter("category2")));
 				
-				if(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, dateTime, productIdToEdit, categoryToEdit, (int)request.getPart("imageProduct").getSize(), sd.getIdUser(), helperListCat)) {
+				if(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, productIdToEdit, categoryToEdit, (int)request.getPart("imageProduct").getSize(), sd.getIdUser(), helperListCat)) {
 					request.setAttribute("clear", "yes");	
 					request.setAttribute("message", "Aktualizacja danych produktu zakończona powodzeniem!");
 					productIdToEdit = 0;
@@ -205,7 +200,7 @@ public class OperatorPanel extends HttpServlet {
 		doGet(request, response);
 	}
 
-	private boolean validationAndSetup(HttpServletRequest request, String productName, String productDescription, double productPrice, int productUnitsInStock, byte[] buffer, LocalDateTime dateTime, List<Integer> helperListCat) throws IOException, ServletException {
+	private boolean validationAndSetup(HttpServletRequest request, String productName, String productDescription, double productPrice, int productUnitsInStock, byte[] buffer, List<Integer> helperListCat) throws IOException, ServletException {
 		// TODO validation and setup objects for use in addProduct and editProduct area
 		boolean validOK = true;
 		Validation valid = new Validation();

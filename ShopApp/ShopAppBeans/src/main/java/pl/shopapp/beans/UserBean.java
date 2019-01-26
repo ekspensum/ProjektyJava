@@ -2,7 +2,6 @@ package pl.shopapp.beans;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
