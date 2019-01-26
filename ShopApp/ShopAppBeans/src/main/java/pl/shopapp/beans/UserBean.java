@@ -1,6 +1,8 @@
 package pl.shopapp.beans;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -57,7 +59,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//for unit
+	//for unit tests
 	public UserBean(EntityManager em, UserTransaction ut) {
 	super();
 	this.em = em;
@@ -189,16 +191,14 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public SessionData loginUser(String login, String password) {
 		User user = null;
 		try {
-			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login)
-					.setParameter("password", password).getSingleResult();
+			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
 		} catch (NoResultException e) {
 //			e.printStackTrace();
 			return null;
 		}
 		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
 		if (ur.getRole().getId() == 2) {
-			Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user)
-					.getSingleResult();
+			Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
 			SessionData data = new SessionData();
 			data.setIdUser(user.getId());
 			data.setFirstName(c.getFirstName());
@@ -208,8 +208,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			data.setActive(user.getActive());
 			return data;
 		} else if (ur.getRole().getId() == 3) {
-			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user)
-					.getSingleResult();
+			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user).getSingleResult();
 			SessionData data = new SessionData();
 			data.setIdUser(user.getId());
 			data.setFirstName(op.getFirstName());
@@ -285,8 +284,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		// TODO update User & Operator from ShopAppClient AdminPanel
 		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser+ "";
 		String updateOperatorQuery = "UPDATE Operator SET firstName = '" + firstName + "', lastName = '" + lastName
-				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now()
-				+ "' WHERE id = " + idOperator + "";
+				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "' WHERE id = " + idOperator + "";
 		try {
 			ut.begin();
 			int uuq = em.createQuery(updateUserQuery).executeUpdate();
@@ -386,10 +384,9 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			String lastName, String phoneNo, String email) {
 		// TODO update User & Admin from ShopAppClient AdminPanel. Only first Admin have
 		// privileges for update other admins.
-		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser
-				+ "";
+		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser + "";
 		String updateAdminQuery = "UPDATE Admin SET firstName = '" + firstName + "', lastName = '" + lastName
-				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now()
+				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 				+ "' WHERE id = " + idAdmin + "";
 		try {
 			ut.begin();
@@ -419,7 +416,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) {
 		// TODO update application setting like parameters password, login, session time
 		String updateSettingAppQuery = "UPDATE SettingsApp SET minCharInPass = "+minCharInPass+", maxCharInPass = "+maxCharInPass+", upperCaseInPass = "+upperCaseInPass+", "
-				+ "numbersInPass = "+numbersInPass+", minCharInLogin = "+minCharInLogin+", maxCharInLogin = "+maxCharInLogin+", sessionTime = "+sessionTime+", idUser = "+idUser+", dateTime = '"+LocalDateTime.now()+"' WHERE id = 1";
+				+ "numbersInPass = "+numbersInPass+", minCharInLogin = "+minCharInLogin+", maxCharInLogin = "+maxCharInLogin+", sessionTime = "+sessionTime+", idUser = "+idUser+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"' WHERE id = 1";
 		try {
 			ut.begin();
 			int usq = em.createQuery(updateSettingAppQuery).executeUpdate();
