@@ -46,6 +46,52 @@
 		</dependency>
 
 
+<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>5.3.2</version>
+    <scope>test</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-all</artifactId>
+    <version>1.10.19</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.jboss.arquillian.junit/arquillian-junit-container -->
+<dependency>
+    <groupId>org.jboss.arquillian.junit</groupId>
+    <artifactId>arquillian-junit-container</artifactId>
+<!--     <version>1.4.1.Final</version> -->
+    <scope>test</scope>
+</dependency>
+
+		
+<!-- <dependency> -->
+<!--     <groupId>org.jboss.arquillian</groupId> -->
+<!--     <artifactId>arquillian-bom</artifactId> -->
+<!--     <version>1.4.1.Final</version> -->
+<!--     <scope>import</scope> -->
+<!--     <type>pom</type> -->
+<!-- </dependency> -->
+<dependency>
+    <groupId>org.glassfish.main.extras</groupId>
+    <artifactId>glassfish-embedded-all</artifactId>
+    <version>5.1.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.jboss.arquillian.container</groupId>
+    <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
+    <version>1.0.2</version>
+    <scope>test</scope>
+</dependency>
+
+
+
 	</dependencies>
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>

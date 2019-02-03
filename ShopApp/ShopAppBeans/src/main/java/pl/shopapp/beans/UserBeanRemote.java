@@ -7,6 +7,7 @@ import javax.ejb.Remote;
 import pl.shopapp.entites.Admin;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.Operator;
+import pl.shopapp.entites.Role;
 import pl.shopapp.entites.SettingsApp;
 import pl.shopapp.entites.User;
 import pl.shopapp.entites.UserRole;
@@ -18,6 +19,8 @@ public interface UserBeanRemote {
 	public Customer findCustomer(User u);
 	public boolean setActiveCustomer(int idCustomer, boolean action);
 	public SessionData loginUser(String login, String password);
+	public boolean addRole(String roleName);
+	public List<Role> getRoleList();
 	
 	public boolean addOperator(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser);
 	public List<Operator> getOperatorsData();

@@ -47,6 +47,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	private List<User> uol;
 	private List<User> ual;
 	private SettingsApp setting;
+	private List<Role> rl;
 
 //	@Resource 
 //	private SessionContext sc;
@@ -58,7 +59,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		// TODO Auto-generated constructor stub
 	}
 	
-	//for unit tests
+	//for tests tests
 	public UserBean(EntityManager em, UserTransaction ut) {
 	super();
 	this.em = em;
@@ -430,6 +431,31 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public boolean addRole(String roleName) {
+		// TODO Auto-generated method stub
+		try {
+			ut.begin();
+			Role r = new Role();
+			r.setRoleName(roleName);
+			em.persist(r);
+			ut.commit();
+			return true;
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public List<Role> getRoleList() {
+		// TODO Auto-generated method stub
+		rl = em.createNamedQuery("roleQuery", Role.class).getResultList();
+		return rl;
 	}
 
 }

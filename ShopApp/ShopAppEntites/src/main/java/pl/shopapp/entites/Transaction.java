@@ -13,6 +13,7 @@ import javax.persistence.*;
 @NamedQueries({
 	@NamedQuery(name="findTransactionsQuery", query="SELECT tr FROM Transaction tr WHERE tr.customer = :customer AND tr.dateTime BETWEEN :dateFrom AND :dateTo")
 })
+@Table(name = "\"Transaction\"") //for integration test with Derby database
 public class Transaction implements Serializable {
    
 	@Id

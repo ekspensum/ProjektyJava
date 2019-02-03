@@ -13,6 +13,7 @@ import javax.persistence.*;
 	@NamedQuery(name="loginQuery", query="SELECT u FROM User u WHERE u.login = :login AND u.password = :password AND u.active = true"),
 	@NamedQuery(name="findUserLoginQuery", query="SELECT u FROM User u WHERE u.login = :login")
 })
+@Table(name = "\"User\"") //for integration test with Derby database
 public class User implements Serializable {
 
 	   

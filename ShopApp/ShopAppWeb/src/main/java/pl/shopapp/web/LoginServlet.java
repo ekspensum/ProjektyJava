@@ -30,17 +30,37 @@ public class LoginServlet extends HttpServlet {
 //	@EJB
 	BasketBeanLocal bbl;
 	private InitialContext ctx;
+	double total = 0.0;
+
+
+	//for tests
+	public LoginServlet() {
+		super();
+	}
+	//for tests	
+	public LoginServlet(UserBeanLocal ubl, ProductBeanLocal pbl, BasketBeanLocal bbl, InitialContext ctx) {
+	super();
+	this.ubl = ubl;
+	this.pbl = pbl;
+	this.bbl = bbl;
+	this.ctx = ctx;
+	}
+	//	for tests
+	public double getTotal() {
+			return total;
+	}
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 	    request.setAttribute("catList", pbl.listCategory());
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		if(sd != null) {
-			double total = 0.0;
+
 			for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
 				total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
 			}
@@ -104,6 +124,6 @@ public class LoginServlet extends HttpServlet {
 		
 		doGet(request, response);
 	}
-
+	
 
 }

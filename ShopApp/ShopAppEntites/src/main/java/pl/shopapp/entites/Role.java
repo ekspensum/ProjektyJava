@@ -9,6 +9,9 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = "roleQuery", query = "SELECT r FROM Role r")
+		})
 public class Role implements Serializable {
 
 	   

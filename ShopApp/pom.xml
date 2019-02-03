@@ -14,4 +14,17 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
+	
+	<dependencyManagement>
+	    <dependencies>
+	        <dependency>
+			    <groupId>org.jboss.arquillian</groupId>
+			    <artifactId>arquillian-bom</artifactId>
+			    <version>1.4.1.Final</version>
+			    <scope>import</scope>
+			    <type>pom</type>
+	        </dependency>
+	    </dependencies>
+	</dependencyManagement>
+	
 </project>
