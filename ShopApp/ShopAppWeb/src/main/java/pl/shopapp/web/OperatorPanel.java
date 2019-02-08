@@ -33,11 +33,21 @@ public class OperatorPanel extends HttpServlet {
 	private int productIdToEdit;
 	private int [] categoryToEdit = new int[2];
 
+//	for tests
+	public OperatorPanel() {
+		super();
+	}
+//	for tests
+	public OperatorPanel(ProductBeanLocal pbl) {
+		super();
+		this.pbl = pbl;
+	}
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		request.setAttribute("SessionData", sd);
@@ -49,7 +59,7 @@ public class OperatorPanel extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		
 		String productName = null, productDescription = null, categoryName;
@@ -59,7 +69,7 @@ public class OperatorPanel extends HttpServlet {
 		List<Integer> helperListCat = new ArrayList<>();
 
 		if (request.getParameter("buttonAddProduct") != null) {
-			if(validationAndSetup(request, productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat)) {
+			if(validation(request)) {
 				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 				
 				productName = request.getParameter("productName");
@@ -154,7 +164,7 @@ public class OperatorPanel extends HttpServlet {
 		}
 		
 		if(request.getParameter("saveButton") != null) {
-			if(validationAndSetup(request, productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat)) {
+			if(validation(request)) {
 				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 				
 				productName = request.getParameter("productName");
@@ -200,7 +210,7 @@ public class OperatorPanel extends HttpServlet {
 		doGet(request, response);
 	}
 
-	private boolean validationAndSetup(HttpServletRequest request, String productName, String productDescription, double productPrice, int productUnitsInStock, byte[] buffer, List<Integer> helperListCat) throws IOException, ServletException {
+	private boolean validation(HttpServletRequest request) throws IOException, ServletException {
 		// TODO validation and setup objects for use in addProduct and editProduct area
 		boolean validOK = true;
 		Validation valid = new Validation();

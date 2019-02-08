@@ -1,20 +1,37 @@
 package tests;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import pl.shopapp.beans.BasketBeanLocal;
+import pl.shopapp.beans.ProductBeanLocal;
+import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBean;
+import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.beans.Validation;
 import pl.shopapp.entites.Admin;
 import pl.shopapp.entites.Customer;
@@ -25,11 +42,12 @@ import pl.shopapp.entites.Role;
 import pl.shopapp.entites.SettingsApp;
 import pl.shopapp.entites.User;
 import pl.shopapp.entites.UserRole;
+import pl.shopapp.web.LoginServlet;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Transaction;
 
 @RunWith(Arquillian.class)
-public class LoginServletTestIT {
+public class LoginServletIT {
 
 	@Deployment
 	public static JavaArchive createDeployment() {
@@ -44,6 +62,14 @@ public class LoginServletTestIT {
 	@Inject
 	private UserBean ub;
 	
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
 	
 	@Test
 	public void testAddCustomer() {
@@ -55,6 +81,29 @@ public class LoginServletTestIT {
 		ub.addCustomer("login", "password", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon");
 		System.out.println(ub.findUser(1).getLogin());
 //		assertTrue(ub.addCustomer("login", "password", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon"));
+	}
+	
+	@Test
+	public final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException {
+
+//		doNothing().when(request).setCharacterEncoding("UTF-8");
+//		when(request.getParameter("loginButton")).thenReturn("login");
+//
+//		when(ubl.getSettingsApp()).thenReturn(sa);
+//
+//		String pasToCode = "Admin11";
+//		when(request.getParameter("password")).thenReturn(pasToCode);
+//		String pass = "dcca2ed163582435afa9d42ce361eb4";
+//		when(valid.passwordToCode(request.getParameter("password"))).thenReturn(pass);
+//		
+//		when(request.getParameter("login")).thenReturn("login");
+//		when(valid.loginValidation(request.getParameter("login"))).thenReturn(true);
+
+//		when(ubl.loginUser(request.getParameter("login"), pass)).thenReturn(sd);
+
+		
+	
+//		ls.doPost(request, response);
 	}
 
 //	@Test

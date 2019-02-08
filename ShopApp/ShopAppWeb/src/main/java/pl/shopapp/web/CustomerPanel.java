@@ -27,6 +27,18 @@ public class CustomerPanel extends HttpServlet {
 	@EJB
 	TransactionBeanLocal tbl;
 	
+//	for tests
+	public CustomerPanel() {
+		super();
+	}
+
+//	for tests
+	public CustomerPanel(UserBeanLocal ubl, TransactionBeanLocal tbl) {
+	super();
+	this.ubl = ubl;
+	this.tbl = tbl;
+}
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -34,10 +46,11 @@ public class CustomerPanel extends HttpServlet {
 		request.getRequestDispatcher("/jsp/customerPanel.jsp").forward(request, response);
 	}
 
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("UTF-8");
 		

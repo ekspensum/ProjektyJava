@@ -2,6 +2,7 @@ package pl.shopapp.web;
 
 import java.io.IOException;
 import javax.ejb.EJB;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -29,7 +30,7 @@ public class LoginServlet extends HttpServlet {
 	ProductBeanLocal pbl;
 //	@EJB
 	BasketBeanLocal bbl;
-	private InitialContext ctx;
+	private Context ctx;
 	double total = 0.0;
 
 
@@ -38,7 +39,7 @@ public class LoginServlet extends HttpServlet {
 		super();
 	}
 	//for tests	
-	public LoginServlet(UserBeanLocal ubl, ProductBeanLocal pbl, BasketBeanLocal bbl, InitialContext ctx) {
+	public LoginServlet(UserBeanLocal ubl, ProductBeanLocal pbl, BasketBeanLocal bbl, Context ctx) {
 	super();
 	this.ubl = ubl;
 	this.pbl = pbl;
@@ -73,7 +74,7 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		if (request.getParameter("loginButton") != null) {
