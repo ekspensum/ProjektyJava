@@ -26,11 +26,10 @@ import pl.shopapp.beans.BasketBeanLocal;
 import pl.shopapp.beans.BasketData;
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
-import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Product;
-import pl.shopapp.web.ProductByCategory;
+import pl.shopapp.web.ProductDetails;
 
-class ProductByCategoryTest {
+class ProductDetailsTest {
 	
 	@Mock
 	HttpServletRequest request;
@@ -44,9 +43,9 @@ class ProductByCategoryTest {
 	RequestDispatcher rd;
 
 	BasketBeanLocal bbl;
-	ProductByCategory pbc;
+	ProductDetails pd;
 	SessionData sd;
-	
+
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 	}
@@ -60,7 +59,7 @@ class ProductByCategoryTest {
 		MockitoAnnotations.initMocks(this);		
 		sd= new SessionData();
 		bbl = new BasketBean();
-		pbc = new ProductByCategory(pbl, bbl);
+		pd = new ProductDetails(pbl, bbl);
 	}
 
 	@AfterEach
@@ -76,77 +75,40 @@ class ProductByCategoryTest {
 		bbl.addBasketRow(2, 14, "productName2", 33.44, basketDataList);
 		sd.setBasketBeanLocal(bbl);
 			
-		when(request.getRequestDispatcher("/jsp/productByCategory.jsp")).thenReturn(rd);
-		pbc.doGet(request, response);
-		assertEquals(614.02, pbc.getTotal());
+		when(request.getRequestDispatcher("/jsp/productDetails.jsp")).thenReturn(rd);
+		pd.doGet(request, response);
+		assertEquals(614.02, pd.getTotal());
 	}
 
 	@SuppressWarnings("serial")
 	@Test
 	final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException {
-		Category cat0 = new Category();
-		cat0.setId(0);
-		Category cat1 = new Category();
-		cat1.setId(1);
-		Category cat2 = new Category();
-		cat2.setId(2);
-		Category cat3 = new Category();
-		cat3.setId(3);
-		Category cat4 = new Category();
-		cat4.setId(4);
-		Category cat5 = new Category();
-		cat5.setId(5);
-		Category cat6 = new Category();
-		cat6.setId(6);
-		Category cat7 = new Category();
-		cat7.setId(7);
-		Category cat8 = new Category();
-		cat8.setId(8);
+		when(pbl.getProduct(Integer.valueOf("1"))).thenReturn(new Product() {{setId(3); setName("name1"); setPrice(55.66);}});		
+		when(request.getParameter("buttonToProductDetailsFromCategory")).thenReturn("1");
+		when(request.getParameter("buttonToProductDetailsFromMain")).thenReturn("1");
 		
-		List<Category> cl = new ArrayList<>();
-		cl.add(cat0);
-		cl.add(cat1);
-		cl.add(cat2);
-		cl.add(cat3);
-		cl.add(cat4);
-		cl.add(cat5);
-		cl.add(cat6);
-		cl.add(cat7);
-		cl.add(cat8);
-		
-		when(pbl.listCategory()).thenReturn(cl);
-		when(request.getParameter(String.valueOf(cl.get(1).getId()))).thenReturn("1");
-		when(request.getParameter(String.valueOf(cl.get(2).getId()))).thenReturn("2");
-		when(request.getParameter(String.valueOf(cl.get(3).getId()))).thenReturn("3");
-		when(request.getParameter(String.valueOf(cl.get(4).getId()))).thenReturn("4");
-		when(request.getParameter(String.valueOf(cl.get(5).getId()))).thenReturn("5");
-		when(request.getParameter(String.valueOf(cl.get(6).getId()))).thenReturn("6");
-		when(request.getParameter(String.valueOf(cl.get(7).getId()))).thenReturn("7");
-		when(request.getParameter(String.valueOf(cl.get(8).getId()))).thenReturn("8");
-		
-//		for buttonToBasketFromCategory parameter
-		when(request.getParameter("buttonToBasketFromCategory")).thenReturn("1");
-		
-		when(pbl.getProduct(1)).thenReturn(new Product() {{setId(1); setName("name"); setPrice(17.17);}});
+//		for buttonToBasketFromDetails parameter
+		when(request.getParameter("buttonToBasketFromDetails")).thenReturn("1");
 		when(request.getSession()).thenReturn(session);
 		when(session.getAttribute("SessionData")).thenReturn(sd);
 		List<BasketData> basketDataList = new ArrayList<>();
 		bbl.addBasketRow(1, 13, "productName1", 11.22, basketDataList);
 		bbl.addBasketRow(2, 14, "productName2", 33.44, basketDataList);
 		sd.setBasketBeanLocal(bbl);
-		when(request.getParameter("buttonToBasketFromCategory")).thenReturn("1");
+		
+		when(request.getParameter("buttonToBasketFromDetails")).thenReturn("1");
 		when(request.getParameter("quantity1")).thenReturn("1");
 		
 //		for buttonDeleteRowBasket parameter
 		when(request.getParameter("buttonDeleteRowBasket")).thenReturn("1");
 		when(request.getParameterValues("chbxDeleteRow")).thenReturn(new String [] {"1", "2"});
-			
-		when(request.getSession()).thenReturn(session);
-		when(request.getRequestDispatcher("/jsp/productByCategory.jsp")).thenReturn(rd);
-		pbc.doPost(request, response);
-//		for buttonToBasketFromCategory parameter
-		assertTrue(bbl.addBasketRow(1, 1, "name", 11.22, bbl.getBasketData()));
-//		for buttonDeleteRowBasket parameter - d't forget that assert above add one row		
+		
+		when(request.getRequestDispatcher("/jsp/productDetails.jsp")).thenReturn(rd);
+		pd.doPost(request, response);
+		
+//		for buttonToBasketFromDetails parameter
+		assertTrue(bbl.addBasketRow(pbl.getProduct(1).getId(), 21, pbl.getProduct(1).getName(), pbl.getProduct(1).getPrice(),	bbl.getBasketData()));
+//		for buttonDeleteRowBasket parameter - to keep in mind that above assert added one row to basket
 		assertEquals(2, bbl.getBasketData().size());
 	}
 

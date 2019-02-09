@@ -23,13 +23,33 @@ public class Transaction extends HttpServlet {
 	private BasketBeanLocal bbl;
 	@EJB
 	private TransactionBeanLocal tbl;
+	private double total = 0.0;
+	
+//	for tests
+	public Transaction() {
+		super();
+	}
+		
+//	for tests
+	public Transaction(BasketBeanLocal bbl, TransactionBeanLocal tbl) {
+		super();
+		this.bbl = bbl;
+		this.tbl = tbl;
+	}
+
+//	for tests
+	public double getTotal() {
+		return total;
+	}
+
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		if(sd != null) {
-			double total = 0.0;
+			
 			for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
 				total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
 			}
@@ -41,7 +61,7 @@ public class Transaction extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		if(request.getParameter("buttonBuyNow") != null) {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");

@@ -22,7 +22,7 @@ public class ProductByCategory extends HttpServlet {
 	@EJB
 	private ProductBeanLocal pbl;
 	private BasketBeanLocal bbl;
-	double total = 0.0;
+	private double total = 0.0;
 	
 //	for tests
 	public ProductByCategory() {
