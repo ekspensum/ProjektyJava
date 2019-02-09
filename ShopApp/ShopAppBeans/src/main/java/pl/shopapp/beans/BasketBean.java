@@ -40,13 +40,13 @@ public class BasketBean implements BasketBeanRemote, BasketBeanLocal {
 	}
 	
     @Override
-	public void addBasketRow(int productId, int quantity, String productName, double price, List<BasketData> basketDataList) {
+	public boolean addBasketRow(int productId, int quantity, String productName, double price, List<BasketData> basketDataList) {
 		basketData = new BasketData();
 		basketData.setProductId(productId);
 		basketData.setQuantity(quantity);
 		basketData.setProductName(productName);
 		basketData.setPrice(price);
-		this.basketDataList.add(basketData);
+		return this.basketDataList.add(basketData);
 	}
 
 	@PostConstruct

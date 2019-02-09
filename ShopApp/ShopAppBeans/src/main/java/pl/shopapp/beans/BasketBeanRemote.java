@@ -8,7 +8,7 @@ import javax.ejb.Remote;
 public interface BasketBeanRemote {
 	
 	public List<BasketData> getBasketData();
-	public void addBasketRow(int productId, int quantity, String productName, double price, List<BasketData> basketDataList);
+	public boolean addBasketRow(int productId, int quantity, String productName, double price, List<BasketData> basketDataList);
 	
 
 }

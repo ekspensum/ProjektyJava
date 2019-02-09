@@ -22,14 +22,32 @@ public class ProductByCategory extends HttpServlet {
 	@EJB
 	private ProductBeanLocal pbl;
 	private BasketBeanLocal bbl;
+	double total = 0.0;
 	
+//	for tests
+	public ProductByCategory() {
+		super();
+	}
+	
+//	for tests
+	public ProductByCategory(ProductBeanLocal pbl, BasketBeanLocal bbl) {
+		super();
+		this.pbl = pbl;
+		this.bbl = bbl;
+	}
+	
+//	for tests
+	public double getTotal() {
+		return total;
+	}
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		if(sd != null) {
-			double total = 0.0;
+
 			for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
 				total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
 			}
@@ -41,7 +59,7 @@ public class ProductByCategory extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		if(request.getParameter(String.valueOf(pbl.listCategory().get(1).getId())) != null) {
