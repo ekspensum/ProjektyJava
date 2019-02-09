@@ -3,7 +3,6 @@ package tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyObject;

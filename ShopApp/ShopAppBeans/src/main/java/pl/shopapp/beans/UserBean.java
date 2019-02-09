@@ -409,26 +409,66 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public SettingsApp getSettingsApp() {
 		// TODO get current application setting like parameters password, login, session time
 		setting = em.find(SettingsApp.class, 1);
+		if(setting == null) {
+			setting = new SettingsApp();
+			setting.setId(1);
+			setting.setMinCharInPass(3);
+			setting.setMaxCharInPass(20);
+			setting.setUpperCaseInPass(0);
+			setting.setNumbersInPass(0);
+			setting.setMinCharInLogin(3);
+			setting.setMaxCharInLogin(20);
+			setting.setSessionTime(30);
+			setting.setDateTime(LocalDateTime.now());
+			setting.setIdUser(1);
+			return setting;
+		}
 		return setting;
 	}
 
 	@Override
 	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) {
-		// TODO update application setting like parameters password, login, session time
-		String updateSettingAppQuery = "UPDATE SettingsApp SET minCharInPass = "+minCharInPass+", maxCharInPass = "+maxCharInPass+", upperCaseInPass = "+upperCaseInPass+", "
-				+ "numbersInPass = "+numbersInPass+", minCharInLogin = "+minCharInLogin+", maxCharInLogin = "+maxCharInLogin+", sessionTime = "+sessionTime+", idUser = "+idUser+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"' WHERE id = 1";
-		try {
-			ut.begin();
-			int usq = em.createQuery(updateSettingAppQuery).executeUpdate();
-			ut.commit();
-			if(usq == 1)
+		// TODO insert or update application setting like parameters password, login, session time
+		setting = em.find(SettingsApp.class, 1);
+		if(setting == null) {
+			setting = new SettingsApp();
+			setting.setId(1);
+			setting.setMinCharInPass(minCharInPass);
+			setting.setMaxCharInPass(maxCharInPass);
+			setting.setUpperCaseInPass(upperCaseInPass);
+			setting.setNumbersInPass(numbersInPass);
+			setting.setMinCharInLogin(minCharInLogin);
+			setting.setMaxCharInLogin(maxCharInLogin);
+			setting.setSessionTime(sessionTime);
+			setting.setDateTime(LocalDateTime.now());
+			setting.setIdUser(idUser);			
+			try {
+				ut.begin();
+				em.persist(setting);
+				ut.commit();
 				return true;
-			else
-				ut.rollback();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException
+					| RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else {
+			String updateSettingAppQuery = "UPDATE SettingsApp SET minCharInPass = "+minCharInPass+", maxCharInPass = "+maxCharInPass+", upperCaseInPass = "+upperCaseInPass+", "
+					+ "numbersInPass = "+numbersInPass+", minCharInLogin = "+minCharInLogin+", maxCharInLogin = "+maxCharInLogin+", sessionTime = "+sessionTime+", idUser = "+idUser+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"' WHERE id = 1";
+			try {
+				ut.begin();
+				int usq = em.createQuery(updateSettingAppQuery).executeUpdate();
+				ut.commit();
+				if(usq == 1)
+					return true;
+				else
+					ut.rollback();
+			} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+					| HeuristicMixedException | HeuristicRollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 		}
 		return false;
 	}

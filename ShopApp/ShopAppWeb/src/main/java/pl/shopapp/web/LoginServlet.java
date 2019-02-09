@@ -25,13 +25,13 @@ public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@EJB
-	UserBeanLocal ubl;
+	private UserBeanLocal ubl;
 	@EJB
-	ProductBeanLocal pbl;
+	private ProductBeanLocal pbl;
 //	@EJB
-	BasketBeanLocal bbl;
+	private BasketBeanLocal bbl;
 	private Context ctx;
-	double total = 0.0;
+	private double total = 0.0;
 
 
 	//for tests

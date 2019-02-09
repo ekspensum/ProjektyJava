@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,9 +28,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import pl.shopapp.beans.BasketBean;
 import pl.shopapp.beans.BasketBeanLocal;
+import pl.shopapp.beans.BasketData;
+import pl.shopapp.beans.ProductBean;
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
+import pl.shopapp.beans.TransactionBean;
 import pl.shopapp.beans.UserBean;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.beans.Validation;
@@ -53,18 +58,29 @@ public class LoginServletIT {
 	public static JavaArchive createDeployment() {
 	    return ShrinkWrap.create(JavaArchive.class)
 	      .addClasses(UserBean.class, Validation.class, Admin.class, Customer.class, Operator.class, Product.class, ProductCategory.class, Role.class, 
-	    		  SettingsApp.class, User.class, UserRole.class, Category.class, Transaction.class)
+	    		  SettingsApp.class, User.class, UserRole.class, Category.class, Transaction.class, BasketBean.class, BasketData.class, ProductBean.class, SessionData.class, TransactionBean.class)
 	      .addAsManifestResource("META-INF/test-persistence.xml", "persistence.xml")
 	      .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
 	
 	@Inject
-	private UserBean ub;
+	private UserBeanLocal ubl;
+	@Inject
+	private ProductBeanLocal pbl;
+	BasketBeanLocal bbl;
+	private Context ctx;
+	LoginServlet ls;
 	
+	@Mock
+	HttpServletRequest request;
+	@Mock
+	HttpServletResponse response;
 
 	@Before
 	public void setUp() throws Exception {
+		MockitoAnnotations.initMocks(this);
+		ls = new LoginServlet(ubl, pbl, bbl, ctx);
 	}
 
 	@After
@@ -73,37 +89,34 @@ public class LoginServletIT {
 	
 	@Test
 	public void testAddCustomer() {
-		ub.addRole("admin");
-		ub.addRole("customer");
-		ub.addRole("operator");
-		List<Role> rl = ub.getRoleList();
+		ubl.addRole("admin");
+		ubl.addRole("customer");
+		ubl.addRole("operator");
+		List<Role> rl = ubl.getRoleList();
 		System.out.println("size: "+rl.size() );
-		ub.addCustomer("login", "password", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon");
-		System.out.println(ub.findUser(1).getLogin());
+		ubl.addCustomer("customer1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon");
+		System.out.println(ubl.findUser(1).getLogin());
 //		assertTrue(ub.addCustomer("login", "password", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon"));
 	}
 	
 	@Test
 	public final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException {
 
-//		doNothing().when(request).setCharacterEncoding("UTF-8");
-//		when(request.getParameter("loginButton")).thenReturn("login");
-//
-//		when(ubl.getSettingsApp()).thenReturn(sa);
-//
-//		String pasToCode = "Admin11";
-//		when(request.getParameter("password")).thenReturn(pasToCode);
-//		String pass = "dcca2ed163582435afa9d42ce361eb4";
-//		when(valid.passwordToCode(request.getParameter("password"))).thenReturn(pass);
-//		
-//		when(request.getParameter("login")).thenReturn("login");
-//		when(valid.loginValidation(request.getParameter("login"))).thenReturn(true);
-
-//		when(ubl.loginUser(request.getParameter("login"), pass)).thenReturn(sd);
-
+		ubl.addRole("admin");
+		ubl.addRole("customer");
+		ubl.addRole("operator");
+		ubl.addCustomer("customer1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon");
 		
-	
-//		ls.doPost(request, response);
+		
+		doNothing().when(request).setCharacterEncoding("UTF-8");
+		when(request.getParameter("loginButton")).thenReturn("customer1");
+
+		when(request.getParameter("password")).thenReturn("Customer11");
+		when(request.getParameter("login")).thenReturn("customer1");
+
+
+		ls.doPost(request, response);
+
 	}
 
 //	@Test
@@ -154,7 +167,7 @@ public class LoginServletIT {
 	@Test
 	public void testGetOperatorsData() {
 //		List<Operator> opl= new ArrayList<>();
-		assertTrue(ub.getOperatorsData().isEmpty());
+		assertTrue(ubl.getOperatorsData().isEmpty());
 	}
 //
 //	@Test
