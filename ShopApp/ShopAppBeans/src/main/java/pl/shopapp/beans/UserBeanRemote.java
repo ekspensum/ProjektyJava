@@ -17,7 +17,7 @@ public interface UserBeanRemote {
 	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon);
 	public boolean updateCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon, int idUser);
 	public Customer findCustomer(User u);
-	public boolean setActiveCustomer(int idCustomer, boolean action);
+	public boolean setActiveCustomer(int idUser, boolean action);
 	public SessionData loginUser(String login, String password);
 	public boolean addRole(String roleName);
 	public List<Role> getRoleList();

@@ -61,7 +61,7 @@ public class LoginServlet extends HttpServlet {
 	    request.setAttribute("catList", pbl.listCategory());
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		if(sd != null) {
-
+			total = 0.0;
 			for(int i=0; i<sd.getBasketBeanLocal().getBasketData().size(); i++){
 				total += sd.getBasketBeanLocal().getBasketData().get(i).getPrice() * sd.getBasketBeanLocal().getBasketData().get(i).getQuantity(); 
 			}

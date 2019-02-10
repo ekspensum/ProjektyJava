@@ -156,8 +156,22 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 
 	@Override
-	public boolean setActiveCustomer(int idCustomer, boolean action) {
-		
+	public boolean setActiveCustomer(int idUser, boolean action) {
+		try {
+			ut.begin();
+			String activeCustomerQuery = "UPDATE User SET active = "+action+" WHERE id = "+idUser+" ";
+			int acq = em.createQuery(activeCustomerQuery).executeUpdate();
+			ut.commit();
+			if(acq == 1)
+				return true;
+			else
+				ut.rollback();
+		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
+				| HeuristicMixedException | HeuristicRollbackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 		return false;
 	}
 
@@ -307,7 +321,20 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		try {
 			ut.begin();
 			User user = em.find(User.class, idUser);
-			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+			Admin adm = null;
+			try {
+				adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+			} catch (NoResultException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+				adm = new Admin();
+				adm.setFirstName("firstNameDefault");
+				adm.setLastName("lastNameDefault");
+				adm.setDate(LocalDateTime.now());
+				adm.setUser(user);
+				adm.setAdmin(adm);
+				em.persist(adm);
+			}
 			
 			User u = new User();
 			u.setLogin(login);
