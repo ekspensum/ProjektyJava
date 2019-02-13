@@ -31,13 +31,12 @@ public class SendEmail {
 	    msg = new MimeMessage(session);
 	}
 
-    public boolean sendEmail(String mailTo, String subject, String text) {
-		
+    public boolean sendEmail(String mailTo, String mailSubject, String mailText) {		
     	try {
 			msg.setFrom(new InternetAddress(mailFrom));
 			msg.setRecipients(Message.RecipientType.TO, mailTo);
-			msg.setSubject(subject);
-			msg.setText(text, "UTF-8");
+			msg.setSubject(mailSubject);
+			msg.setText(mailText, "UTF-8", "html");
 			Transport.send(msg);
 			return true;
 		} catch (MessagingException e) {
@@ -46,14 +45,18 @@ public class SendEmail {
 		}
     	return false;   	
     }
-	
     
-    public static void main(String[] args) {
+    public String getMailFrom() {
+		return mailFrom;
+	}
+
+	public static void main(String[] args) {
 		SendEmail se = new SendEmail();
 		
 		String mailTo = "ekspensum@interia.pl";
 		String subject = "Test";
-		String text = "abc ąbćłłmń";
+		String text = "<font color='blue' size='3'>Dzień dobry <b>"+"firstName"+" "+"lastName"+"</b><br>Twoje konto zostało zarejestrowane i możesz dokonywać zakupów.<br>"
+				+ "Twój login to: "+"login"+". <br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+se.getMailFrom();
 		se.sendEmail(mailTo, subject, text);
 	}
 } 

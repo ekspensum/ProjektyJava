@@ -48,6 +48,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	private List<User> ual;
 	private SettingsApp setting;
 	private List<Role> rl;
+	private SendEmail mail;
 
 //	@Resource 
 //	private SessionContext sc;
@@ -74,6 +75,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			User u = new User();
 			Customer c = new Customer();
 			Validation valid = new Validation();
+			mail = new SendEmail();
+			String mailSubject = "Potwierdzenie rejestracji konta użytkownika w sklepie internetowym ShopApp.";
+			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz dokonywać zakupów.<br>"
+					+ "Twój login to: "+login+". <br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+mail.getMailFrom();
 			
 			u.setLogin(login);
 			u.setPassword(valid.passwordToCode(password));
@@ -101,6 +106,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			em.persist(u);
 			em.persist(c);
 			em.persist(ur);
+			mail.sendEmail(c.getEmail(), mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
@@ -266,9 +272,15 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			
 			UserRole ur = addUserRole(u, 3);
 			
+			mail = new SendEmail();
+			String mailSubject = "Potwierdzenie rejestracji konta operatora w sklepie internetowym ShopApp.";
+			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
+					+ "Twój login to: "+login+". <br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
+			
 			em.persist(u);
 			em.persist(o);
 			em.persist(ur);
+			mail.sendEmail(o.getEmail(), mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (NotSupportedException | SystemException | HeuristicRollbackException | HeuristicMixedException
@@ -336,6 +348,11 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 				em.persist(adm);
 			}
 			
+			mail = new SendEmail();
+			String mailSubject = "Potwierdzenie rejestracji konta administratora w sklepie internetowym ShopApp.";
+			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
+					+ "Twój login to: "+login+". <br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
+			
 			User u = new User();
 			u.setLogin(login);
 			u.setPassword(password);
@@ -355,6 +372,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			em.persist(u);
 			em.persist(a);
 			em.persist(ur);
+			mail.sendEmail(a.getEmail(), mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
