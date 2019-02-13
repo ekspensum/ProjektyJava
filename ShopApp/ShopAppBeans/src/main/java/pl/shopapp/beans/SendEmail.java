@@ -3,50 +3,57 @@ package pl.shopapp.beans;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
+
 
 public class SendEmail {
 
-   public static void main(String [] args) {    
-      // Recipient's email ID needs to be mentioned.
-      String to = "abcd@gmail.com";
+    private String mailFrom = "testjava55@gmail.com";
 
-      // Sender's email ID needs to be mentioned
-      String from = "web@gmail.com";
+    private Properties props;
+    private Session session;
+    private MimeMessage msg;
+    private String username = "testjava55";
+    private String password = "javatest@";
 
-      // Assuming you are sending email from localhost
-      String host = "smtp.gmail.com";
+    public SendEmail() {
+        props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+	    session = Session.getInstance(props, new Authenticator() {
+	    	@Override
+	    	protected PasswordAuthentication getPasswordAuthentication() {
+		    	// TODO Auto-generated method stub
+		    	return new PasswordAuthentication(username, password);
+	    }
+		});
+	    msg = new MimeMessage(session);
+	}
 
-      // Get system properties
-      Properties properties = System.getProperties();
-
-      // Setup mail server
-      properties.setProperty("mail.smtp.host", host);
-
-      // Get the default Session object.
-      Session session = Session.getDefaultInstance(properties);
-
-      try {
-         // Create a default MimeMessage object.
-         MimeMessage message = new MimeMessage(session);
-
-         // Set From: header field of the header.
-         message.setFrom(new InternetAddress(from));
-
-         // Set To: header field of the header.
-         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-         // Set Subject: header field
-         message.setSubject("This is the Subject Line!");
-
-         // Now set the actual message
-         message.setText("This is actual message");
-
-         // Send message
-         Transport.send(message);
-         System.out.println("Sent message successfully....");
-      } catch (MessagingException mex) {
-         mex.printStackTrace();
-      }
-   }
+    public boolean sendEmail(String mailTo, String subject, String text) {
+		
+    	try {
+			msg.setFrom(new InternetAddress(mailFrom));
+			msg.setRecipients(Message.RecipientType.TO, mailTo);
+			msg.setSubject(subject);
+			msg.setText(text, "UTF-8");
+			Transport.send(msg);
+			return true;
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return false;   	
+    }
+	
+    
+    public static void main(String[] args) {
+		SendEmail se = new SendEmail();
+		
+		String mailTo = "ekspensum@interia.pl";
+		String subject = "Test";
+		String text = "abc ąbćłłmń";
+		se.sendEmail(mailTo, subject, text);
+	}
 } 

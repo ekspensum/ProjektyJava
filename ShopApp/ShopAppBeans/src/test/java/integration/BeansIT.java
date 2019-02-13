@@ -1,6 +1,7 @@
 package integration;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import pl.shopapp.beans.BasketBean;
+import pl.shopapp.beans.BasketBeanLocal;
 import pl.shopapp.beans.BasketData;
 import pl.shopapp.beans.ProductBean;
 import pl.shopapp.beans.ProductBeanLocal;
@@ -65,6 +67,10 @@ public class BeansIT {
 	private UserBeanLocal ubl;
 	@EJB
 	private ProductBeanLocal pbl;
+	@EJB
+	private BasketBeanLocal bbl;
+	@EJB
+	private TransactionBean tb;
 	
 	private byte [] buffer = {1,1,1};
 	
@@ -181,6 +187,7 @@ public class BeansIT {
 		assertTrue(ubl.findUserLogin(login));
 		assertEquals(ubl.getUsersOperatorData().size(), ubl.getOperatorsData().size());
 	}
+	
 	@Test
 	@InSequence(5)
 	public final void testCategory() {
@@ -203,6 +210,7 @@ public class BeansIT {
 		assertTrue(pbl.addProduct("productName", "productDescription", 11.22, 13, buffer, helperListCat, 3));
 		assertEquals(1, pbl.getProduct(1).getId());
 		
+//		it's working despite the "in" is ambiguous in statement derby database.   
 		String updateProductWithoutImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 33.44, unitsInStock = 3, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', id = 1 WHERE id = 1";
 		try {
 			ut.begin();
@@ -213,6 +221,23 @@ public class BeansIT {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		assertEquals(3, pbl.getProduct(1).getUnitsInStock());
-	}	
+		assertEquals(33.44, pbl.getProduct(1).getPrice());
+	}
+	
+	@Test
+	@InSequence(7)
+	public final void testBasket() {
+		List<BasketData> basketDataList = bbl.getBasketData();
+		assertTrue(bbl.addBasketRow(1, 133, "productName1", 55.66, basketDataList));
+		assertEquals(55.66, basketDataList.get(0).getPrice());
+	}
+	
+	@Test
+	@InSequence(8)
+	public final void testTransaction() {
+		testBasket();
+		List<BasketData> basketList = bbl.getBasketData();
+		assertTrue(tb.newTransaction(1, basketList));
+		assertEquals(133, tb.getTransactionsData(1, LocalDateTime.now().minusDays(1), LocalDateTime.now()).get(0).getQuantity());
+	}
 }
