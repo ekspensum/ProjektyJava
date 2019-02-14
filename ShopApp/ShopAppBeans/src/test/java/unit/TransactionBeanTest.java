@@ -81,6 +81,7 @@ class TransactionBeanTest {
 			when(em.find(User.class, u.getId())).thenReturn(u);
 			Customer c = new Customer();
 			c.setId(1);
+			c.setEmail("email@gmailtest.com");
 			@SuppressWarnings("unchecked")
 			TypedQuery<Customer> mockedCustomerQuery = mock(TypedQuery.class);
 			when(em.createNamedQuery("customerQuery", Customer.class)).thenReturn(mockedCustomerQuery);

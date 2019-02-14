@@ -35,6 +35,9 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 	@Resource
 	private UserTransaction ut;
 	
+	private SendEmail mail;
+	StringBuilder message;
+	
     /**
      * Default constructor. 
      */
@@ -52,7 +55,8 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 	@Override
 	public boolean newTransaction(int idUser, List<BasketData> basketList) {
 		// TODO Auto-generated method stub
-		int newUnitInStock = 0;		
+		int newUnitInStock = 0;
+		message = new StringBuilder();
 		try {
 			ut.begin();
 			User u = em.find(User.class, idUser);
@@ -71,9 +75,21 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 				t.setPrice(p.getPrice());
 				t.setProduct(p);
 				t.setDateTime(LocalDateTime.now());
+				message.append("<tr><td>").append(i+1).append(". </td><td>").append(basketList.get(i).getProductName()).append("</td><td>").append(basketList.get(i).getQuantity()).append("</td><td>").append(basketList.get(i).getPrice()).append("</td><td>").append(basketList.get(i).getQuantity() * basketList.get(i).getPrice()).append("</td></tr>");
 				em.persist(t);		
 			}
 			basketList.clear();
+			mail = new SendEmail();
+			String mailSubject = "Potwierdzenie dokonania zakupu towarów w sklepie internetowym ShopApp.";
+			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+c.getFirstName()+" "+c.getLastName()+"</b><br>"
+					+ "Potwierdzamy zawarcie transakcji zakupu następujących towarów:</font><br><br>"
+					+ "<table>"
+					+ "<tr><th>Lp</th><th>Nazwa produktu</th><th>Ilość</th><th>Cena</th><th>Wartość</th></tr>"
+					+ message
+					+ "</table><br>"
+					+ "<font size='3'>Towar zostanie wysłany w ciągu 48 godzin po otrzymaniu zapłaty.<br><br>"
+					+ "Pozdrawiamy<br>Dział Obsługi Klienta</font><br>"+mail.getMailFrom();
+			mail.sendEmail(c.getEmail(), mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException

@@ -126,7 +126,7 @@ public class UserBeanTest {
 			}
 			e.printStackTrace();
 		}
-		assertTrue(this.ub.addCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon"));
+		assertTrue(this.ub.addCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email@gmailtest.com", true, "companyName", "taxNo", "regon"));
 	}
 
 	/**
@@ -402,7 +402,7 @@ public class UserBeanTest {
 			}
 			e.printStackTrace();
 		}
-		assertTrue(this.ub.addOperator("firstName", "lastName", "phoneNo", "email", "login", "password", 3));	
+		assertTrue(this.ub.addOperator("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login", "password", 3));	
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class UserBeanTest {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email", "login1", "Password11", 2));
+			assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login1", "Password11", 2));
 		}	
 	}
 

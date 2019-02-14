@@ -78,7 +78,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta użytkownika w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz dokonywać zakupów.<br>"
-					+ "Twój login to: "+login+". <br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+mail.getMailFrom();
+					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+mail.getMailFrom();
 			
 			u.setLogin(login);
 			u.setPassword(valid.passwordToCode(password));
@@ -275,7 +275,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta operatora w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
-					+ "Twój login to: "+login+". <br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
+					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
 			
 			em.persist(u);
 			em.persist(o);
@@ -351,7 +351,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta administratora w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
-					+ "Twój login to: "+login+". <br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
+					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
 			
 			User u = new User();
 			u.setLogin(login);

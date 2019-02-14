@@ -20,6 +20,7 @@ public class SendEmail {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 	    session = Session.getInstance(props, new Authenticator() {
 	    	@Override
@@ -50,13 +51,17 @@ public class SendEmail {
 		return mailFrom;
 	}
 
+	public void setMailFrom(String mailFrom) {
+		this.mailFrom = mailFrom;
+	}
+
 	public static void main(String[] args) {
 		SendEmail se = new SendEmail();
 		
 		String mailTo = "ekspensum@interia.pl";
 		String subject = "Test";
 		String text = "<font color='blue' size='3'>Dzień dobry <b>"+"firstName"+" "+"lastName"+"</b><br>Twoje konto zostało zarejestrowane i możesz dokonywać zakupów.<br>"
-				+ "Twój login to: "+"login"+". <br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+se.getMailFrom();
+				+ "Twój login to: "+"login"+". <br>Pozdrawiamy<br><br>Dział Obsługi Klienta</font><br>"+se.getMailFrom();
 		se.sendEmail(mailTo, subject, text);
 	}
 } 
