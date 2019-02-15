@@ -11,7 +11,8 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="customerQuery", query="SELECT c FROM Customer c WHERE c.user = :user")
+	@NamedQuery(name="customerQuery", query="SELECT c FROM Customer c WHERE c.user = :user"),
+	@NamedQuery(name="activationStringQuery", query="SELECT c FROM Customer c WHERE c.activationString = :activationString")
 })
 public class Customer implements Serializable {
 
@@ -34,6 +35,7 @@ public class Customer implements Serializable {
 	private String unitNo;
 	private String email;
 	private LocalDateTime dateRegistration;
+	private String activationString;
 	
 //	@Column(name="user_id", insertable=false, updatable=false)
 //	private int userId;
@@ -174,6 +176,14 @@ public class Customer implements Serializable {
 
 	public void setDateRegistration(LocalDateTime dateRegistration) {
 		this.dateRegistration = dateRegistration;
+	}
+
+	public String getActivationString() {
+		return activationString;
+	}
+
+	public void setActivationString(String activationString) {
+		this.activationString = activationString;
 	}
 
 	public User getUser() {

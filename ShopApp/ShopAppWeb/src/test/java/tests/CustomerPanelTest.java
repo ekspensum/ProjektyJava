@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -112,7 +110,7 @@ class CustomerPanelTest {
 		String pasToCode = "Admin11";
 		when(request.getParameter("password")).thenReturn(pasToCode);
 		String pass = "dcca2ed163582435afa9d42ce361eb4";
-		when(valid.passwordToCode(request.getParameter("password"))).thenReturn(pass);
+		when(valid.stringToCode(request.getParameter("password"))).thenReturn(pass);
 		
 		SessionData loginSD = new SessionData();
 		loginSD.setIdUser(1);

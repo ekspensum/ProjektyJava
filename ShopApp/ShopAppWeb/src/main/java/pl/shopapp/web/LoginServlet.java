@@ -79,7 +79,7 @@ public class LoginServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		if (request.getParameter("loginButton") != null) {
 			Validation valid = new Validation(ubl.getSettingsApp());
-			String pass = valid.passwordToCode(request.getParameter("password"));
+			String pass = valid.stringToCode(request.getParameter("password"));
 			if (valid.loginValidation(request.getParameter("login"))) {
 				if (ubl.loginUser(request.getParameter("login"), pass) != null) {
 					SessionData sd = ubl.loginUser(request.getParameter("login"), pass);

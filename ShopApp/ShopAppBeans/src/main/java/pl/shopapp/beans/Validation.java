@@ -20,7 +20,7 @@ public class Validation {
 		this.setting = setting;
 	}
 
-	public String passwordToCode(String password) {
+	public String stringToCode(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			byte[] bytes = md.digest(password.getBytes());

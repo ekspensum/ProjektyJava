@@ -132,7 +132,7 @@ class LoginServletTest {
 		String pasToCode = "Admin11";
 		when(request.getParameter("password")).thenReturn(pasToCode);
 		String pass = "dcca2ed163582435afa9d42ce361eb4";
-		when(valid.passwordToCode(request.getParameter("password"))).thenReturn(pass);
+		when(valid.stringToCode(request.getParameter("password"))).thenReturn(pass);
 		
 		when(request.getParameter("login")).thenReturn("login");
 		when(valid.loginValidation(request.getParameter("login"))).thenReturn(true);

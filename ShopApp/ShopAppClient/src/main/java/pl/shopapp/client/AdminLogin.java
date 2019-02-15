@@ -122,7 +122,7 @@ public class AdminLogin {
 				if (!textFieldLogin.getText().equals("")) {
 					if (passwordField.getPassword().length != 0) {
 						Validation valid = new Validation(ubr.getSettingsApp());
-						String pass = valid.passwordToCode(passwordField.getText());
+						String pass = valid.stringToCode(passwordField.getText());
 						if (valid.loginValidation(textFieldLogin.getText())) {
 							if (ubr.loginAdmin(textFieldLogin.getText(), pass) != null) {
 								SessionData sd = ubr.loginAdmin(textFieldLogin.getText(), pass);

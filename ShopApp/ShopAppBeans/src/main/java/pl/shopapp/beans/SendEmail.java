@@ -55,13 +55,4 @@ public class SendEmail {
 		this.mailFrom = mailFrom;
 	}
 
-	public static void main(String[] args) {
-		SendEmail se = new SendEmail();
-		
-		String mailTo = "ekspensum@interia.pl";
-		String subject = "Test";
-		String text = "<font color='blue' size='3'>Dzień dobry <b>"+"firstName"+" "+"lastName"+"</b><br>Twoje konto zostało zarejestrowane i możesz dokonywać zakupów.<br>"
-				+ "Twój login to: "+"login"+". <br>Pozdrawiamy<br><br>Dział Obsługi Klienta</font><br>"+se.getMailFrom();
-		se.sendEmail(mailTo, subject, text);
-	}
 } 

@@ -161,7 +161,7 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.passwordToCode(textFieldPasswordOperator.getText()), sd.getIdUser());
+					ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.stringToCode(textFieldPasswordOperator.getText()), sd.getIdUser());
 					lblMsgOperator.setText("<HTML>Dodano nowego operatora!</HTML>");
 					textFieldLoginOperator.setText("");
 					textFieldPasswordOperator.setText("");
@@ -447,7 +447,7 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.passwordToCode(textFieldPasswordAdmin.getText()), sd.getIdUser());
+					ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.stringToCode(textFieldPasswordAdmin.getText()), sd.getIdUser());
 					lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
 					textFieldLoginAdmin.setText("");
 					textFieldPasswordAdmin.setText("");

@@ -42,9 +42,9 @@ class ValidationTest {
 	}
 
 	@Test
-	void testPasswordToCode() {
+	void testStringToCode() {
 		String expected = "dcca2ed163582435afa9d42ce361eb4";
-		String actual = valid.passwordToCode("Admin11");
+		String actual = valid.stringToCode("Admin11");
 		assertEquals(expected, actual);
 		assertNotEquals("Admin1", actual);
 	}

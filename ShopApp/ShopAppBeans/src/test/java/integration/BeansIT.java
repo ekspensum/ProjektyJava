@@ -138,7 +138,7 @@ public class BeansIT {
 		assertTrue(ubl.setActiveCustomer(c.getId(), false));
 		assertTrue(ubl.setActiveCustomer(c.getId(), true));
 		assertTrue(ubl.findUserLogin(login));
-		SessionData sd = ubl.loginUser(login, valid.passwordToCode(password));	
+		SessionData sd = ubl.loginUser(login, valid.stringToCode(password));	
 		assertEquals(2, sd.getIdRole());
 	}
 	
@@ -155,11 +155,11 @@ public class BeansIT {
 		assertTrue(valid.nameValidation(lastName));
 		assertTrue(valid.telephoneNoValidation(phoneNo));
 		assertTrue(valid.emailValidation(email));
-		assertTrue(ubl.addAdmin(firstName, lastName, phoneNo, email, login, valid.passwordToCode(password), 1));
+		assertTrue(ubl.addAdmin(firstName, lastName, phoneNo, email, login, valid.stringToCode(password), 1));
 //		note: is 2 admins because first admin was added with addAdmin method (default) 
 		assertEquals(2, ubl.getAdminsData().size());
 		assertTrue(ubl.updateAdminData(1, ubl.getAdminsData().get(1).getId(), login, true, firstName, lastName, phoneNo, email));
-		SessionData sd = ubl.loginAdmin(login, valid.passwordToCode(password));
+		SessionData sd = ubl.loginAdmin(login, valid.stringToCode(password));
 		assertEquals(1, sd.getIdRole());
 		assertTrue(ubl.findUserLogin(login));
 		assertEquals(ubl.getUsersAdminData().size()+1, ubl.getAdminsData().size());
@@ -178,11 +178,11 @@ public class BeansIT {
 		assertTrue(valid.nameValidation(lastName));
 		assertTrue(valid.telephoneNoValidation(phoneNo));
 		assertTrue(valid.emailValidation(email));
-		assertTrue(ubl.addOperator(firstName, lastName, phoneNo, email, login, valid.passwordToCode(password), 1));
+		assertTrue(ubl.addOperator(firstName, lastName, phoneNo, email, login, valid.stringToCode(password), 1));
 		List<Operator> ol = ubl.getOperatorsData();
 		assertEquals(1, ol.size());
 		assertTrue(ubl.updateOperatorData(1, ol.get(0).getId(), login, true, firstName, lastName, phoneNo, email));
-		SessionData sd = ubl.loginUser(login, valid.passwordToCode(password));
+		SessionData sd = ubl.loginUser(login, valid.stringToCode(password));
 		assertEquals(3, sd.getIdRole());
 		assertTrue(ubl.findUserLogin(login));
 		assertEquals(ubl.getUsersOperatorData().size(), ubl.getOperatorsData().size());

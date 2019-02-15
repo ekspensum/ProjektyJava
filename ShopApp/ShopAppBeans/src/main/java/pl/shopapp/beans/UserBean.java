@@ -3,6 +3,8 @@ package pl.shopapp.beans;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
+
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -61,7 +63,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	}
 	
 	//for tests tests
-	public UserBean(EntityManager em, UserTransaction ut) {
+	public UserBean(EntityManager em, UserTransaction ut, SendEmail mail) {
 	super();
 	this.em = em;
 	this.ut = ut;
@@ -75,14 +77,26 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			User u = new User();
 			Customer c = new Customer();
 			Validation valid = new Validation();
+			
+			StringBuilder activationString = new StringBuilder();
+			StringBuilder activationLink = new StringBuilder();
+			Random rand = new Random();
+			int number = rand.nextInt(10000);
+			activationString.append(number).append(email);
+			activationLink.append("<a href=\"").append("http://localhost:8080/ShopAppWeb/CustomerActivation?").append("activationString=").append(valid.stringToCode(activationString.toString())).append("\">Naciśnij ten link aktywacyjny</a>");
+			
 			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta użytkownika w sklepie internetowym ShopApp.";
-			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz dokonywać zakupów.<br>"
-					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+mail.getMailFrom();
+			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane.<br>"
+					+ "Twój login to: "+login+". <br>"
+					+ "Poniżej znajduje się link aktywacyjny. Prosimy o jego klikniecie celu aktywacji konta. Link będzie ważny 6 godzin. "
+					+ "W przypadku braku aktywacji konta w tym czasie, konieczna będzie ponowna rejestracja.<br><br>"
+					+ activationLink
+					+ "<br><br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+mail.getMailFrom();
 			
 			u.setLogin(login);
-			u.setPassword(valid.passwordToCode(password));
-			u.setActive(true);
+			u.setPassword(valid.stringToCode(password));
+			u.setActive(false);
 			c.setFirstName(firstName);
 			c.setLastName(lastName);
 			c.setPesel(pesel);
@@ -100,13 +114,14 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 				c.setRegon(regon);					
 			}
 			c.setDateRegistration(LocalDateTime.now());
+			c.setActivationString(valid.stringToCode(activationString.toString()));
 			c.setUser(u);		
 			
 			UserRole ur = addUserRole(u, 2);
 			em.persist(u);
 			em.persist(c);
 			em.persist(ur);
-			mail.sendEmail(c.getEmail(), mailSubject, mailText);
+			mail.sendEmail(email, mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
@@ -128,7 +143,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		try {
 			ut.begin();
 			Validation valid = new Validation();
-			password = valid.passwordToCode(password);
+			password = valid.stringToCode(password);
 			String updateUserQuery = "UPDATE User SET login = '" + login + "', password = '" + password + "' WHERE id = " + idUser + "";
 			User user = em.find(User.class, idUser);
 			Customer customer = (Customer) em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
@@ -179,6 +194,28 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			return false;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean setActiveCustomer(String activationString) {
+		// TODO Auto-generated method stub
+		List<Customer> cl;
+		try {
+			cl = em.createNamedQuery("activationStringQuery", Customer.class).setParameter("activationString", activationString).getResultList();
+			
+			if(cl.size() == 0)
+				return false;
+			else if(cl.size() == 1 && LocalDateTime.now().isBefore(cl.get(0).getDateRegistration().plusHours(6))) {
+				setActiveCustomer(cl.get(0).getUser().getId(), true);
+				return true;	
+			}
+			else
+				return false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -280,7 +317,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			em.persist(u);
 			em.persist(o);
 			em.persist(ur);
-			mail.sendEmail(o.getEmail(), mailSubject, mailText);
+			mail.sendEmail(email, mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (NotSupportedException | SystemException | HeuristicRollbackException | HeuristicMixedException
@@ -372,7 +409,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			em.persist(u);
 			em.persist(a);
 			em.persist(ur);
-			mail.sendEmail(a.getEmail(), mailSubject, mailText);
+			mail.sendEmail(email, mailSubject, mailText);
 			ut.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException

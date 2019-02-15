@@ -33,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import pl.shopapp.beans.SendEmail;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBean;
 import pl.shopapp.beans.Validation;
@@ -56,6 +57,7 @@ public class UserBeanTest {
 	User user;
 	Customer customer;
 	Operator operator;
+	SendEmail mail;
 
 	/**
 	 * @throws java.lang.Exception
@@ -78,7 +80,8 @@ public class UserBeanTest {
 	public void setUp() throws Exception {
 		this.em = Mockito.mock(EntityManager.class);
 		this.ut = Mockito.mock(UserTransaction.class);
-		this.ub = new UserBean(em, ut);
+		this.mail = Mockito.mock(SendEmail.class);
+		this.ub = new UserBean(em, ut, mail);
 		this.user = new User();
 		this.customer = new Customer();
 		this.operator = new Operator();
@@ -106,7 +109,7 @@ public class UserBeanTest {
 		try {
 			ut.begin();
 			Validation valid = new Validation();
-			String encryptionPass = valid.passwordToCode("Customer11");
+			String encryptionPass = valid.stringToCode("Customer11");
 			assertEquals(expectedPass, encryptionPass);
 			
 			UserRole ur = ub.addUserRole(user, 2);
@@ -126,6 +129,7 @@ public class UserBeanTest {
 			}
 			e.printStackTrace();
 		}
+//		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
 		assertTrue(this.ub.addCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email@gmailtest.com", true, "companyName", "taxNo", "regon"));
 	}
 
@@ -140,7 +144,7 @@ public class UserBeanTest {
 		try {
 			ut.begin();
 			Validation valid = new Validation();
-			String encryptionPass = valid.passwordToCode("Customer11");
+			String encryptionPass = valid.stringToCode("Customer11");
 			assertEquals(expectedPass, encryptionPass);
 
 			user.setLogin("login1");
@@ -402,6 +406,7 @@ public class UserBeanTest {
 			}
 			e.printStackTrace();
 		}
+		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
 		assertTrue(this.ub.addOperator("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login", "password", 3));	
 	}
 
@@ -481,6 +486,11 @@ public class UserBeanTest {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			when(mail.getMailFrom()).thenReturn("testjava55@gmail.com");
+			String mailSubject = "Potwierdzenie rejestracji konta operatora w sklepie internetowym ShopApp.";
+			String mailText = "<font color='blue' size='3'>Dzień dobry <b>firstName lastName</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
+					+ "Twój login to: login1. <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
+			when(mail.sendEmail("email@gmailtest.com", mailSubject, mailText)).thenReturn(true);
 			assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login1", "Password11", 2));
 		}	
 	}

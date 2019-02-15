@@ -89,14 +89,16 @@ public class CustomerPanel extends HttpServlet {
 				SessionData sd = ubl.loginUser(login, password);
 				request.getSession().setAttribute("SessionData", sd);
 				request.getSession().setMaxInactiveInterval(ubl.getSettingsApp().getSessionTime()*60);
-				request.setAttribute("message", "Klient został dodany do bazy danych!");			
+				request.setAttribute("message", "Klient został dodany do bazy danych!<br>"
+						+ "Na Twój adres e-mail został wysłany mail z linkien aktywacyjnym.<br>"
+						+ "Prosimy o potwierdzenie aktywacji poprzez klikniecie na link aktywacyjny.");			
 			}		
 		}
 		
 		if(request.getParameter("buttonOpenEdit") != null) {
 			// TODO Auto-generated method stub
 			Validation valid = new Validation(ubl.getSettingsApp());
-			String pass = valid.passwordToCode(request.getParameter("password"));
+			String pass = valid.stringToCode(request.getParameter("password"));
 			if (valid.loginValidation(request.getParameter("login"))) {
 				if (ubl.loginUser(request.getParameter("login"), pass) != null) {
 					SessionData loginSD = ubl.loginUser(request.getParameter("login"), pass);
