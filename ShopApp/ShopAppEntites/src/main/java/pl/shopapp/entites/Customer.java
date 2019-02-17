@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Entity
 @NamedQueries({
 	@NamedQuery(name="customerQuery", query="SELECT c FROM Customer c WHERE c.user = :user"),
-	@NamedQuery(name="activationStringQuery", query="SELECT c FROM Customer c WHERE c.activationString = :activationString")
+	@NamedQuery(name="activationStringQuery", query="SELECT c FROM Customer c WHERE c.activationString = :activationString"),
+	@NamedQuery(name="customerByLastNameQuery", query="SELECT c FROM Customer c INNER JOIN c.user u WHERE c.lastName LIKE :lastName AND c.pesel LIKE :pesel")
 })
 public class Customer implements Serializable {
 

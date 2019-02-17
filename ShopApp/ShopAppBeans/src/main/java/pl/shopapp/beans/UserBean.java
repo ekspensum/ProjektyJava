@@ -44,12 +44,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Resource
 	private UserTransaction ut;
 
-	private List<Operator> ol;
-	private List<Admin> al;
-	private List<User> uol;
-	private List<User> ual;
 	private SettingsApp setting;
-	private List<Role> rl;
 	private SendEmail mail;
 
 //	@Resource 
@@ -282,8 +277,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<User> getUsersOperatorData() {
 		// TODO Auto-generated method stub
-		uol = em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
-		return uol;
+		return em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
 	}
 
 	@Override
@@ -337,8 +331,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<Operator> getOperatorsData() {
 		// TODO Auto-generated method stub
-		ol = em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
-		return ol;
+		return em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
 	}
 
 	@Override
@@ -449,15 +442,13 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<Admin> getAdminsData() {
 		// TODO get current admins list
-		al = em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
-		return al;
+		return em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
 	}
 
 	@Override
 	public List<User> getUsersAdminData() {
 		// TODO get current users list which role is admin
-		ual = em.createNamedQuery("getUserAdminQuery", User.class).getResultList();
-		return ual;
+		return em.createNamedQuery("getUserAdminQuery", User.class).getResultList();
 	}
 
 	@Override
@@ -574,9 +565,20 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	@Override
 	public List<Role> getRoleList() {
+		// TODO Auto-generated method stub		
+		return em.createNamedQuery("roleQuery", Role.class).getResultList();
+	}
+
+	@Override
+	public List<Customer> findCustomerList(String lastName, String pesel) {
 		// TODO Auto-generated method stub
-		rl = em.createNamedQuery("roleQuery", Role.class).getResultList();
-		return rl;
+		return em.createNamedQuery("customerByLastNameQuery", Customer.class).setParameter("lastName", "%"+lastName+"%").setParameter("pesel", "%"+pesel+"%").getResultList();
+	}
+
+	@Override
+	public List<Customer> findCustomerListByPesel(String pesel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

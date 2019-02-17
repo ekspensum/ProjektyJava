@@ -21,6 +21,8 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class AdminPanel extends JFrame {
 
@@ -38,8 +40,11 @@ public class AdminPanel extends JFrame {
 	private DefaultTableModel tableModelOperator;
 	private DefaultTableModel tableModelAdmin;
 	private DefaultTableModel tableModelRole;
+	private DefaultTableModel tableModelCustomer;
 	private JTable tableOperator;
 	private JTable tableAdmin;
+	private JTable roleTable;
+	private JTable tableCustomer;
 	private JTextField textFieldLoginAdmin;
 	private JTextField textFieldPasswordAdmin;
 	private JTextField textFieldFirstNameAdmin;
@@ -53,8 +58,10 @@ public class AdminPanel extends JFrame {
 	private JTextField textFieldNumbersInPass;
 	private JTextField textFieldMinCharInLogin;
 	private JTextField textFieldMaxCharInLogin;
-	private JTable roleTable;
 	private JTextField textFieldNewRole;
+	private JTextField textFieldSerchByLastName;
+	private JTextField textFieldSearchByPesel;
+	private int sizeCustomerList;
 
 	/**
 	 * Create the frame.
@@ -515,77 +522,202 @@ public class AdminPanel extends JFrame {
 		panelAddOtherAdmin.setFocusTraversalPolicy(new FocusTraversalOnArray(
 				new Component[] { textFieldLoginAdmin, textFieldPasswordAdmin, textFieldFirstNameAdmin,
 						textFieldLastNameAdmin, textFieldTelephoneAdmin, textFieldEmailAdmin, btnAddAdmin }));
+		
+		JPanel panelSetActiveCustomer = new JPanel();
+		tabbedPane.addTab("Actywacja / Deaktywacja klienta", null, panelSetActiveCustomer, null);
+		panelSetActiveCustomer.setLayout(null);
+		
 
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Ustawienia", null, panel, null);
-		panel.setLayout(null);
+		
+		JLabel lblWyszukajWgNazwiska = new JLabel("wg fragmentu nazwiska:");
+		lblWyszukajWgNazwiska.setBounds(10, 45, 128, 14);
+		panelSetActiveCustomer.add(lblWyszukajWgNazwiska);
+		
+		JLabel lblWyszukajWgFragmentu = new JLabel("wg fragmentu pesel:");
+		lblWyszukajWgFragmentu.setBounds(339, 45, 119, 14);
+		panelSetActiveCustomer.add(lblWyszukajWgFragmentu);
+		
+		
+		JScrollPane scrollPaneCustomer = new JScrollPane();
+		scrollPaneCustomer.setBounds(10, 73, 571, 182);
+		panelSetActiveCustomer.add(scrollPaneCustomer);
+		
+		String [] headerCustomerTable = {"Aktywny", "Id user", "Login", "Imię", "Nazwisko", "Pesel", "Wybierz"};
+		tableModelCustomer = new DefaultTableModel(headerCustomerTable, 0) {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				// TODO Auto-generated method stub
+				switch (columnIndex) {
+				case 0:
+					return Boolean.class;
+				case 1:
+					return Integer.class;
+				case 2:
+					return String.class;
+				case 6:
+					return Boolean.class;
+	
+				default:
+					break;
+				}
+								
+				return super.getColumnClass(columnIndex);
+			}
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return column == 0 || column == 6;
+			}
+		};
+		
+		textFieldSerchByLastName = new JTextField();
+		textFieldSerchByLastName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				textFieldSearchByPesel.setText(null);
+				sizeCustomerList = 0;
+				sizeCustomerList = ubr.findCustomerList(textFieldSerchByLastName.getText(), "").size();
+				loadTableCustomer(ubr, sizeCustomerList);
+			}
+		});
+		textFieldSerchByLastName.setBounds(148, 42, 113, 20);
+		panelSetActiveCustomer.add(textFieldSerchByLastName);
+		textFieldSerchByLastName.setColumns(10);
+		
+		textFieldSearchByPesel = new JTextField();
+		textFieldSearchByPesel.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				textFieldSerchByLastName.setText(null);
+				sizeCustomerList = 0;
+				sizeCustomerList = ubr.findCustomerList("", textFieldSearchByPesel.getText()).size();
+				loadTableCustomer(ubr, sizeCustomerList);
+			}
+		});
+		textFieldSearchByPesel.setBounds(468, 42, 113, 20);
+		panelSetActiveCustomer.add(textFieldSearchByPesel);
+		textFieldSearchByPesel.setColumns(10);
+				
+		tableCustomer = new JTable(tableModelCustomer);
+		scrollPaneCustomer.setViewportView(tableCustomer);
+		
+		JLabel lblMsgCustomer = new JLabel("");
+		lblMsgCustomer.setBounds(10, 266, 375, 75);
+		panelSetActiveCustomer.add(lblMsgCustomer);
+		
+		JButton btnAktywujDeaktywuj = new JButton("Aktywuj / deaktywuj");
+		btnAktywujDeaktywuj.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				lblMsgCustomer.setText("");
+				int checked = 0;
+				String login = "";
+				boolean active = false;
+				int idUser = 0;
+				for (int i = 0; i < tableCustomer.getRowCount(); i++) {
+					if (tableCustomer.getValueAt(i, 6) != null)
+						if ((boolean) tableCustomer.getValueAt(i, 6) == true) {
+							active = (boolean) tableCustomer.getValueAt(i, 0);
+							idUser = (int) tableCustomer.getValueAt(i, 1);
+							login = (String) tableCustomer.getValueAt(i, 2);
+							checked += 1;
+						}
+				}
+				if (checked == 1) {
+					if (ubr.setActiveCustomer(idUser, active == true ? false : true)) {
+						lblMsgCustomer.setText("<HTML>Dokonano edycji klienta o loginie: " + login + "!</HTML>");
+						loadTableCustomer(ubr, sizeCustomerList);
+					} else {
+						lblMsgCustomer.setText("<HTML>Nie udało sie dokonać edeycji klienta o loginie: " + login + "!</HTML>");
+						loadTableCustomer(ubr, sizeCustomerList);
+					}
+				} else
+					lblMsgCustomer.setText("<HTML>Proszę zaznaczyć jeden wiersz do edycji!</HTML>");
+			}
+		});
+		btnAktywujDeaktywuj.setBounds(432, 266, 149, 23);
+		panelSetActiveCustomer.add(btnAktywujDeaktywuj);
+		
+		JLabel lblWyszukaj = new JLabel("Wyszukaj: ");
+		lblWyszukaj.setBounds(10, 20, 75, 14);
+		panelSetActiveCustomer.add(lblWyszukaj);
+
+		JPanel panelSettingApp = new JPanel();
+		tabbedPane.addTab("Ustawienia", null, panelSettingApp, null);
+		panelSettingApp.setLayout(null);
 		
 		textFieldMinCharInPass = new JTextField();
 		textFieldMinCharInPass.setBounds(198, 30, 86, 20);
-		panel.add(textFieldMinCharInPass);
+		panelSettingApp.add(textFieldMinCharInPass);
 		textFieldMinCharInPass.setColumns(10);
 		
 		textFieldUpperCaseCharInPass = new JTextField();
 		textFieldUpperCaseCharInPass.setBounds(198, 97, 86, 20);
-		panel.add(textFieldUpperCaseCharInPass);
+		panelSettingApp.add(textFieldUpperCaseCharInPass);
 		textFieldUpperCaseCharInPass.setColumns(10);
 		
 		textFieldMaxCharInPass = new JTextField();
 		textFieldMaxCharInPass.setBounds(198, 63, 86, 20);
-		panel.add(textFieldMaxCharInPass);
+		panelSettingApp.add(textFieldMaxCharInPass);
 		textFieldMaxCharInPass.setColumns(10);
 		
 		JLabel lblMinCharInPass = new JLabel("Min znaków w haśle:");
 		lblMinCharInPass.setBounds(10, 33, 178, 14);
-		panel.add(lblMinCharInPass);
+		panelSettingApp.add(lblMinCharInPass);
 		
 		JLabel lblMaxCharInPass = new JLabel("Max znaków w haśle:");
 		lblMaxCharInPass.setBounds(10, 66, 178, 14);
-		panel.add(lblMaxCharInPass);
+		panelSettingApp.add(lblMaxCharInPass);
 		
 		JLabel lblUpperCaseCharInPass = new JLabel("Ilość dużych liter w haśle:");
 		lblUpperCaseCharInPass.setBounds(10, 100, 178, 14);
-		panel.add(lblUpperCaseCharInPass);
+		panelSettingApp.add(lblUpperCaseCharInPass);
 		
 		textFieldSessionTime = new JTextField();
 		textFieldSessionTime.setBounds(198, 232, 86, 20);
-		panel.add(textFieldSessionTime);
+		panelSettingApp.add(textFieldSessionTime);
 		textFieldSessionTime.setColumns(10);
 		
 		JLabel lblTimeOffSession = new JLabel("Czas trwania sesji (minut):");
 		lblTimeOffSession.setBounds(10, 235, 178, 14);
-		panel.add(lblTimeOffSession);
+		panelSettingApp.add(lblTimeOffSession);
 		
 		textFieldNumbersInPass = new JTextField();
 		textFieldNumbersInPass.setBounds(198, 131, 86, 20);
-		panel.add(textFieldNumbersInPass);
+		panelSettingApp.add(textFieldNumbersInPass);
 		textFieldNumbersInPass.setColumns(10);
 		
 		JLabel lblNumbersInPass = new JLabel("Ilość liczb w haśle:");
 		lblNumbersInPass.setBounds(11, 134, 177, 14);
-		panel.add(lblNumbersInPass);
+		panelSettingApp.add(lblNumbersInPass);
 		
 		textFieldMinCharInLogin = new JTextField();
 		textFieldMinCharInLogin.setBounds(198, 165, 86, 20);
-		panel.add(textFieldMinCharInLogin);
+		panelSettingApp.add(textFieldMinCharInLogin);
 		textFieldMinCharInLogin.setColumns(10);
 		
 		textFieldMaxCharInLogin = new JTextField();
 		textFieldMaxCharInLogin.setBounds(198, 198, 86, 20);
-		panel.add(textFieldMaxCharInLogin);
+		panelSettingApp.add(textFieldMaxCharInLogin);
 		textFieldMaxCharInLogin.setColumns(10);
 		
 		JLabel lblMinCharInLogin = new JLabel("Min ilość znaków w loginie:");
 		lblMinCharInLogin.setBounds(12, 168, 176, 14);
-		panel.add(lblMinCharInLogin);
+		panelSettingApp.add(lblMinCharInLogin);
 		
 		JLabel lblMaxCharInLogin = new JLabel("Max ilość znaków w loginie:");
 		lblMaxCharInLogin.setBounds(10, 201, 178, 14);
-		panel.add(lblMaxCharInLogin);
+		panelSettingApp.add(lblMaxCharInLogin);
 		
 		JLabel lblMsgSettings = new JLabel("");
 		lblMsgSettings.setBounds(10, 313, 274, 65);
-		panel.add(lblMsgSettings);
+		panelSettingApp.add(lblMsgSettings);
 		
 		loadSettingsApp(ubr);
 				
@@ -642,20 +774,20 @@ public class AdminPanel extends JFrame {
 			}
 		});
 		btnSaveSettings.setBounds(212, 270, 72, 23);
-		panel.add(btnSaveSettings);
+		panelSettingApp.add(btnSaveSettings);
 		
 		JLabel lblDescriptionForSession = new JLabel("<html>koresponduje z @StatefulTimeout, zmiana wymaga kompilacji. Można także ustawić w pliku ejb-jar.xml</html>");
 		lblDescriptionForSession.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblDescriptionForSession.setBounds(294, 220, 243, 44);
-		panel.add(lblDescriptionForSession);
+		panelSettingApp.add(lblDescriptionForSession);
 		
 		JLabel lblDodajRol = new JLabel("Istniejące role użytkowników:");
 		lblDodajRol.setBounds(602, 30, 193, 14);
-		panel.add(lblDodajRol);
+		panelSettingApp.add(lblDodajRol);
 		
 		JScrollPane scrollPaneRole = new JScrollPane();
 		scrollPaneRole.setBounds(602, 55, 243, 111);
-		panel.add(scrollPaneRole);
+		panelSettingApp.add(scrollPaneRole);
 		
 		String [] tableRoleColumn = {"Id", "Rola"};
 		tableModelRole = new DefaultTableModel(tableRoleColumn, ubr.getRoleList().size());
@@ -667,16 +799,16 @@ public class AdminPanel extends JFrame {
 		
 		JLabel lblDodajNowRol = new JLabel("Dodaj nową rolę:");
 		lblDodajNowRol.setBounds(602, 192, 109, 14);
-		panel.add(lblDodajNowRol);
+		panelSettingApp.add(lblDodajNowRol);
 		
 		textFieldNewRole = new JTextField();
 		textFieldNewRole.setBounds(602, 210, 146, 20);
-		panel.add(textFieldNewRole);
+		panelSettingApp.add(textFieldNewRole);
 		textFieldNewRole.setColumns(10);
 				
 		JLabel lblMsgRole = new JLabel("");
 		lblMsgRole.setBounds(602, 253, 243, 40);
-		panel.add(lblMsgRole);
+		panelSettingApp.add(lblMsgRole);
 		
 		JButton btnAddRole = new JButton("Dodaj");
 		btnAddRole.addActionListener(new ActionListener() {
@@ -704,7 +836,7 @@ public class AdminPanel extends JFrame {
 			}
 		});
 		btnAddRole.setBounds(766, 209, 79, 23);
-		panel.add(btnAddRole);
+		panelSettingApp.add(btnAddRole);
 	
 		JLabel lblZalogowanyJako = new JLabel("Zalogowany jako: ");
 		contentPane.add(lblZalogowanyJako, BorderLayout.NORTH);
@@ -752,5 +884,17 @@ public class AdminPanel extends JFrame {
 			roleTable.setValueAt(ubr.getRoleList().get(i).getId(), i, 0);
 			roleTable.setValueAt(ubr.getRoleList().get(i).getRoleName(), i, 1);
 		}	
+	}
+	
+	private void loadTableCustomer(UserBeanRemote ubr, int sizeCustomerList) {
+		tableModelCustomer.setRowCount(sizeCustomerList);
+		for(int i = 0; i<sizeCustomerList; i++) {
+			tableModelCustomer.setValueAt(ubr.findCustomerList(textFieldSerchByLastName.getText() == null ? "" : textFieldSerchByLastName.getText(), textFieldSearchByPesel.getText() == null ? "" : textFieldSearchByPesel.getText()).get(i).getUser().getActive(), i, 0);
+			tableModelCustomer.setValueAt(ubr.findCustomerList(textFieldSerchByLastName.getText() == null ? "" : textFieldSerchByLastName.getText(), textFieldSearchByPesel.getText() == null ? "" : textFieldSearchByPesel.getText()).get(i).getUser().getId(), i, 1);
+			tableModelCustomer.setValueAt(ubr.findCustomerList(textFieldSerchByLastName.getText() == null ? "" : textFieldSerchByLastName.getText(), textFieldSearchByPesel.getText() == null ? "" : textFieldSearchByPesel.getText()).get(i).getUser().getLogin(), i, 2);
+			tableModelCustomer.setValueAt(ubr.findCustomerList(textFieldSerchByLastName.getText() == null ? "" : textFieldSerchByLastName.getText(), textFieldSearchByPesel.getText() == null ? "" : textFieldSearchByPesel.getText()).get(i).getFirstName(), i, 3);
+			tableModelCustomer.setValueAt(ubr.findCustomerList(textFieldSerchByLastName.getText() == null ? "" : textFieldSerchByLastName.getText(), textFieldSearchByPesel.getText() == null ? "" : textFieldSearchByPesel.getText()).get(i).getLastName(), i, 4);
+			tableModelCustomer.setValueAt(ubr.findCustomerList(textFieldSerchByLastName.getText() == null ? "" : textFieldSerchByLastName.getText(), textFieldSearchByPesel.getText() == null ? "" : textFieldSearchByPesel.getText()).get(i).getPesel(), i, 5);
+		}
 	}
 }
