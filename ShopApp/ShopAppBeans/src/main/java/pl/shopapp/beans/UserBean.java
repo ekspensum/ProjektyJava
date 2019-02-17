@@ -60,6 +60,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	public UserBean() {
 		// TODO Auto-generated constructor stub
+		mail = new SendEmail();
 	}
 	
 	//for tests tests
@@ -67,6 +68,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	super();
 	this.em = em;
 	this.ut = ut;
+	this.mail = mail;
 }
 
 	@Override
@@ -85,7 +87,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			activationString.append(number).append(email);
 			activationLink.append("<a href=\"").append("http://localhost:8080/ShopAppWeb/CustomerActivation?").append("activationString=").append(valid.stringToCode(activationString.toString())).append("\">Naciśnij ten link aktywacyjny</a>");
 			
-			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta użytkownika w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane.<br>"
 					+ "Twój login to: "+login+". <br>"
@@ -309,7 +310,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			
 			UserRole ur = addUserRole(u, 3);
 			
-			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta operatora w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
 					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
@@ -385,7 +385,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 				em.persist(adm);
 			}
 			
-			mail = new SendEmail();
 			String mailSubject = "Potwierdzenie rejestracji konta administratora w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
 					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();

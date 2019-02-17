@@ -22,6 +22,11 @@ public class CustomerActivation extends HttpServlet {
 	UserBeanLocal ubl;
 	
 //	for tests
+	public CustomerActivation() {
+		super();
+	}
+
+	//	for tests
 	public CustomerActivation(UserBeanLocal ubl) {
 		super();
 		this.ubl = ubl;

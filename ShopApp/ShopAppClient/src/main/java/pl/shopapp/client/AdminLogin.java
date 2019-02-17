@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class AdminLogin {
 
@@ -103,41 +105,28 @@ public class AdminLogin {
 		textFieldLogin.setBounds(193, 90, 120, 20);
 		frame.getContentPane().add(textFieldLogin);
 		textFieldLogin.setColumns(10);
-
-		passwordField = new JPasswordField();
-		passwordField.setBounds(193, 115, 120, 20);
-		frame.getContentPane().add(passwordField);
-
+		
 		JLabel lblMsg = new JLabel("");
 		lblMsg.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblMsg.setBounds(117, 187, 295, 14);
 		frame.getContentPane().add(lblMsg);
 
-		JButton btnZaloguj = new JButton("Zaloguj");
+		passwordField = new JPasswordField();
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == 10)
+					logInMethod(lblMsg);
+			}
+		});
+		passwordField.setBounds(193, 115, 120, 20);
+		frame.getContentPane().add(passwordField);
 
+		JButton btnZaloguj = new JButton("Zaloguj");
 		btnZaloguj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				ubr = contextAppUserBean();
-				if (!textFieldLogin.getText().equals("")) {
-					if (passwordField.getPassword().length != 0) {
-						Validation valid = new Validation(ubr.getSettingsApp());
-						String pass = valid.stringToCode(passwordField.getText());
-						if (valid.loginValidation(textFieldLogin.getText())) {
-							if (ubr.loginAdmin(textFieldLogin.getText(), pass) != null) {
-								SessionData sd = ubr.loginAdmin(textFieldLogin.getText(), pass);
-								frame.dispose();
-								AdminPanel ap = new AdminPanel(ubr, sd);
-								ap.setLocationRelativeTo(null);
-								ap.setVisible(true);
-							} else
-								lblMsg.setText("Nieprawidłowe dane logowania lub user jest nieaktywny!");
-						} else
-							lblMsg.setText("Nieprawidłowe dane logowania! 3");
-					} else
-						lblMsg.setText("Nieprawidłowe dane logowania! 2");
-				} else
-					lblMsg.setText("Nieprawidłowe dane logowania! 1");
+				logInMethod(lblMsg);
 			}
 		});
 
@@ -149,5 +138,28 @@ public class AdminLogin {
 		lblLogowanieDoPanelu.setBounds(119, 51, 213, 14);
 		frame.getContentPane().add(lblLogowanieDoPanelu);
 
+	}
+	
+	private void logInMethod(JLabel lblMsg) {
+		ubr = contextAppUserBean();
+		if (!textFieldLogin.getText().equals("")) {
+			if (passwordField.getPassword().length != 0) {
+				Validation valid = new Validation(ubr.getSettingsApp());
+				String pass = valid.stringToCode(String.valueOf(passwordField.getPassword()));
+				if (valid.loginValidation(textFieldLogin.getText())) {
+					if (ubr.loginAdmin(textFieldLogin.getText(), pass) != null) {
+						SessionData sd = ubr.loginAdmin(textFieldLogin.getText(), pass);
+						frame.dispose();
+						AdminPanel ap = new AdminPanel(ubr, sd);
+						ap.setLocationRelativeTo(null);
+						ap.setVisible(true);
+					} else
+						lblMsg.setText("Nieprawidłowe dane logowania lub user jest nieaktywny!");
+				} else
+					lblMsg.setText("Nieprawidłowe dane logowania! 3");
+			} else
+				lblMsg.setText("Nieprawidłowe dane logowania! 2");
+		} else
+			lblMsg.setText("Nieprawidłowe dane logowania! 1");
 	}
 }

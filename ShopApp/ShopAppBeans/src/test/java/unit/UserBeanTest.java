@@ -4,6 +4,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -98,6 +99,7 @@ public class UserBeanTest {
 		this.user = null;
 		this.customer = null;
 		this.operator = null;
+		this.mail = null;
 	}
 
 	/**
@@ -129,7 +131,8 @@ public class UserBeanTest {
 			}
 			e.printStackTrace();
 		}
-//		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
+
+		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
 		assertTrue(this.ub.addCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email@gmailtest.com", true, "companyName", "taxNo", "regon"));
 	}
 
@@ -217,11 +220,44 @@ public class UserBeanTest {
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#setActiveCustomer(int, boolean)}.
 	 */
-//	@Test
-//	public void testSetActiveCustomer() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	public void testSetActiveCustomerIdUserArg() {
+		Query query = mock(Query.class);
+		String activeCustomerQuery = "UPDATE User SET active = true WHERE id = 1 ";
+		when(em.createQuery(activeCustomerQuery)).thenReturn(query);
+		when(query.executeUpdate()).thenReturn(1);
+		assertTrue(ub.setActiveCustomer(1, true));
+		when(query.executeUpdate()).thenReturn(2);
+		assertFalse(ub.setActiveCustomer(1, true));
+	}
 
+	@Test
+	public void testSetActiveCustomerStringArg() {
+		List<Customer> cl = new ArrayList<>();
+		user.setId(1);
+		customer.setUser(user);
+		customer.setDateRegistration(LocalDateTime.now().minusMinutes(1));
+		cl.add(customer);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Customer> namedQuery = mock(TypedQuery.class);
+		when(namedQuery.setParameter("activationString", "activationString")).thenReturn(namedQuery);
+		when(namedQuery.getResultList()).thenReturn(cl);
+		when(em.createNamedQuery("activationStringQuery", Customer.class)).thenReturn(namedQuery);
+		
+		testSetActiveCustomerIdUserArg();
+		assertTrue(ub.setActiveCustomer("activationString"));
+		
+		user = new User();
+		user.setId(1);
+		customer = new Customer();
+		customer.setUser(user);
+		customer.setDateRegistration(LocalDateTime.now().minusMinutes(1));
+		cl.add(customer);
+		
+		assertFalse(ub.setActiveCustomer("activationString"));
+	}
+
+	
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#findUser(int)}.
 	 */
@@ -486,13 +522,10 @@ public class UserBeanTest {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			when(mail.getMailFrom()).thenReturn("testjava55@gmail.com");
-			String mailSubject = "Potwierdzenie rejestracji konta operatora w sklepie internetowym ShopApp.";
-			String mailText = "<font color='blue' size='3'>Dzień dobry <b>firstName lastName</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
-					+ "Twój login to: login1. <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
-			when(mail.sendEmail("email@gmailtest.com", mailSubject, mailText)).thenReturn(true);
-			assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login1", "Password11", 2));
 		}	
+		
+		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
+		assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login1", "Password11", 2));
 	}
 
 	/**

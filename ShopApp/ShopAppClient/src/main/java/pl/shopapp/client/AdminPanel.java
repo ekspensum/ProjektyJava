@@ -37,6 +37,7 @@ public class AdminPanel extends JFrame {
 	private JTextField textFieldLoginOperator;
 	private DefaultTableModel tableModelOperator;
 	private DefaultTableModel tableModelAdmin;
+	private DefaultTableModel tableModelRole;
 	private JTable tableOperator;
 	private JTable tableAdmin;
 	private JTextField textFieldLoginAdmin;
@@ -52,6 +53,8 @@ public class AdminPanel extends JFrame {
 	private JTextField textFieldNumbersInPass;
 	private JTextField textFieldMinCharInLogin;
 	private JTextField textFieldMaxCharInLogin;
+	private JTable roleTable;
+	private JTextField textFieldNewRole;
 
 	/**
 	 * Create the frame.
@@ -161,15 +164,18 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.stringToCode(textFieldPasswordOperator.getText()), sd.getIdUser());
-					lblMsgOperator.setText("<HTML>Dodano nowego operatora!</HTML>");
-					textFieldLoginOperator.setText("");
-					textFieldPasswordOperator.setText("");
-					textFieldFirstNameOperator.setText("");
-					textFieldLastNameOperator.setText("");
-					textFieldTelephoneOperator.setText("");
-					textFieldEmailOperator.setText("");
-					loadTableOperatorData(ubr);
+					if(ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.stringToCode(textFieldPasswordOperator.getText()), sd.getIdUser())) {
+						lblMsgOperator.setText("<HTML>Dodano nowego operatora!</HTML>");
+						textFieldLoginOperator.setText("");
+						textFieldPasswordOperator.setText("");
+						textFieldFirstNameOperator.setText("");
+						textFieldLastNameOperator.setText("");
+						textFieldTelephoneOperator.setText("");
+						textFieldEmailOperator.setText("");
+						loadTableOperatorData(ubr);
+					} else
+						lblMsgOperator.setText("<HTML>Nie udało się dodać nowego operatora!</HTML>");
+
 				}
 			}
 		});
@@ -447,15 +453,17 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.stringToCode(textFieldPasswordAdmin.getText()), sd.getIdUser());
-					lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
-					textFieldLoginAdmin.setText("");
-					textFieldPasswordAdmin.setText("");
-					textFieldFirstNameAdmin.setText("");
-					textFieldLastNameAdmin.setText("");
-					textFieldTelephoneAdmin.setText("");
-					textFieldEmailAdmin.setText("");
-					loadTableAdminData(ubr);
+					if(ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.stringToCode(textFieldPasswordAdmin.getText()), sd.getIdUser())) {
+						lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
+						textFieldLoginAdmin.setText("");
+						textFieldPasswordAdmin.setText("");
+						textFieldFirstNameAdmin.setText("");
+						textFieldLastNameAdmin.setText("");
+						textFieldTelephoneAdmin.setText("");
+						textFieldEmailAdmin.setText("");
+						loadTableAdminData(ubr);
+					} else
+						lblMsgAdmin.setText("<HTML>Nie udało się dodać nowego administratora!</HTML>");	
 				}
 			}
 		});
@@ -636,10 +644,67 @@ public class AdminPanel extends JFrame {
 		btnSaveSettings.setBounds(212, 270, 72, 23);
 		panel.add(btnSaveSettings);
 		
-		JLabel lblDescriptionForSession = new JLabel("koresponduje z @StatefulTimeout, zmiana wymaga kompilacji. Można także ustawić w pliku ejb-jar.xml");
+		JLabel lblDescriptionForSession = new JLabel("<html>koresponduje z @StatefulTimeout, zmiana wymaga kompilacji. Można także ustawić w pliku ejb-jar.xml</html>");
 		lblDescriptionForSession.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblDescriptionForSession.setBounds(294, 235, 551, 17);
+		lblDescriptionForSession.setBounds(294, 220, 243, 44);
 		panel.add(lblDescriptionForSession);
+		
+		JLabel lblDodajRol = new JLabel("Istniejące role użytkowników:");
+		lblDodajRol.setBounds(602, 30, 193, 14);
+		panel.add(lblDodajRol);
+		
+		JScrollPane scrollPaneRole = new JScrollPane();
+		scrollPaneRole.setBounds(602, 55, 243, 111);
+		panel.add(scrollPaneRole);
+		
+		String [] tableRoleColumn = {"Id", "Rola"};
+		tableModelRole = new DefaultTableModel(tableRoleColumn, ubr.getRoleList().size());
+		roleTable = new JTable(tableModelRole);
+		roleTable.getColumnModel().getColumn(0).setPreferredWidth(15);
+		roleTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+		scrollPaneRole.setViewportView(roleTable);
+		loadTableRole(ubr);
+		
+		JLabel lblDodajNowRol = new JLabel("Dodaj nową rolę:");
+		lblDodajNowRol.setBounds(602, 192, 109, 14);
+		panel.add(lblDodajNowRol);
+		
+		textFieldNewRole = new JTextField();
+		textFieldNewRole.setBounds(602, 210, 146, 20);
+		panel.add(textFieldNewRole);
+		textFieldNewRole.setColumns(10);
+				
+		JLabel lblMsgRole = new JLabel("");
+		lblMsgRole.setBounds(602, 253, 243, 40);
+		panel.add(lblMsgRole);
+		
+		JButton btnAddRole = new JButton("Dodaj");
+		btnAddRole.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				boolean validOK = true;
+				Validation valid = new Validation(ubr.getSettingsApp());
+
+				if (textFieldNewRole.getText() == ""
+						|| !valid.nameValidation(textFieldNewRole.getText())) {
+					validOK = false;
+					lblMsgRole.setText("<HTML>Pole rola jest puste lub zawiera niepoprawne znaki!</HTML>");
+				}
+				
+				if (validOK) {
+					if(ubr.addRole(textFieldNewRole.getText())) {
+						lblMsgRole.setText("<HTML>Dodano nową rolę!</HTML>");
+						textFieldNewRole.setText("");
+						loadTableRole(ubr);
+					} else
+						lblMsgRole.setText("<HTML>Nie udało się dodać nowej roli!</HTML>");	
+				};
+				
+				loadTableRole(ubr);
+			}
+		});
+		btnAddRole.setBounds(766, 209, 79, 23);
+		panel.add(btnAddRole);
 	
 		JLabel lblZalogowanyJako = new JLabel("Zalogowany jako: ");
 		contentPane.add(lblZalogowanyJako, BorderLayout.NORTH);
@@ -679,5 +744,13 @@ public class AdminPanel extends JFrame {
 		textFieldMinCharInLogin.setText(String.valueOf(ubr.getSettingsApp().getMinCharInLogin()));
 		textFieldMaxCharInLogin.setText(String.valueOf(ubr.getSettingsApp().getMaxCharInLogin()));
 		textFieldSessionTime.setText(String.valueOf(ubr.getSettingsApp().getSessionTime()));
+	}
+	
+	private void loadTableRole(UserBeanRemote ubr) {
+		tableModelRole.setRowCount(ubr.getRoleList().size());
+		for(int i =0; i < ubr.getRoleList().size(); i++) {
+			roleTable.setValueAt(ubr.getRoleList().get(i).getId(), i, 0);
+			roleTable.setValueAt(ubr.getRoleList().get(i).getRoleName(), i, 1);
+		}	
 	}
 }
