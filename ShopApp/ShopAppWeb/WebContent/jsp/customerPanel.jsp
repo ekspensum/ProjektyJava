@@ -52,9 +52,9 @@
 <p>Wyszukiwanie transakcji wg daty</p>
 <p>Data od: <input type="date" name="searchProductDateFrom" value="${param['searchProductDateFrom']}" />	Data do: <input type="date" name="searchProductDateTo" value="${param['searchProductDateTo']}" />	<button type="submit" name="buttonSearchTransaction" value="yes" form="customerTransactionForm">Wyszukaj</button></p>
 <table>
-<tr><th>Lp</th><th>Data</th><th>Nazwa produktu</th><th>Cena</th><th>Zakupiona ilość</th><th>Wartość zakupu</th></tr>
+<tr><th>Lp</th><th>Data zakupu</th><th>Nazwa produktu</th><th>Cena</th><th>Zakupiona ilość</th><th>Wartość zakupu</th><th>Realizacja</th><th>Data wysyłki</th></tr>
 <c:forEach items="${transactionsDataList}" var="tr" begin="0" varStatus="loop">
-<tr><td>${loop.count }</td><td>${tr.dateTime }</td><td>${tr.productName }</td><td>${tr.price }</td><td>${tr.quantity }</td><td>${tr.price * tr.quantity }</td></tr>
+<tr><td>${loop.count }</td><td>${tr.dateTime }</td><td>${tr.productName }</td><td>${tr.price }</td><td>${tr.quantity }</td><td>${tr.price * tr.quantity }</td><td>${tr.execOrder == true ? "Tak" : "Nie" }</td><td>${tr.execOrderDate }</td></tr>
 </c:forEach>
 </table>
 </form>

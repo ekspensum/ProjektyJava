@@ -3,6 +3,8 @@ package pl.shopapp.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import javax.servlet.http.Part;
 
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
+import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.beans.Validation;
 
 /**
@@ -30,6 +33,8 @@ public class OperatorPanel extends HttpServlet {
 
 	@EJB
 	private ProductBeanLocal pbl;
+	@EJB
+	private TransactionBeanLocal tbl;
 	private int productIdToEdit;
 	private int [] categoryToEdit = new int[2];
 
@@ -206,7 +211,31 @@ public class OperatorPanel extends HttpServlet {
 				}
 			}
 		}
+		
+		if(request.getParameter("buttonSearchNoExecOrder") != null) {
+			String dateFrom = request.getParameter("transactionDateFrom")+" 00:00:00";
+			String dateTo = request.getParameter("transactionDateTo")+" 23:59:59";
+			try {
+				request.setAttribute("Transaction", tbl.getNoExecOrder(LocalDateTime.parse(dateFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDateTime.parse(dateTo, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
+				e.printStackTrace();
+			}		
+		}
 
+		if(request.getParameter("buttonExecOrder") != null) {
+			if(request.getParameterValues("idTransaction").length > 0) {
+				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
+				if(tbl.execOrder(request.getParameterValues("idTransaction"), sd.getIdUser()))
+					request.setAttribute("message", "Zaznaczone transacje zapisano do bazy jako zrealizowane!<br>"
+							+ "Do klienta został wysłany e-mail z powiadomieniem o wysłaniu towaru.");
+				else
+					request.setAttribute("message", "Nie udało się oznaczyć jako zrealizowane zaznaczonych transakcji!");			
+			}
+		} else
+			request.setAttribute("message", "Proszę zaznaczyć co najmniej 1 wiersz do realizacji zamówienia!");
+		
 		doGet(request, response);
 	}
 

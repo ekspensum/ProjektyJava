@@ -572,13 +572,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public List<Customer> findCustomerList(String lastName, String pesel) {
 		// TODO Auto-generated method stub
-		return em.createNamedQuery("customerByLastNameQuery", Customer.class).setParameter("lastName", "%"+lastName+"%").setParameter("pesel", "%"+pesel+"%").getResultList();
-	}
-
-	@Override
-	public List<Customer> findCustomerListByPesel(String pesel) {
-		// TODO Auto-generated method stub
-		return null;
+		return em.createNamedQuery("customerByLastNamePeselQuery", Customer.class).setParameter("lastName", "%"+lastName+"%").setParameter("pesel", "%"+pesel+"%").getResultList();
 	}
 
 }

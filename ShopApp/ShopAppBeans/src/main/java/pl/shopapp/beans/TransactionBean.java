@@ -115,4 +115,17 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 		return tl;
 	}
 
+	@Override
+	public List<Transaction> getNoExecOrder(LocalDateTime dateFrom, LocalDateTime dateTo) {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("findNoExecTransactionQuery", Transaction.class).setParameter("dateFrom", dateFrom).setParameter("dateTo", dateTo).getResultList();
+	}
+
+	@Override
+	public boolean execOrder(String [] idTransactionArray, int idUser) {
+		// TODO Auto-generated method stub
+		System.out.println(idTransactionArray[0] +" "+ idTransactionArray[1]+" "+ idTransactionArray[2]+" "+ idTransactionArray[3]);
+		return false;
+	}
+
 }

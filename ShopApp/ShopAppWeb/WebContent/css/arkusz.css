@@ -102,6 +102,13 @@ table, th, td {
 	text-align: left;
 }
 
+#execTransactionForm {
+	position: absolute;
+	left: 65%;
+	top: 14%;
+	text-align: left;
+}
+
 #searchFormMain {
 	position: absolute;
 	left: 35%;

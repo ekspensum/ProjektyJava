@@ -666,5 +666,31 @@ public class UserBeanTest {
 		}
 		assertTrue(ub.setSettingsApp(5, 12, 1, 2, 6, 15, 30, 1));
 	}
-
+	
+	@Test
+	public void testAddRole() {
+		assertTrue(ub.addRole("roleName"));
+	}
+	
+	@Test
+	public void testGetRoleList() {
+		List<Role> rl = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Role> roleQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("roleQuery", Role.class)).thenReturn(roleQuery);
+		when(roleQuery.getResultList()).thenReturn(rl);
+		assertEquals(rl, ub.getRoleList());
+	}
+	
+	@Test
+	public void testFindCustomerList() {
+		List<Customer> cl = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Customer> customerQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("customerByLastNamePeselQuery", Customer.class)).thenReturn(customerQuery);
+		when(customerQuery.setParameter("lastName", "%lastName%")).thenReturn(customerQuery);
+		when(customerQuery.setParameter("pesel", "%pesel%")).thenReturn(customerQuery);
+		when(customerQuery.getResultList()).thenReturn(cl);
+		assertEquals(cl, ub.findCustomerList("lastName", "pesel"));
+	}
 }
