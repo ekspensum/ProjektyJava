@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Entity
 @NamedQueries({
 	@NamedQuery(name="findTransactionsQuery", query="SELECT tr FROM Transaction tr WHERE tr.customer = :customer AND tr.dateTime BETWEEN :dateFrom AND :dateTo"),
-	@NamedQuery(name="findNoExecTransactionQuery", query="SELECT tr FROM Transaction tr WHERE tr.execOrder = false AND tr.dateTime BETWEEN :dateFrom AND :dateTo")
+	@NamedQuery(name="findNoExecTransactionQuery", query="SELECT tr FROM Transaction tr WHERE tr.execOrder = false AND tr.dateTime BETWEEN :dateFrom AND :dateTo"),
+	@NamedQuery(name="findTransactionToExecQuery", query="SELECT tr FROM Transaction tr WHERE tr.id IN :idTransaction")
 })
 @Table(name = "\"Transaction\"") //for integration test with Derby database
 public class Transaction implements Serializable {
@@ -30,7 +31,8 @@ public class Transaction implements Serializable {
 	private LocalDateTime dateTime;
 	private boolean execOrder;
 	private LocalDateTime execOrderDate;
-	private Operator operatorExecOrder;
+	@OneToOne
+	private Operator execOrderOperator;
 	private static final long serialVersionUID = 1L;
 
 	public Transaction() {
@@ -94,11 +96,11 @@ public class Transaction implements Serializable {
 	public void setExecOrderDate(LocalDateTime execOrderDate) {
 		this.execOrderDate = execOrderDate;
 	}
-	public Operator getOperatorExecOrder() {
-		return operatorExecOrder;
+	public Operator getExecOrderOperator() {
+		return execOrderOperator;
 	}
-	public void setOperatorExecOrder(Operator operatorExecOrder) {
-		this.operatorExecOrder = operatorExecOrder;
+	public void setExecOrderOperator(Operator execOrderOperator) {
+		this.execOrderOperator = execOrderOperator;
 	}
    
 }

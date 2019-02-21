@@ -136,9 +136,10 @@ class ProductBeanTest {
 			when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
 			when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
 			op.setId(3);
-			String updateProductWithoutImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 11.22, unitsInStock = 1, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op_id = 3 WHERE id = "+p.getId()+"";
+			String updateProductWithoutImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 11.22, unitsInStock = 1, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = "+p.getId()+"";
 			Query mockedQueryWithOutImage = mock(Query.class);
 			when(em.createQuery(updateProductWithoutImage)).thenReturn(mockedQueryWithOutImage);
+			when(mockedQueryWithOutImage.setParameter("op", op)).thenReturn(mockedQueryWithOutImage);
 			when(mockedQueryWithOutImage.executeUpdate()).thenReturn(1);
 			for(int i = 0; i<helperListCat.size(); i++) {
 				when(em.find(Category.class, categoryToEdit[i])).thenReturn(cat);
@@ -187,10 +188,11 @@ class ProductBeanTest {
 			when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
 			when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
 			op.setId(3);
-			String updateProductWithImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 11.22, unitsInStock = 1, productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op_id = 3 WHERE id = 1";
+			String updateProductWithImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 11.22, unitsInStock = 1, productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = 1";
 			Query mockedQueryWithImage = mock(Query.class);
 			when(em.createQuery(updateProductWithImage)).thenReturn(mockedQueryWithImage);
 			when(mockedQueryWithImage.setParameter("productImage", buffer)).thenReturn(mockedQueryWithImage);
+			when(mockedQueryWithImage.setParameter("op", op)).thenReturn(mockedQueryWithImage);
 			when(mockedQueryWithImage.executeUpdate()).thenReturn(1);			
 			for(int i = 0; i<helperListCat.size(); i++) {
 				when(em.find(Category.class, categoryToEdit[i])).thenReturn(cat);

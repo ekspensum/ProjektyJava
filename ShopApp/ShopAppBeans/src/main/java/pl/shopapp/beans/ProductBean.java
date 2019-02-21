@@ -10,7 +10,6 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -104,16 +103,13 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 			Product p = em.find(Product.class, productIdToEdit);
 			User u = em.find(User.class, idUser);
 			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", u).getSingleResult();
-			String updateProductWithoutImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
-			String updateProductWithImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op_id = "+op.getId()+" WHERE id = "+productIdToEdit+"";
+			String updateProductWithoutImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = "+productIdToEdit+"";
+			String updateProductWithImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = "+productIdToEdit+"";
 
 			if(sizeFileImage == 0)
-				rowProduct = em.createQuery(updateProductWithoutImage).executeUpdate();
-			else {
-				Query query = em.createQuery(updateProductWithImage);	
-				query.setParameter("productImage", buffer);
-				rowProduct = query.executeUpdate();
-			}
+				rowProduct = em.createQuery(updateProductWithoutImage).setParameter("op", op).executeUpdate();
+			else 
+				rowProduct = em.createQuery(updateProductWithImage).setParameter("productImage", buffer).setParameter("op", op).executeUpdate();
 			
 			for(int i = 0; i<helperListCat.size(); i++) {
 				Category cat = em.find(Category.class, categoryToEdit[i]);

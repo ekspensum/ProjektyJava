@@ -57,10 +57,10 @@
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="execTransactionForm">
 <p>Wyszukaj niezrealizowane zamówienia:</p>
-<p>Data od:<input name="transactionDateFrom" type="date" /> Data do: <input name="transactionDateTo" type="date" /> <button name="buttonSearchNoExecOrder" form="execTransactionForm" type="submit" value="yes">Wyszukaj</button></p>
+<p>Data od:<input name="transactionDateFrom" type="date" value="${param['transactionDateFrom'] }" /> Data do: <input name="transactionDateTo" type="date" value="${param['transactionDateTo'] }" /> <button name="buttonSearchNoExecOrder" form="execTransactionForm" type="submit" value="yes">Wyszukaj</button></p>
 <table>
 <tr><th>Lp</th><th>Imie klienta</th><th>Nazwisko klienta</th><th>Nazwa produktu</th><th>Ilość</th><th>Cena</th><th>Data zamówienia</th><th>Wybierz</th></tr>
-<c:forEach items="${Transaction}" var="tr" begin="0" varStatus="lp">
+<c:forEach items="${Transactions}" var="tr" begin="0" varStatus="lp">
 <tr><td>${lp.count }</td><td>${tr.customer.firstName }</td><td>${tr.customer.lastName }</td><td>${tr.product.name }</td><td>${tr.quantity }</td><td>${tr.price }</td><td>${tr.dateTime }</td><td><input type="checkbox" name="idTransaction" value="${tr.id }" /></td></tr>
 </c:forEach>
 </table>

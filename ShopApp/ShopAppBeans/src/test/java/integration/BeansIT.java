@@ -220,7 +220,7 @@ public class BeansIT {
 				| HeuristicMixedException | HeuristicRollbackException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 		assertEquals(33.44, pbl.getProduct(1).getPrice());
 	}
 	

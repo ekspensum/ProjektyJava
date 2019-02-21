@@ -43,9 +43,10 @@ public class OperatorPanel extends HttpServlet {
 		super();
 	}
 //	for tests
-	public OperatorPanel(ProductBeanLocal pbl) {
+	public OperatorPanel(ProductBeanLocal pbl, TransactionBeanLocal tbl) {
 		super();
 		this.pbl = pbl;
+		this.tbl = tbl;
 	}
 
 	/**
@@ -213,28 +214,26 @@ public class OperatorPanel extends HttpServlet {
 		}
 		
 		if(request.getParameter("buttonSearchNoExecOrder") != null) {
-			String dateFrom = request.getParameter("transactionDateFrom")+" 00:00:00";
-			String dateTo = request.getParameter("transactionDateTo")+" 23:59:59";
-			try {
-				request.setAttribute("Transaction", tbl.getNoExecOrder(LocalDateTime.parse(dateFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDateTime.parse(dateTo, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
-				e.printStackTrace();
-			}		
+			searchNoExecOrder(request);
 		}
 
 		if(request.getParameter("buttonExecOrder") != null) {
-			if(request.getParameterValues("idTransaction").length > 0) {
-				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
-				if(tbl.execOrder(request.getParameterValues("idTransaction"), sd.getIdUser()))
-					request.setAttribute("message", "Zaznaczone transacje zapisano do bazy jako zrealizowane!<br>"
-							+ "Do klienta został wysłany e-mail z powiadomieniem o wysłaniu towaru.");
-				else
-					request.setAttribute("message", "Nie udało się oznaczyć jako zrealizowane zaznaczonych transakcji!");			
-			}
-		} else
-			request.setAttribute("message", "Proszę zaznaczyć co najmniej 1 wiersz do realizacji zamówienia!");
+			if(request.getParameter("buttonExecOrder").equals("yes")) {
+				if(request.getParameterValues("idTransaction") != null) {
+						SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
+						if(tbl.execOrder(request.getParameterValues("idTransaction"), sd.getIdUser())) {
+							request.setAttribute("message", "Zaznaczone transacje zapisano do bazy jako zrealizowane!<br>"
+									+ "Do klienta został wysłany e-mail z powiadomieniem o wysłaniu towaru.");
+							searchNoExecOrder(request);
+						} else
+							request.setAttribute("message", "Nie udało się oznaczyć jako zrealizowane zaznaczonych transakcji!");			
+				} else {
+					searchNoExecOrder(request);
+					request.setAttribute("message", "Proszę zaznaczyć co najmniej 1 wiersz do realizacji zamówienia!");	
+				}							
+			}			
+		}
+
 		
 		doGet(request, response);
 	}
@@ -281,5 +280,17 @@ public class OperatorPanel extends HttpServlet {
 			return true;
 			
 		return false;
+	}
+	
+	private void searchNoExecOrder(HttpServletRequest request) {
+		String dateFrom = request.getParameter("transactionDateFrom")+" 00:00:00";
+		String dateTo = request.getParameter("transactionDateTo")+" 23:59:59";
+		try {
+			request.setAttribute("Transactions", tbl.getNoExecOrder(LocalDateTime.parse(dateFrom, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDateTime.parse(dateTo, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
+			e.printStackTrace();
+		}	
 	}
 }

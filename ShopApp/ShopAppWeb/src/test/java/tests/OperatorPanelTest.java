@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,14 +30,18 @@ import org.mockito.MockitoAnnotations;
 
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
+import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Product;
+import pl.shopapp.entites.Transaction;
 import pl.shopapp.web.OperatorPanel;
 
 class OperatorPanelTest {
 
 	@Mock
 	ProductBeanLocal pbl;
+	@Mock
+	TransactionBeanLocal tbl;
 	@Mock
 	HttpSession session;
 	@Mock
@@ -62,7 +68,7 @@ class OperatorPanelTest {
 	void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		sd = new SessionData();
-		op = new OperatorPanel(pbl);
+		op = new OperatorPanel(pbl, tbl);
 	}
 
 	@AfterEach
@@ -279,6 +285,21 @@ class OperatorPanelTest {
 		when(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, 3, new int [] {1,2}, (int)filePartProduct.getSize(), sd.getIdUser(), helperListCat)).thenReturn(true);
 		when(sc.getAttribute("button")).thenReturn("searchQuantityButton");	
 		
+//		for buttonSearchNoExecOrder parameter
+		when(request.getParameter("buttonSearchNoExecOrder")).thenReturn("buttonSearchNoExecOrder");
+		when(request.getParameter("transactionDateFrom")).thenReturn("2019-01-01");
+		when(request.getParameter("transactionDateTo")).thenReturn("2019-01-01");
+		when(tbl.getNoExecOrder(LocalDateTime.parse("2019-01-01 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDateTime.parse("2019-01-01 23:59:59", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))).thenReturn(new ArrayList<Transaction>());
+		
+//		for buttonExecOrder parameter
+		when(request.getParameter("buttonExecOrder")).thenReturn("yes");
+		String [] idTransactionArray = {"1","2","3","4"};
+		when(request.getParameterValues("idTransaction")).thenReturn(idTransactionArray);
+		sd.setIdUser(1);
+		when((SessionData) request.getSession().getAttribute("SessionData")).thenReturn(sd);
+		when(tbl.execOrder(request.getParameterValues("idTransaction"), sd.getIdUser())).thenReturn(true);
+		
+		
 		when(request.getRequestDispatcher("jsp/operatorPanel.jsp")).thenReturn(rd);
 	
 		op.doPost(request, response);
@@ -289,6 +310,8 @@ class OperatorPanelTest {
 		assertTrue(pbl.addCategory(categoryName, buffer, sd.getIdUser()));
 //		for saveButton parameter
 		assertTrue(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, 3, new int [] {1,2}, (int)filePartProduct.getSize(), sd.getIdUser(), helperListCat));
+//		for buttonExecOrder parameter		
+		assertTrue(tbl.execOrder(request.getParameterValues("idTransaction"), sd.getIdUser()));
 	}
 
 }

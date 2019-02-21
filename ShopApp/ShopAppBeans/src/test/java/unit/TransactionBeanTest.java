@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +25,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import pl.shopapp.beans.BasketData;
+import pl.shopapp.beans.SendEmail;
 import pl.shopapp.beans.TransactionBean;
 import pl.shopapp.entites.Customer;
+import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Product;
 import pl.shopapp.entites.Transaction;
 import pl.shopapp.entites.User;
@@ -35,6 +38,7 @@ class TransactionBeanTest {
 	TransactionBean tb;
 	EntityManager em;
 	UserTransaction ut;
+	SendEmail mail;
 	User u;
 	List<BasketData> basketList;
 
@@ -50,7 +54,8 @@ class TransactionBeanTest {
 	void setUp() throws Exception {
 		em = mock(EntityManager.class);
 		ut = mock(UserTransaction.class);
-		tb = new TransactionBean(em, ut);
+		mail = mock(SendEmail.class);
+		tb = new TransactionBean(em, ut, mail);
 		u = new User();
 		basketList = new ArrayList<>();
 	}
@@ -147,5 +152,50 @@ class TransactionBeanTest {
 		List<Transaction> actual = tb.getTransactionsData(u.getId(), dateFrom, dateTo);
 		assertEquals(expected, actual);
 	}
-
+	
+	@Test
+	void testGetNoExecOrder() {
+		LocalDateTime dateFrom = LocalDateTime.now().minusDays(15);
+		LocalDateTime dateTo = LocalDateTime.now();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Transaction> transactionQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("findNoExecTransactionQuery", Transaction.class)).thenReturn(transactionQuery);
+		when(transactionQuery.setParameter("dateFrom", dateFrom)).thenReturn(transactionQuery);
+		when(transactionQuery.setParameter("dateTo", dateTo)).thenReturn(transactionQuery);
+		when(transactionQuery.getResultList()).thenReturn(new ArrayList<Transaction>());
+		assertEquals(new ArrayList<Transaction>(), tb.getNoExecOrder(dateFrom, dateTo));
+	}
+	
+	@Test
+	void testExecOrder() {
+		u.setId(1);
+		String [] idTransactionArray = {"1"};
+		String idTransaction = idTransactionArray[0];
+		for(int i = 1; i<idTransactionArray.length; i++)
+			idTransaction += ", "+idTransactionArray[i];
+		@SuppressWarnings("unchecked")
+		TypedQuery<Transaction> transactionQuery = mock(TypedQuery.class);
+		when(em.createQuery("SELECT tr FROM Transaction tr WHERE id IN ("+idTransaction+")", Transaction.class)).thenReturn(transactionQuery);
+		Customer customer = new Customer();
+		Transaction tr = new Transaction();
+		tr.setCustomer(customer);
+		List<Transaction> trl = new ArrayList<>();
+		tr.setId(1);
+		trl.add(tr);
+		when(transactionQuery.getResultList()).thenReturn(trl);
+		
+		when(em.find(User.class, u.getId())).thenReturn(u);
+		Operator op = new Operator();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Operator> operatorQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(operatorQuery);
+		when(operatorQuery.setParameter("user", u)).thenReturn(operatorQuery);
+		when(operatorQuery.getSingleResult()).thenReturn(op);
+		Query updateQuery = mock(Query.class);
+		when(em.createQuery("UPDATE Transaction SET execOrder = true, execOrderDate = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', execOrderOperator = :operator WHERE id IN ("+idTransaction+")")).thenReturn(updateQuery);
+		when(updateQuery.setParameter("operator", op)).thenReturn(updateQuery);
+		when(updateQuery.executeUpdate()).thenReturn(1);
+		
+		assertTrue(tb.execOrder(idTransactionArray, u.getId()));
+	}
 }
