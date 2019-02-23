@@ -26,9 +26,20 @@ public class Kursy implements Runnable {
 	private double eur_usd;
 	private double chf_usd;
 	private double eur_chf;
+	
+	private double pln_usd_Ask;
+	private double pln_usd_Bid;
+	private double pln_eur_Ask;
+	private double pln_eur_Bid;
+	private double pln_chf_Ask;
+	private double pln_chf_Bid;
+	
+	private ObslugaBD bd;
+	private KoszykDaneWalut kdw;
 
 	public Kursy() {
-//		Kod przesunięto do metody run
+		bd = new ObslugaBD();
+		kdw = bd.daneBidAskWalut();
 	}
 
 	public double getPln_usd() {
@@ -53,6 +64,31 @@ public class Kursy implements Runnable {
 
 	public double getEur_chf() {
 		return eur_chf;
+	}
+
+	public double getPln_usd_Ask() {
+		return pln_usd_Ask;
+	}
+
+	public double getPln_usd_Bid() {
+		return pln_usd_Bid;
+	}
+
+	public double getPln_eur_Ask() {
+		return pln_eur_Ask;
+	}
+
+
+	public double getPln_eur_Bid() {
+		return pln_eur_Bid;
+	}
+
+	public double getPln_chf_Ask() {
+		return pln_chf_Ask;
+	}
+
+	public double getPln_chf_Bid() {
+		return pln_chf_Bid;
 	}
 
 	private Document getKursyNBP() {
@@ -86,7 +122,7 @@ public class Kursy implements Runnable {
 
 	private JSONObject getKursyECB() {
 		try {
-			URL url = new URL("https://exchangeratesapi.io/api/latest");
+			URL url = new URL("https://api.exchangeratesapi.io/latest");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Accept", "application/json");
@@ -140,26 +176,36 @@ public class Kursy implements Runnable {
 		return null;
 	}
 
-//Przekzanie do osobnego wątku
+//Przekazanie do osobnego wątku
 @Override
 public void run() {
 	try {
 //		JSONObject obECB = getKursyECB();
 //		JSONObject obFreeApi = getKursyFreeApi();
-//		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
-		this.pln_usd = 1/3.7;
-//		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
-		this.pln_eur = 1/4.3;
-//		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
-		this.pln_chf = 1/3.67;
+		this.pln_usd = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent());
+//		this.pln_usd = 1/3.7;
+		this.pln_eur = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent());
+//		this.pln_eur = 1/4.3;
+		this.pln_chf = 1 / Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent());
+//		this.pln_chf = 1/3.67;
+		
+//		for asynchronous transfer
+		this.pln_usd_Ask = Math.round(Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent()) * kdw.getDolarAsk() * 10000) * 0.0001;
+		this.pln_usd_Bid = Math.round(Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(1).getTextContent()) * kdw.getDolarBid() * 10000) * 0.0001;
+		this.pln_eur_Ask = Math.round(Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent()) * kdw.getEuroAsk() * 10000) * 0.0001;
+		this.pln_eur_Bid = Math.round(Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(7).getTextContent()) * kdw.getEuroBid() * 10000) * 0.0001;
+		this.pln_chf_Ask = Math.round(Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent()) * kdw.getFrankAsk() * 10000) * 0.0001;
+		this.pln_chf_Bid = Math.round(Double.valueOf(getKursyNBP().getElementsByTagName("Mid").item(9).getTextContent()) * kdw.getFrankBid() * 10000) * 0.0001;
+		
 //		if (obECB != null)
 //			this.eur_usd = obECB.getDouble("USD");
-		this.eur_usd = 1.2234;
-//		this.chf_usd = obFreeApi.getDouble("val");
-		this.chf_usd = 0.99;
+//		this.eur_usd = 1.2234;
+//		if (obFreeApi != null)
+//			this.chf_usd = obFreeApi.getDouble("val");
+//		this.chf_usd = 0.99;
 //		if (obECB != null)
 //			this.eur_chf = obECB.getDouble("CHF");
-		this.eur_chf = 1.1798;
+//		this.eur_chf = 1.1798;
 	} catch (NumberFormatException | DOMException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
