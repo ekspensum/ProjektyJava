@@ -530,7 +530,7 @@ public class AdminPanel extends JFrame {
 
 		
 		JLabel lblWyszukajWgNazwiska = new JLabel("wg fragmentu nazwiska:");
-		lblWyszukajWgNazwiska.setBounds(10, 45, 128, 14);
+		lblWyszukajWgNazwiska.setBounds(10, 45, 143, 14);
 		panelSetActiveCustomer.add(lblWyszukajWgNazwiska);
 		
 		JLabel lblWyszukajWgFragmentu = new JLabel("wg fragmentu pesel:");
@@ -587,7 +587,7 @@ public class AdminPanel extends JFrame {
 				loadTableCustomer(ubr, sizeCustomerList);
 			}
 		});
-		textFieldSerchByLastName.setBounds(148, 42, 113, 20);
+		textFieldSerchByLastName.setBounds(163, 42, 113, 20);
 		panelSetActiveCustomer.add(textFieldSerchByLastName);
 		textFieldSerchByLastName.setColumns(10);
 		

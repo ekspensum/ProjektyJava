@@ -9,6 +9,7 @@
 		<module>ShopAppWeb</module>
 		<module>ShopAppEntites</module>
 		<module>ShopAppClient</module>
+		<module>ShopAppWebService</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
