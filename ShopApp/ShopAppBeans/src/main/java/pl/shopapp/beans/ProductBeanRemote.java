@@ -15,6 +15,7 @@ public interface ProductBeanRemote {
 	public List<Product> findProduct(int quantity);
 	public List<Product> listProductByCategory(int idCategory);
 	public Product getProduct(int idProduct);
+	public List<Product> listProductByIdRange(int idFrom, int idTo);
 		
 	public boolean addCategory(String categoryName, byte[] buffer, int idUser);
 	public List<Category> listCategory();

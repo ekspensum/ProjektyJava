@@ -14,7 +14,8 @@ import javax.persistence.*;
 @NamedQueries({
 	@NamedQuery(name="productsByCategory", query="SELECT p FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = ?1"),
 	@NamedQuery(name="productsByName", query="SELECT pr FROM Product pr WHERE pr.name LIKE :name"),
-	@NamedQuery(name="productsByQuantity", query="SELECT pr FROM Product pr WHERE pr.unitsInStock <= :quantity")
+	@NamedQuery(name="productsByQuantity", query="SELECT pr FROM Product pr WHERE pr.unitsInStock <= :quantity"),
+	@NamedQuery(name="productsByIdRange", query="SELECT pr FROM Product pr WHERE pr.id BETWEEN :idFrom AND :idTo")
 })
 public class Product implements Serializable {
 

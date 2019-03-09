@@ -190,6 +190,11 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 		List<Category> catList = em.createNamedQuery("productCategoriesQuery", Category.class).setParameter("product", p).getResultList();
 		return catList;
 	}
-
+	
+	@Override
+	public List<Product> listProductByIdRange(int idFrom, int idTo) {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("productsByIdRange", Product.class).setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
+	}
 
 }
