@@ -13,7 +13,7 @@
 <body>
 <c:if test="${SessionData != null }">
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
-<a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
+<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 <form action="/ShopAppWeb/CustomerPanel" method="POST" id="customerLoginUpdateForm">
 <p>Potwierdź swoje dane w celu edycji:</p>
 <p>Login: <input type="text" name="login"/></p>

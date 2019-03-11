@@ -14,7 +14,7 @@
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
 <a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
 <b id="message">${message }</b>
-<a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
+<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="addProductForm" enctype="multipart/form-data">
 <p id="optionHeader">Dodawanie /edycja produktu</p>

@@ -15,8 +15,8 @@
 <c:if test="${SessionData != null }">
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
 </c:if>
-<a ${SessionData != null ? 'href="http://localhost:8080/ShopAppWeb/LogOutServlet"' : '' }><button id="buttonLogOut" ${SessionData != null ? "" : "disabled" }>Wyloguj</button></a>
-<a ${SessionData.idRole == 3 ? "" : 'href="http://localhost:8080/ShopAppWeb/CustomerPanel"' }><button id="registrationButtonId" ${SessionData.idRole == 3 ? "disabled" : "" } >${SessionData != null ? "Panel klienta" : "Rejestracja" }</button></a>
+<a ${SessionData != null ? 'href="/ShopAppWeb/LogOutServlet"' : '' }><button id="buttonLogOut" ${SessionData != null ? "" : "disabled" }>Wyloguj</button></a>
+<a ${SessionData.idRole == 3 ? "" : 'href="/ShopAppWeb/CustomerPanel"' }><button id="registrationButtonId" ${SessionData.idRole == 3 ? "disabled" : "" } >${SessionData != null ? "Panel klienta" : "Rejestracja" }</button></a>
 <b id="message">${message }</b>
 
 <c:if test="${SessionData.idRole == 3 }">

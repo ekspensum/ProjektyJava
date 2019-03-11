@@ -94,7 +94,7 @@ public class LoginServlet extends HttpServlet {
 					request.getSession().setAttribute("SessionData", sd);
 					request.getSession().setMaxInactiveInterval(ubl.getSettingsApp().getSessionTime()*60);
 					if (sd.getIdRole() == 3)
-						response.sendRedirect("http://localhost:8080/ShopAppWeb/OperatorPanel");
+						response.sendRedirect("/ShopAppWeb/OperatorPanel");
 				} else
 					request.setAttribute("message", "Niepoprawne dane logowania lub użytkownik nie jest aktywny!");
 			} else

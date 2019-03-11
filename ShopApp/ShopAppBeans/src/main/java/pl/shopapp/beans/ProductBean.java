@@ -196,5 +196,16 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 		// TODO Auto-generated method stub
 		return em.createNamedQuery("productsByIdRange", Product.class).setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
 	}
+	
+	@Override
+	public List<Product> listAllMainBoard() {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("getAllMainBoard", Product.class).getResultList();
+	}
+	@Override
+	public List<Product> listAllRamMemory() {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("getAllRamMemory", Product.class).getResultList();
+	}
 
 }

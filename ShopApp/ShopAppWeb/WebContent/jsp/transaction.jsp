@@ -14,7 +14,7 @@
 <b id="messageTransaction">${message }</b>
 <c:if test="${SessionData != null }">
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
-<a href="http://localhost:8080/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
+<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
 </c:if>
 <a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
 <br><br><br>

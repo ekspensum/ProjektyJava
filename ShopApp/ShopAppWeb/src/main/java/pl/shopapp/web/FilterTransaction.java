@@ -42,7 +42,7 @@ public class FilterTransaction implements Filter {
 		SessionData sd = (SessionData) req.getSession().getAttribute("SessionData");
 		if(sd == null || sd.getIdRole() != 2) {
 			req.getSession().invalidate();
-			resp.sendRedirect("http://localhost:8080/ShopAppWeb/LoginServlet");
+			resp.sendRedirect("/ShopAppWeb/LoginServlet");
 			return;
 		}
 		

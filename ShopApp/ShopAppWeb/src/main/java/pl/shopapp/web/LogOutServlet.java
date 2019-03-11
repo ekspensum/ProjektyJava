@@ -21,7 +21,7 @@ public class LogOutServlet extends HttpServlet {
 
 		request.getSession().invalidate();
 		request.logout();
-		response.sendRedirect("http://localhost:8080/ShopAppWeb/LoginServlet");
+		response.sendRedirect("/ShopAppWeb/LoginServlet");
 	}
 
 }

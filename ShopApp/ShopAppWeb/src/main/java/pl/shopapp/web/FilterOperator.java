@@ -44,7 +44,7 @@ public class FilterOperator implements Filter {
 			SessionData sd = (SessionData) req.getSession().getAttribute("SessionData");
 			if(sd == null || sd.getIdRole() != 3) {
 				req.getSession().invalidate();
-				resp.sendRedirect("http://localhost:8080/ShopAppWeb/LoginServlet");
+				resp.sendRedirect("/ShopAppWeb/LoginServlet");
 				return;
 			}
 		// pass the request along the filter chain

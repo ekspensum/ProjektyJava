@@ -1,9 +1,12 @@
 package pl.shopapp.webservice;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -30,13 +33,16 @@ public class ShopResource {
 	@EJB
 	private ProductBeanLocal pbl;
 	private String category;
-
+	private List<MainBoard> listMainBoard;
+	private MainBoard mb;
+	private List<RamMemory> listRamMemory;
+	private RamMemory rm;
 	
 	@GET
 	@Path("/Processors")
 	@Produces(MediaType.TEXT_XML)
 	public byte [] getProcessors() {
-
+		
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();
 		category = "Procesory";
 		try {
@@ -202,6 +208,42 @@ public class ShopResource {
 			return ba.toByteArray();
 		} else
 			return "<Product>Product not found.</Product>".getBytes();
+	}
+	
+	@GET
+	@Path("/MainBoards")
+	@Produces(MediaType.APPLICATION_XML)
+	public List<MainBoard> getMainBoards() throws NamingException {
+		listMainBoard = new ArrayList<>();	
+		for (int i = 0; i < pbl.listAllMainBoard().size(); i++) {
+			mb = new MainBoard();
+			mb.setId(pbl.listAllMainBoard().get(i).getId());
+			mb.setName(pbl.listAllMainBoard().get(i).getName());
+			mb.setDescription(pbl.listAllMainBoard().get(i).getDescription());
+			mb.setUnitsInStock(pbl.listAllMainBoard().get(i).getUnitsInStock());
+			mb.setPrice(pbl.listAllMainBoard().get(i).getPrice());
+			mb.setBase64Image(pbl.listAllMainBoard().get(i).getBase64Image());
+			listMainBoard.add(mb);
+		}
+		return listMainBoard;
+	}
+	
+	@GET
+	@Path("/RamMemory")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<RamMemory> getAllRamMemory(){
+		listRamMemory = new ArrayList<>();
+		for (int i = 0; i < pbl.listAllRamMemory().size(); i++) {
+			rm = new RamMemory();
+			rm.setId(pbl.listAllRamMemory().get(i).getId());
+			rm.setName(pbl.listAllRamMemory().get(i).getName());
+			rm.setDescription(pbl.listAllRamMemory().get(i).getDescription());
+			rm.setUnitsInStock(pbl.listAllRamMemory().get(i).getUnitsInStock());
+			rm.setPrice(pbl.listAllRamMemory().get(i).getPrice());
+			rm.setBase64Image(pbl.listAllRamMemory().get(i).getBase64Image());
+			listRamMemory.add(rm);
+		}
+		return listRamMemory;
 	}
 	
 	private void getProducts(Document doc, Element root, String productCategory, String id, String productId, String productName, String productDescription, String productPrice, String productUnitsInStock, String productImage) {
