@@ -16,22 +16,24 @@ import javax.persistence.*;
 	@NamedQuery(name="productsByName", query="SELECT pr FROM Product pr WHERE pr.name LIKE :name"),
 	@NamedQuery(name="productsByQuantity", query="SELECT pr FROM Product pr WHERE pr.unitsInStock <= :quantity"),
 	@NamedQuery(name="productsByIdRange", query="SELECT pr FROM Product pr WHERE pr.id BETWEEN :idFrom AND :idTo"),
-	@NamedQuery(name="getAllMainBoard", query="SELECT p FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 24 OR c.id = 31"),
-	@NamedQuery(name="getAllRamMemory", query="SELECT p FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 25 OR c.id = 29")
+	@NamedQuery(name="getAllMainBoardXml", query="SELECT p FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 24"),
+	@NamedQuery(name="getAllRamMemoryXml", query="SELECT p FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 25"),
+	@NamedQuery(name="getAllMainBoardJson", query="SELECT p.id, p.name, p.description, p.price, p.unitsInStock, p.productImage FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 24"),
+	@NamedQuery(name="getAllRamMemoryJson", query="SELECT p.id, p.name, p.description, p.price, p.unitsInStock, p.productImage FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 25")
 })
 public class Product implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private String name;
-	private String description;
-	private double price;
-	private int unitsInStock;
+	protected int id;
+	protected String name;
+	protected String description;
+	protected double price;
+	protected int unitsInStock;
 	@Lob
 	private byte[] productImage;
 	@Transient
-	private String base64Image;
+	protected String base64Image;
 	private LocalDateTime dateTime;
 	
 	@OneToOne

@@ -1,9 +1,6 @@
 package pl.shopapp.webservice;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
-public class MainBoard {
+public class MainBoardJson {
 	
 	private int id;
 	private String name;

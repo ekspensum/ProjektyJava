@@ -4,9 +4,15 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.naming.NamingException;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -25,22 +31,36 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import pl.shopapp.beans.ProductBeanLocal;
+import pl.shopapp.entites.Product;
+
 
 @Stateless
 @Path("/ShopResource")
-public class ShopResource {
+@LocalBean
+@TransactionManagement(TransactionManagementType.BEAN)
+public class ShopResource implements ShopResourceLocal {
+	
+	@PersistenceContext(unitName = "ShopAppEntites")
+	private EntityManager em;
+
+	@Resource
+	private UserTransaction ut;
 	
 	@EJB
 	private ProductBeanLocal pbl;
 	private String category;
-	private List<MainBoard> listMainBoard;
-	private MainBoard mb;
-	private List<RamMemory> listRamMemory;
-	private RamMemory rm;
+	List<Product> listProduct;
+	private List<MainBoardXml> listMainBoardXml;
+	private MainBoardXml mb;
+	private List<RamMemoryXml> listRamMemoryXml;
+	private RamMemoryXml rm;
+	
+
 	
 	@GET
-	@Path("/Processors")
+	@Path("/ProcessorsXml")
 	@Produces(MediaType.TEXT_XML)
+	@Override
 	public byte [] getProcessors() {
 		
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();
@@ -79,8 +99,9 @@ public class ShopResource {
 	}
 	
 	@GET
-	@Path("/HardDisks")
+	@Path("/HardDisksXml")
 	@Produces(MediaType.TEXT_XML)
+	@Override
 	public byte [] getHardDisks() {
 
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();
@@ -119,8 +140,9 @@ public class ShopResource {
 	}
 	
 	@GET
-	@Path("/Product/{id}")
+	@Path("/ProductXml/{id}")
 	@Produces(MediaType.TEXT_XML)
+	@Override
 	public byte [] getProductById(@PathParam("id") int id) {
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();			
 		if(pbl.getProduct(id) != null) {
@@ -173,12 +195,15 @@ public class ShopResource {
 	}
 	
 	@GET
-	@Path("/Products/{idFrom}/{idTo}")
+	@Path("/ProductsXml/{idFrom}/{idTo}")
 	@Produces(MediaType.TEXT_XML)
+	@Override
 	public byte [] getProductsById(@PathParam("idFrom") int idFrom, @PathParam("idTo") int idTo) {
+		
+		listProduct = em.createNamedQuery("productsByIdRange", Product.class).setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
 
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();			
-		if(pbl.listProductByIdRange(idFrom, idTo) != null && pbl.listProductByIdRange(idFrom, idTo).size() > 0) {
+		if(listProduct != null && listProduct.size() > 0) {
 
 			try {
 				DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -187,8 +212,8 @@ public class ShopResource {
 				Element root = doc.createElement("Products");
 				doc.appendChild(root);
 				
-				for(int i=0; i<pbl.listProductByIdRange(idFrom, idTo).size(); i++)
-					getProductsById(doc, root, String.valueOf(i), String.valueOf(pbl.listProductByIdRange(idFrom, idTo).get(i).getId()), pbl.listProductByIdRange(idFrom, idTo).get(i).getName(), pbl.listProductByIdRange(idFrom, idTo).get(i).getDescription(), String.valueOf(pbl.listProductByIdRange(idFrom, idTo).get(i).getPrice()), String.valueOf(pbl.listProductByIdRange(idFrom, idTo).get(i).getUnitsInStock()), pbl.listProductByIdRange(idFrom, idTo).get(i).getBase64Image());
+				for(int i=0; i<listProduct.size(); i++)
+					getProductsById(doc, root, String.valueOf(i), String.valueOf(listProduct.get(i).getId()), listProduct.get(i).getName(), listProduct.get(i).getDescription(), String.valueOf(listProduct.get(i).getPrice()), String.valueOf(listProduct.get(i).getUnitsInStock()), listProduct.get(i).getBase64Image());
 				
 //				write the content into response - ServletOutputStream
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -211,40 +236,70 @@ public class ShopResource {
 	}
 	
 	@GET
-	@Path("/MainBoards")
+	@Path("/MainBoardsXml")
 	@Produces(MediaType.APPLICATION_XML)
-	public List<MainBoard> getMainBoards() throws NamingException {
-		listMainBoard = new ArrayList<>();	
-		for (int i = 0; i < pbl.listAllMainBoard().size(); i++) {
-			mb = new MainBoard();
-			mb.setId(pbl.listAllMainBoard().get(i).getId());
-			mb.setName(pbl.listAllMainBoard().get(i).getName());
-			mb.setDescription(pbl.listAllMainBoard().get(i).getDescription());
-			mb.setUnitsInStock(pbl.listAllMainBoard().get(i).getUnitsInStock());
-			mb.setPrice(pbl.listAllMainBoard().get(i).getPrice());
-			mb.setBase64Image(pbl.listAllMainBoard().get(i).getBase64Image());
-			listMainBoard.add(mb);
+	@Override
+	public List<MainBoardXml> getMainBoardXmls() {	
+		listProduct = em.createNamedQuery("getAllMainBoardXml", Product.class).getResultList();	
+		listMainBoardXml = new ArrayList<>();	
+		for (int i = 0; i < listProduct.size(); i++) {
+			mb = new MainBoardXml();
+			mb.setId(listProduct.get(i).getId());
+			mb.setName(listProduct.get(i).getName());
+			mb.setDescription(listProduct.get(i).getDescription());
+			mb.setPrice(listProduct.get(i).getPrice());
+			mb.setUnitsInStock(listProduct.get(i).getUnitsInStock());
+			mb.setBase64Image(listProduct.get(i).getBase64Image());
+			listMainBoardXml.add(mb);
 		}
-		return listMainBoard;
+		return listMainBoardXml;
 	}
 	
 	@GET
-	@Path("/RamMemory")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<RamMemory> getAllRamMemory(){
-		listRamMemory = new ArrayList<>();
-		for (int i = 0; i < pbl.listAllRamMemory().size(); i++) {
-			rm = new RamMemory();
-			rm.setId(pbl.listAllRamMemory().get(i).getId());
-			rm.setName(pbl.listAllRamMemory().get(i).getName());
-			rm.setDescription(pbl.listAllRamMemory().get(i).getDescription());
-			rm.setUnitsInStock(pbl.listAllRamMemory().get(i).getUnitsInStock());
-			rm.setPrice(pbl.listAllRamMemory().get(i).getPrice());
-			rm.setBase64Image(pbl.listAllRamMemory().get(i).getBase64Image());
-			listRamMemory.add(rm);
+	@Path("/RamMemoryXml")
+	@Produces(MediaType.APPLICATION_XML)
+	@Override
+	public List<RamMemoryXml> getRamMemoryXml() {
+		listProduct = em.createNamedQuery("getAllRamMemoryXml", Product.class).getResultList();		
+		listRamMemoryXml = new ArrayList<>();	
+		for (int i = 0; i < listProduct.size(); i++) {
+			rm = new RamMemoryXml();
+			rm.setId(listProduct.get(i).getId());
+			rm.setName(listProduct.get(i).getName());
+			rm.setDescription(listProduct.get(i).getDescription());
+			rm.setUnitsInStock(listProduct.get(i).getUnitsInStock());
+			rm.setPrice(listProduct.get(i).getPrice());
+			rm.setBase64Image(listProduct.get(i).getBase64Image());
+			listRamMemoryXml.add(rm);
 		}
-		return listRamMemory;
+		return listRamMemoryXml;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/MainBoardsJson")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<MainBoardJson> getAllMainBoardJson() {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("getAllMainBoardJson").getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/RamMemoryJson")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<RamMemoryJson> getAllRamMemoryJson() {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("getAllRamMemoryJson").getResultList();
+	}
+
+	
+	
+	
+	
+	
 	
 	private void getProducts(Document doc, Element root, String productCategory, String id, String productId, String productName, String productDescription, String productPrice, String productUnitsInStock, String productImage) {
 		Element category = doc.createElement(productCategory);
