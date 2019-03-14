@@ -2,7 +2,9 @@ package pl.shopapp.webservice;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -32,6 +34,7 @@ import org.w3c.dom.Element;
 
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.entites.Product;
+import pl.shopapp.entites.ProductCategory;
 
 
 @Stateless
@@ -49,12 +52,11 @@ public class ShopResource implements ShopResourceLocal {
 	@EJB
 	private ProductBeanLocal pbl;
 	private String category;
-	List<Product> listProduct;
+	private List<Product> listProduct;
 	private List<MainBoardXml> listMainBoardXml;
 	private MainBoardXml mb;
 	private List<RamMemoryXml> listRamMemoryXml;
 	private RamMemoryXml rm;
-	
 
 	
 	@GET
@@ -277,6 +279,16 @@ public class ShopResource implements ShopResourceLocal {
 	
 	@SuppressWarnings("unchecked")
 	@GET
+	@Path("/ProcessorsJson")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<ProcessorsJson> getAllProcessorsJson() {
+		// TODO Auto-generated method stub 
+		return em.createNamedQuery("getAllProcessorsJson").getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@GET
 	@Path("/MainBoardsJson")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
@@ -295,10 +307,65 @@ public class ShopResource implements ShopResourceLocal {
 		return em.createNamedQuery("getAllRamMemoryJson").getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/HardDisksJson")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<HardDisksJson> getAllHardDisksJson() {
+		// TODO Auto-generated method stub
+		return em.createNamedQuery("getAllHardDisksJson").getResultList();
+	}
 	
-	
-	
-	
+	@GET
+	@Path("/ProductsJson/{idFrom}/{idTo}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public Map<String, List<ProductsJson>> getProductsJsonByIdRange(@PathParam("idFrom") int idFrom, @PathParam("idTo") int idTo) {
+		// TODO Auto-generated method stub
+		ProductsJson productsJson;
+		List<ProductsJson> listProcessor = new ArrayList<>();
+		List<ProductsJson> listMainBoard = new ArrayList<>();
+		List<ProductsJson> listRamMemory = new ArrayList<>();
+		List<ProductsJson> listHardDisk = new ArrayList<>();
+		Map<String, List<ProductsJson>> mapProductJson = new HashMap<>();
+
+		List<ProductCategory> lpc = em.createNamedQuery("productsByIdRangeJson", ProductCategory.class).setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
+		
+		for(int i=0; i<lpc.size(); i++) {
+			
+			productsJson = new ProductsJson();
+			productsJson.setId(lpc.get(i).getProduct().getId());
+			productsJson.setName(lpc.get(i).getProduct().getName());
+			productsJson.setDescription(lpc.get(i).getProduct().getDescription());
+			productsJson.setPrice(lpc.get(i).getProduct().getPrice());
+			productsJson.setUnitsInStock(lpc.get(i).getProduct().getUnitsInStock());
+			productsJson.setBase64Image(lpc.get(i).getProduct().getBase64Image());
+			
+			if(lpc.get(i).getCategory().getName().equals("Płyty główne")) {
+				listMainBoard.add(productsJson);
+				mapProductJson.put(lpc.get(i).getCategory().getName(), listMainBoard);	
+				continue;
+			}
+			if(lpc.get(i).getCategory().getName().equals("Pamięci RAM")) {
+				listRamMemory.add(productsJson);
+				mapProductJson.put(lpc.get(i).getCategory().getName(), listRamMemory);
+				continue;
+			}
+			if(lpc.get(i).getCategory().getName().equals("Dyski twarde")) {
+				listHardDisk.add(productsJson);
+				mapProductJson.put(lpc.get(i).getCategory().getName(), listHardDisk);
+				continue;
+			}
+			if(lpc.get(i).getCategory().getName().equals("Procesory")) {
+				listProcessor.add(productsJson);
+				mapProductJson.put(lpc.get(i).getCategory().getName(), listProcessor);
+				continue;
+			}
+		}				
+		return mapProductJson;
+	}
+
 	
 	
 	private void getProducts(Document doc, Element root, String productCategory, String id, String productId, String productName, String productDescription, String productPrice, String productUnitsInStock, String productImage) {
