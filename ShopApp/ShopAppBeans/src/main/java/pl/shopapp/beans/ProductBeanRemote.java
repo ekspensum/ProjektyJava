@@ -20,4 +20,5 @@ public interface ProductBeanRemote {
 	public boolean addCategory(String categoryName, byte[] buffer, int idUser);
 	public List<Category> listCategory();
 	public List<Category> getProductCategories(Product p);
+	public int findIdCategory(String categoryName);
 }

@@ -22,6 +22,7 @@ import javax.persistence.*;
 	@NamedQuery(name="getAllRamMemoryJson", query="SELECT p.id, p.name, p.description, p.price, p.unitsInStock, p.productImage FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 25"),
 	@NamedQuery(name="getAllProcessorsJson", query="SELECT p.id, p.name, p.description, p.price, p.unitsInStock, p.productImage, c.name FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 27"),
 	@NamedQuery(name="getAllHardDisksJson", query="SELECT p.id, p.name, p.description, p.price, p.unitsInStock, p.productImage, c.name FROM ProductCategory pc INNER JOIN pc.product p INNER JOIN pc.category c WHERE c.id = 26"),
+	@NamedQuery(name="getProductByIdJson", query="SELECT p.id, p.name, p.description, p.price, p.unitsInStock, p.productImage FROM Product p WHERE p.id = :id"),
 	@NamedQuery(name="productsByIdRangeJson", query="SELECT pc FROM ProductCategory pc INNER JOIN pc.product pr INNER JOIN pc.category c WHERE c.id IN(24,25,26,27) AND pr.id BETWEEN :idFrom AND :idTo")
 })
 public class Product implements Serializable {

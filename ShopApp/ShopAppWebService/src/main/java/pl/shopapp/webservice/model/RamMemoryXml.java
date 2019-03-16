@@ -1,6 +1,9 @@
-package pl.shopapp.webservice;
+package pl.shopapp.webservice.model;
 
-public class ProcessorsJson {
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class RamMemoryXml {
 	
 	private int id;
 	private String name;
@@ -8,7 +11,6 @@ public class ProcessorsJson {
 	private double price;
 	private int unitsInStock;
 	private String base64Image;
-	private String categoryName;
 	
 	public int getId() {
 		return id;
@@ -45,11 +47,5 @@ public class ProcessorsJson {
 	}
 	public void setBase64Image(String base64Image) {
 		this.base64Image = base64Image;
-	}
-	public String getCategoryName() {
-		return categoryName;
-	}
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
 	}
 }

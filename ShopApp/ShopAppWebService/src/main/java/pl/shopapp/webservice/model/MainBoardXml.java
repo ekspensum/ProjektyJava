@@ -1,9 +1,9 @@
-package pl.shopapp.webservice;
+package pl.shopapp.webservice.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class RamMemoryJson {
+public class MainBoardXml {
 	
 	private int id;
 	private String name;

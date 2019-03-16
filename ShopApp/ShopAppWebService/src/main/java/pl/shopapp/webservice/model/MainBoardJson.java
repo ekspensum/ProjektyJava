@@ -1,4 +1,4 @@
-package pl.shopapp.webservice;
+package pl.shopapp.webservice.model;
 
 public class MainBoardJson {
 	

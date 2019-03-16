@@ -1,9 +1,6 @@
-package pl.shopapp.webservice;
+package pl.shopapp.webservice.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
-public class RamMemoryXml {
+public class ProductsJson {
 	
 	private int id;
 	private String name;
@@ -11,6 +8,7 @@ public class RamMemoryXml {
 	private double price;
 	private int unitsInStock;
 	private String base64Image;
+	private byte [] image;
 	
 	public int getId() {
 		return id;
@@ -48,4 +46,11 @@ public class RamMemoryXml {
 	public void setBase64Image(String base64Image) {
 		this.base64Image = base64Image;
 	}
+	public byte [] getImage() {
+		return image;
+	}
+	public void setImage(byte [] image) {
+		this.image = image;
+	}
+
 }

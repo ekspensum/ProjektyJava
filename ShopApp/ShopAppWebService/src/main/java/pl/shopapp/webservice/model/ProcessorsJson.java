@@ -1,6 +1,6 @@
-package pl.shopapp.webservice;
+package pl.shopapp.webservice.model;
 
-public class HardDisksJson {
+public class ProcessorsJson {
 	
 	private int id;
 	private String name;

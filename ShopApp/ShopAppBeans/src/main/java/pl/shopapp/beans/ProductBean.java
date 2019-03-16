@@ -196,6 +196,11 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 		// TODO Auto-generated method stub
 		return em.createNamedQuery("productsByIdRange", Product.class).setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
 	}
+	@Override
+	public int findIdCategory(String categoryName) {
+		// TODO Auto-generated method stub
+		return (int) em.createNamedQuery("findIdCategory").setParameter("name", categoryName).getSingleResult();
+	}
 	
 
 }

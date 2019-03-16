@@ -5,6 +5,15 @@ import java.util.Map;
 
 import javax.ejb.Local;
 
+import pl.shopapp.webservice.model.HardDisksJson;
+import pl.shopapp.webservice.model.MainBoardJson;
+import pl.shopapp.webservice.model.MainBoardXml;
+import pl.shopapp.webservice.model.ProcessorsJson;
+import pl.shopapp.webservice.model.ProductDataJson;
+import pl.shopapp.webservice.model.ProductsJson;
+import pl.shopapp.webservice.model.RamMemoryJson;
+import pl.shopapp.webservice.model.RamMemoryXml;
+
 
 @Local
 public interface ShopResourceLocal {
@@ -20,5 +29,11 @@ public interface ShopResourceLocal {
 	public List<MainBoardJson> getAllMainBoardJson();
 	public List<RamMemoryJson> getAllRamMemoryJson();
 	public List<HardDisksJson> getAllHardDisksJson();
+	public ProductsJson getProductJsonById(int id);
 	public Map<String, List<ProductsJson>> getProductsJsonByIdRange(int idFrom, int idTo);
+	
+	public int updateProductData(int idProduct);
+	public String addNewProductFormParam(String login, String password, String productName, String productDescription, double productPrice, int productUnitsInStock, String category1Name, String category2Name, String base64Image);
+	public String addNewProductFormParamMap(Map<String, String> mapParam);
+	public String addNewProductJson(ProductDataJson pdj);
 }
