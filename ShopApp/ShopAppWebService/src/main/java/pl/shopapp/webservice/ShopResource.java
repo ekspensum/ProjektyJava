@@ -42,6 +42,7 @@ import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.entites.Product;
 import pl.shopapp.entites.ProductCategory;
+import pl.shopapp.webservice.model.CategoryJson;
 import pl.shopapp.webservice.model.HardDisksJson;
 import pl.shopapp.webservice.model.MainBoardJson;
 import pl.shopapp.webservice.model.MainBoardXml;
@@ -345,8 +346,17 @@ public class ShopResource implements ShopResourceLocal {
 		return em.createNamedQuery("getAllHardDisksJson").getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/ProductJson/{id}")
+	@Path("/AllCategoryJson")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<CategoryJson> getAllCategory(){
+		return em.createNamedQuery("listCategoryJson").getResultList();
+	}
+	
+	@GET
+	@Path("/ProductByIdJson/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public ProductsJson getProductJsonById(@PathParam("id") int id) {
@@ -362,6 +372,42 @@ public class ShopResource implements ShopResourceLocal {
 		return productsJson;
 	}
 
+	@GET
+	@Path("/ProductsByNameJson/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public List<ProductDataJson> getProductJsonByName(@PathParam("name") String name) {
+		// TODO Auto-generated method stub		
+		List<Product> productList = pbl.findProduct(name);
+		ProductDataJson pdj;
+		List<ProductDataJson> productListJson = new ArrayList<>();	
+		List<ProductCategory> pcList = em.createNamedQuery("getAllProductCategory", ProductCategory.class).getResultList();
+		int cat = 0;		
+		for(int i=0; i<productList.size(); i++) {			
+			pdj = new ProductDataJson();
+			pdj.setIdProduct(productList.get(i).getId());
+			pdj.setName(productList.get(i).getName());
+			pdj.setDescription(productList.get(i).getDescription());
+			pdj.setPrice(productList.get(i).getPrice());
+			pdj.setUnitsInStock(productList.get(i).getUnitsInStock());
+			pdj.setImage(productList.get(i).getProductImage());
+			productListJson.add(pdj);
+			cat = 0;
+			for(int j=0; j<pcList.size(); j++) {
+				if(productList.get(i).getId() == pcList.get(j).getProduct().getId() && cat == 0) {
+					productListJson.get(i).setCategory1Name(pcList.get(j).getCategory().getId());
+					cat++;
+					continue;
+				}
+				if(productList.get(i).getId() == pcList.get(j).getProduct().getId() && cat == 1) {
+					productListJson.get(i).setCategory2Name(pcList.get(j).getCategory().getId());
+					break;
+				}					
+			}
+		}
+		return productListJson;
+	}
+	
 	@GET
 	@Path("/ProductsJson/{idFrom}/{idTo}")
 	@Produces(MediaType.APPLICATION_JSON)

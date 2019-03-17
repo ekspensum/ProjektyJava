@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.ejb.Local;
 
+import pl.shopapp.webservice.model.CategoryJson;
 import pl.shopapp.webservice.model.HardDisksJson;
 import pl.shopapp.webservice.model.MainBoardJson;
 import pl.shopapp.webservice.model.MainBoardXml;
@@ -30,10 +31,13 @@ public interface ShopResourceLocal {
 	public List<RamMemoryJson> getAllRamMemoryJson();
 	public List<HardDisksJson> getAllHardDisksJson();
 	public ProductsJson getProductJsonById(int id);
+	public List<ProductDataJson> getProductJsonByName(String name);
 	public Map<String, List<ProductsJson>> getProductsJsonByIdRange(int idFrom, int idTo);
 	
 	public int updateProductData(int idProduct);
 	public String addNewProductFormParam(String login, String password, String productName, String productDescription, double productPrice, int productUnitsInStock, String category1Name, String category2Name, String base64Image);
 	public String addNewProductFormParamMap(Map<String, String> mapParam);
 	public String addNewProductJson(ProductDataJson pdj);
+	
+	public List<CategoryJson> getAllCategory();
 }

@@ -14,7 +14,9 @@ import javax.persistence.*;
 @Entity
 @NamedQueries({
 	@NamedQuery(name="listCategory", query="SELECT c FROM Category c"),
-	@NamedQuery(name="findIdCategory", query="SELECT c.id FROM Category c WHERE c.name = :name")
+	@NamedQuery(name="findIdCategory", query="SELECT c.id FROM Category c WHERE c.name = :name"),
+	@NamedQuery(name="listCategoryJson", query="SELECT c.id, c.name FROM Category c"),
+	@NamedQuery(name="listAllCategory", query="SELECT c FROM Category c")
 })
 public class Category implements Serializable {
 

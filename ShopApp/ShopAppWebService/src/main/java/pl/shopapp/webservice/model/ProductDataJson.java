@@ -11,6 +11,8 @@ public class ProductDataJson {
 	private int category2Name;
 	private String login;
 	private String password;
+	private int idProduct;
+	
 	public String getName() {
 		return name;
 	}
@@ -64,6 +66,12 @@ public class ProductDataJson {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public int getIdProduct() {
+		return idProduct;
+	}
+	public void setIdProduct(int idProduct) {
+		this.idProduct = idProduct;
 	}
 	
 	
