@@ -395,12 +395,12 @@ public class ShopResource implements ShopResourceLocal {
 			cat = 0;
 			for(int j=0; j<pcList.size(); j++) {
 				if(productList.get(i).getId() == pcList.get(j).getProduct().getId() && cat == 0) {
-					productListJson.get(i).setCategory1Name(pcList.get(j).getCategory().getId());
+					productListJson.get(i).setCategory1Id(pcList.get(j).getCategory().getId());
 					cat++;
 					continue;
 				}
 				if(productList.get(i).getId() == pcList.get(j).getProduct().getId() && cat == 1) {
-					productListJson.get(i).setCategory2Name(pcList.get(j).getCategory().getId());
+					productListJson.get(i).setCategory2Id(pcList.get(j).getCategory().getId());
 					break;
 				}					
 			}
@@ -467,8 +467,8 @@ public class ShopResource implements ShopResourceLocal {
 	public String addNewProductFormParam(@FormParam("login") String login, @FormParam("password") String password,
 			@FormParam("productName") String productName, @FormParam("productDescription") String productDescription,
 			@FormParam("productPrice") double productPrice, @FormParam("productUnitsInStock") int productUnitsInStock,
-			@FormParam("category1Name") String category1Id,
-			@FormParam("category2Name") String category2Id,
+			@FormParam("category1Id") String category1Id,
+			@FormParam("category2Id") String category2Id,
 			@FormParam("base64Image") String base64Image) {
 
 		SessionData sd = ubl.loginUser(login, password);
@@ -498,9 +498,9 @@ public class ShopResource implements ShopResourceLocal {
 		if (sd != null && sd.getIdRole() == 3) {
 
 			List<Integer> helperListCat = new ArrayList<>();
-			helperListCat.add(Integer.valueOf(mapParam.get("category1Name")));
-			if(mapParam.get("category2Name") != null)
-				helperListCat.add(Integer.valueOf(mapParam.get("category2Name")));
+			helperListCat.add(Integer.valueOf(mapParam.get("category1Id")));
+			if(mapParam.get("category2Id") != null)
+				helperListCat.add(Integer.valueOf(mapParam.get("category2Id")));
 
 			byte [] buffer = Base64.getDecoder().decode(mapParam.get("image"));
 			
@@ -523,9 +523,8 @@ public class ShopResource implements ShopResourceLocal {
 		if (sd != null && sd.getIdRole() == 3) {
 
 			List<Integer> helperListCat = new ArrayList<>();
-			helperListCat.add(pdj.getCategory1Name());
-			if(pdj.getCategory2Name() != 0)
-				helperListCat.add(pdj.getCategory2Name());
+			helperListCat.add(pdj.getCategory1Id());
+			helperListCat.add(pdj.getCategory2Id());
 			
 			if (pbl.addProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(),	pdj.getImage(), helperListCat, sd.getIdUser()))
 				return "Produkt został dodany do bazy danych.";
@@ -534,21 +533,37 @@ public class ShopResource implements ShopResourceLocal {
 		} else
 			return "Brak autoryzacji lub autentykacji";
     }
-    
-    
-    
+       
 	@PUT
-	@Path("/ProductUpdate/{idProduct}")
+	@Path("/ProductUpdateJson")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public int updateProductData(@PathParam("idProduct") int idproduct) {
-		if (idproduct <= 0)
-			return -1;
-		System.out.println("Update " + idproduct);
-		return idproduct * 2;
-	}
+	public String updateProductData(ProductDataJson pdj) {
 
+		SessionData sd = ubl.loginUser(pdj.getLogin(), pdj.getPassword());
+		if (sd != null && sd.getIdRole() == 3) {
+			
+//			it is new category
+			List<Integer> helperListCat = new ArrayList<>();
+			helperListCat.add(pdj.getCategory1Id());
+			helperListCat.add(pdj.getCategory2Id());
+
+//			it is previous category
+			int [] categoryToEdit = new int [2];
+			categoryToEdit[0] = pdj.getPreviousCategory1Id();
+			categoryToEdit[1] = pdj.getPreviousCategory2Id();
+
+			if (pbl.updateProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(), pdj.getImage(), pdj.getIdProduct(), categoryToEdit, pdj.getImageSize(), sd.getIdUser(), helperListCat))
+				return "Dane produktu id = "+pdj.getIdProduct()+" zostały zaktualizowane w bazie danych.";
+			else
+				return "Nie udało się zaktualizować danych produktu id = "+pdj.getIdProduct()+" w bazie danych.";
+		} else
+			return "Brak autoryzacji lub autentykacji";
+    }
+
+	
+	
 	private void getProducts(Document doc, Element root, String productCategory, String id, String productId,
 			String productName, String productDescription, String productPrice, String productUnitsInStock,
 			String productImage) {

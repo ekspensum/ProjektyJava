@@ -7,11 +7,14 @@ public class ProductDataJson {
 	private double price;
 	private int unitsInStock;
 	private byte [] image;
-	private int category1Name;
-	private int category2Name;
+	private int category1Id;
+	private int category2Id;
+	private int previousCategory1Id;
+	private int previousCategory2Id;
 	private String login;
 	private String password;
 	private int idProduct;
+	private int imageSize;
 	
 	public String getName() {
 		return name;
@@ -43,17 +46,17 @@ public class ProductDataJson {
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
-	public int getCategory1Name() {
-		return category1Name;
+	public int getCategory1Id() {
+		return category1Id;
 	}
-	public void setCategory1Name(int category1Name) {
-		this.category1Name = category1Name;
+	public void setCategory1Id(int category1Name) {
+		this.category1Id = category1Name;
 	}
-	public int getCategory2Name() {
-		return category2Name;
+	public int getCategory2Id() {
+		return category2Id;
 	}
-	public void setCategory2Name(int category2Name) {
-		this.category2Name = category2Name;
+	public void setCategory2Id(int category2Name) {
+		this.category2Id = category2Name;
 	}
 	public String getLogin() {
 		return login;
@@ -72,6 +75,24 @@ public class ProductDataJson {
 	}
 	public void setIdProduct(int idProduct) {
 		this.idProduct = idProduct;
+	}
+	public int getPreviousCategory1Id() {
+		return previousCategory1Id;
+	}
+	public void setPreviousCategory1Id(int previousCategory1Id) {
+		this.previousCategory1Id = previousCategory1Id;
+	}
+	public int getPreviousCategory2Id() {
+		return previousCategory2Id;
+	}
+	public void setPreviousCategory2Id(int previousCategory2Id) {
+		this.previousCategory2Id = previousCategory2Id;
+	}
+	public int getImageSize() {
+		return imageSize;
+	}
+	public void setImageSize(int imageSize) {
+		this.imageSize = imageSize;
 	}
 	
 	
