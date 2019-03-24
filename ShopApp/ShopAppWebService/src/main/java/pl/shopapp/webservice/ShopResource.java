@@ -73,6 +73,19 @@ public class ShopResource implements ShopResourceLocal {
 	private List<RamMemoryXml> listRamMemoryXml;
 	private RamMemoryXml rm;
 
+//	for tests
+	public ShopResource(EntityManager em, UserTransaction ut, ProductBeanLocal pbl, UserBeanLocal ubl) {
+	super();
+	this.em = em;
+	this.ut = ut;
+	this.pbl = pbl;
+	this.ubl = ubl;
+}
+	
+	public ShopResource() {
+	super();
+}
+
 	@GET
 	@Path("/ProcessorsXml")
 	@Produces(MediaType.TEXT_XML)
