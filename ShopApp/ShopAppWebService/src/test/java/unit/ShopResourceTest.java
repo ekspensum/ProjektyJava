@@ -22,8 +22,14 @@ import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Product;
+import pl.shopapp.entites.ProductCategory;
 import pl.shopapp.webservice.ShopResource;
 import pl.shopapp.webservice.ShopResourceLocal;
+import pl.shopapp.webservice.model.CategoryJson;
+import pl.shopapp.webservice.model.HardDisksJson;
+import pl.shopapp.webservice.model.MainBoardJson;
+import pl.shopapp.webservice.model.ProcessorsJson;
+import pl.shopapp.webservice.model.RamMemoryJson;
 
 class ShopResourceTest {
 
@@ -143,52 +149,177 @@ class ShopResourceTest {
 
 	@Test
 	final void testGetMainBoardXmls() {
-		fail("Not yet implemented"); // TODO
+		Product pr = new Product();
+		pr.setId(1);
+		pr.setName("productName");
+		pr.setDescription("productDescription");
+		pr.setPrice(11.22);
+		pr.setUnitsInStock(1);
+		byte [] productImage = new byte[100];
+		pr.setProductImage(productImage);
+		List<Product> listProduct = new ArrayList<>();
+		listProduct.add(pr);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Product> productQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllMainBoardXml", Product.class)).thenReturn(productQuery);
+		when(productQuery.getResultList()).thenReturn(listProduct);
+		
+		assertEquals("productName", srl.getMainBoardXmls().get(0).getName());
 	}
 
 	@Test
 	final void testGetRamMemoryXml() {
-		fail("Not yet implemented"); // TODO
+		Product pr = new Product();
+		pr.setId(1);
+		pr.setName("productName");
+		pr.setDescription("productDescription");
+		pr.setPrice(11.22);
+		pr.setUnitsInStock(1);
+		byte [] productImage = new byte[100];
+		pr.setProductImage(productImage);
+		List<Product> listProduct = new ArrayList<>();
+		listProduct.add(pr);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Product> productQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllRamMemoryXml", Product.class)).thenReturn(productQuery);
+		when(productQuery.getResultList()).thenReturn(listProduct);
+		
+		assertEquals("productName", srl.getRamMemoryXml().get(0).getName());
 	}
 
 	@Test
 	final void testGetAllProcessorsJson() {
-		fail("Not yet implemented"); // TODO
+		List<ProcessorsJson> listProc = new ArrayList<>();
+		ProcessorsJson proc = new ProcessorsJson();
+		proc.setId(1);
+		proc.setBase64Image("base64Image");
+		listProc.add(proc);
+		@SuppressWarnings("unchecked")
+		TypedQuery<ProcessorsJson> procQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllProcessorsJson")).thenReturn(procQuery);
+		when(procQuery.getResultList()).thenReturn(listProc);
+		
+		assertEquals("base64Image", srl.getAllProcessorsJson().get(0).getBase64Image());
 	}
 
 	@Test
 	final void testGetAllMainBoardJson() {
-		fail("Not yet implemented"); // TODO
+		List<MainBoardJson> listMB = new ArrayList<>();
+		MainBoardJson mb = new MainBoardJson();
+		mb.setId(1);
+		mb.setBase64Image("base64Image");
+		listMB.add(mb);
+		@SuppressWarnings("unchecked")
+		TypedQuery<MainBoardJson> mbQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllMainBoardJson")).thenReturn(mbQuery);
+		when(mbQuery.getResultList()).thenReturn(listMB);
+		
+		assertEquals("base64Image", srl.getAllMainBoardJson().get(0).getBase64Image());
 	}
 
 	@Test
 	final void testGetAllRamMemoryJson() {
-		fail("Not yet implemented"); // TODO
+		List<RamMemoryJson> listRam = new ArrayList<>();
+		RamMemoryJson ram = new RamMemoryJson();
+		ram.setId(1);
+		ram.setBase64Image("base64Image");
+		listRam.add(ram);
+		@SuppressWarnings("unchecked")
+		TypedQuery<RamMemoryJson> ramQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllRamMemoryJson")).thenReturn(ramQuery);
+		when(ramQuery.getResultList()).thenReturn(listRam);
+		
+		assertEquals("base64Image", srl.getAllRamMemoryJson().get(0).getBase64Image());
 	}
 
 	@Test
 	final void testGetAllHardDisksJson() {
-		fail("Not yet implemented"); // TODO
+		List<HardDisksJson> listHdd = new ArrayList<>();
+		HardDisksJson hdd = new HardDisksJson();
+		hdd.setId(1);
+		hdd.setBase64Image("base64Image");
+		listHdd.add(hdd);
+		@SuppressWarnings("unchecked")
+		TypedQuery<HardDisksJson> hddQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllHardDisksJson")).thenReturn(hddQuery);
+		when(hddQuery.getResultList()).thenReturn(listHdd);
+		
+		assertEquals("base64Image", srl.getAllHardDisksJson().get(0).getBase64Image());
 	}
 
 	@Test
 	final void testGetAllCategory() {
-		fail("Not yet implemented"); // TODO
+		List<CategoryJson> listCat = new ArrayList<>();
+		CategoryJson cj = new CategoryJson();
+		cj.setId(1);
+		cj.setName("Category name");
+		listCat.add(cj);
+		@SuppressWarnings("unchecked")
+		TypedQuery<CategoryJson> catQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("listCategoryJson")).thenReturn(catQuery);
+		when(catQuery.getResultList()).thenReturn(listCat);
+		
+		assertEquals("Category name", srl.getAllCategory().get(0).getName());
 	}
 
 	@Test
 	final void testGetProductJsonById() {
-		fail("Not yet implemented"); // TODO
+		Product pr = new Product();
+		pr.setId(1);
+		pr.setName("productName");
+		when(pbl.getProduct(pr.getId())).thenReturn(pr);
+		
+		assertEquals("productName", srl.getProductJsonById(1).getName());
 	}
 
 	@Test
 	final void testGetProductJsonByName() {
-		fail("Not yet implemented"); // TODO
+		Product pr = new Product();
+		pr.setId(1);
+		pr.setName("productName");
+		List<Product> productList = new ArrayList<>();
+		productList.add(pr);
+		when(pbl.findProduct(pr.getName())).thenReturn(productList);
+		
+		Category cat = new Category();
+		cat.setId(1);
+		cat.setName("CategoryName");
+		ProductCategory pc = new ProductCategory();
+		pc.setProduct(pr);
+		pc.setCategory(cat);
+		List<ProductCategory> lpc = new ArrayList<>();
+		lpc.add(pc);
+		@SuppressWarnings("unchecked")
+		TypedQuery<ProductCategory> pcQuery = mock(TypedQuery.class);
+		when(pcQuery.getResultList()).thenReturn(lpc);
+		when(em.createNamedQuery("getAllProductCategory", ProductCategory.class)).thenReturn(pcQuery);
+		
+		assertEquals("productName", srl.getProductJsonByName("productName").get(0).getName());
 	}
 
 	@Test
 	final void testGetProductsJsonByIdRange() {
-		fail("Not yet implemented"); // TODO
+		Product pr = new Product();
+		pr.setId(1);
+		pr.setName("productName");
+		byte [] productImage = new byte[100];
+		pr.setProductImage(productImage);
+		Category cat = new Category();
+		cat.setId(1);
+		cat.setName("Płyty główne");
+		ProductCategory pc = new ProductCategory();
+		pc.setProduct(pr);
+		pc.setCategory(cat);
+		List<ProductCategory> lpc = new ArrayList<>();
+		lpc.add(pc);
+		@SuppressWarnings("unchecked")
+		TypedQuery<ProductCategory> pcQuery = mock(TypedQuery.class);
+		when(pcQuery.setParameter("idFrom", 1)).thenReturn(pcQuery);
+		when(pcQuery.setParameter("idTo", 1)).thenReturn(pcQuery);
+		when(em.createNamedQuery("productsByIdRangeJson", ProductCategory.class)).thenReturn(pcQuery);
+		when(pcQuery.getResultList()).thenReturn(lpc);
+		
+		assertEquals("productName", srl.getProductsJsonByIdRange(1, 1).get("Płyty główne").get(0).getName());
 	}
 
 	@Test
