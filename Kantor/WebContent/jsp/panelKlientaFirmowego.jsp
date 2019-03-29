@@ -11,7 +11,7 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
-<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
+<a href="/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <br/>
 <b>Panel Klienta Firmowego</b>
@@ -19,7 +19,7 @@
 Zalogowany: ${userZalogowany.nazwaFirmy }
 <jsp:include page="index.jsp"></jsp:include>
 <br>
-<a href="http://localhost:8080/Kantor/statystykaKF">Statystyka wykonanych transakcji</a>
+<a href="/Kantor/statystykaKF">Statystyka wykonanych transakcji</a>
 <br><br>
 <b>Stan posiadanych rachunków:</b><br/>
 Rachunek PLN<br/>
@@ -35,11 +35,11 @@ Dostępne środki: USD${rachunkiKF.stanUSD }<br/>
 <br>
 <br>
 <b>USD	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.dolarBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
-<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajUSD" size="10" /><input type="submit" value="Sprzedaj" /></form>
+<form action="/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajUSD" size="10" /><input type="submit" value="Sprzedaj" /></form>
 <b>${komunikatSprzedajUSD }</b>
 <br>
 <b>USD	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_usd * mnoznik.dolarAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
-<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupUSD" size="10" /><input type="submit" value="Kup" /></form>
+<form action="/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupUSD" size="10" /><input type="submit" value="Kup" /></form>
 <b>${komunikatKupUSD }</b>
 <br>
 <b>${komunikat }</b>
@@ -54,11 +54,11 @@ Dostępne środki: EUR${rachunkiKF.stanEUR }<br/>
 <br>
 <br>
 <b>EUR	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_eur * mnoznik.euroBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
-<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajEUR" size="10" /><input type="submit" value="Sprzedaj" /></form>
+<form action="/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajEUR" size="10" /><input type="submit" value="Sprzedaj" /></form>
 <b>${komunikatSprzedajEUR }</b>
 <br>
 <b>EUR	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_eur * mnoznik.euroAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
-<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupEUR" size="10" /><input type="submit" value="Kup" /></form>
+<form action="/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupEUR" size="10" /><input type="submit" value="Kup" /></form>
 <b>${komunikatKupEUR }</b>
 <br>
 <b>${komunikat }</b>
@@ -73,11 +73,11 @@ Dostępne środki: CHF${rachunkiKF.stanCHF }<br/>
 <br>
 <br>
 <b>CHF	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankBid }"  minFractionDigits="4" maxFractionDigits="4" /></b> 
-<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajCHF" size="10" /><input type="submit" value="Sprzedaj" /></form>
+<form action="/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="sprzedajCHF" size="10" /><input type="submit" value="Sprzedaj" /></form>
 <b>${komunikatSprzedajCHF }</b>
 <br>
 <b>CHF	<fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b>
-<form action="http://localhost:8080/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupCHF" size="10" /><input type="submit" value="Kup" /></form>
+<form action="/Kantor/transakcjaKF" method="POST">	Kwota: <input type="text" name="kupCHF" size="10" /><input type="submit" value="Kup" /></form>
 <b>${komunikatKupCHF }</b>
 <br>
 <b>${komunikat }</b>

@@ -43,12 +43,12 @@ public class Logowanie extends HttpServlet {
 				doGet(request, response);				
 			}
 			else if(uz.getIdRola() == 1)
-				response.sendRedirect("http://localhost:8080/Kantor/panelAdministratora");
+				response.sendRedirect("/Kantor/panelAdministratora");
 			else if(uz.getIdRola() == 2)
-				response.sendRedirect("http://localhost:8080/Kantor/panelOperatora");
+				response.sendRedirect("/Kantor/panelOperatora");
 			else if(uz.getIdRola() == 3)
-				response.sendRedirect("http://localhost:8080/Kantor/panelKlientaFirmowego");
+				response.sendRedirect("/Kantor/panelKlientaFirmowego");
 			else if(uz.getIdRola() == 4)
-				response.sendRedirect("http://localhost:8080/Kantor/panelKlientaPrywatnego");
+				response.sendRedirect("/Kantor/panelKlientaPrywatnego");
 	}
 }

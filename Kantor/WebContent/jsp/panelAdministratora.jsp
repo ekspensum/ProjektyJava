@@ -11,7 +11,7 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
-<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
+<a href="/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <p>Panel Administratora</p>
 <p>Zalogowany: ${userZalogowany.imieAdministratora } ${userZalogowany.nazwiskoAdministratora }</p>
@@ -28,7 +28,7 @@
 <b>CHF sprzedaż: <fmt:formatNumber pattern="#0.0000" value="${1 / kurs.pln_chf * mnoznik.frankAsk }"  minFractionDigits="4" maxFractionDigits="4" /> </b><br/>
 <br>
 <p>Dodaj użytkownika</p>
-<form action="http://localhost:8080/Kantor/panelAdministratora" method="POST">
+<form action="/Kantor/panelAdministratora" method="POST">
 <select name="opcje">
 <option value="wybor">Wybierz opcję</option>
 <option value="admin">Nowy administrator</option>
@@ -39,7 +39,7 @@
 <input type="submit" value="Wybierz" />
 <br/>
 <br/>
-<a href="http://localhost:8080/Kantor/dodajRachunek">Dodaj/aktywuj/deaktywuj rachunek walutowy klienta</a>
+<a href="/Kantor/dodajRachunek">Dodaj/aktywuj/deaktywuj rachunek walutowy klienta</a>
 </form>
 </body>
 </html>

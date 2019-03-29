@@ -11,7 +11,7 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body bgcolor="gray">
-<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
+<a href="/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <br/>
 <b>Statystyka Klienta Prywatnego</b>
@@ -42,10 +42,10 @@ Nr rachunku: ${rachunkiKP.nrRachunkuCHF }<br/>
 Dostępne środki: CHF${rachunkiKP.stanCHF }<br/>
 </c:if>
 <br><br>
-<a href="http://localhost:8080/Kantor/panelKlientaPrywatnego">Powrót</a>
+<a href="/Kantor/panelKlientaPrywatnego">Powrót</a>
 <br><br>
 <b>Wyszukaj operacje według daty i waluty:</b>
-<form name="okres" action="http://localhost:8080/Kantor/statystykaKP" method="POST">
+<form name="okres" action="/Kantor/statystykaKP" method="POST">
 <p>Wybierz walute: <select name="opcje">
 	<option value="wszystkie">Wszystkie waluty</option><option value="USD">Tylko USD</option><option value="EUR">Tylko EUR</option><option value="CHF">Tylko CHF</option>
 </select></p>

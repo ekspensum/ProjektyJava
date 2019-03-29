@@ -46,7 +46,7 @@ public class FiltrPanelKP implements Filter {
 
 		if(uz == null || uz.getIdRola() != 4) {
 			sesja.invalidate();
-			resp.sendRedirect("http://localhost:8080/Kantor/logowanie");
+			resp.sendRedirect("/Kantor/logowanie");
 			return;
 		}
 		

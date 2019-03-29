@@ -11,17 +11,17 @@
 <link href="css/arkusz.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
+<a href="/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <p>Panel Administratora</p>
 <p>Zalogowany: ${userZalogowany.imieAdministratora } ${userZalogowany.nazwiskoAdministratora }</p>
 <br>
-<a href="http://localhost:8080/Kantor/panelAdministratora">Powrót</a>
+<a href="/Kantor/panelAdministratora">Powrót</a>
 <br/>
 <br/>
 <b>Dodawanie klienta firmowego</b>
 <br/>
-<form action="http://localhost:8080/Kantor/dodajKlientaFirmowego" method="POST">
+<form action="/Kantor/dodajKlientaFirmowego" method="POST">
 <p>Login: <input name="login" type="text" value="${user.login }" /></p>
 <b>${login }</b>
 <p>Hasło: <input name="haslo" type="password" value="${user.haslo }"></p>

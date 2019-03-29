@@ -11,9 +11,9 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
-<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
+<a href="/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
-<p>Panel Administratora</p>
+<p>Panel Operatora</p>
 <p>Zalogowany: ${userZalogowany.imieOperatora } ${userZalogowany.nazwiskoOperatora }</p>
 <br>
 <p>Aktualne kursy walut:</p>
@@ -31,7 +31,7 @@
 <b>Wprowadzenie nowych ustawień:</b>
 <br>
 <br>
-<form method="POST" name="daneUSD" action="http://localhost:8080/Kantor/panelOperatora">
+<form method="POST" name="daneUSD" action="/Kantor/panelOperatora">
 <b>USD		Bid: <input type="text" name="dolarBid" /> Ask: <input type="text" name="dolarAsk" />	<input type="submit" value="Dodaj" /></b>
 </form>
 
@@ -54,7 +54,7 @@
 </c:forEach>
 </table>
 <br>
-<form method="POST" name="daneEUR" action="http://localhost:8080/Kantor/panelOperatora">
+<form method="POST" name="daneEUR" action="/Kantor/panelOperatora">
 <b>EUR		Bid: <input type="text" name="euroBid" /> Ask: <input type="text" name="euroAsk" />	<input type="submit" value="Dodaj" /></b>
 </form>
 <br>
@@ -76,7 +76,7 @@
 </c:forEach>
 </table>
 <br>
-<form method="POST" name="daneCHF" action="http://localhost:8080/Kantor/panelOperatora">
+<form method="POST" name="daneCHF" action="/Kantor/panelOperatora">
 <b>CHF		Bid: <input type="text" name="frankBid" /> Ask: <input type="text" name="frankAsk" />	<input type="submit" value="Dodaj" /></b>
 </form>
 <br>

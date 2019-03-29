@@ -12,7 +12,7 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body bgcolor="gray" onload="odliczKF();">
-<a href="http://localhost:8080/Kantor/panelKlientaFirmowego">Powrót</a>
+<a href="/Kantor/panelKlientaFirmowego">Powrót</a>
 <p>Zalogowany: ${userZalogowany.nazwaFirmy }</p>
 <br>
 <b>Stan posiadanych rachunków:</b>
@@ -40,7 +40,7 @@
 <br>
 <b>Pozostały czas do pojęcia decyzji: </b><b id="zegarKF"></b><b> sekund.</b>
 <br><br>
-<form method="POST" action="http://localhost:8080/Kantor/panelKlientaFirmowego" >
+<form method="POST" action="/Kantor/panelKlientaFirmowego" >
 <b>${transakcjaKF.rodzaj }:</b>	<input type="text" name="kwota" value="${transakcjaKF.kwota }" disabled="disabled"/> <b>${transakcjaKF.znak } po cenie: </b><input type="text" name="cena" value="${transakcjaKF.cena }" disabled="disabled" />
 	<input type="submit" value="ZATWIERDŹ" />
 </form>

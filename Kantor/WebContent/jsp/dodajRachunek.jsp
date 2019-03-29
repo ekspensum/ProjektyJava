@@ -11,23 +11,23 @@
 <link href="css/arkusz.css" style="text/css" rel="stylesheet" />
 </head>
 <body>
-<a href="http://localhost:8080/Kantor/wylogowanie"><button>Wyloguj</button></a>
+<a href="/Kantor/wylogowanie"><button>Wyloguj</button></a>
 <br/>
 <p>Panel Administratora</p>
 <p>Zalogowany: ${userZalogowany.imieAdministratora } ${userZalogowany.nazwiskoAdministratora }</p>
 <br>
-<a href="http://localhost:8080/Kantor/panelAdministratora">Powrót</a>
+<a href="/Kantor/panelAdministratora">Powrót</a>
 <br/>
 <br/>
 <b>Dodawanie/usuwanie rachunku</b>
 <br/>
 <br/>
 Wyszukaj klienta firmowego:
-<form name="wyszukajKF" action="http://localhost:8080/Kantor/dodajRachunek" method="POST">
+<form name="wyszukajKF" action="/Kantor/dodajRachunek" method="POST">
 <p>Login: <input name="loginKF" type="text" size="10" /> AND/OR Nazwa firmy: <input name="nazwa" type="text" size="12" /> AND/OR Regon: <input name="regon" type="text" size="9" /> AND/OR NIP: <input name="nip" type="text" size="10" />
 <input type="submit" value="Wyszukaj" /></p>
 </form>
-<form name="wybierzKF" action="http://localhost:8080/Kantor/dodajRachunek" method="POST">
+<form name="wybierzKF" action="/Kantor/dodajRachunek" method="POST">
 <table>
 	<tr>
 	<th>Login</th>
@@ -58,11 +58,11 @@ Wprowadz numer rchunku banowego: <input type="text" name="rachunekKF" />
 </form>
 <br/>
 Wyszukaj klienta prywatnego:
-<form name="wyszukajKP" action="http://localhost:8080/Kantor/dodajRachunek" method="POST">
+<form name="wyszukajKP" action="/Kantor/dodajRachunek" method="POST">
 <p>Login: <input name="loginKP" type="text" size="10" /> AND/OR Nazwisko: <input name="nazwisko" type="text" size="12" /> AND/OR Pesel: <input name="pesel" type="text" size="11" />
 <input type="submit" value="Wyszukaj" /></p>
 </form>
-<form name="wybierzKP" action="http://localhost:8080/Kantor/dodajRachunek" method="POST" >
+<form name="wybierzKP" action="/Kantor/dodajRachunek" method="POST" >
 <table>
 	<tr>
 	<th>Login</th>

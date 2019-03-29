@@ -78,6 +78,12 @@ public class Sluchacz implements ServletContextListener, ServletContextAttribute
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-   } 
+   }
+
+	@Override
+	public void requestDestroyed(ServletRequestEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	} 
 	
 }
