@@ -35,7 +35,7 @@ public interface ShopResourceLocal {
 	public Map<String, List<ProductsJson>> getProductsJsonByIdRange(int idFrom, int idTo);
 	
 	public String updateProductData(ProductDataJson pdj);
-	public String addNewProductFormParam(String login, String password, String productName, String productDescription, double productPrice, int productUnitsInStock, String category1Name, String category2Name, String base64Image);
+	public String addNewProductFormParam(String login, String password, String productName, String productDescription, double productPrice, int productUnitsInStock, String category1Id, String category2Id, String base64Image);
 	public String addNewProductFormParamMap(Map<String, String> mapParam);
 	public String addNewProductJson(ProductDataJson pdj);
 	

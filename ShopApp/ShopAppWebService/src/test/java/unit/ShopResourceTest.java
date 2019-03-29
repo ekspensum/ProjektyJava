@@ -4,7 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -19,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import pl.shopapp.beans.ProductBeanLocal;
+import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Product;
@@ -29,6 +33,7 @@ import pl.shopapp.webservice.model.CategoryJson;
 import pl.shopapp.webservice.model.HardDisksJson;
 import pl.shopapp.webservice.model.MainBoardJson;
 import pl.shopapp.webservice.model.ProcessorsJson;
+import pl.shopapp.webservice.model.ProductDataJson;
 import pl.shopapp.webservice.model.RamMemoryJson;
 
 class ShopResourceTest {
@@ -324,22 +329,116 @@ class ShopResourceTest {
 
 	@Test
 	final void testAddNewProductFormParam() {
-		fail("Not yet implemented"); // TODO
+		SessionData sd = new SessionData();
+		sd.setIdRole(3);
+		sd.setFirstName("firstName");
+		when(ubl.loginUser("login", "password")).thenReturn(sd);
+		List<Integer> helperListCat = new ArrayList<>();
+		helperListCat.add(24);
+		when(pbl.addProduct("productName", "productDescription", 11.22, 33,	Base64.getDecoder().decode("base64Image"), helperListCat, sd.getIdUser())).thenReturn(true);
+		
+		assertEquals("Produkt został dodany do bazy danych.", srl.addNewProductFormParam("login", "password", "productName", "productDescription", 11.22, 33, "24", null, "base64Image"));
+		assertEquals("Nie udało się dodać produktu do bazy danych.", srl.addNewProductFormParam("login", "password", "productName", "productDescription", 11.22, 33, "24", "0", "base64Image"));
+		assertEquals("Brak autoryzacji lub autentykacji", srl.addNewProductFormParam("login", "passwordXX", "productName", "productDescription", 11.22, 33, "24", null, "base64Image"));
 	}
 
 	@Test
 	final void testAddNewProductFormParamMap() {
-		fail("Not yet implemented"); // TODO
+		Map<String, String> mapParam = new HashMap<>();
+		mapParam.put("login", "login");
+		mapParam.put("password", "password");
+		mapParam.put("productName", "productName");
+		mapParam.put("productDescription", "productDescription");
+		mapParam.put("productPrice", "11.22");
+		mapParam.put("productUnitsInStock", "33");
+		mapParam.put("category1Id", "24");
+		mapParam.put("category2Id", "26");
+		mapParam.put("image", "value123");
+		
+		SessionData sd = new SessionData();
+		sd.setIdRole(3);
+		sd.setFirstName("firstName");
+		when(ubl.loginUser(mapParam.get("login"), mapParam.get("password"))).thenReturn(sd);
+		
+		List<Integer> helperListCat = new ArrayList<>();
+		helperListCat.add(Integer.valueOf(mapParam.get("category1Id")));
+		if(mapParam.get("category2Id") != null)
+			helperListCat.add(Integer.valueOf(mapParam.get("category2Id")));
+		byte [] buffer = Base64.getDecoder().decode(mapParam.get("image"));		
+		when(pbl.addProduct(mapParam.get("productName"), mapParam.get("productDescription"), Double.valueOf(mapParam.get("productPrice")), Integer.valueOf(mapParam.get("productUnitsInStock")), buffer, helperListCat, sd.getIdUser())).thenReturn(true);
+		
+		assertEquals("Produkt został dodany do bazy danych.", srl.addNewProductFormParamMap(mapParam));
+		mapParam.put("image", "value12");
+		assertEquals("Nie udało się dodać produktu do bazy danych.", srl.addNewProductFormParamMap(mapParam));
+		mapParam.put("password", "password1");
+		mapParam.put("image", "value123");
+		assertEquals("Brak autoryzacji lub autentykacji", srl.addNewProductFormParamMap(mapParam));
 	}
 
 	@Test
 	final void testAddNewProductJson() {
-		fail("Not yet implemented"); // TODO
+		ProductDataJson pdj = new ProductDataJson();
+		pdj.setLogin("login");
+		pdj.setPassword("password");
+		pdj.setName("name");
+		pdj.setDescription("description");
+		pdj.setPrice(11.22);
+		pdj.setUnitsInStock(33);
+		pdj.setCategory1Id(24);
+		pdj.setCategory2Id(0);
+		byte [] image = Base64.getDecoder().decode("image123");	
+		pdj.setImage(image);
+		SessionData sd = new SessionData();
+		sd.setIdRole(3);
+		List<Integer> helperListCat = new ArrayList<>();
+		helperListCat.add(24);
+		helperListCat.add(0);
+		when(ubl.loginUser(pdj.getLogin(), pdj.getPassword())).thenReturn(sd);
+		when(pbl.addProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(),	pdj.getImage(), helperListCat, sd.getIdUser())).thenReturn(true);
+		
+		assertEquals("Produkt został dodany do bazy danych.", srl.addNewProductJson(pdj));
+		pdj.setLogin("login1");
+		assertEquals("Brak autoryzacji lub autentykacji", srl.addNewProductJson(pdj));
+		image = Base64.getDecoder().decode("image12");	
+		pdj.setLogin("login");
+		pdj.setImage(image);
+		assertEquals("Nie udało się dodać produktu do bazy danych.", srl.addNewProductJson(pdj));
 	}
 
 	@Test
 	final void testUpdateProductData() {
-		fail("Not yet implemented"); // TODO
+		ProductDataJson pdj = new ProductDataJson();
+		pdj.setLogin("login");
+		pdj.setPassword("password");
+		pdj.setIdProduct(1);
+		pdj.setName("name");
+		pdj.setDescription("description");
+		pdj.setPrice(11.22);
+		pdj.setUnitsInStock(33);
+		pdj.setCategory1Id(24);
+		pdj.setCategory2Id(0);
+		pdj.setPreviousCategory1Id(24);
+		pdj.setPreviousCategory2Id(0);
+		byte [] image = Base64.getDecoder().decode("image123");	
+		pdj.setImage(image);
+		SessionData sd = new SessionData();
+		sd.setIdRole(3);
+		List<Integer> helperListCat = new ArrayList<>();
+		helperListCat.add(24);
+		helperListCat.add(0);
+		int [] categoryToEdit = new int [2];
+		categoryToEdit[0] = pdj.getPreviousCategory1Id();
+		categoryToEdit[1] = pdj.getPreviousCategory2Id();
+		when(ubl.loginUser(pdj.getLogin(), pdj.getPassword())).thenReturn(sd);
+		when(pbl.updateProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(), pdj.getImage(), pdj.getIdProduct(), categoryToEdit, pdj.getImageSize(), sd.getIdUser(), helperListCat)).thenReturn(true);
+		
+		assertEquals("Dane produktu id = "+pdj.getIdProduct()+" zostały zaktualizowane w bazie danych.", srl.updateProductData(pdj));
+		pdj.setLogin("login1");
+		assertEquals("Brak autoryzacji lub autentykacji", srl.updateProductData(pdj));
+		image = Base64.getDecoder().decode("image12");	
+		pdj.setLogin("login");
+		pdj.setImage(image);
+		assertEquals("Nie udało się zaktualizować danych produktu id = "+pdj.getIdProduct()+" w bazie danych.", srl.updateProductData(pdj));
 	}
 
 }
