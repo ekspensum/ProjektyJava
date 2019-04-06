@@ -25,6 +25,7 @@ import pl.shopapp.entites.User;
 
 /**
  * Session Bean implementation class ProductOperations
+ * This class provide 
  */
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)

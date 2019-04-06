@@ -31,7 +31,9 @@ import pl.shopapp.entites.User;
 import pl.shopapp.entites.UserRole;
 
 /**
- * Session Bean implementation class CustomerOperations
+ * The UserBean class provide create, read and update method for users. Method delete is not predict to use. Additional, this class include setting application like login and password setting, session time setting.
+ * This class also include service e-mail, which is use in create user methods to message purpose.  
+ * Each method in this class include transaction if necessary.
  */
 @Stateless
 @TransactionManagement(TransactionManagementType.BEAN)
@@ -58,7 +60,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		mail = new SendEmail();
 	}
 	
-	//for tests tests
+	/**
+	 * This constructor is using only for tests
+	 * @param em
+	 * @param ut
+	 * @param mail
+	 */
 	public UserBean(EntityManager em, UserTransaction ut, SendEmail mail) {
 	super();
 	this.em = em;
@@ -66,6 +73,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	this.mail = mail;
 }
 
+	/**
+	 * Adds new customer to database with specified parameters. During the operation will be add data of User, UserRole and Customer class
+	 * @return true if operation is done 
+	 */
 	@Override
 	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon) {
 
@@ -133,9 +144,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		}
 	}
 
+	/**
+	 * Update existing user data in database with gets parameter values. If any parameter is null (exceptions idUser), then previous parameter value no change in database.
+	 * @return true if update is done  
+	 */
 	@Override
 	public boolean updateCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon, int idUser) {
-		// TODO Auto-generated method stub
 		try {
 			ut.begin();
 			Validation valid = new Validation();
@@ -165,6 +179,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return false;
 	}
 
+	/**
+	 * Returns Customer object use User parameter.
+	 * @return Returns Customer
+	 */
 	@Override
 	public Customer findCustomer(User u) {
 		// TODO Auto-generated method stub
@@ -172,6 +190,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return c;
 	}
 
+	/**
+	 * Set active user. When user is active then can login to shop application, else user can't access to shop. Administrator can change this state.
+	 * @return true if operation is done
+	 */
 	@Override
 	public boolean setActiveCustomer(int idUser, boolean action) {
 		try {
@@ -439,23 +461,31 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return data;
 	}
 
+	/**
+	 * Gets current admins list
+	 * @return list containing objects of Admin class 
+	 */
 	@Override
 	public List<Admin> getAdminsData() {
-		// TODO get current admins list
 		return em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
 	}
 
+	/**
+	 * Gets current users list which role is admin
+	 * @return list containing objects of User class 
+	 */
 	@Override
 	public List<User> getUsersAdminData() {
-		// TODO get current users list which role is admin
 		return em.createNamedQuery("getUserAdminQuery", User.class).getResultList();
 	}
 
+	/**
+	 * Update administrator data and user data in database. Call is from ShopAppClient AdminPanel. Only first Admin have privileges for update other admins.
+	 * @return true if update is done
+	 */
 	@Override
 	public boolean updateAdminData(int idUser, int idAdmin, String login, boolean active, String firstName,
 			String lastName, String phoneNo, String email) {
-		// TODO update User & Admin from ShopAppClient AdminPanel. Only first Admin have
-		// privileges for update other admins.
 		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser + "";
 		String updateAdminQuery = "UPDATE Admin SET firstName = '" + firstName + "', lastName = '" + lastName
 				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
@@ -477,9 +507,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return false;
 	}
 
+	/**
+	 * Gets current application setting like password, login, session time parameters
+	 * @return object of SettingsApp class 
+	 */
 	@Override
 	public SettingsApp getSettingsApp() {
-		// TODO get current application setting like parameters password, login, session time
 		setting = em.find(SettingsApp.class, 1);
 		if(setting == null) {
 			setting = new SettingsApp();
@@ -498,9 +531,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return setting;
 	}
 
+	/**
+	 * Insert or update application setting like parameters password, login, session time
+	 * @return <a>true if add or update setting is done</a>
+	 */
 	@Override
 	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) {
-		// TODO insert or update application setting like parameters password, login, session time
 		setting = em.find(SettingsApp.class, 1);
 		if(setting == null) {
 			setting = new SettingsApp();
@@ -545,6 +581,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return false;
 	}
 
+	/**
+	 * Adds the specified role to database
+	 * @return true if operation is done
+	 */
 	@Override
 	public boolean addRole(String roleName) {
 		// TODO Auto-generated method stub
@@ -563,12 +603,20 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return false;
 	}
 
+	/**
+	 * Gets current list of all role in application
+	 * @return list of objects Role class
+	 */
 	@Override
 	public List<Role> getRoleList() {
 		// TODO Auto-generated method stub		
 		return em.createNamedQuery("roleQuery", Role.class).getResultList();
 	}
 
+	/**
+	 * Gets current list of all customers
+	 * @return list of objects Customer class
+	 */
 	@Override
 	public List<Customer> findCustomerList(String lastName, String pesel) {
 		// TODO Auto-generated method stub
