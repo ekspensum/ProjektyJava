@@ -62,9 +62,9 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	
 	/**
 	 * This constructor is using only for tests
-	 * @param em
-	 * @param ut
-	 * @param mail
+	 * @param em EntityManager
+	 * @param ut UserTransaction
+	 * @param mail SendEmail
 	 */
 	public UserBean(EntityManager em, UserTransaction ut, SendEmail mail) {
 	super();
@@ -75,7 +75,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	/**
 	 * Adds new customer to database with specified parameters. During the operation will be add data of User, UserRole and Customer class
-	 * @return true if operation is done 
+	 * @return true if operation done 
 	 */
 	@Override
 	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon) {
@@ -146,7 +146,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	/**
 	 * Update existing user data in database with gets parameter values. If any parameter is null (exceptions idUser), then previous parameter value no change in database.
-	 * @return true if update is done  
+	 * @return true if update done  
 	 */
 	@Override
 	public boolean updateCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon, int idUser) {
@@ -192,7 +192,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	/**
 	 * Set active user. When user is active then can login to shop application, else user can't access to shop. Administrator can change this state.
-	 * @return true if operation is done
+	 * @return true if operation done
 	 */
 	@Override
 	public boolean setActiveCustomer(int idUser, boolean action) {
@@ -214,6 +214,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return false;
 	}
 	
+	/**
+	 * This method is using by customer for activate his account. Parameter activationString is sending by e-mail and then to send by URL parameter to this method from content e-mail.
+	 * @return true if method done   
+	 */
 	@Override
 	public boolean setActiveCustomer(String activationString) {
 		// TODO Auto-generated method stub
@@ -236,6 +240,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		}
 	}
 
+	/**
+	 * Returns User object using id parameter.
+	 * @return User
+	 */
 	@Override
 	public User findUser(int idUser) {
 		// TODO Auto-generated method stub
@@ -243,6 +251,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return u;
 	}
 
+	/**
+	 * Checking whether login name is unique (distinct). This method is using with registration new customer.
+	 * @return true if login name already using by another user. 
+	 */
 	@Override
 	public boolean findUserLogin(String login) {
 		// TODO examine whether the login is in use
@@ -252,6 +264,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			return false;
 	}
 
+	/**
+	 * Every user has role. This method persist role for each user.
+	 * @return UserRole
+	 */
 	@Override
 	public UserRole addUserRole(User u, int idRole) {
 		Role r = em.find(Role.class, idRole);
@@ -261,6 +277,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return ur;
 	}
 
+	/**
+	 * Returns SessionData if login and password is correct. Returns null if login or password is't correct or user is inactive. Session data object include user data and basket data.
+	 * @return SessionData
+	 */
 	@Override
 	@Interceptors(LoggingInterceptor.class)
 	public SessionData loginUser(String login, String password) {
@@ -296,12 +316,20 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return null;
 	}
 
+	/**
+	 * Returns list of all users which role is operator. This method is using by administrator in ShopAppClient.
+	 * @return users list.
+	 */
 	@Override
 	public List<User> getUsersOperatorData() {
 		// TODO Auto-generated method stub
 		return em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
 	}
 
+	/**
+	 * Add new operator. This method is using by administrator in ShopAppClient.
+	 * @return true if method done.
+	 */
 	@Override
 	public boolean addOperator(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) {
 
@@ -350,12 +378,20 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		}
 	}
 
+	/**
+	 * Returns list of all operator data. This method is using by administrator in ShopAppClient module.
+	 * @return operators list.
+	 */
 	@Override
 	public List<Operator> getOperatorsData() {
 		// TODO Auto-generated method stub
 		return em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
 	}
 
+	/**
+	 * Update operator data. This method is using by administrator in ShopAppClient.
+	 * @return true if method done.
+	 */
 	@Override
 	public boolean updateOperatorData(int idUser, int idOperator, String login, boolean active, String firstName,
 			String lastName, String phoneNo, String email) {
@@ -380,6 +416,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		return false;
 	}
 
+	/**
+	 * Add new administrator. This method is using by administrator in ShopAppClient. Only first administrator (default) can add other administrator.
+	 * @return true if operation done.
+	 */
 	@Override
 	public boolean addAdmin(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) {
 		try {
@@ -440,6 +480,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		}
 	}
 
+	/**
+	 * Returns SessionData object if login and password is correct, else return null. SessionData object include administrator data. This method is using by administrator in ShopAppClient module. 
+	 * @return SessionData or null.
+	 */
 	@Override
 	public SessionData loginAdmin(String login, String password) {
 		User user = null;
@@ -481,7 +525,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	/**
 	 * Update administrator data and user data in database. Call is from ShopAppClient AdminPanel. Only first Admin have privileges for update other admins.
-	 * @return true if update is done
+	 * @return true if update done
 	 */
 	@Override
 	public boolean updateAdminData(int idUser, int idAdmin, String login, boolean active, String firstName,
@@ -533,7 +577,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	/**
 	 * Insert or update application setting like parameters password, login, session time
-	 * @return <a>true if add or update setting is done</a>
+	 * @return true if add or update setting done
 	 */
 	@Override
 	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) {
@@ -583,7 +627,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	/**
 	 * Adds the specified role to database
-	 * @return true if operation is done
+	 * @return true if operation done
 	 */
 	@Override
 	public boolean addRole(String roleName) {
