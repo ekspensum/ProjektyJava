@@ -13,6 +13,7 @@ import pl.shopapp.beans.BasketBeanLocal;
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.entites.Category;
+import pl.shopapp.entites.Product;
 
 
 /**
@@ -101,14 +102,12 @@ public class ProductByCategory extends HttpServlet {
 		
 //		allows add product to basket
 		if(request.getParameter("buttonToBasketFromCategory") != null) {
-			String name = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromCategory"))).getName();
-			double price = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromCategory"))).getPrice();
-			int id = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromCategory"))).getId();
+			Product product = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromCategory")));
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");			
 			if(sd != null) {
 				bbl = sd.getBasketBeanLocal();
 				String quantity = "quantity"+request.getParameter("buttonToBasketFromCategory");
-				bbl.addBasketRow(id, Integer.valueOf(request.getParameter(quantity)), name, price, bbl.getBasketData());
+				bbl.addBasketRow(product.getId(), Integer.valueOf(request.getParameter(quantity)), product.getName(), product.getPrice(), bbl.getBasketData());
 			} else
 				request.setAttribute("message", "Aby dodać produkt do koszyka należy się zalogować!");	
 		}

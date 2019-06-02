@@ -16,6 +16,7 @@ import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.beans.Validation;
+import pl.shopapp.entites.User;
 
 /**
  * Servlet implementation class AddPrivateCustomer
@@ -111,9 +112,10 @@ public class CustomerPanel extends HttpServlet {
 					SessionData loginSD = ubl.loginUser(request.getParameter("login"), pass);
 					SessionData currentSD = (SessionData) request.getSession().getAttribute("SessionData");
 					if(loginSD.getIdUser() == currentSD.getIdUser()) {
+						User user = ubl.findUser(currentSD.getIdUser());
 						request.setAttribute("openToEdit", "yes");
-						request.setAttribute("userData", ubl.findUser(currentSD.getIdUser()));
-						request.setAttribute("customerData", ubl.findCustomer(ubl.findUser(currentSD.getIdUser())));						
+						request.setAttribute("userData", user);
+						request.setAttribute("customerData", ubl.findCustomer(user));						
 					} else
 						request.setAttribute("message", "Dane logowania niezgodne z bieżącą sesją!");
 				} else

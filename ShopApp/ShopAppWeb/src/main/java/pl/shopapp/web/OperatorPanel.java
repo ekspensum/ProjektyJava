@@ -23,6 +23,7 @@ import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.beans.Validation;
+import pl.shopapp.entites.Product;
 
 /**
  * Servlet implementation class OperatorPanel
@@ -163,9 +164,10 @@ public class OperatorPanel extends HttpServlet {
 		if(request.getParameter("editButton") != null) {
 			if(request.getParameter("idProduct") != null) {
 				if(request.getParameterValues("idProduct").length == 1) {
-					request.setAttribute("productToEdit", pbl.getProduct(Integer.valueOf(request.getParameter("idProduct"))));
-					request.setAttribute("categoryToEdit", pbl.getProductCategories(pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")))));
-					productIdToEdit = pbl.getProduct(Integer.valueOf(request.getParameter("idProduct"))).getId();
+					Product product = pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")));
+					request.setAttribute("productToEdit", product);
+					request.setAttribute("categoryToEdit", pbl.getProductCategories(product));
+					productIdToEdit = product.getId();
 				} else
 					request.setAttribute("message", "Proszę zaznaczyć jeden produkt!");
 			} else
