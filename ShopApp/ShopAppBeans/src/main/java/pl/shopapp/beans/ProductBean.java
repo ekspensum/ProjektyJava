@@ -1,7 +1,7 @@
 package pl.shopapp.beans;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -20,7 +20,6 @@ import javax.transaction.UserTransaction;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Product;
-import pl.shopapp.entites.ProductCategory;
 import pl.shopapp.entites.User;
 
 /**
@@ -57,7 +56,7 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public boolean addProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, List<Integer> helperListCat, int idUser) {
+	public boolean addProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, List<Integer> helperListCat, int idUser) throws IllegalStateException, SecurityException, SystemException {
 		try {
 			ut.begin();
 			User u = em.find(User.class, idUser);
@@ -70,63 +69,57 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 			p.setProductImage(buffer);
 			p.setDateTime(LocalDateTime.now());
 			p.setOp(op);
-			em.persist(p);	
+			List<Category> categories = new ArrayList<>();	
 			for(int i = 0; i<helperListCat.size(); i++) {
 				Category cat = em.find(Category.class, helperListCat.get(i));
-				ProductCategory pc = new ProductCategory();
-				pc.setCategory(cat);
-				pc.setProduct(p);
-				em.persist(pc);
+				categories.add(cat);
 			}
+			p.setCategories(categories);
+			em.persist(p);
 			ut.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			ut.rollback();
 			e.printStackTrace();
 			return false;
 		}
 	}
 
 	@Override
-	public boolean updateProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, int productIdToEdit, int [] categoryToEdit, int sizeFileImage, int idUser, List<Integer> helperListCat) {
-		// TODO Auto-generated method stub
-		int rowProduct = 0;
-		int rowCategory = 0;
+	public boolean updateProduct(String productName, String productDescription, double productPrice, int productUnitsInStock, byte [] buffer, int productIdToEdit, int sizeFileImage, int idUser, List<Integer> helperListCat) throws IllegalStateException, SecurityException, SystemException {
 		try {
 			ut.begin();
+			
 			Product p = em.find(Product.class, productIdToEdit);
 			User u = em.find(User.class, idUser);
 			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", u).getSingleResult();
-			String updateProductWithoutImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = "+productIdToEdit+"";
-			String updateProductWithImage = "UPDATE Product SET name = '"+productName+"', description = '"+productDescription+"', price = "+productPrice+", unitsInStock = "+productUnitsInStock+", productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = "+productIdToEdit+"";
-
-			if(sizeFileImage == 0)
-				rowProduct = em.createQuery(updateProductWithoutImage).setParameter("op", op).executeUpdate();
-			else 
-				rowProduct = em.createQuery(updateProductWithImage).setParameter("productImage", buffer).setParameter("op", op).executeUpdate();
+			p.setOp(op);
+			p.setName(productName);
+			p.setDescription(productDescription);
+			p.setPrice(productPrice);
+			p.setUnitsInStock(productUnitsInStock);
+			p.setDateTime(LocalDateTime.now());
 			
-			for(int i = 0; i<helperListCat.size(); i++) {
-				Category cat = em.find(Category.class, categoryToEdit[i]);
-				ProductCategory pc = em.createNamedQuery("getProductCategoryQuery", ProductCategory.class).setParameter("category", cat).setParameter("product", p).getSingleResult();
-				String updateProductCategory = "UPDATE ProductCategory SET category_id = "+helperListCat.get(i)+", product_id = "+p.getId()+" WHERE id = "+pc.getId()+"";
-				rowCategory = em.createQuery(updateProductCategory).executeUpdate();
+			if(sizeFileImage > 0) {
+				p.setProductImage(buffer);				
 			}
 			
+			List<Category> categories = null;
+			for(int i = 0; i<helperListCat.size(); i++) {
+				Category cat = em.find(Category.class, helperListCat.get(i));
+				categories = p.getCategories();
+				categories.set(i, cat);
+			}
+			p.setCategories(categories);
+			em.persist(p);
 			ut.commit();
-			if(rowProduct == 1 && rowCategory == 1)
-				return true;
-			else
-				ut.rollback();
+
+			return true;
+			
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+			ut.rollback();
 			e.printStackTrace();
 		}
 		return false;
@@ -147,7 +140,7 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	}
 
 	@Override
-	public boolean addCategory(String categoryName, byte[] buffer, int idUser) {
+	public boolean addCategory(String categoryName, byte[] buffer, int idUser) throws IllegalStateException, SecurityException, SystemException {
 		try {
 			ut.begin();
 			User user = em.find(User.class, idUser);
@@ -162,7 +155,7 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+			ut.rollback();
 			e.printStackTrace();
 			return false;			
 		}
@@ -176,7 +169,8 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 
 	@Override
 	public List<Product> listProductByCategory(int idCategory) {
-		listProductByCat = em.createNamedQuery("productsByCategory", Product.class).setParameter(1, idCategory).getResultList();
+		Category findCategory = em.find(Category.class, idCategory);
+		listProductByCat = findCategory.getProduct();
 		return listProductByCat;
 	}
 

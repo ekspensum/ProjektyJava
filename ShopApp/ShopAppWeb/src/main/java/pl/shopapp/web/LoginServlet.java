@@ -120,7 +120,7 @@ public class LoginServlet extends HttpServlet {
 		
 //		for searching products
 		if(request.getParameter("searchProductButton") != null) {
-			request.setAttribute("resultSearchProducts", pbl.findProduct(request.getParameter("searchProductInput")));			
+			request.setAttribute("resultSearchProducts", pbl.findProduct(request.getParameter("searchProductInput")));	
 		}
 		
 		doGet(request, response);

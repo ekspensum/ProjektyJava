@@ -2,6 +2,7 @@ package pl.shopapp.entites;
 
 import java.io.Serializable;
 import java.lang.String;
+
 import javax.persistence.*;
 
 /**
@@ -11,7 +12,9 @@ import javax.persistence.*;
 @Entity
 @NamedQueries({
 	@NamedQuery(name="loginQuery", query="SELECT u FROM User u WHERE u.login = :login AND u.password = :password AND u.active = true"),
-	@NamedQuery(name="findUserLoginQuery", query="SELECT u FROM User u WHERE u.login = :login")
+	@NamedQuery(name="findUserLoginQuery", query="SELECT u FROM User u WHERE u.login = :login"),
+	@NamedQuery(name="getUserOperatorQuery", query="SELECT u FROM User u WHERE u.role.id = 3"),
+	@NamedQuery(name="getUserAdminQuery", query="SELECT u FROM User u WHERE u.role.id = 1")
 })
 @Table(name = "\"User\"") //for integration test with Derby database
 public class User implements Serializable {
@@ -23,6 +26,10 @@ public class User implements Serializable {
 	private String login;
 	private String password;
 	private boolean active;
+	
+	@OneToOne
+	private Role role; 
+	
 	private static final long serialVersionUID = 1L;
 
 	public User() {
@@ -55,6 +62,12 @@ public class User implements Serializable {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
 	}
    
 }

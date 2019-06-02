@@ -4,7 +4,6 @@ package integration;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +11,6 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
@@ -33,6 +28,7 @@ import pl.shopapp.beans.BasketBeanLocal;
 import pl.shopapp.beans.BasketData;
 import pl.shopapp.beans.ProductBean;
 import pl.shopapp.beans.ProductBeanLocal;
+import pl.shopapp.beans.SendEmail;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.TransactionBean;
 import pl.shopapp.beans.UserBean;
@@ -43,12 +39,11 @@ import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Customer;
 import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Product;
-import pl.shopapp.entites.ProductCategory;
 import pl.shopapp.entites.Role;
 import pl.shopapp.entites.SettingsApp;
 import pl.shopapp.entites.Transaction;
 import pl.shopapp.entites.User;
-import pl.shopapp.entites.UserRole;
+
 
 @RunWith(Arquillian.class)
 public class BeansIT {
@@ -56,8 +51,8 @@ public class BeansIT {
 	@Deployment
 	public static JavaArchive createDeployment() {
 	    return ShrinkWrap.create(JavaArchive.class)
-	      .addClasses(UserBean.class, Validation.class, Admin.class, Customer.class, Operator.class, Product.class, ProductCategory.class, Role.class, 
-	    		  SettingsApp.class, User.class, UserRole.class, Category.class, Transaction.class, BasketBean.class, BasketData.class, ProductBean.class, 
+	      .addClasses(UserBean.class, Validation.class, Admin.class, Customer.class, Operator.class, Product.class, Role.class, SendEmail.class,
+	    		  SettingsApp.class, User.class, Category.class, Transaction.class, BasketBean.class, BasketData.class, ProductBean.class, 
 	    		  SessionData.class, TransactionBean.class)
 	      .addAsManifestResource("META-INF/test-persistence.xml", "persistence.xml")
 	      .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -72,7 +67,7 @@ public class BeansIT {
 	@EJB
 	private TransactionBean tb;
 	
-	private byte [] buffer = {1,1,1};
+	private byte [] buffer = {49,50,51};
 	
 	private String login = null;
 	private String password = null;
@@ -100,7 +95,7 @@ public class BeansIT {
 	
 	@Test
 	@InSequence(1)
-	public final void prepareTests() {
+	public final void prepareTests() throws IllegalStateException, SecurityException, SystemException {
 		ubl.addRole("admin");
 		ubl.addRole("customer");
 		ubl.addRole("operator");
@@ -110,7 +105,7 @@ public class BeansIT {
 	
 	@Test
 	@InSequence(2)
-	public final void testCustomer() throws InterruptedException {
+	public final void testCustomer() throws InterruptedException, IllegalStateException, SecurityException, SystemException {
 
 		Validation valid = new Validation(ubl.getSettingsApp());
 		login = "customer1";
@@ -144,7 +139,7 @@ public class BeansIT {
 	
 	@Test
 	@InSequence(3)
-	public final void testAdmin() {
+	public final void testAdmin() throws IllegalStateException, SecurityException, SystemException {
 		login = "admin1";
 		password = "Admin11";
 		Validation valid = new Validation(ubl.getSettingsApp());
@@ -167,7 +162,7 @@ public class BeansIT {
 	
 	@Test
 	@InSequence(4)
-	public final void testOperator() {
+	public final void testOperator() throws IllegalStateException, SecurityException, SystemException {
 		login = "operator1";
 		password = "Operator11";
 		Validation valid = new Validation(ubl.getSettingsApp());
@@ -190,7 +185,7 @@ public class BeansIT {
 	
 	@Test
 	@InSequence(5)
-	public final void testCategory() {
+	public final void testCategory() throws IllegalStateException, SecurityException, SystemException {
 		assertTrue(pbl.addCategory("categoryName1", buffer, 3));
 		assertTrue(pbl.addCategory("categoryName2", buffer, 3));
 		assertTrue(pbl.addCategory("categoryName3", buffer, 3));
@@ -199,29 +194,23 @@ public class BeansIT {
 	
 	@Test
 	@InSequence(6)
-	public final void testProduct() {
-		byte [] buffer = {};
-		int [] categoryToEdit = new int [9];
-		categoryToEdit[0] = 1;
-		categoryToEdit[1] = 3;
+	public final void testProduct() throws IllegalStateException, SecurityException, SystemException {
+		byte [] buffer1 = {105, 109, 97, 103, 101, 49, 51};
 		List<Integer> helperListCat = new ArrayList<>();
 		helperListCat.add(1);
 		helperListCat.add(3);
-		assertTrue(pbl.addProduct("productName", "productDescription", 11.22, 13, buffer, helperListCat, 3));
+		assertTrue(pbl.addProduct("productName", "productDescription", 11.22, 13, buffer1, helperListCat, 3));
 		assertEquals(1, pbl.getProduct(1).getId());
 		
-//		it's working despite the "in" is ambiguous in statement derby database.   
-		String updateProductWithoutImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 33.44, unitsInStock = 3, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', id = 1 WHERE id = 1";
-		try {
-			ut.begin();
-			assertEquals(1, em.createQuery(updateProductWithoutImage).executeUpdate());
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		byte [] buffer2 = {105, 109, 97, 103, 101, 54, 54};
+		pbl.updateProduct("productName2", "productDescription2", 33.44, 666, buffer2, 1, buffer2.length, 3, helperListCat);
+		
+		assertEquals("productName2", pbl.getProduct(1).getName());
+		assertEquals("productDescription2", pbl.getProduct(1).getDescription());
 		assertEquals(33.44, pbl.getProduct(1).getPrice());
+		assertEquals(666, pbl.getProduct(1).getUnitsInStock());
+		assertEquals("aW1hZ2U2Ng==", pbl.getProduct(1).getBase64Image());
+		assertEquals(3, pbl.getProduct(1).getCategories().get(1).getId());
 	}
 	
 	@Test

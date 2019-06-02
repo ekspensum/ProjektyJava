@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.junit.jupiter.api.AfterAll;
@@ -26,15 +27,11 @@ import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Product;
-import pl.shopapp.entites.ProductCategory;
 import pl.shopapp.webservice.ShopResource;
 import pl.shopapp.webservice.ShopResourceLocal;
 import pl.shopapp.webservice.model.CategoryJson;
-import pl.shopapp.webservice.model.HardDisksJson;
-import pl.shopapp.webservice.model.MainBoardJson;
-import pl.shopapp.webservice.model.ProcessorsJson;
 import pl.shopapp.webservice.model.ProductDataJson;
-import pl.shopapp.webservice.model.RamMemoryJson;
+
 
 class ShopResourceTest {
 
@@ -162,12 +159,17 @@ class ShopResourceTest {
 		pr.setUnitsInStock(1);
 		byte [] productImage = new byte[100];
 		pr.setProductImage(productImage);
+		
 		List<Product> listProduct = new ArrayList<>();
 		listProduct.add(pr);
+		
+		Category category = new Category();
+		category.setProduct(listProduct);
+		
 		@SuppressWarnings("unchecked")
-		TypedQuery<Product> productQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("getAllMainBoardXml", Product.class)).thenReturn(productQuery);
-		when(productQuery.getResultList()).thenReturn(listProduct);
+		TypedQuery<Category> productQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllMainBoardXml", Category.class)).thenReturn(productQuery);
+		when(productQuery.getSingleResult()).thenReturn(category);
 		
 		assertEquals("productName", srl.getMainBoardXmls().get(0).getName());
 	}
@@ -184,72 +186,100 @@ class ShopResourceTest {
 		pr.setProductImage(productImage);
 		List<Product> listProduct = new ArrayList<>();
 		listProduct.add(pr);
+		
+		Category category = new Category();
+		category.setProduct(listProduct);
+		
 		@SuppressWarnings("unchecked")
-		TypedQuery<Product> productQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("getAllRamMemoryXml", Product.class)).thenReturn(productQuery);
-		when(productQuery.getResultList()).thenReturn(listProduct);
+		TypedQuery<Category> categoryQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllRamMemoryXml", Category.class)).thenReturn(categoryQuery);
+		when(categoryQuery.getSingleResult()).thenReturn(category);
 		
 		assertEquals("productName", srl.getRamMemoryXml().get(0).getName());
 	}
 
 	@Test
 	final void testGetAllProcessorsJson() {
-		List<ProcessorsJson> listProc = new ArrayList<>();
-		ProcessorsJson proc = new ProcessorsJson();
+		byte [] productImage = new byte[100];
+		List<Product> listProc = new ArrayList<>();
+		Product proc = new Product();
 		proc.setId(1);
-		proc.setBase64Image("base64Image");
+		proc.setProductImage(productImage);
+		proc.setName("Processor-13");
 		listProc.add(proc);
-		@SuppressWarnings("unchecked")
-		TypedQuery<ProcessorsJson> procQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("getAllProcessorsJson")).thenReturn(procQuery);
-		when(procQuery.getResultList()).thenReturn(listProc);
 		
-		assertEquals("base64Image", srl.getAllProcessorsJson().get(0).getBase64Image());
+		Category category = new Category();
+		category.setProduct(listProc);
+		
+		@SuppressWarnings("unchecked")
+		TypedQuery<Category> categoryQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllProcessors", Category.class)).thenReturn(categoryQuery);
+		when(categoryQuery.getSingleResult()).thenReturn(category);
+		
+		assertEquals("Processor-13", srl.getAllProcessorsJson().get(0).getName());
 	}
 
 	@Test
 	final void testGetAllMainBoardJson() {
-		List<MainBoardJson> listMB = new ArrayList<>();
-		MainBoardJson mb = new MainBoardJson();
-		mb.setId(1);
-		mb.setBase64Image("base64Image");
-		listMB.add(mb);
-		@SuppressWarnings("unchecked")
-		TypedQuery<MainBoardJson> mbQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("getAllMainBoardJson")).thenReturn(mbQuery);
-		when(mbQuery.getResultList()).thenReturn(listMB);
+		byte [] productImage = new byte[100];
+		List<Product> listMainBoard = new ArrayList<>();
+		Product proc = new Product();
+		proc.setId(1);
+		proc.setProductImage(productImage);
+		proc.setName("MainBoard-13");
+		listMainBoard.add(proc);
 		
-		assertEquals("base64Image", srl.getAllMainBoardJson().get(0).getBase64Image());
+		Category category = new Category();
+		category.setProduct(listMainBoard);
+		
+		@SuppressWarnings("unchecked")
+		TypedQuery<Category> categoryQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllMainBoard", Category.class)).thenReturn(categoryQuery);
+		when(categoryQuery.getSingleResult()).thenReturn(category);
+		
+		assertEquals("MainBoard-13", srl.getAllMainBoardJson().get(0).getName());
 	}
 
 	@Test
 	final void testGetAllRamMemoryJson() {
-		List<RamMemoryJson> listRam = new ArrayList<>();
-		RamMemoryJson ram = new RamMemoryJson();
-		ram.setId(1);
-		ram.setBase64Image("base64Image");
-		listRam.add(ram);
-		@SuppressWarnings("unchecked")
-		TypedQuery<RamMemoryJson> ramQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("getAllRamMemoryJson")).thenReturn(ramQuery);
-		when(ramQuery.getResultList()).thenReturn(listRam);
+		byte [] productImage = new byte[100];
+		List<Product> listRamMemory = new ArrayList<>();
+		Product proc = new Product();
+		proc.setId(1);
+		proc.setProductImage(productImage);
+		proc.setName("RamMemory-13");
+		listRamMemory.add(proc);
 		
-		assertEquals("base64Image", srl.getAllRamMemoryJson().get(0).getBase64Image());
+		Category category = new Category();
+		category.setProduct(listRamMemory);
+		
+		@SuppressWarnings("unchecked")
+		TypedQuery<Category> categoryQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllRamMemory", Category.class)).thenReturn(categoryQuery);
+		when(categoryQuery.getSingleResult()).thenReturn(category);
+		
+		assertEquals("RamMemory-13", srl.getAllRamMemoryJson().get(0).getName());
 	}
 
 	@Test
 	final void testGetAllHardDisksJson() {
-		List<HardDisksJson> listHdd = new ArrayList<>();
-		HardDisksJson hdd = new HardDisksJson();
-		hdd.setId(1);
-		hdd.setBase64Image("base64Image");
-		listHdd.add(hdd);
-		@SuppressWarnings("unchecked")
-		TypedQuery<HardDisksJson> hddQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("getAllHardDisksJson")).thenReturn(hddQuery);
-		when(hddQuery.getResultList()).thenReturn(listHdd);
+		byte [] productImage = new byte[100];
+		List<Product> listHardDisk = new ArrayList<>();
+		Product proc = new Product();
+		proc.setId(1);
+		proc.setProductImage(productImage);
+		proc.setName("HardDisk-13");
+		listHardDisk.add(proc);
 		
-		assertEquals("base64Image", srl.getAllHardDisksJson().get(0).getBase64Image());
+		Category category = new Category();
+		category.setProduct(listHardDisk);
+		
+		@SuppressWarnings("unchecked")
+		TypedQuery<Category> categoryQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("getAllHardDisks", Category.class)).thenReturn(categoryQuery);
+		when(categoryQuery.getSingleResult()).thenReturn(category);
+		
+		assertEquals("HardDisk-13", srl.getAllHardDisksJson().get(0).getName());
 	}
 
 	@Test
@@ -279,56 +309,57 @@ class ShopResourceTest {
 
 	@Test
 	final void testGetProductJsonByName() {
-		Product pr = new Product();
-		pr.setId(1);
-		pr.setName("productName");
-		List<Product> productList = new ArrayList<>();
-		productList.add(pr);
-		when(pbl.findProduct(pr.getName())).thenReturn(productList);
+		Category category0 = new Category();
+		category0.setId(0);
+		Category category1 = new Category();
+		category1.setId(1);
+		List<Category> categories = new ArrayList<>();
+		categories.add(category0);
+		categories.add(category1);
 		
-		Category cat = new Category();
-		cat.setId(1);
-		cat.setName("CategoryName");
-		ProductCategory pc = new ProductCategory();
-		pc.setProduct(pr);
-		pc.setCategory(cat);
-		List<ProductCategory> lpc = new ArrayList<>();
-		lpc.add(pc);
-		@SuppressWarnings("unchecked")
-		TypedQuery<ProductCategory> pcQuery = mock(TypedQuery.class);
-		when(pcQuery.getResultList()).thenReturn(lpc);
-		when(em.createNamedQuery("getAllProductCategory", ProductCategory.class)).thenReturn(pcQuery);
+		Product product = new Product();
+		product.setId(1);
+		product.setName("productName");
+		product.setCategories(categories);
+		
+		List<Product> productList = new ArrayList<>();
+		productList.add(product);
+		when(pbl.findProduct(product.getName())).thenReturn(productList);
 		
 		assertEquals("productName", srl.getProductJsonByName("productName").get(0).getName());
 	}
 
 	@Test
 	final void testGetProductsJsonByIdRange() {
-		Product pr = new Product();
-		pr.setId(1);
-		pr.setName("productName");
+		Category category = new Category();
+		category.setId(1);
+		category.setName("Płyty główne");
+	
+		List<Category> categories = new ArrayList<>();
+		categories.add(category);
+		
+		Product product = new Product();
+		product.setId(1);
+		product.setName("productName");
 		byte [] productImage = new byte[100];
-		pr.setProductImage(productImage);
-		Category cat = new Category();
-		cat.setId(1);
-		cat.setName("Płyty główne");
-		ProductCategory pc = new ProductCategory();
-		pc.setProduct(pr);
-		pc.setCategory(cat);
-		List<ProductCategory> lpc = new ArrayList<>();
-		lpc.add(pc);
+		product.setProductImage(productImage);
+		product.setCategories(categories);
+		
+		List<Product> products = new ArrayList<>();
+		products.add(product);
+		
 		@SuppressWarnings("unchecked")
-		TypedQuery<ProductCategory> pcQuery = mock(TypedQuery.class);
-		when(pcQuery.setParameter("idFrom", 1)).thenReturn(pcQuery);
-		when(pcQuery.setParameter("idTo", 1)).thenReturn(pcQuery);
-		when(em.createNamedQuery("productsByIdRangeJson", ProductCategory.class)).thenReturn(pcQuery);
-		when(pcQuery.getResultList()).thenReturn(lpc);
+		TypedQuery<Product> productsListQuery = mock(TypedQuery.class);
+		when(productsListQuery.setParameter("idFrom", 1)).thenReturn(productsListQuery);
+		when(productsListQuery.setParameter("idTo", 1)).thenReturn(productsListQuery);
+		when(em.createNamedQuery("productsByIdRangeJson", Product.class)).thenReturn(productsListQuery);
+		when(productsListQuery.getResultList()).thenReturn(products);
 		
 		assertEquals("productName", srl.getProductsJsonByIdRange(1, 1).get("Płyty główne").get(0).getName());
 	}
 
 	@Test
-	final void testAddNewProductFormParam() {
+	final void testAddNewProductFormParam() throws IllegalStateException, SecurityException, SystemException {
 		SessionData sd = new SessionData();
 		sd.setIdRole(3);
 		sd.setFirstName("firstName");
@@ -343,7 +374,7 @@ class ShopResourceTest {
 	}
 
 	@Test
-	final void testAddNewProductFormParamMap() {
+	final void testAddNewProductFormParamMap() throws NumberFormatException, IllegalStateException, SecurityException, SystemException {
 		Map<String, String> mapParam = new HashMap<>();
 		mapParam.put("login", "login");
 		mapParam.put("password", "password");
@@ -376,7 +407,7 @@ class ShopResourceTest {
 	}
 
 	@Test
-	final void testAddNewProductJson() {
+	final void testAddNewProductJson() throws IllegalStateException, SecurityException, SystemException {
 		ProductDataJson pdj = new ProductDataJson();
 		pdj.setLogin("login");
 		pdj.setPassword("password");
@@ -406,7 +437,7 @@ class ShopResourceTest {
 	}
 
 	@Test
-	final void testUpdateProductData() {
+	final void testUpdateProductData() throws IllegalStateException, SecurityException, SystemException {
 		ProductDataJson pdj = new ProductDataJson();
 		pdj.setLogin("login");
 		pdj.setPassword("password");
@@ -426,11 +457,9 @@ class ShopResourceTest {
 		List<Integer> helperListCat = new ArrayList<>();
 		helperListCat.add(24);
 		helperListCat.add(0);
-		int [] categoryToEdit = new int [2];
-		categoryToEdit[0] = pdj.getPreviousCategory1Id();
-		categoryToEdit[1] = pdj.getPreviousCategory2Id();
+
 		when(ubl.loginUser(pdj.getLogin(), pdj.getPassword())).thenReturn(sd);
-		when(pbl.updateProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(), pdj.getImage(), pdj.getIdProduct(), categoryToEdit, pdj.getImageSize(), sd.getIdUser(), helperListCat)).thenReturn(true);
+		when(pbl.updateProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(), pdj.getImage(), pdj.getIdProduct(), pdj.getImageSize(), sd.getIdUser(), helperListCat)).thenReturn(true);
 		
 		assertEquals("Dane produktu id = "+pdj.getIdProduct()+" zostały zaktualizowane w bazie danych.", srl.updateProductData(pdj));
 		pdj.setLogin("login1");

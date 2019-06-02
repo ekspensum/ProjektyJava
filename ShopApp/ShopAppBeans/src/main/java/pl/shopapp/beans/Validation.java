@@ -68,7 +68,13 @@ public class Validation {
 	}
     
 	public boolean nameValidation(String name) {
-		Pattern patt = Pattern.compile("^[^|'\":%^#~}{\\]\\[;=<>`]{3,100}$");
+		Pattern patt = Pattern.compile("^[^|'\"%^#~}{\\]\\[;=<>`]{3,100}$");
+		Matcher mat = patt.matcher(name);
+		return mat.find();
+	}
+	
+	public boolean describeValidation(String name) {
+		Pattern patt = Pattern.compile("^[^|'\"%^#~}{\\]\\[;=<>`]{3,1000}$");
 		Matcher mat = patt.matcher(name);
 		return mat.find();
 	}

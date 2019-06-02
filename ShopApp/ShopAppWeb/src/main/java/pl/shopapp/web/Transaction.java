@@ -67,7 +67,9 @@ public class Transaction extends HttpServlet {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			bbl = sd.getBasketBeanLocal();
 			if(tbl.newTransaction(sd.getIdUser(), bbl.getBasketData())) {
-				request.setAttribute("message", "Transakcja zakończona powodzeniem!");
+				request.setAttribute("message", "Transakcja zakończona powodzeniem!"
+						+ "<br>Wysłano potwierdzenie transakcji na podany email.");
+				total = 0.0;
 			} else
 				request.setAttribute("message", "Nie udało się zrealizować transakcji!");		
 		}

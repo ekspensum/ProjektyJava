@@ -1,6 +1,8 @@
 package pl.shopapp.web;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import pl.shopapp.beans.BasketBeanLocal;
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
+import pl.shopapp.entites.Category;
 
 
 /**
@@ -61,38 +64,39 @@ public class ProductByCategory extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		List<Category> listCategory = pbl.listCategory();
 
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(1).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(1));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(1).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(1).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(1));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(1).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(2).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(2));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(2).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(2).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(2));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(2).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(3).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(3));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(3).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(3).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(3));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(3).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(4).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(4));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(4).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(4).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(4));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(4).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(5).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(5));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(5).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(5).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(5));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(5).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(6).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(6));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(6).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(6).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(6));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(6).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(7).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(7));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(7).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(7).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(7));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(7).getId()));
 		}
-		if(request.getParameter(String.valueOf(pbl.listCategory().get(8).getId())) != null) {
-			request.setAttribute("curentCategory", pbl.listCategory().get(8));
-			request.setAttribute("productList", pbl.listProductByCategory(pbl.listCategory().get(8).getId()));
+		if(request.getParameter(String.valueOf(listCategory.get(8).getId())) != null) {
+			request.setAttribute("curentCategory", listCategory.get(8));
+			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(8).getId()));
 		}
 		
 //		allows add product to basket

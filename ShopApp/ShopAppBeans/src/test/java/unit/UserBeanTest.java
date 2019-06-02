@@ -13,17 +13,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
@@ -44,7 +38,7 @@ import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Role;
 import pl.shopapp.entites.SettingsApp;
 import pl.shopapp.entites.User;
-import pl.shopapp.entites.UserRole;
+
 
 /**
  * @author user
@@ -104,102 +98,57 @@ public class UserBeanTest {
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#addCustomer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String, java.lang.String)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testAddCustomer() {
+	public void testAddCustomer() throws IllegalStateException, SecurityException, SystemException {
 		String expectedPass = "96be325cf35649f073df921686aae2c";
-		try {
-			ut.begin();
-			Validation valid = new Validation();
-			String encryptionPass = valid.stringToCode("Customer11");
-			assertEquals(expectedPass, encryptionPass);
-			
-			UserRole ur = ub.addUserRole(user, 2);
-			em.persist(user);
-			em.persist(customer);
-			em.persist(ur);
-			
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
+		Validation valid = new Validation();
+		String encryptionPass = valid.stringToCode("Customer11");
+		assertEquals(expectedPass, encryptionPass);
 
 		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
-		assertTrue(this.ub.addCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email@gmailtest.com", true, "companyName", "taxNo", "regon"));
+		assertTrue(ub.addCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email@gmailtest.com", true, "companyName", "taxNo", "regon"));
 	}
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#updateCustomer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String, java.lang.String, int)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testUpdateCustomer() {
-		String expectedPass = "96be325cf35649f073df921686aae2c";
-		Query mockedUserQuery = Mockito.mock(Query.class);
-		Query mockedCustomerQuery = Mockito.mock(Query.class);
-		try {
-			ut.begin();
-			Validation valid = new Validation();
-			String encryptionPass = valid.stringToCode("Customer11");
-			assertEquals(expectedPass, encryptionPass);
+	public void testUpdateCustomer() throws IllegalStateException, SecurityException, SystemException {
+		String expectedPassword = "96be325cf35649f073df921686aae2c";
+		Validation valid = new Validation();
+		String encryptionPass = valid.stringToCode("Customer11");
+		assertEquals(expectedPassword, encryptionPass);
 
-			user.setLogin("login1");
-			user.setPassword(encryptionPass);
-			user.setId(6);
-			user.setActive(true);
-			when(this.em.find(User.class, 6)).thenReturn(user);
-			
-			customer.setFirstName("firstName");
-			customer.setLastName("lastName");
-			customer.setPesel("pesel");
-			customer.setZipCode("zipCode");
-			customer.setCountry("country");
-			customer.setCity("city");
-			customer.setStreet("street");
-			customer.setStreetNo("streetNo");
-			customer.setUnitNo("unitNo");
-			customer.setEmail("email");
-			customer.setCompany(true);
-			customer.setCompanyName("companyName");
-			customer.setTaxNo("taxNo");
-			customer.setRegon("regon");
-			customer.setId(2);
-			customer.setUser(user);
-			
-			@SuppressWarnings("unchecked")
-			TypedQuery<Customer> mockedQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("customerQuery", Customer.class)).thenReturn(mockedQuery);
-			when(mockedQuery.setParameter("user", user)).thenReturn(mockedQuery);
-			when(mockedQuery.getSingleResult()).thenReturn(customer);
-			
-			String updateUserQuery = "UPDATE User SET login = 'login1', password = '96be325cf35649f073df921686aae2c' WHERE id = 6";
-			String updateCustomerQuery = "UPDATE Customer SET firstName = 'firstName', lastName = 'lastName', pesel = 'pesel', country = 'country', zipCode = 'zipCode', city = 'city', street = 'street', streetNo = 'streetNo', unitNo = 'unitNo', email = 'email', company = true, companyName = 'companyName', taxNo = 'taxNo', regon = 'regon' WHERE id = 2";
-			
-			when(em.createQuery(updateUserQuery)).thenReturn(mockedUserQuery);
-			when(mockedUserQuery.executeUpdate()).thenReturn(1);
-			when(em.createQuery(updateCustomerQuery)).thenReturn(mockedCustomerQuery);
-			when(mockedCustomerQuery.executeUpdate()).thenReturn(1);
-			
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		assertTrue(this.ub.updateCustomer("login1", "Customer11", "firstName", "lastName", "pesel", "zipCode", "country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon", 6));
+		user.setLogin("login1");
+		user.setPassword(encryptionPass);
+		user.setId(6);
+		user.setActive(true);
+		when(this.em.find(User.class, 6)).thenReturn(user);
+
+		customer.setFirstName("firstName");
+		customer.setId(2);
+		customer.setUser(user);
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Customer> mockedQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("customerQuery", Customer.class)).thenReturn(mockedQuery);
+		when(mockedQuery.setParameter("user", user)).thenReturn(mockedQuery);
+		when(mockedQuery.getSingleResult()).thenReturn(customer);
+
+		assertTrue(this.ub.updateCustomer("login1234", "Customer11", "firstName1234", "lastName", "pesel", "zipCode",
+				"country", "city", "street", "streetNo", "unitNo", "email", true, "companyName", "taxNo", "regon", 6));
+		assertEquals("login1234", customer.getUser().getLogin());
+		assertNotEquals("login1", customer.getUser().getLogin());
+		assertEquals("firstName1234", customer.getFirstName());
+		assertEquals(2, customer.getId());
+		assertEquals(6, customer.getUser().getId());
 	}
 
 	/**
@@ -219,20 +168,20 @@ public class UserBeanTest {
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#setActiveCustomer(int, boolean)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testSetActiveCustomerIdUserArg() {
-		Query query = mock(Query.class);
-		String activeCustomerQuery = "UPDATE User SET active = true WHERE id = 1 ";
-		when(em.createQuery(activeCustomerQuery)).thenReturn(query);
-		when(query.executeUpdate()).thenReturn(1);
+	public void testSetActiveCustomerIdUserArg() throws IllegalStateException, SecurityException, SystemException {
+		user.setId(1);
+		user.setActive(false);
+		when(em.find(User.class, 1)).thenReturn(user);
 		assertTrue(ub.setActiveCustomer(1, true));
-		when(query.executeUpdate()).thenReturn(2);
-		assertFalse(ub.setActiveCustomer(1, true));
 	}
 
 	@Test
-	public void testSetActiveCustomerStringArg() {
+	public void testSetActiveCustomerStringArg() throws IllegalStateException, SecurityException, SystemException {
 		List<Customer> cl = new ArrayList<>();
 		user.setId(1);
 		customer.setUser(user);
@@ -285,29 +234,11 @@ public class UserBeanTest {
 	}
 
 	/**
-	 * Test method for {@link pl.shopapp.beans.UserBean#addUserRole(pl.shopapp.entites.User, int)}.
-	 */
-	@Test
-	public void testAddUserRole() {
-		Role role = new Role();
-		role.setId(2);
-		role.setRoleName("customer");
-		when(em.find(Role.class, 2)).thenReturn(role);
-		UserRole userRoleExpected = new UserRole();
-		userRoleExpected.setId(0);
-		userRoleExpected.setUser(user);
-		userRoleExpected.setRole(role);
-		UserRole userRoleActual = ub.addUserRole(user, 2);
-		assertEquals(userRoleExpected.getId(), userRoleActual.getId());
-		assertEquals(userRoleExpected.getRole(), userRoleActual.getRole());
-		assertEquals(userRoleExpected.getUser(), userRoleActual.getUser());
-	}
-
-	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#loginUser(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testLoginUser() {
+//		TEST PART 1
 		User u1 = new User();
 		@SuppressWarnings("unchecked")
 		TypedQuery<User> mockedUserQuery = mock(TypedQuery.class);
@@ -319,12 +250,12 @@ public class UserBeanTest {
 		try {
 			u2 = em.createNamedQuery("loginQuery", User.class).setParameter("login", "loginA").setParameter("password", "Password11").getSingleResult();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			assertNull(u2);
 		}
 		User u3 = em.createNamedQuery("loginQuery", User.class).setParameter("login", "login1").setParameter("password", "Password11").getSingleResult();
 		assertNotNull(u3);
 		
+//		TEST PART 2
 		User user2 = new User();
 		@SuppressWarnings("unchecked")
 		TypedQuery<User> mockedUserQuery2 = mock(TypedQuery.class);
@@ -332,33 +263,28 @@ public class UserBeanTest {
 		when(mockedUserQuery2.setParameter("login", "login2")).thenReturn(mockedUserQuery2);
 		when(mockedUserQuery2.setParameter("password", "Password22")).thenReturn(mockedUserQuery2);
 		when(mockedUserQuery2.getSingleResult()).thenReturn(user2);
-		Role r2 = new Role();
-		r2.setId(2);
-		UserRole ur2 = new UserRole();
-		ur2.setRole(r2);
-		@SuppressWarnings("unchecked")
-		TypedQuery<UserRole> mockedUserRoleQueryRole2 = mock(TypedQuery.class);
-		when(em.createNamedQuery("userRoleQuery", UserRole.class)).thenReturn(mockedUserRoleQueryRole2);
-		when(mockedUserRoleQueryRole2.setParameter("user", user2)).thenReturn(mockedUserRoleQueryRole2);
-		when(mockedUserRoleQueryRole2.getSingleResult()).thenReturn(ur2);
+		Role role2 = new Role();
+		role2.setId(2);
+		user2.setRole(role2);
 		
-		Customer c2 = new Customer();
-		c2.setFirstName("customer");
+		Customer customer2 = new Customer();
+		customer2.setFirstName("customer");
+		customer2.setUser(user2);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Customer> mockedCustomerQuery = mock(TypedQuery.class);
 		when(em.createNamedQuery("customerQuery", Customer.class)).thenReturn(mockedCustomerQuery);
 		when(mockedCustomerQuery.setParameter("user", user2)).thenReturn(mockedCustomerQuery);
-		when(mockedCustomerQuery.getSingleResult()).thenReturn(c2);
+		when(mockedCustomerQuery.getSingleResult()).thenReturn(customer2);
 		
 		SessionData expected2 = new SessionData();
-		expected2.setIdRole(ur2.getRole().getId());
-		expected2.setFirstName(c2.getFirstName());
+		expected2.setIdRole(user2.getRole().getId());
+		expected2.setFirstName(customer2.getFirstName());
 		
 		SessionData actual2 = ub.loginUser("login2", "Password22");
 		assertEquals(expected2.getIdRole(), actual2.getIdRole());
 		assertEquals(expected2.getFirstName(), actual2.getFirstName());
 		
-		
+//		TEST PART 3
 		User user3 = new User();
 		@SuppressWarnings("unchecked")
 		TypedQuery<User> mockedUserQuery3 = mock(TypedQuery.class);
@@ -366,27 +292,21 @@ public class UserBeanTest {
 		when(mockedUserQuery3.setParameter("login", "login3")).thenReturn(mockedUserQuery3);
 		when(mockedUserQuery3.setParameter("password", "Password33")).thenReturn(mockedUserQuery3);
 		when(mockedUserQuery3.getSingleResult()).thenReturn(user3);
-		Role r3 = new Role();
-		r3.setId(3);
-		UserRole ur3 = new UserRole();
-		ur3.setRole(r3);
-		@SuppressWarnings("unchecked")
-		TypedQuery<UserRole> mockedUserRoleQueryRole3 = mock(TypedQuery.class);
-		when(em.createNamedQuery("userRoleQuery", UserRole.class)).thenReturn(mockedUserRoleQueryRole3);
-		when(mockedUserRoleQueryRole3.setParameter("user", user3)).thenReturn(mockedUserRoleQueryRole3);
-		when(mockedUserRoleQueryRole3.getSingleResult()).thenReturn(ur3);
+		Role role3 = new Role();
+		role3.setId(3);
+		user3.setRole(role3);
 		
-		Operator o3 = new Operator();
-		o3.setFirstName("operator");
+		Operator operator3 = new Operator();
+		operator3.setFirstName("operator");
 		@SuppressWarnings("unchecked")
 		TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
 		when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
 		when(mockedOperatorQuery.setParameter("user", user3)).thenReturn(mockedOperatorQuery);
-		when(mockedOperatorQuery.getSingleResult()).thenReturn(o3);
+		when(mockedOperatorQuery.getSingleResult()).thenReturn(operator3);
 		
 		SessionData expected3 = new SessionData();
-		expected3.setIdRole(ur3.getRole().getId());
-		expected3.setFirstName(o3.getFirstName());
+		expected3.setIdRole(user3.getRole().getId());
+		expected3.setFirstName(operator3.getFirstName());
 		
 		SessionData actual3 = ub.loginUser("login3", "Password33");
 		assertEquals(expected3.getIdRole(), actual3.getIdRole());
@@ -410,40 +330,24 @@ public class UserBeanTest {
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#addOperator(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testAddOperator() {
+	public void testAddOperator() throws IllegalStateException, SecurityException, SystemException {
+		when(em.find(User.class, 3)).thenReturn(user);
 
-		try {
-			ut.begin();
-			when(em.find(User.class, 3)).thenReturn(user);
-			
-			Admin admin = new Admin();
-			@SuppressWarnings("unchecked")
-			TypedQuery<Admin> mockedQueryAdmin = mock(TypedQuery.class);
-			when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedQueryAdmin);
-			when(mockedQueryAdmin.setParameter("user", user)).thenReturn(mockedQueryAdmin);
-			when(mockedQueryAdmin.getSingleResult()).thenReturn(admin);
-					
-			UserRole ur = ub.addUserRole(user, 2);
-			em.persist(user);
-			em.persist(operator);
-			em.persist(ur);
-			
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
+		Admin admin = new Admin();
+		admin.setUser(user);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Admin> mockedQueryAdmin = mock(TypedQuery.class);
+		when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedQueryAdmin);
+		when(mockedQueryAdmin.setParameter("user", user)).thenReturn(mockedQueryAdmin);
+		when(mockedQueryAdmin.getSingleResult()).thenReturn(admin);
+
 		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
-		assertTrue(this.ub.addOperator("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login", "password", 3));	
+		assertTrue(ub.addOperator("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login", "password", 3));
 	}
 
 	/**
@@ -463,67 +367,61 @@ public class UserBeanTest {
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#updateOperatorData(int, int, java.lang.String, boolean, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testUpdateOperatorData() {
-		String updateUserQuery = "UPDATE User SET login = 'login', active = true WHERE id = 3";
-		String updateOperatorQuery = "UPDATE Operator SET firstName = 'firstName', lastName = 'lastName', phoneNo = 'phoneNo', email = 'email', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "' WHERE id = 1";
-		try {
-			ut.begin();
-			Query mockedUserQuery = mock(Query.class);
-			when(em.createQuery(updateUserQuery)).thenReturn(mockedUserQuery);
-			when(mockedUserQuery.executeUpdate()).thenReturn(1);
-			Query mockedOperatorQuery = mock(Query.class);
-			when(em.createQuery(updateOperatorQuery)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.executeUpdate()).thenReturn(1);
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		assertTrue(ub.updateOperatorData(3, 1, "login", true, "firstName", "lastName", "phoneNo", "email"));
+	public void testUpdateOperatorData() throws IllegalStateException, SecurityException, SystemException {
+
+		User loginUser = new User();
+		loginUser.setId(3);
+		loginUser.setLogin("LoginUser456");
+		when(em.find(User.class, 3)).thenReturn(loginUser);
+		
+		Admin loginAdmin = new Admin();
+		loginAdmin.setId(1);
+		loginAdmin.setUser(loginUser);
+		
+		@SuppressWarnings("unchecked")
+		TypedQuery<Admin> typedQueryAdmin = mock(TypedQuery.class);
+		when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(typedQueryAdmin);
+		when(typedQueryAdmin.setParameter("user", loginUser)).thenReturn(typedQueryAdmin);
+		when(typedQueryAdmin.getSingleResult()).thenReturn(loginAdmin);
+		
+		Operator operatorToEdit = new Operator();
+		operatorToEdit.setLastName("lastName1234");
+		User userToEdit = new User();
+		userToEdit.setLogin("login1234");
+		operatorToEdit.setUser(userToEdit);
+		operatorToEdit.setAdmin(loginAdmin);
+		when(em.find(Operator.class, 44)).thenReturn(operatorToEdit);
+		
+		assertTrue(ub.updateOperatorData(3, 44, "login", true, "firstName", "lastName741", "phoneNo", "email"));
+		assertEquals("lastName741", operatorToEdit.getLastName());
+		assertEquals("login", operatorToEdit.getUser().getLogin());
+		assertEquals("LoginUser456", operatorToEdit.getAdmin().getUser().getLogin());
 	}
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#addAdmin(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testAddAdmin() {
-		try {
-			ut.begin();
-			when(em.find(User.class, 2)).thenReturn(user);
-			
-			Admin admin = new Admin();
-			@SuppressWarnings("unchecked")
-			TypedQuery<Admin> mockedAdminQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedAdminQuery);
-			when(mockedAdminQuery.setParameter("user", user)).thenReturn(mockedAdminQuery);
-			when(mockedAdminQuery.getSingleResult()).thenReturn(admin);
-			UserRole ur = ub.addUserRole(user, 1);
-			
-			em.persist(user);
-			em.persist(admin);
-			em.persist(ur);
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}	
-		
+	public void testAddAdmin() throws IllegalStateException, SecurityException, SystemException {
+
+		when(em.find(User.class, 2)).thenReturn(user);
+
+		Admin admin = new Admin();
+		admin.setUser(user);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Admin> mockedAdminQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedAdminQuery);
+		when(mockedAdminQuery.setParameter("user", user)).thenReturn(mockedAdminQuery);
+		when(mockedAdminQuery.getSingleResult()).thenReturn(admin);
+
 		when(mail.sendEmail("email@gmailtest.com", "mailSubject", "mailText")).thenReturn(true);
 		assertTrue(ub.addAdmin("firstName", "lastName", "phoneNo", "email@gmailtest.com", "login1", "Password11", 2));
 	}
@@ -543,17 +441,12 @@ public class UserBeanTest {
 		
 		Role role = new Role();
 		role.setId(1);
-		UserRole ur = new UserRole();
-		ur.setRole(role);
-		@SuppressWarnings("unchecked")
-		TypedQuery<UserRole> mockedUserRoleQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("userRoleQuery", UserRole.class)).thenReturn(mockedUserRoleQuery);
-		when(mockedUserRoleQuery.setParameter("user", user)).thenReturn(mockedUserRoleQuery);
-		when(mockedUserRoleQuery.getSingleResult()).thenReturn(ur);
+		user.setRole(role);
 		
 		Admin admin = new Admin();
 		admin.setFirstName("firstName");
 		admin.setLastName("lastName");
+		admin.setUser(user);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Admin> mockedAdminQuery = mock(TypedQuery.class);
 		when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(mockedAdminQuery);
@@ -602,32 +495,40 @@ public class UserBeanTest {
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#updateAdminData(int, int, java.lang.String, boolean, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testUpdateAdminData() {
-		String updateUserQuery = "UPDATE User SET login = 'login1', active = true WHERE id = 1";
-		String updateAdminQuery = "UPDATE Admin SET firstName = 'firstName', lastName = 'lastName', phoneNo = 'phoneNo', email = 'email', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "' WHERE id = 1";	
-		try {
-			ut.begin();
-			Query mockedUserQuery = mock(Query.class);
-			when(em.createQuery(updateUserQuery)).thenReturn(mockedUserQuery);
-			when(mockedUserQuery.executeUpdate()).thenReturn(1);
-			Query mockedAdminQuery = mock(Query.class);
-			when(em.createQuery(updateAdminQuery)).thenReturn(mockedAdminQuery);
-			when(mockedAdminQuery.executeUpdate()).thenReturn(1);
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		assertTrue(ub.updateAdminData(1, 1, "login1", true, "firstName", "lastName", "phoneNo", "email"));
+	public void testUpdateAdminData() throws IllegalStateException, SecurityException, SystemException {
+		User loginUser = new User();
+		loginUser.setId(1);
+		loginUser.setLogin("LoginUser789");
+		when(em.find(User.class, 1)).thenReturn(loginUser);
+		
+		Admin loginAdmin = new Admin();
+		loginAdmin.setId(1);
+		loginAdmin.setUser(loginUser);
+		
+		@SuppressWarnings("unchecked")
+		TypedQuery<Admin> typedQueryAdmin = mock(TypedQuery.class);
+		when(em.createNamedQuery("adminLoginQuery", Admin.class)).thenReturn(typedQueryAdmin);
+		when(typedQueryAdmin.setParameter("user", loginUser)).thenReturn(typedQueryAdmin);
+		when(typedQueryAdmin.getSingleResult()).thenReturn(loginAdmin);
+		
+		Admin adminToEdit = new Admin();
+		adminToEdit.setLastName("lastName1234");
+		
+		User userToEdit = new User();
+		userToEdit.setLogin("login1234");
+		adminToEdit.setUser(userToEdit);
+		adminToEdit.setAdmin(loginAdmin);
+		when(em.find(Admin.class, 13)).thenReturn(adminToEdit);
+		
+		assertTrue(ub.updateAdminData(1, 13, "login1", true, "firstName", "lastName", "phoneNo", "email"));
+		assertEquals("lastName", adminToEdit.getLastName());
+		assertEquals("login1", adminToEdit.getUser().getLogin());
+		assertEquals("LoginUser789", adminToEdit.getAdmin().getUser().getLogin());
 	}
 
 	/**
@@ -643,28 +544,24 @@ public class UserBeanTest {
 
 	/**
 	 * Test method for {@link pl.shopapp.beans.UserBean#setSettingsApp(int, int, int, int, int, int, int, int)}.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Test
-	public void testSetSettingsApp() {
-		String updateSettingAppQuery = "UPDATE SettingsApp SET minCharInPass = 5, maxCharInPass = 12, upperCaseInPass = 1, numbersInPass = 2, minCharInLogin = 6, maxCharInLogin = 15, sessionTime = 30, idUser = 1, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"' WHERE id = 1";
-		try {
-			ut.begin();
-			Query mockedQuery = mock(Query.class);
-			when(em.createQuery(updateSettingAppQuery)).thenReturn(mockedQuery);
-			when(mockedQuery.executeUpdate()).thenReturn(1);
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
+	public void testSetSettingsApp() throws IllegalStateException, SecurityException, SystemException {
+//		TEST PART 1
+		when(em.find(SettingsApp.class, 1)).thenReturn(null);
 		assertTrue(ub.setSettingsApp(5, 12, 1, 2, 6, 15, 30, 1));
+		
+//		TEST PART 2
+		SettingsApp settingsApp = new SettingsApp();
+		settingsApp.setMaxCharInLogin(33);
+		settingsApp.setId(1);
+		when(em.find(SettingsApp.class, 1)).thenReturn(settingsApp);
+		assertTrue(ub.setSettingsApp(5, 12, 1, 2, 6, 15, 30, 1));
+		assertEquals(15, ub.getSettingsApp().getMaxCharInLogin());
+		assertEquals(15, settingsApp.getMaxCharInLogin());
 	}
 	
 	@Test

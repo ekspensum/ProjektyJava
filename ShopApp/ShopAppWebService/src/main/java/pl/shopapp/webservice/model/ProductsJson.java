@@ -9,6 +9,7 @@ public class ProductsJson {
 	private int unitsInStock;
 	private String base64Image;
 	private byte [] image;
+	private String categoryName;
 	
 	public int getId() {
 		return id;
@@ -51,6 +52,12 @@ public class ProductsJson {
 	}
 	public void setImage(byte [] image) {
 		this.image = image;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 }

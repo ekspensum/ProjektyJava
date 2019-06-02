@@ -1,7 +1,6 @@
 package pl.shopapp.beans;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +27,7 @@ import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Role;
 import pl.shopapp.entites.SettingsApp;
 import pl.shopapp.entites.User;
-import pl.shopapp.entites.UserRole;
+
 
 /**
  * The UserBean class provide create, read and update method for users. Method delete is not predict to use. Additional, this class include setting application like login and password setting, session time setting.
@@ -41,12 +40,11 @@ import pl.shopapp.entites.UserRole;
 public class UserBean implements UserBeanRemote, UserBeanLocal {
 
 	@PersistenceContext(unitName = "ShopAppEntites")
-	private EntityManager em;
+	private EntityManager entityManager;
 
 	@Resource
-	private UserTransaction ut;
+	private UserTransaction userTransaction;
 
-	private SettingsApp setting;
 	private SendEmail mail;
 
 //	@Resource 
@@ -62,28 +60,31 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	
 	/**
 	 * This constructor is using only for tests
-	 * @param em EntityManager
-	 * @param ut UserTransaction
+	 * @param entityManager EntityManager
+	 * @param userTransaction UserTransaction
 	 * @param mail SendEmail
 	 */
 	public UserBean(EntityManager em, UserTransaction ut, SendEmail mail) {
 	super();
-	this.em = em;
-	this.ut = ut;
+	this.entityManager = em;
+	this.userTransaction = ut;
 	this.mail = mail;
 }
 
 	/**
 	 * Adds new customer to database with specified parameters. During the operation will be add data of User, UserRole and Customer class
 	 * @return true if operation done 
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon) {
+	public boolean addCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon) throws IllegalStateException, SecurityException, SystemException {
 
 		try {
-			ut.begin();
-			User u = new User();
-			Customer c = new Customer();
+			userTransaction.begin();
+			User user = new User();
+			Customer customer = new Customer();
 			Validation valid = new Validation();
 			
 			StringBuilder activationString = new StringBuilder();
@@ -101,45 +102,41 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 					+ activationLink
 					+ "<br><br>Pozdrawiamy<br>Dział Obsługi Klienta</font><br><br>"+mail.getMailFrom();
 			
-			u.setLogin(login);
-			u.setPassword(valid.stringToCode(password));
-			u.setActive(false);
-			c.setFirstName(firstName);
-			c.setLastName(lastName);
-			c.setPesel(pesel);
-			c.setZipCode(zipCode);
-			c.setCountry(country);
-			c.setCity(city);
-			c.setStreet(street);
-			c.setStreetNo(streetNo);
-			c.setUnitNo(unitNo);
-			c.setEmail(email);
-			if (isCompany) {
-				c.setCompany(isCompany);
-				c.setCompanyName(companyName);
-				c.setTaxNo(taxNo);
-				c.setRegon(regon);					
-			}
-			c.setDateRegistration(LocalDateTime.now());
-			c.setActivationString(valid.stringToCode(activationString.toString()));
-			c.setUser(u);		
+			user.setLogin(login);
+			user.setPassword(valid.stringToCode(password));
+			user.setActive(false);
 			
-			UserRole ur = addUserRole(u, 2);
-			em.persist(u);
-			em.persist(c);
-			em.persist(ur);
-			mail.sendEmail(email, mailSubject, mailText);
-			ut.commit();
-			return true;
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			Role role = entityManager.find(Role.class, 2);
+			user.setRole(role);
+			
+			customer.setFirstName(firstName);
+			customer.setLastName(lastName);
+			customer.setPesel(pesel);
+			customer.setZipCode(zipCode);
+			customer.setCountry(country);
+			customer.setCity(city);
+			customer.setStreet(street);
+			customer.setStreetNo(streetNo);
+			customer.setUnitNo(unitNo);
+			customer.setEmail(email);
+			if (isCompany) {
+				customer.setCompany(isCompany);
+				customer.setCompanyName(companyName);
+				customer.setTaxNo(taxNo);
+				customer.setRegon(regon);					
 			}
+			customer.setDateRegistration(LocalDateTime.now());
+			customer.setActivationString(valid.stringToCode(activationString.toString()));
+			customer.setUser(user);		
+			
+			entityManager.persist(user);
+			entityManager.persist(customer);
+			mail.sendEmail(email, mailSubject, mailText);
+			userTransaction.commit();
+			return true;
+		} catch (Exception e) {
+			userTransaction.rollback();
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -147,36 +144,56 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	/**
 	 * Update existing user data in database with gets parameter values. If any parameter is null (exceptions idUser), then previous parameter value no change in database.
 	 * @return true if update done  
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean updateCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon, int idUser) {
+	public boolean updateCustomer(String login, String password, String firstName, String lastName, String pesel, String zipCode, String country, String city, 
+			String street, String streetNo, String unitNo, String email, boolean isCompany, String companyName, String taxNo, String regon, int idUser) 
+					throws IllegalStateException, SecurityException, SystemException {
 		try {
-			ut.begin();
+			userTransaction.begin();
 			Validation valid = new Validation();
 			password = valid.stringToCode(password);
-			String updateUserQuery = "UPDATE User SET login = '" + login + "', password = '" + password + "' WHERE id = " + idUser + "";
-			User user = em.find(User.class, idUser);
-			Customer customer = (Customer) em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
-			String updateCustomerQuery = "UPDATE Customer SET firstName = '" + firstName + "', lastName = '"
-					+ lastName + "', pesel = '" + pesel + "', country = '" + country
-					+ "', zipCode = '" + zipCode + "', city = '" + city + "', street = '" + street
-					+ "', streetNo = '" + streetNo + "', unitNo = '" + unitNo + "', email = '"
-					+ email + "', company = " + isCompany + ", companyName = '" + companyName
-					+ "', taxNo = '" + taxNo + "', regon = '" + regon + "' WHERE id = " + customer.getId()	+ "";
-			int uuq = em.createQuery(updateUserQuery).executeUpdate();
-			int ucq = em.createQuery(updateCustomerQuery).executeUpdate();
-			ut.commit();
-			if (uuq == 1 && ucq == 1)
-				return true;
-			else
-				ut.rollback();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+
+			User user = entityManager.find(User.class, idUser);
+			user.setLogin(login);
+			user.setPassword(password);
+			
+			Role role = entityManager.find(Role.class, 2);
+			user.setRole(role);
+			
+			Customer customer = (Customer) entityManager.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
+			customer.setFirstName(firstName);
+			customer.setLastName(lastName);
+			customer.setPesel(pesel);
+			customer.setZipCode(zipCode);
+			customer.setCountry(country);
+			customer.setCity(city);
+			customer.setStreet(street);
+			customer.setStreetNo(streetNo);
+			customer.setUnitNo(unitNo);
+			customer.setEmail(email);
+			customer.setCompany(isCompany);
+			if(isCompany) {
+				customer.setCompanyName(companyName);
+				customer.setTaxNo(taxNo);
+				customer.setRegon(regon);
+			}
+			customer.setDateRegistration(LocalDateTime.now());
+			customer.setUser(user);	
+
+			entityManager.persist(user);
+			entityManager.persist(customer);
+			
+			userTransaction.commit();
+			return true;
+		} catch (Exception e) {
+			userTransaction.rollback();
 			e.printStackTrace();
 			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -185,33 +202,31 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public Customer findCustomer(User u) {
-		// TODO Auto-generated method stub
-		Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", u).getSingleResult();
-		return c;
+		Customer customer = entityManager.createNamedQuery("customerQuery", Customer.class).setParameter("user", u).getSingleResult();
+		return customer;
 	}
 
 	/**
 	 * Set active user. When user is active then can login to shop application, else user can't access to shop. Administrator can change this state.
 	 * @return true if operation done
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean setActiveCustomer(int idUser, boolean action) {
+	public boolean setActiveCustomer(int idUser, boolean action) throws IllegalStateException, SecurityException, SystemException {
 		try {
-			ut.begin();
-			String activeCustomerQuery = "UPDATE User SET active = "+action+" WHERE id = "+idUser+" ";
-			int acq = em.createQuery(activeCustomerQuery).executeUpdate();
-			ut.commit();
-			if(acq == 1)
-				return true;
-			else
-				ut.rollback();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+			userTransaction.begin();
+			User user = entityManager.find(User.class, idUser);
+			user.setActive(action);
+			entityManager.persist(user);
+			userTransaction.commit();
+			return true;
+		} catch (Exception e) {
+			userTransaction.rollback();
 			e.printStackTrace();
 			return false;
 		}
-		return false;
 	}
 	
 	/**
@@ -223,7 +238,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 		// TODO Auto-generated method stub
 		List<Customer> cl;
 		try {
-			cl = em.createNamedQuery("activationStringQuery", Customer.class).setParameter("activationString", activationString).getResultList();
+			cl = entityManager.createNamedQuery("activationStringQuery", Customer.class).setParameter("activationString", activationString).getResultList();
 			
 			if(cl.size() == 0)
 				return false;
@@ -246,9 +261,8 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public User findUser(int idUser) {
-		// TODO Auto-generated method stub
-		User u = em.find(User.class, idUser);
-		return u;
+		User user = entityManager.find(User.class, idUser);
+		return user;
 	}
 
 	/**
@@ -258,23 +272,10 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	@Override
 	public boolean findUserLogin(String login) {
 		// TODO examine whether the login is in use
-		if (em.createNamedQuery("findUserLoginQuery", User.class).setParameter("login", login).getResultList().size() > 0)
+		if (entityManager.createNamedQuery("findUserLoginQuery", User.class).setParameter("login", login).getResultList().size() > 0)
 			return true;
 		else
 			return false;
-	}
-
-	/**
-	 * Every user has role. This method persist role for each user.
-	 * @return UserRole
-	 */
-	@Override
-	public UserRole addUserRole(User u, int idRole) {
-		Role r = em.find(Role.class, idRole);
-		UserRole ur = new UserRole();
-		ur.setRole(r);
-		ur.setUser(u);
-		return ur;
 	}
 
 	/**
@@ -286,30 +287,30 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public SessionData loginUser(String login, String password) {
 		User user = null;
 		try {
-			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
+			user = entityManager.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
 		} catch (NoResultException e) {
 //			e.printStackTrace();
 			return null;
 		}
-		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
-		if (ur.getRole().getId() == 2) {
-			Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
+		
+		if (user.getRole().getId() == 2) {
+			Customer c = entityManager.createNamedQuery("customerQuery", Customer.class).setParameter("user", user).getSingleResult();
 			SessionData data = new SessionData();
 			data.setIdUser(user.getId());
 			data.setFirstName(c.getFirstName());
 			data.setLastName(c.getLastName());
-			data.setIdRole(ur.getRole().getId());
-			data.setRoleName(ur.getRole().getRoleName());
+			data.setIdRole(user.getRole().getId());
+			data.setRoleName(user.getRole().getRoleName());
 			data.setActive(user.getActive());
 			return data;
-		} else if (ur.getRole().getId() == 3) {
-			Operator op = em.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user).getSingleResult();
+		} else if (user.getRole().getId() == 3) {
+			Operator op = entityManager.createNamedQuery("operatorQuery", Operator.class).setParameter("user", user).getSingleResult();
 			SessionData data = new SessionData();
 			data.setIdUser(user.getId());
 			data.setFirstName(op.getFirstName());
 			data.setLastName(op.getLastName());
-			data.setIdRole(ur.getRole().getId());
-			data.setRoleName(ur.getRole().getRoleName());
+			data.setIdRole(user.getRole().getId());
+			data.setRoleName(user.getRole().getRoleName());
 			data.setActive(user.getActive());
 			return data;
 		}
@@ -322,58 +323,53 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public List<User> getUsersOperatorData() {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
+		return entityManager.createNamedQuery("getUserOperatorQuery", User.class).getResultList();
 	}
 
 	/**
 	 * Add new operator. This method is using by administrator in ShopAppClient.
 	 * @return true if method done.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean addOperator(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) {
+	public boolean addOperator(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) throws IllegalStateException, SecurityException, SystemException {
 
 		try {
-			ut.begin();
-			User user = em.find(User.class, idUser);
-			Admin adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+			userTransaction.begin();
+			User userAdmin = entityManager.find(User.class, idUser);
+			Admin admin = entityManager.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", userAdmin).getSingleResult();
+			Role role = entityManager.find(Role.class, 3);
 			
-			User u = new User();
-			u.setLogin(login);
-			u.setPassword(password);
-			u.setActive(true);
+			User user = new User();
+			user.setLogin(login);
+			user.setPassword(password);
+			user.setActive(true);
+			user.setRole(role);
 			
-			Operator o = new Operator();
-			o.setFirstName(firstName);
-			o.setLastName(lastName);
-			o.setPhoneNo(phoneNo);
-			o.setEmail(email);
-			o.setAdmin(adm);
-			o.setUser(u);
-			o.setDate(LocalDateTime.now());
 			
-			UserRole ur = addUserRole(u, 3);
+			Operator operator = new Operator();
+			operator.setFirstName(firstName);
+			operator.setLastName(lastName);
+			operator.setPhoneNo(phoneNo);
+			operator.setEmail(email);
+			operator.setAdmin(admin);
+			operator.setUser(user);
+			operator.setDate(LocalDateTime.now());
 			
 			String mailSubject = "Potwierdzenie rejestracji konta operatora w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
 					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
 			
-			em.persist(u);
-			em.persist(o);
-			em.persist(ur);
+			entityManager.persist(user);
+			entityManager.persist(operator);
 			mail.sendEmail(email, mailSubject, mailText);
-			ut.commit();
+			userTransaction.commit();
 			return true;
-		} catch (NotSupportedException | SystemException | HeuristicRollbackException | HeuristicMixedException
-				| RollbackException | IllegalStateException | SecurityException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			userTransaction.rollback();
 			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			return false;
 		}
 	}
@@ -384,98 +380,103 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public List<Operator> getOperatorsData() {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
+		return entityManager.createNamedQuery("getAllOperatorsQuery", Operator.class).getResultList();
 	}
 
 	/**
 	 * Update operator data. This method is using by administrator in ShopAppClient.
 	 * @return true if method done.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean updateOperatorData(int idUser, int idOperator, String login, boolean active, String firstName,
-			String lastName, String phoneNo, String email) {
-		// TODO update User & Operator from ShopAppClient AdminPanel
-		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser+ "";
-		String updateOperatorQuery = "UPDATE Operator SET firstName = '" + firstName + "', lastName = '" + lastName
-				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "' WHERE id = " + idOperator + "";
+	public boolean updateOperatorData(int idLoginUser, int idOperator, String login, boolean active, String firstName,
+		String lastName, String phoneNo, String email) throws IllegalStateException, SecurityException, SystemException {
 		try {
-			ut.begin();
-			int uuq = em.createQuery(updateUserQuery).executeUpdate();
-			int uoq = em.createQuery(updateOperatorQuery).executeUpdate();
-			ut.commit();
-			if (uuq == 1 && uoq == 1)
-				return true;
-			else
-				ut.rollback();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+			userTransaction.begin();
+			User loginUser = entityManager.find(User.class, idLoginUser);
+			Admin loginAdmin = entityManager.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", loginUser).getSingleResult();
+			
+			Operator operatorToEdit = entityManager.find(Operator.class, idOperator);
+			User userToEdit = operatorToEdit.getUser();
+			
+			userToEdit.setLogin(login);
+			userToEdit.setActive(active);
+			operatorToEdit.setUser(userToEdit);
+			operatorToEdit.setFirstName(firstName);
+			operatorToEdit.setLastName(lastName);
+			operatorToEdit.setPhoneNo(phoneNo);
+			operatorToEdit.setEmail(email);
+			operatorToEdit.setAdmin(loginAdmin);
+			operatorToEdit.setDate(LocalDateTime.now());
+
+			entityManager.persist(operatorToEdit);
+			userTransaction.commit();
+			return true;
+			
+		} catch (Exception e) {
+			userTransaction.rollback();
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	/**
 	 * Add new administrator. This method is using by administrator in ShopAppClient. Only first administrator (default) can add other administrator.
 	 * @return true if operation done.
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean addAdmin(String firstName, String lastName, String phoneNo, String email, String login, String password, int idUser) {
+	public boolean addAdmin(String firstName, String lastName, String phoneNo, String email, String login, String password, int idLoginUser) throws IllegalStateException, SecurityException, SystemException {
 		try {
-			ut.begin();
-			User user = em.find(User.class, idUser);
-			Admin adm = null;
+			userTransaction.begin();
+			User userAdmin = entityManager.find(User.class, idLoginUser);
+			Admin admin = null;
 			try {
-				adm = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+				admin = entityManager.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", userAdmin).getSingleResult();
 			} catch (NoResultException e) {
-				// TODO Auto-generated catch block
 //				e.printStackTrace();
-				adm = new Admin();
-				adm.setFirstName("firstNameDefault");
-				adm.setLastName("lastNameDefault");
-				adm.setDate(LocalDateTime.now());
-				adm.setUser(user);
-				adm.setAdmin(adm);
-				em.persist(adm);
+				admin = new Admin();
+				admin.setFirstName("firstNameDefault");
+				admin.setLastName("lastNameDefault");
+				admin.setDate(LocalDateTime.now());
+				admin.setUser(userAdmin);
+				admin.setAdmin(admin);
+				entityManager.persist(admin);
 			}
 			
 			String mailSubject = "Potwierdzenie rejestracji konta administratora w sklepie internetowym ShopApp.";
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
 					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
 			
-			User u = new User();
-			u.setLogin(login);
-			u.setPassword(password);
-			u.setActive(true);
+			Role role = entityManager.find(Role.class, 1);
 			
-			Admin a = new Admin();
-			a.setFirstName(firstName);
-			a.setLastName(lastName);
-			a.setPhoneNo(phoneNo);
-			a.setEmail(email);
-			a.setAdmin(adm);
-			a.setUser(u);
-			a.setDate(LocalDateTime.now());
+			User newUser = new User();
+			newUser.setLogin(login);
+			newUser.setPassword(password);
+			newUser.setActive(true);
+			newUser.setRole(role);
 			
-			UserRole ur = addUserRole(u, 1);
+			Admin newAdmin = new Admin();
+			newAdmin.setFirstName(firstName);
+			newAdmin.setLastName(lastName);
+			newAdmin.setPhoneNo(phoneNo);
+			newAdmin.setEmail(email);
+			newAdmin.setAdmin(admin);
+			newAdmin.setUser(newUser);
+			newAdmin.setDate(LocalDateTime.now());
 			
-			em.persist(u);
-			em.persist(a);
-			em.persist(ur);
+			entityManager.persist(newUser);
+			entityManager.persist(newAdmin);
 			mail.sendEmail(email, mailSubject, mailText);
-			ut.commit();
+			userTransaction.commit();
 			return true;
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			userTransaction.rollback();
 			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			return false;
 		}
 	}
@@ -488,19 +489,18 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	public SessionData loginAdmin(String login, String password) {
 		User user = null;
 		try {
-			user = em.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
+			user = entityManager.createNamedQuery("loginQuery", User.class).setParameter("login", login).setParameter("password", password).getSingleResult();
 		} catch (NoResultException e) {
 //			e.printStackTrace();
 			return null;
 		}
-		UserRole ur = em.createNamedQuery("userRoleQuery", UserRole.class).setParameter("user", user).getSingleResult();
-		Admin a = em.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
+		Admin admin = entityManager.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", user).getSingleResult();
 		SessionData data = new SessionData();
 		data.setIdUser(user.getId());
-		data.setFirstName(a.getFirstName());
-		data.setLastName(a.getLastName());
-		data.setIdRole(ur.getRole().getId());
-		data.setRoleName(ur.getRole().getRoleName());
+		data.setFirstName(admin.getFirstName());
+		data.setLastName(admin.getLastName());
+		data.setIdRole(user.getRole().getId());
+		data.setRoleName(user.getRole().getRoleName());
 		data.setActive(user.getActive());
 		return data;
 	}
@@ -511,7 +511,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public List<Admin> getAdminsData() {
-		return em.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
+		return entityManager.createNamedQuery("getAllAdminsQuery", Admin.class).getResultList();
 	}
 
 	/**
@@ -520,32 +520,42 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public List<User> getUsersAdminData() {
-		return em.createNamedQuery("getUserAdminQuery", User.class).getResultList();
+		return entityManager.createNamedQuery("getUserAdminQuery", User.class).getResultList();
 	}
 
 	/**
 	 * Update administrator data and user data in database. Call is from ShopAppClient AdminPanel. Only first Admin have privileges for update other admins.
 	 * @return true if update done
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean updateAdminData(int idUser, int idAdmin, String login, boolean active, String firstName,
-			String lastName, String phoneNo, String email) {
-		String updateUserQuery = "UPDATE User SET login = '" + login + "', active = " + active + " WHERE id = " + idUser + "";
-		String updateAdminQuery = "UPDATE Admin SET firstName = '" + firstName + "', lastName = '" + lastName
-				+ "', phoneNo = '" + phoneNo + "', email = '" + email + "', date = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-				+ "' WHERE id = " + idAdmin + "";
+	public boolean updateAdminData(int idLoginUser, int idAdmin, String login, boolean active, String firstName,
+			String lastName, String phoneNo, String email) throws IllegalStateException, SecurityException, SystemException {
 		try {
-			ut.begin();
-			int uuq = em.createQuery(updateUserQuery).executeUpdate();
-			int uaq = em.createQuery(updateAdminQuery).executeUpdate();
-			ut.commit();
-			if (uuq == 1 && uaq == 1)
-				return true;
-			else
-				ut.rollback();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
+			userTransaction.begin();		
+			User loginUser = entityManager.find(User.class, idLoginUser);
+			Admin loginAdmin = entityManager.createNamedQuery("adminLoginQuery", Admin.class).setParameter("user", loginUser).getSingleResult();
+			
+			Admin adminToEdit = entityManager.find(Admin.class, idAdmin);
+			User userToEdit = adminToEdit.getUser();
+
+			userToEdit.setLogin(login);
+			userToEdit.setActive(active);
+			adminToEdit.setUser(userToEdit);
+			adminToEdit.setFirstName(firstName);
+			adminToEdit.setLastName(lastName);
+			adminToEdit.setPhoneNo(phoneNo);
+			adminToEdit.setEmail(email);
+			adminToEdit.setAdmin(loginAdmin);
+			adminToEdit.setDate(LocalDateTime.now());
+			
+			entityManager.persist(adminToEdit);
+			userTransaction.commit();
+			return true;
+		} catch (Exception e) {
+			userTransaction.rollback();
 			e.printStackTrace();
 		}
 		return false;
@@ -557,7 +567,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public SettingsApp getSettingsApp() {
-		setting = em.find(SettingsApp.class, 1);
+		SettingsApp setting = entityManager.find(SettingsApp.class, 1);
 		if(setting == null) {
 			setting = new SettingsApp();
 			setting.setId(1);
@@ -578,10 +588,13 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	/**
 	 * Insert or update application setting like parameters password, login, session time
 	 * @return true if add or update setting done
+	 * @throws SystemException 
+	 * @throws SecurityException 
+	 * @throws IllegalStateException 
 	 */
 	@Override
-	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) {
-		setting = em.find(SettingsApp.class, 1);
+	public boolean setSettingsApp(int minCharInPass, int maxCharInPass, int upperCaseInPass, int numbersInPass,	int minCharInLogin, int maxCharInLogin, int sessionTime, int idUser) throws IllegalStateException, SecurityException, SystemException {
+		SettingsApp setting = entityManager.find(SettingsApp.class, 1);
 		if(setting == null) {
 			setting = new SettingsApp();
 			setting.setId(1);
@@ -595,30 +608,33 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			setting.setDateTime(LocalDateTime.now());
 			setting.setIdUser(idUser);			
 			try {
-				ut.begin();
-				em.persist(setting);
-				ut.commit();
+				userTransaction.begin();
+				entityManager.persist(setting);
+				userTransaction.commit();
 				return true;
-			} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException
-					| RollbackException | HeuristicMixedException | HeuristicRollbackException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
+				userTransaction.rollback();
 				e.printStackTrace();
 			}
 		}
 		else {
-			String updateSettingAppQuery = "UPDATE SettingsApp SET minCharInPass = "+minCharInPass+", maxCharInPass = "+maxCharInPass+", upperCaseInPass = "+upperCaseInPass+", "
-					+ "numbersInPass = "+numbersInPass+", minCharInLogin = "+minCharInLogin+", maxCharInLogin = "+maxCharInLogin+", sessionTime = "+sessionTime+", idUser = "+idUser+", dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"' WHERE id = 1";
 			try {
-				ut.begin();
-				int usq = em.createQuery(updateSettingAppQuery).executeUpdate();
-				ut.commit();
-				if(usq == 1)
-					return true;
-				else
-					ut.rollback();
-			} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-					| HeuristicMixedException | HeuristicRollbackException e) {
-				// TODO Auto-generated catch block
+				userTransaction.begin();
+				setting = getSettingsApp();
+				setting.setMinCharInPass(minCharInPass);
+				setting.setMaxCharInPass(maxCharInPass);
+				setting.setUpperCaseInPass(upperCaseInPass);
+				setting.setNumbersInPass(numbersInPass);
+				setting.setMinCharInLogin(minCharInLogin);
+				setting.setMaxCharInLogin(maxCharInLogin);
+				setting.setSessionTime(sessionTime);
+				setting.setDateTime(LocalDateTime.now());
+				setting.setIdUser(idUser);	
+				entityManager.persist(setting);
+				userTransaction.commit();
+				return true;
+			} catch (Exception e) {
+				userTransaction.rollback();
 				e.printStackTrace();
 			}			
 		}
@@ -631,13 +647,12 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public boolean addRole(String roleName) {
-		// TODO Auto-generated method stub
 		try {
-			ut.begin();
-			Role r = new Role();
-			r.setRoleName(roleName);
-			em.persist(r);
-			ut.commit();
+			userTransaction.begin();
+			Role role = new Role();
+			role.setRoleName(roleName);
+			entityManager.persist(role);
+			userTransaction.commit();
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
@@ -653,8 +668,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public List<Role> getRoleList() {
-		// TODO Auto-generated method stub		
-		return em.createNamedQuery("roleQuery", Role.class).getResultList();
+		return entityManager.createNamedQuery("roleQuery", Role.class).getResultList();
 	}
 
 	/**
@@ -663,8 +677,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 	 */
 	@Override
 	public List<Customer> findCustomerList(String lastName, String pesel) {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("customerByLastNamePeselQuery", Customer.class).setParameter("lastName", "%"+lastName+"%").setParameter("pesel", "%"+pesel+"%").getResultList();
+		return entityManager.createNamedQuery("customerByLastNamePeselQuery", Customer.class).setParameter("lastName", "%"+lastName+"%").setParameter("pesel", "%"+pesel+"%").getResultList();
 	}
 
 }

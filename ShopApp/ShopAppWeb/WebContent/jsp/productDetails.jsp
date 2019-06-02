@@ -21,7 +21,7 @@
 <form action="/ShopAppWeb/ProductDetails" method="POST" id="ProductDetails">
 <p>${pd.name } <img src="data:image;base64,${pd.base64Image}">	${pd.description }</p>
 <p>Cena: ${pd.price } Dostępna ilość: ${pd.unitsInStock }</p>
-<p>Dodaj do koszyka: <input type="number" name="quantity${pd.id }" max="${pd.unitsInStock }" value="1" style="width: 3em;" ${ SessionData.idRole == 3 || pd.unitsInStock == 0 ? "disabled" : ""} />	<button type="submit" name="buttonToBasketFromDetails" value="${pd.id }" form="ProductDetails" ${ SessionData.idRole == 3 || pd.unitsInStock == 0  ? "disabled" : ""} >Dodaj do koszyka</button>
+<p>Dodaj do koszyka: <input type="number" name="quantity${pd.id }" max="${pd.unitsInStock }" min="0" value="1" style="width: 3em;" ${ SessionData.idRole == 3 || pd.unitsInStock == 0 ? "disabled" : ""} />	<button type="submit" name="buttonToBasketFromDetails" value="${pd.id }" form="ProductDetails" ${ SessionData.idRole == 3 || pd.unitsInStock == 0  ? "disabled" : ""} >Dodaj do koszyka</button>
 </form>
 
 <c:if test="${SessionData != null && SessionData.idRole == 2}">

@@ -10,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.SystemException;
+
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.beans.UserBeanLocal;
@@ -85,7 +87,12 @@ public class CustomerPanel extends HttpServlet {
 			}
 			
 			if(validation(request, login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, companyName, taxNo, regon)) {
-				ubl.addCustomer(login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, isCompany, companyName, taxNo, regon);
+				try {
+					ubl.addCustomer(login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, isCompany, companyName, taxNo, regon);
+				} catch (IllegalStateException | SecurityException | SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				SessionData sd = ubl.loginUser(login, password);
 				request.getSession().setAttribute("SessionData", sd);
 				request.getSession().setMaxInactiveInterval(ubl.getSettingsApp().getSessionTime()*60);
@@ -145,12 +152,17 @@ public class CustomerPanel extends HttpServlet {
 					
 			request.setAttribute("saveEdit", "yes");
 			if(validation(request, login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, companyName, taxNo, regon)) {
-				if(ubl.updateCustomer(login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, isCompany, companyName, taxNo, regon, sd.getIdUser())) {
-					request.setAttribute("message", "Zaktualizowano dane klienta w bazie danych!");	
-					request.setAttribute("openToEdit", "no");
-					request.setAttribute("saveEdit", "no");					
-				} else
-					request.setAttribute("message", "Nie udało się zaktualizować danych klienta!");	
+				try {
+					if(ubl.updateCustomer(login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, isCompany, companyName, taxNo, regon, sd.getIdUser())) {
+						request.setAttribute("message", "Zaktualizowano dane klienta w bazie danych!");	
+						request.setAttribute("openToEdit", "no");
+						request.setAttribute("saveEdit", "no");					
+					} else
+						request.setAttribute("message", "Nie udało się zaktualizować danych klienta!");
+				} catch (IllegalStateException | SecurityException | SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
 			} else
 				request.setAttribute("saveEdit", "yes");
 		}

@@ -94,7 +94,7 @@ class ValidationTest {
 		assertFalse(valid.nameValidation("a123%"));
 		assertFalse(valid.nameValidation("a123^"));
 		assertFalse(valid.nameValidation("a123|"));
-		assertFalse(valid.nameValidation("a123:"));
+		assertFalse(valid.nameValidation("a123'"));
 		assertFalse(valid.nameValidation("a123;"));
 		assertFalse(valid.nameValidation("a111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"));
 	}

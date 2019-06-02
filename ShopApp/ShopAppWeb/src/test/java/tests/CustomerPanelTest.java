@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.SystemException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,7 +76,7 @@ class CustomerPanelTest {
 	}
 
 	@Test
-	final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException {
+	final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException, IllegalStateException, SecurityException, SystemException {
 		doNothing().when(request).setCharacterEncoding("UTF-8");
 		
 //		for buttonAddCustomer parameter

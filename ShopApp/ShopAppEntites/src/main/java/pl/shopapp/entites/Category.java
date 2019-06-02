@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.String;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -27,8 +28,13 @@ public class Category implements Serializable {
 	private LocalDateTime dateTime;
 	@Lob
 	private byte[] categoryImage;
+	
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="categories")
+	private List<Product> product;
+	
 	@OneToOne
 	private Operator op;
+	
 	@Transient
 	private String base64Image;
 
@@ -68,6 +74,14 @@ public class Category implements Serializable {
 
 	public void setCategoryImage(byte[] categoryImage) {
 		this.categoryImage = categoryImage;
+	}
+
+	public List<Product> getProduct() {
+		return product;
+	}
+
+	public void setProduct(List<Product> product) {
+		this.product = product;
 	}
 
 	public Operator getOp() {

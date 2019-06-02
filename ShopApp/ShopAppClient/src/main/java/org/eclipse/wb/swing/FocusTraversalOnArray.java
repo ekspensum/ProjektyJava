@@ -16,7 +16,7 @@ import java.awt.FocusTraversalPolicy;
 
 /**
  * Cyclic focus traversal policy based on array of components.
- * <p>
+ * <product>
  * This class may be freely distributed as part of any application or plugin.
  * 
  * @author scheglov_ke

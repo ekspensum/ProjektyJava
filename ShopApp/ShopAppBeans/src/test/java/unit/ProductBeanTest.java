@@ -3,18 +3,11 @@ package unit;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
@@ -29,7 +22,6 @@ import pl.shopapp.beans.ProductBean;
 import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Operator;
 import pl.shopapp.entites.Product;
-import pl.shopapp.entites.ProductCategory;
 import pl.shopapp.entites.User;
 
 class ProductBeanTest {
@@ -39,7 +31,7 @@ class ProductBeanTest {
 	UserTransaction ut;
 	User user;
 	List<Integer> helperListCat;
-	Product p;
+	Product product;
 	Category cat;
 	
 	@BeforeAll
@@ -66,7 +58,7 @@ class ProductBeanTest {
 		helperListCat.add(7);
 		helperListCat.add(8);
 		helperListCat.add(9);
-		p = new Product();
+		product = new Product();
 		cat = new Category();
 	}
 
@@ -76,160 +68,105 @@ class ProductBeanTest {
 		ut = null;
 		pb = null;
 		helperListCat.clear();
-		p = null;
+		product = null;
 		cat = null;
 	}
 
 	@Test
-	void testAddProduct() {
-		byte [] buffer = new byte[10];
-		try {
-			ut.begin();
-			when(em.find(User.class, 3)).thenReturn(user);
+	void testAddProduct() throws IllegalStateException, SecurityException, SystemException {
+		byte[] buffer = new byte[10];
 
-			Operator operator = new Operator();
-			@SuppressWarnings("unchecked")
-			TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.getSingleResult()).thenReturn(operator);
+		when(em.find(User.class, 3)).thenReturn(user);
 
-			p.setOp(operator);
-			em.persist(p);
-			for(int i = 0; i<helperListCat.size(); i++) {
-				when(em.find(Category.class, helperListCat.get(i))).thenReturn(cat);
-				ProductCategory pc = new ProductCategory();
-				pc.setCategory(cat);
-				pc.setProduct(p);
-				em.persist(pc);
-			}
-			ut.commit();
+		Operator operator = new Operator();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.getSingleResult()).thenReturn(operator);
+		product.setOp(operator);
 
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		List<Category> categories = new ArrayList<>();
+		for (int i = 0; i < helperListCat.size(); i++) {
+			when(em.find(Category.class, helperListCat.get(i))).thenReturn(cat);
+			categories.add(cat);
 		}
+		product.setCategories(categories);
+
 		assertTrue(pb.addProduct("productName", "productDescription", 11.22, 1, buffer, helperListCat, 3));
 	}
 
 	@Test
-	void testUpdateProductWithOutImage() {
-		int [] categoryToEdit = new int [9];
-		byte [] buffer = new byte[10];
-		try {
-			ut.begin();
-			p.setId(1);
-			when(em.find(Product.class, p.getId())).thenReturn(p);
-			when(em.find(User.class, 3)).thenReturn(user);
-			user.setId(3);
-			Operator op = new Operator();
-			@SuppressWarnings("unchecked")
-			TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
-			op.setId(3);
-			String updateProductWithoutImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 11.22, unitsInStock = 1, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = "+p.getId()+"";
-			Query mockedQueryWithOutImage = mock(Query.class);
-			when(em.createQuery(updateProductWithoutImage)).thenReturn(mockedQueryWithOutImage);
-			when(mockedQueryWithOutImage.setParameter("op", op)).thenReturn(mockedQueryWithOutImage);
-			when(mockedQueryWithOutImage.executeUpdate()).thenReturn(1);
-			for(int i = 0; i<helperListCat.size(); i++) {
-				when(em.find(Category.class, categoryToEdit[i])).thenReturn(cat);
-				ProductCategory pc = new ProductCategory();
-				pc.setId(1);
-				@SuppressWarnings("unchecked")
-				TypedQuery<ProductCategory> mockedProductCategoryQuery = mock(TypedQuery.class);
-				when(em.createNamedQuery("getProductCategoryQuery", ProductCategory.class)).thenReturn(mockedProductCategoryQuery);
-				when(mockedProductCategoryQuery.setParameter("category", cat)).thenReturn(mockedProductCategoryQuery);
-				when(mockedProductCategoryQuery.setParameter("product", p)).thenReturn(mockedProductCategoryQuery);
-				when(mockedProductCategoryQuery.getSingleResult()).thenReturn(pc);
-				String updateProductCategory = "UPDATE ProductCategory SET category_id = "+helperListCat.get(i)+", product_id = 1 WHERE id = "+pc.getId()+"";
-				Query mockedUpdateProductCategoryQuery = mock(Query.class);
-				when(em.createQuery(updateProductCategory)).thenReturn(mockedUpdateProductCategoryQuery);
-				when(mockedUpdateProductCategoryQuery.executeUpdate()).thenReturn(1);
-			}			
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+	void testUpdateProductWithOutImage() throws IllegalStateException, SecurityException, SystemException {
+		byte[] buffer = new byte[0];
+
+		product.setId(1);
+		when(em.find(Product.class, product.getId())).thenReturn(product);
+		when(em.find(User.class, 3)).thenReturn(user);
+		user.setId(3);
+		Operator op = new Operator();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
+		op.setId(3);
+		product.setOp(op);
+		product.setPrice(10.10);
+
+		List<Category> categories = new ArrayList<>();
+		for (int i = 0; i < helperListCat.size(); i++) {
+			when(em.find(Category.class, helperListCat.get(i))).thenReturn(cat);
+			cat.setId(helperListCat.get(i));
+			categories.add(cat);
 		}
-		assertTrue(pb.updateProduct("productName", "productDescription", 11.22, 1, buffer, 1, categoryToEdit, 0, 3, helperListCat));
+		product.setCategories(categories);
+
+		assertTrue(pb.updateProduct("productName", "productDescription", 11.22, 1, buffer, 1, 0, 3, helperListCat));
+		assertEquals(11.22, product.getPrice());
+		assertNotEquals(10.10, product.getPrice());
 	}
 
 	@Test
-	void testUpdateProductWithImage() {
-		int [] categoryToEdit = new int [9];
-		byte [] buffer = new byte[10];
-		try {
-			ut.begin();
-			p.setId(1);
-			when(em.find(Product.class, p.getId())).thenReturn(p);
-			when(em.find(User.class, 3)).thenReturn(user);
-			user.setId(3);
-			Operator op = new Operator();
-			@SuppressWarnings("unchecked")
-			TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
-			op.setId(3);
-			String updateProductWithImage = "UPDATE Product SET name = 'productName', description = 'productDescription', price = 11.22, unitsInStock = 1, productImage = :productImage, dateTime = '"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))+"', op = :op WHERE id = 1";
-			Query mockedQueryWithImage = mock(Query.class);
-			when(em.createQuery(updateProductWithImage)).thenReturn(mockedQueryWithImage);
-			when(mockedQueryWithImage.setParameter("productImage", buffer)).thenReturn(mockedQueryWithImage);
-			when(mockedQueryWithImage.setParameter("op", op)).thenReturn(mockedQueryWithImage);
-			when(mockedQueryWithImage.executeUpdate()).thenReturn(1);			
-			for(int i = 0; i<helperListCat.size(); i++) {
-				when(em.find(Category.class, categoryToEdit[i])).thenReturn(cat);
-				ProductCategory pc = new ProductCategory();
-				pc.setId(1);
-				@SuppressWarnings("unchecked")
-				TypedQuery<ProductCategory> mockedProductCategoryQuery = mock(TypedQuery.class);
-				when(em.createNamedQuery("getProductCategoryQuery", ProductCategory.class)).thenReturn(mockedProductCategoryQuery);
-				when(mockedProductCategoryQuery.setParameter("category", cat)).thenReturn(mockedProductCategoryQuery);
-				when(mockedProductCategoryQuery.setParameter("product", p)).thenReturn(mockedProductCategoryQuery);
-				when(mockedProductCategoryQuery.getSingleResult()).thenReturn(pc);
-				String updateProductCategory = "UPDATE ProductCategory SET category_id = "+helperListCat.get(i)+", product_id = 1 WHERE id = "+pc.getId()+"";
-				Query mockedUpdateProductCategoryQuery = mock(Query.class);
-				when(em.createQuery(updateProductCategory)).thenReturn(mockedUpdateProductCategoryQuery);
-				when(mockedUpdateProductCategoryQuery.executeUpdate()).thenReturn(1);
-			}
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+	void testUpdateProductWithImage() throws IllegalStateException, SecurityException, SystemException {
+		byte[] buffer = new byte[10];
+
+		product.setId(1);
+		when(em.find(Product.class, product.getId())).thenReturn(product);
+		when(em.find(User.class, 3)).thenReturn(user);
+		user.setId(3);
+		Operator op = new Operator();
+		@SuppressWarnings("unchecked")
+		TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
+		op.setId(3);
+		product.setOp(op);
+		product.setDescription("description");
+
+		product.setProductImage(buffer);
+
+		List<Category> categories = new ArrayList<>();
+		for (int i = 0; i < helperListCat.size(); i++) {
+			when(em.find(Category.class, helperListCat.get(i))).thenReturn(cat);
+			cat.setId(helperListCat.get(i));
+			categories.add(cat);
 		}
-		assertTrue(pb.updateProduct("productName", "productDescription", 11.22, 1, buffer, 1, categoryToEdit, 1, 3, helperListCat));
+		product.setCategories(categories);
+
+		assertTrue(pb.updateProduct("productName", "productDescription", 11.22, 1, buffer, 1, 1, 3, helperListCat));
+		assertEquals(10, product.getProductImage().length);
+		assertEquals("productDescription", product.getDescription());
+		assertNotEquals("description", product.getDescription());
 	}
 	
 	@Test
 	void testFindProductString() {
-		p.setName("name");
+		product.setName("name");
 		String name = "name";
 		List<Product> expected = new ArrayList<>();
-		expected.add(p);
+		expected.add(product);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Product> mockedProductQuery = mock(TypedQuery.class);
 		when(em.createNamedQuery("productsByName", Product.class)).thenReturn(mockedProductQuery);
@@ -241,9 +178,9 @@ class ProductBeanTest {
 
 	@Test
 	void testFindProductInt() {
-		p.setId(1);
+		product.setId(1);
 		List<Product> expected = new ArrayList<>();
-		expected.add(p);
+		expected.add(product);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Product> mockedProductQuery = mock(TypedQuery.class);
 		when(em.createNamedQuery("productsByQuantity", Product.class)).thenReturn(mockedProductQuery);
@@ -254,27 +191,19 @@ class ProductBeanTest {
 	}
 
 	@Test
-	void testAddCategory() {
-		byte [] buffer = new byte [10];
-		try {
-			ut.begin();
-			when(em.find(User.class, 3)).thenReturn(user);
-			user.setId(3);
-			Operator op = new Operator();
-			op.setId(1);
-			@SuppressWarnings("unchecked")
-			TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
-			when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
-			cat.setOp(op);
-			em.persist(cat);
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	void testAddCategory() throws IllegalStateException, SecurityException, SystemException {
+		byte[] buffer = new byte[10];
+		when(em.find(User.class, 3)).thenReturn(user);
+		user.setId(3);
+		Operator op = new Operator();
+		op.setId(1);
+		@SuppressWarnings("unchecked")
+		TypedQuery<Operator> mockedOperatorQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("operatorQuery", Operator.class)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.setParameter("user", user)).thenReturn(mockedOperatorQuery);
+		when(mockedOperatorQuery.getSingleResult()).thenReturn(op);
+		cat.setOp(op);
+
 		assertTrue(pb.addCategory("categoryName", buffer, user.getId()));
 	}
 
@@ -293,38 +222,35 @@ class ProductBeanTest {
 
 	@Test
 	void testListProductByCategory() {
-		p.setId(1);
-		List<Product> expected = new ArrayList<>();
-		expected.add(p);
-		@SuppressWarnings("unchecked")
-		TypedQuery<Product> mockedQuery = mock(TypedQuery.class);
-		when(em.createNamedQuery("productsByCategory", Product.class)).thenReturn(mockedQuery);
-		when(mockedQuery.setParameter(1, 1)).thenReturn(mockedQuery);
-		when(mockedQuery.getResultList()).thenReturn(expected);
-		List<Product> actual = pb.listProductByCategory(1);
-		assertEquals(expected, actual);
+		product.setId(1);
+		List<Product> productsExpected = new ArrayList<>();
+		productsExpected.add(product);
+		cat.setProduct(productsExpected);
+		when(em.find(Category.class, 1)).thenReturn(cat);
+		List<Product> productsActual = pb.listProductByCategory(1);
+		assertEquals(productsExpected, productsActual);
 	}
 
 	@Test
 	void testGetProduct() {
-		p.setId(1);
-		when(em.find(Product.class, p.getId())).thenReturn(p);
+		product.setId(1);
+		when(em.find(Product.class, product.getId())).thenReturn(product);
 		Product actual = pb.getProduct(1);
-		assertEquals(p, actual);
+		assertEquals(product, actual);
 	}
 
 	@Test
 	void testGetProductCategories() {
-		p.setId(1);
+		product.setId(1);
 		cat.setId(1);
 		List<Category> expected = new ArrayList<>();
 		expected.add(cat);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Category> mockedQuery = mock(TypedQuery.class);
 		when(em.createNamedQuery("productCategoriesQuery", Category.class)).thenReturn(mockedQuery);
-		when(mockedQuery.setParameter("product", p)).thenReturn(mockedQuery);
+		when(mockedQuery.setParameter("product", product)).thenReturn(mockedQuery);
 		when(mockedQuery.getResultList()).thenReturn(expected);
-		List<Category> actual = pb.getProductCategories(p);
+		List<Category> actual = pb.getProductCategories(product);
 		assertEquals(expected, actual);
 	}
 

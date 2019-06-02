@@ -4,12 +4,10 @@
 <!-- 	<provider>org.hibernate.ejb.HibernatePersistence</provider> -->
 		<jta-data-source>java:/MySqlDS</jta-data-source>
 		<class>pl.shopapp.entites.User</class>
-		<class>pl.shopapp.entites.UserRole</class>
 		<class>pl.shopapp.entites.Role</class>
 		<class>pl.shopapp.entites.Customer</class>
 		<class>pl.shopapp.entites.Product</class>
 		<class>pl.shopapp.entites.Category</class>
-		<class>pl.shopapp.entites.ProductCategory</class>
 		<class>pl.shopapp.entites.Admin</class>
 		<class>pl.shopapp.entites.Transaction</class>
 		<class>pl.shopapp.entites.Operator</class>

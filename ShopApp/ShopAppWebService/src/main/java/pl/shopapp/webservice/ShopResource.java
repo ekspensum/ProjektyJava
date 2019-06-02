@@ -15,6 +15,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -40,17 +41,14 @@ import org.w3c.dom.Element;
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanLocal;
+import pl.shopapp.entites.Category;
 import pl.shopapp.entites.Product;
-import pl.shopapp.entites.ProductCategory;
 import pl.shopapp.webservice.model.CategoryJson;
-import pl.shopapp.webservice.model.HardDisksJson;
-import pl.shopapp.webservice.model.MainBoardJson;
 import pl.shopapp.webservice.model.MainBoardXml;
-import pl.shopapp.webservice.model.ProcessorsJson;
 import pl.shopapp.webservice.model.ProductDataJson;
 import pl.shopapp.webservice.model.ProductsJson;
-import pl.shopapp.webservice.model.RamMemoryJson;
 import pl.shopapp.webservice.model.RamMemoryXml;
+
 
 @Stateless
 @Path("/ShopResource")
@@ -66,12 +64,6 @@ public class ShopResource implements ShopResourceLocal {
 	private ProductBeanLocal pbl;
 	@EJB
 	private UserBeanLocal ubl;
-	private String category;
-	private List<Product> listProduct;
-	private List<MainBoardXml> listMainBoardXml;
-	private MainBoardXml mb;
-	private List<RamMemoryXml> listRamMemoryXml;
-	private RamMemoryXml rm;
 
 //	for tests
 	public ShopResource(EntityManager em, UserTransaction ut, ProductBeanLocal pbl, UserBeanLocal ubl) {
@@ -80,11 +72,11 @@ public class ShopResource implements ShopResourceLocal {
 	this.ut = ut;
 	this.pbl = pbl;
 	this.ubl = ubl;
-}
+	}
 	
 	public ShopResource() {
 	super();
-}
+	}
 
 	@GET
 	@Path("/ProcessorsXml")
@@ -93,7 +85,7 @@ public class ShopResource implements ShopResourceLocal {
 	public byte[] getProcessors() {
 
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();
-		category = "Procesory";
+		String category = "Procesory";
 		try {
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -101,20 +93,26 @@ public class ShopResource implements ShopResourceLocal {
 			Element root = doc.createElement("Processors");
 			doc.appendChild(root);
 
+			List<Category> listCategory = pbl.listCategory();
 			int id = 0;
-			for (int i = 0; i < pbl.listCategory().size(); i++)
-				if (pbl.listCategory().get(i).getName().equals(category))
-					id = pbl.listCategory().get(i).getId();
+			for (int i = 0; i < listCategory.size(); i++) {
+				if (listCategory.get(i).getName().equals(category)) {
+					id = listCategory.get(i).getId();	
+					break;
+				}
+			}
 
-			for (int i = 0; i < pbl.listProductByCategory(id).size(); i++)
+			List<Product> listProductByCategory = pbl.listProductByCategory(id);
+			for (int i = 0; i < listProductByCategory.size(); i++) {
 				getProducts(doc, root, "Processor", String.valueOf(i),
-						String.valueOf(pbl.listProductByCategory(id).get(i).getId()),
-						pbl.listProductByCategory(id).get(i).getName(),
-						pbl.listProductByCategory(id).get(i).getDescription(),
-						String.valueOf(pbl.listProductByCategory(id).get(i).getPrice()),
-						String.valueOf(pbl.listProductByCategory(id).get(i).getUnitsInStock()),
-						pbl.listProductByCategory(id).get(i).getBase64Image());
-
+						String.valueOf(listProductByCategory.get(i).getId()),
+						listProductByCategory.get(i).getName(),
+						listProductByCategory.get(i).getDescription(),
+						String.valueOf(listProductByCategory.get(i).getPrice()),
+						String.valueOf(listProductByCategory.get(i).getUnitsInStock()),
+						listProductByCategory.get(i).getBase64Image());
+			}
+			
 //			write the content into response - ServletOutputStream
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -140,7 +138,7 @@ public class ShopResource implements ShopResourceLocal {
 	public byte[] getHardDisks() {
 
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();
-		category = "Dyski twarde";
+		String category = "Dyski twarde";
 		try {
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -148,20 +146,23 @@ public class ShopResource implements ShopResourceLocal {
 			Element root = doc.createElement("HardDisks");
 			doc.appendChild(root);
 
+			List<Category> listCategory = pbl.listCategory();
 			int id = 0;
-			for (int i = 0; i < pbl.listCategory().size(); i++)
-				if (pbl.listCategory().get(i).getName().equals(category))
-					id = pbl.listCategory().get(i).getId();
+			for (int i = 0; i < listCategory.size(); i++)
+				if (listCategory.get(i).getName().equals(category))
+					id = listCategory.get(i).getId();
 
-			for (int i = 0; i < pbl.listProductByCategory(id).size(); i++)
+			List<Product> listProductByCategory = pbl.listProductByCategory(id);
+			for (int i = 0; i < listProductByCategory.size(); i++) {
 				getProducts(doc, root, "HardDisk", String.valueOf(i),
-						String.valueOf(pbl.listProductByCategory(id).get(i).getId()),
-						pbl.listProductByCategory(id).get(i).getName(),
-						pbl.listProductByCategory(id).get(i).getDescription(),
-						String.valueOf(pbl.listProductByCategory(id).get(i).getPrice()),
-						String.valueOf(pbl.listProductByCategory(id).get(i).getUnitsInStock()),
-						pbl.listProductByCategory(id).get(i).getBase64Image());
-
+						String.valueOf(listProductByCategory.get(i).getId()),
+						listProductByCategory.get(i).getName(),
+						listProductByCategory.get(i).getDescription(),
+						String.valueOf(listProductByCategory.get(i).getPrice()),
+						String.valueOf(listProductByCategory.get(i).getUnitsInStock()),
+						listProductByCategory.get(i).getBase64Image());
+			}
+			
 //			write the content into response - ServletOutputStream
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -240,7 +241,7 @@ public class ShopResource implements ShopResourceLocal {
 	@Override
 	public byte[] getProductsById(@PathParam("idFrom") int idFrom, @PathParam("idTo") int idTo) {
 
-		listProduct = em.createNamedQuery("productsByIdRange", Product.class).setParameter("idFrom", idFrom)
+		List<Product> listProduct = em.createNamedQuery("productsByIdRange", Product.class).setParameter("idFrom", idFrom)
 				.setParameter("idTo", idTo).getResultList();
 
 		ByteArrayOutputStream ba = new ByteArrayOutputStream();
@@ -284,79 +285,79 @@ public class ShopResource implements ShopResourceLocal {
 	@Produces(MediaType.APPLICATION_XML)
 	@Override
 	public List<MainBoardXml> getMainBoardXmls() {
-		listProduct = em.createNamedQuery("getAllMainBoardXml", Product.class).getResultList();
-		listMainBoardXml = new ArrayList<>();
-		for (int i = 0; i < listProduct.size(); i++) {
-			mb = new MainBoardXml();
-			mb.setId(listProduct.get(i).getId());
-			mb.setName(listProduct.get(i).getName());
-			mb.setDescription(listProduct.get(i).getDescription());
-			mb.setPrice(listProduct.get(i).getPrice());
-			mb.setUnitsInStock(listProduct.get(i).getUnitsInStock());
-			mb.setBase64Image(listProduct.get(i).getBase64Image());
-			listMainBoardXml.add(mb);
+		Category singleResult = em.createNamedQuery("getAllMainBoardXml", Category.class).getSingleResult();
+		List<Product> productsList = singleResult.getProduct();
+		List<MainBoardXml> mainBoardXmlList  = new ArrayList<>();
+		MainBoardXml mainBoardXml;
+		for (int i = 0; i < productsList.size(); i++) {
+			mainBoardXml = new MainBoardXml();
+			mainBoardXml.setId(productsList.get(i).getId());
+			mainBoardXml.setName(productsList.get(i).getName());
+			mainBoardXml.setDescription(productsList.get(i).getDescription());
+			mainBoardXml.setPrice(productsList.get(i).getPrice());
+			mainBoardXml.setUnitsInStock(productsList.get(i).getUnitsInStock());
+			mainBoardXml.setBase64Image(productsList.get(i).getBase64Image());
+			mainBoardXmlList.add(mainBoardXml);
 		}
-		return listMainBoardXml;
+		return mainBoardXmlList;
 	}
-
+	
 	@GET
 	@Path("/RamMemoryXml")
 	@Produces(MediaType.APPLICATION_XML)
 	@Override
 	public List<RamMemoryXml> getRamMemoryXml() {
-		listProduct = em.createNamedQuery("getAllRamMemoryXml", Product.class).getResultList();
-		listRamMemoryXml = new ArrayList<>();
-		for (int i = 0; i < listProduct.size(); i++) {
-			rm = new RamMemoryXml();
-			rm.setId(listProduct.get(i).getId());
-			rm.setName(listProduct.get(i).getName());
-			rm.setDescription(listProduct.get(i).getDescription());
-			rm.setUnitsInStock(listProduct.get(i).getUnitsInStock());
-			rm.setPrice(listProduct.get(i).getPrice());
-			rm.setBase64Image(listProduct.get(i).getBase64Image());
-			listRamMemoryXml.add(rm);
+		Category singleResult = em.createNamedQuery("getAllRamMemoryXml", Category.class).getSingleResult();
+		List<Product> productsList = singleResult.getProduct();
+		List<RamMemoryXml> ramMemoryXmlList  = new ArrayList<>();
+		RamMemoryXml ramMemoryXml;
+		for (int i = 0; i < productsList.size(); i++) {
+			ramMemoryXml = new RamMemoryXml();
+			ramMemoryXml.setId(productsList.get(i).getId());
+			ramMemoryXml.setName(productsList.get(i).getName());
+			ramMemoryXml.setDescription(productsList.get(i).getDescription());
+			ramMemoryXml.setPrice(productsList.get(i).getPrice());
+			ramMemoryXml.setUnitsInStock(productsList.get(i).getUnitsInStock());
+			ramMemoryXml.setBase64Image(productsList.get(i).getBase64Image());
+			ramMemoryXmlList.add(ramMemoryXml);
 		}
-		return listRamMemoryXml;
+		return ramMemoryXmlList;
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/ProcessorsJson")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public List<ProcessorsJson> getAllProcessorsJson() {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("getAllProcessorsJson").getResultList();
+	public List<ProductsJson> getAllProcessorsJson() {
+		Category singleResult = em.createNamedQuery("getAllProcessors", Category.class).getSingleResult();
+		return createProductList(singleResult);
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/MainBoardsJson")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public List<MainBoardJson> getAllMainBoardJson() {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("getAllMainBoardJson").getResultList();
+	public List<ProductsJson> getAllMainBoardJson() {
+		Category singleResult = em.createNamedQuery("getAllMainBoard", Category.class).getSingleResult();
+		return createProductList(singleResult);
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/RamMemoryJson")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public List<RamMemoryJson> getAllRamMemoryJson() {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("getAllRamMemoryJson").getResultList();
+	public List<ProductsJson> getAllRamMemoryJson() {
+		Category singleResult = em.createNamedQuery("getAllRamMemory", Category.class).getSingleResult();
+		return createProductList(singleResult);
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/HardDisksJson")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public List<HardDisksJson> getAllHardDisksJson() {
-		// TODO Auto-generated method stub
-		return em.createNamedQuery("getAllHardDisksJson").getResultList();
+	public List<ProductsJson> getAllHardDisksJson() {
+		Category singleResult = em.createNamedQuery("getAllHardDisks", Category.class).getSingleResult();
+		return createProductList(singleResult);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -373,7 +374,6 @@ public class ShopResource implements ShopResourceLocal {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public ProductsJson getProductJsonById(@PathParam("id") int id) {
-		// TODO Auto-generated method stub
 		Product pr = pbl.getProduct(id);
 		ProductsJson productsJson = new ProductsJson();
 		productsJson.setId(pr.getId());
@@ -390,12 +390,9 @@ public class ShopResource implements ShopResourceLocal {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public List<ProductDataJson> getProductJsonByName(@PathParam("name") String name) {
-		// TODO Auto-generated method stub		
 		List<Product> productList = pbl.findProduct(name);
 		ProductDataJson pdj;
 		List<ProductDataJson> productListJson = new ArrayList<>();	
-		List<ProductCategory> pcList = em.createNamedQuery("getAllProductCategory", ProductCategory.class).getResultList();
-		int cat = 0;		
 		for(int i=0; i<productList.size(); i++) {			
 			pdj = new ProductDataJson();
 			pdj.setIdProduct(productList.get(i).getId());
@@ -404,19 +401,9 @@ public class ShopResource implements ShopResourceLocal {
 			pdj.setPrice(productList.get(i).getPrice());
 			pdj.setUnitsInStock(productList.get(i).getUnitsInStock());
 			pdj.setImage(productList.get(i).getProductImage());
+			pdj.setCategory1Id(productList.get(i).getCategories().get(0).getId());
+			pdj.setCategory2Id(productList.get(i).getCategories().get(1).getId());
 			productListJson.add(pdj);
-			cat = 0;
-			for(int j=0; j<pcList.size(); j++) {
-				if(productList.get(i).getId() == pcList.get(j).getProduct().getId() && cat == 0) {
-					productListJson.get(i).setCategory1Id(pcList.get(j).getCategory().getId());
-					cat++;
-					continue;
-				}
-				if(productList.get(i).getId() == pcList.get(j).getProduct().getId() && cat == 1) {
-					productListJson.get(i).setCategory2Id(pcList.get(j).getCategory().getId());
-					break;
-				}					
-			}
 		}
 		return productListJson;
 	}
@@ -425,9 +412,7 @@ public class ShopResource implements ShopResourceLocal {
 	@Path("/ProductsJson/{idFrom}/{idTo}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public Map<String, List<ProductsJson>> getProductsJsonByIdRange(@PathParam("idFrom") int idFrom,
-			@PathParam("idTo") int idTo) {
-		// TODO Auto-generated method stub
+	public Map<String, List<ProductsJson>> getProductsJsonByIdRange(@PathParam("idFrom") int idFrom, @PathParam("idTo") int idTo) {
 		ProductsJson productsJson;
 		List<ProductsJson> listProcessor = new ArrayList<>();
 		List<ProductsJson> listMainBoard = new ArrayList<>();
@@ -435,38 +420,54 @@ public class ShopResource implements ShopResourceLocal {
 		List<ProductsJson> listHardDisk = new ArrayList<>();
 		Map<String, List<ProductsJson>> mapProductJson = new HashMap<>();
 
-		List<ProductCategory> lpc = em.createNamedQuery("productsByIdRangeJson", ProductCategory.class)
-				.setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
+		List<Product> products = em.createNamedQuery("productsByIdRangeJson", Product.class).setParameter("idFrom", idFrom).setParameter("idTo", idTo).getResultList();
 
-		for (int i = 0; i < lpc.size(); i++) {
+		for (int i = 0; i < products.size(); i++) {
 
 			productsJson = new ProductsJson();
-			productsJson.setId(lpc.get(i).getProduct().getId());
-			productsJson.setName(lpc.get(i).getProduct().getName());
-			productsJson.setDescription(lpc.get(i).getProduct().getDescription());
-			productsJson.setPrice(lpc.get(i).getProduct().getPrice());
-			productsJson.setUnitsInStock(lpc.get(i).getProduct().getUnitsInStock());
-			productsJson.setBase64Image(lpc.get(i).getProduct().getBase64Image());
+			productsJson.setId(products.get(i).getId());
+			productsJson.setName(products.get(i).getName());
+			productsJson.setDescription(products.get(i).getDescription());
+			productsJson.setPrice(products.get(i).getPrice());
+			productsJson.setUnitsInStock(products.get(i).getUnitsInStock());
+			productsJson.setBase64Image(products.get(i).getBase64Image());
 
-			if (lpc.get(i).getCategory().getName().equals("Płyty główne")) {
-				listMainBoard.add(productsJson);
-				mapProductJson.put(lpc.get(i).getCategory().getName(), listMainBoard);
-				continue;
+			boolean forward = false;
+			for (int j = 0; j < products.get(i).getCategories().size(); j++) {
+				if (products.get(i).getCategories().get(j).getName().equals("Płyty główne")) {
+					listMainBoard.add(productsJson);
+					mapProductJson.put(products.get(i).getCategories().get(j).getName(), listMainBoard);
+					forward = true;
+				}				
 			}
-			if (lpc.get(i).getCategory().getName().equals("Pamięci RAM")) {
-				listRamMemory.add(productsJson);
-				mapProductJson.put(lpc.get(i).getCategory().getName(), listRamMemory);
+			if(forward)
 				continue;
+			
+			for (int j = 0; j < products.get(i).getCategories().size(); j++) {
+				if (products.get(i).getCategories().get(j).getName().equals("Pamięci RAM")) {
+					listRamMemory.add(productsJson);
+					mapProductJson.put(products.get(i).getCategories().get(j).getName(), listRamMemory);
+					forward = true;
+				}				
 			}
-			if (lpc.get(i).getCategory().getName().equals("Dyski twarde")) {
-				listHardDisk.add(productsJson);
-				mapProductJson.put(lpc.get(i).getCategory().getName(), listHardDisk);
+			if(forward)
 				continue;
+			
+			for (int j = 0; j < products.get(i).getCategories().size(); j++) {
+				if (products.get(i).getCategories().get(j).getName().equals("Dyski twarde")) {
+					listHardDisk.add(productsJson);
+					mapProductJson.put(products.get(i).getCategories().get(j).getName(), listHardDisk);
+					forward = true;
+				}				
 			}
-			if (lpc.get(i).getCategory().getName().equals("Procesory")) {
-				listProcessor.add(productsJson);
-				mapProductJson.put(lpc.get(i).getCategory().getName(), listProcessor);
+			if(forward)
 				continue;
+
+			for (int j = 0; j < products.get(i).getCategories().size(); j++) {
+				if (products.get(i).getCategories().get(j).getName().equals("Procesory")) {
+					listProcessor.add(productsJson);
+					mapProductJson.put(products.get(i).getCategories().get(j).getName(), listProcessor);
+				}				
 			}
 		}
 		return mapProductJson;
@@ -482,7 +483,7 @@ public class ShopResource implements ShopResourceLocal {
 			@FormParam("productPrice") double productPrice, @FormParam("productUnitsInStock") int productUnitsInStock,
 			@FormParam("category1Id") String category1Id,
 			@FormParam("category2Id") String category2Id,
-			@FormParam("base64Image") String base64Image) {
+			@FormParam("base64Image") String base64Image) throws IllegalStateException, SecurityException, SystemException {
 
 		SessionData sd = ubl.loginUser(login, password);
 		if (sd != null && sd.getIdRole() == 3) {
@@ -505,7 +506,7 @@ public class ShopResource implements ShopResourceLocal {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Override
-    public String addNewProductFormParamMap(Map<String, String> mapParam) {
+    public String addNewProductFormParamMap(Map<String, String> mapParam) throws NumberFormatException, IllegalStateException, SecurityException, SystemException {
       
 		SessionData sd = ubl.loginUser(mapParam.get("login"), mapParam.get("password"));
 		if (sd != null && sd.getIdRole() == 3) {
@@ -530,7 +531,7 @@ public class ShopResource implements ShopResourceLocal {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Override
-    public String addNewProductJson(ProductDataJson pdj) {
+    public String addNewProductJson(ProductDataJson pdj) throws IllegalStateException, SecurityException, SystemException {
     	
 		SessionData sd = ubl.loginUser(pdj.getLogin(), pdj.getPassword());
 		if (sd != null && sd.getIdRole() == 3) {
@@ -552,7 +553,7 @@ public class ShopResource implements ShopResourceLocal {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public String updateProductData(ProductDataJson pdj) {
+	public String updateProductData(ProductDataJson pdj) throws IllegalStateException, SecurityException, SystemException {
 
 		SessionData sd = ubl.loginUser(pdj.getLogin(), pdj.getPassword());
 		if (sd != null && sd.getIdRole() == 3) {
@@ -567,7 +568,7 @@ public class ShopResource implements ShopResourceLocal {
 			categoryToEdit[0] = pdj.getPreviousCategory1Id();
 			categoryToEdit[1] = pdj.getPreviousCategory2Id();
 
-			if (pbl.updateProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(), pdj.getImage(), pdj.getIdProduct(), categoryToEdit, pdj.getImageSize(), sd.getIdUser(), helperListCat))
+			if (pbl.updateProduct(pdj.getName(), pdj.getDescription(), pdj.getPrice(), pdj.getUnitsInStock(), pdj.getImage(), pdj.getIdProduct(), pdj.getImageSize(), sd.getIdUser(), helperListCat))
 				return "Dane produktu id = "+pdj.getIdProduct()+" zostały zaktualizowane w bazie danych.";
 			else
 				return "Nie udało się zaktualizować danych produktu id = "+pdj.getIdProduct()+" w bazie danych.";
@@ -575,7 +576,25 @@ public class ShopResource implements ShopResourceLocal {
 			return "Brak autoryzacji lub autentykacji";
     }
 
+
 	
+	public List<ProductsJson> createProductList(Category category) {
+		List<Product> productsList = category.getProduct();
+		List<ProductsJson> productWebServicesList  = new ArrayList<>();
+		ProductsJson productsJson;
+		for (int i = 0; i < productsList.size(); i++) {
+			productsJson = new ProductsJson();
+			productsJson.setId(productsList.get(i).getId());
+			productsJson.setName(productsList.get(i).getName());
+			productsJson.setDescription(productsList.get(i).getDescription());
+			productsJson.setPrice(productsList.get(i).getPrice());
+			productsJson.setUnitsInStock(productsList.get(i).getUnitsInStock());
+			productsJson.setBase64Image(productsList.get(i).getBase64Image());
+			productsJson.setCategoryName(category.getName());
+			productWebServicesList.add(productsJson);
+		}
+		return productWebServicesList;
+	}
 	
 	private void getProducts(Document doc, Element root, String productCategory, String id, String productId,
 			String productName, String productDescription, String productPrice, String productUnitsInStock,

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.transaction.SystemException;
 
 import pl.shopapp.beans.ProductBeanLocal;
 import pl.shopapp.beans.SessionData;
@@ -36,7 +37,6 @@ public class OperatorPanel extends HttpServlet {
 	@EJB
 	private TransactionBeanLocal tbl;
 	private int productIdToEdit;
-	private int [] categoryToEdit = new int[2];
 
 //	for tests
 	public OperatorPanel() {
@@ -97,12 +97,17 @@ public class OperatorPanel extends HttpServlet {
 				helperListCat.add(Integer.valueOf(request.getParameter("category1")));
 				helperListCat.add(Integer.valueOf(request.getParameter("category2")));
 				
-				if (pbl.addProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat, sd.getIdUser())) {
-					request.setAttribute("message", "Produkt został dodany!");
-					request.setAttribute("clear", "yes");
-					helperListCat.clear();
-				} else
-					request.setAttribute("message", "Nie udało się dodać produktu!");
+				try {
+					if (pbl.addProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, helperListCat, sd.getIdUser())) {
+						request.setAttribute("message", "Produkt został dodany!");
+						request.setAttribute("clear", "yes");
+						helperListCat.clear();
+					} else
+						request.setAttribute("message", "Nie udało się dodać produktu!");
+				} catch (IllegalStateException | SecurityException | SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -129,6 +134,15 @@ public class OperatorPanel extends HttpServlet {
 				} catch (EJBException e) {
 					request.setAttribute("message", "Rozmiar pliku jest zbyt duży!");
 					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -152,8 +166,6 @@ public class OperatorPanel extends HttpServlet {
 					request.setAttribute("productToEdit", pbl.getProduct(Integer.valueOf(request.getParameter("idProduct"))));
 					request.setAttribute("categoryToEdit", pbl.getProductCategories(pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")))));
 					productIdToEdit = pbl.getProduct(Integer.valueOf(request.getParameter("idProduct"))).getId();
-					categoryToEdit[0] = pbl.getProductCategories(pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")))).get(0).getId();
-					categoryToEdit[1] = pbl.getProductCategories(pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")))).get(1).getId();
 				} else
 					request.setAttribute("message", "Proszę zaznaczyć jeden produkt!");
 			} else
@@ -192,15 +204,18 @@ public class OperatorPanel extends HttpServlet {
 				helperListCat.add(Integer.valueOf(request.getParameter("category1")));
 				helperListCat.add(Integer.valueOf(request.getParameter("category2")));
 				
-				if(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, productIdToEdit, categoryToEdit, (int)request.getPart("imageProduct").getSize(), sd.getIdUser(), helperListCat)) {
-					request.setAttribute("clear", "yes");	
-					request.setAttribute("message", "Aktualizacja danych produktu zakończona powodzeniem!");
-					productIdToEdit = 0;
-					categoryToEdit[0] = 0;
-					categoryToEdit[1] = 0;
-					helperListCat.clear();
-				} else
-					request.setAttribute("message", "Nie udało się zaktualizować produktu!");
+				try {
+					if(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, productIdToEdit, (int)request.getPart("imageProduct").getSize(), sd.getIdUser(), helperListCat)) {
+						request.setAttribute("clear", "yes");	
+						request.setAttribute("message", "Aktualizacja danych produktu zakończona powodzeniem!");
+						productIdToEdit = 0;
+						helperListCat.clear();
+					} else
+						request.setAttribute("message", "Nie udało się zaktualizować produktu!");
+				} catch (IllegalStateException | SecurityException | SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				if(request.getServletContext().getAttribute("button").equals("searchPruductButton")) {
 					request.setAttribute("Products", pbl.findProduct((String)request.getServletContext().getAttribute("searchPruductByName")));
@@ -245,12 +260,12 @@ public class OperatorPanel extends HttpServlet {
 		if (request.getParameter("productName").equals("")
 				|| !valid.nameValidation(request.getParameter("productName"))) {
 			validOK = false;
-			request.setAttribute("message", "Pole nazwa produktu jest puste lub zawiera niepoprawne znaki!");
+			request.setAttribute("message", "Pole nazwa produktu jest puste lub zawiera niepoprawne znaki, bądz ilość znaków przekrasza 100!");
 		}
 		if (request.getParameter("productDescription").equals("")
-				|| !valid.nameValidation(request.getParameter("productDescription"))) {
+				|| !valid.describeValidation(request.getParameter("productDescription"))) {
 			validOK = false;
-			request.setAttribute("message", "Pole nazwa produktu jest puste lub zawiera niepoprawne znaki!");
+			request.setAttribute("message", "Pole opis produktu jest puste lub zawiera niepoprawne znaki, bądz ilość znaków przekrasza 1000!");
 		}
 		if (request.getParameter("productPrice").equals("")
 				|| !valid.numberValidation(request.getParameter("productPrice"))) {

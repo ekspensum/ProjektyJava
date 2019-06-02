@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.transaction.SystemException;
+
 import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.UserBeanRemote;
 import pl.shopapp.beans.Validation;
@@ -171,17 +173,22 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					if(ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.stringToCode(textFieldPasswordOperator.getText()), sd.getIdUser())) {
-						lblMsgOperator.setText("<HTML>Dodano nowego operatora!</HTML>");
-						textFieldLoginOperator.setText("");
-						textFieldPasswordOperator.setText("");
-						textFieldFirstNameOperator.setText("");
-						textFieldLastNameOperator.setText("");
-						textFieldTelephoneOperator.setText("");
-						textFieldEmailOperator.setText("");
-						loadTableOperatorData(ubr);
-					} else
-						lblMsgOperator.setText("<HTML>Nie udało się dodać nowego operatora!</HTML>");
+					try {
+						if(ubr.addOperator(textFieldFirstNameOperator.getText(), textFieldLastNameOperator.getText(), textFieldTelephoneOperator.getText(), textFieldEmailOperator.getText(), textFieldLoginOperator.getText(), valid.stringToCode(textFieldPasswordOperator.getText()), sd.getIdUser())) {
+							lblMsgOperator.setText("<HTML>Dodano nowego operatora!</HTML>");
+							textFieldLoginOperator.setText("");
+							textFieldPasswordOperator.setText("");
+							textFieldFirstNameOperator.setText("");
+							textFieldLastNameOperator.setText("");
+							textFieldTelephoneOperator.setText("");
+							textFieldEmailOperator.setText("");
+							loadTableOperatorData(ubr);
+						} else
+							lblMsgOperator.setText("<HTML>Nie udało się dodać nowego operatora!</HTML>");
+					} catch (IllegalStateException | SecurityException | SystemException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
 				}
 			}
@@ -265,12 +272,11 @@ public class AdminPanel extends JFrame {
 				int checked = 0;
 				String login = null, firstName = null, lastName = null, phoneNo = null, email = null;
 				boolean active = false;
-				int idOperator = 0, idUser = 0;
+				int idOperator = 0;
 				for (int i = 0; i < tableOperator.getRowCount(); i++) {
 					if (tableOperator.getValueAt(i, 6) != null)
 						if ((boolean) tableOperator.getValueAt(i, 6) == true) {
 							idOperator = ubr.getOperatorsData().get(i).getId();
-							idUser = ubr.getUsersOperatorData().get(i).getId();
 							login = (String) tableOperator.getValueAt(i, 0);
 							active = (boolean) tableOperator.getValueAt(i, 1);
 							firstName = (String) tableOperator.getValueAt(i, 2);
@@ -281,14 +287,18 @@ public class AdminPanel extends JFrame {
 						}
 				}
 				if (checked == 1) {
-					if (ubr.updateOperatorData(idUser, idOperator, login, active, firstName, lastName, phoneNo,
-							email)) {
-						lblMsgOperator.setText("<HTML>Dokonano edycji usera o loginie: " + login + "!</HTML>");
-						loadTableOperatorData(ubr);
-					} else {
-						lblMsgOperator
-								.setText("<HTML>Nie udało sie dokonać edeycji usera o loginie: " + login + "!</HTML>");
-						loadTableOperatorData(ubr);
+					try {
+						if (ubr.updateOperatorData(sd.getIdUser(), idOperator, login, active, firstName, lastName, phoneNo,	email)) {
+							lblMsgOperator.setText("<HTML>Dokonano edycji usera o loginie: " + login + "!</HTML>");
+							loadTableOperatorData(ubr);
+						} else {
+							lblMsgOperator
+									.setText("<HTML>Nie udało sie dokonać edeycji usera o loginie: " + login + "!</HTML>");
+							loadTableOperatorData(ubr);
+						}
+					} catch (IllegalStateException | SecurityException | SystemException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
 				} else
 					lblMsgOperator.setText("<HTML>Proszę zaznaczyć jeden wiersz do edycji!</HTML>");
@@ -460,17 +470,22 @@ public class AdminPanel extends JFrame {
 				}
 
 				if (validOK) {
-					if(ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.stringToCode(textFieldPasswordAdmin.getText()), sd.getIdUser())) {
-						lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
-						textFieldLoginAdmin.setText("");
-						textFieldPasswordAdmin.setText("");
-						textFieldFirstNameAdmin.setText("");
-						textFieldLastNameAdmin.setText("");
-						textFieldTelephoneAdmin.setText("");
-						textFieldEmailAdmin.setText("");
-						loadTableAdminData(ubr);
-					} else
-						lblMsgAdmin.setText("<HTML>Nie udało się dodać nowego administratora!</HTML>");	
+					try {
+						if(ubr.addAdmin(textFieldFirstNameAdmin.getText(), textFieldLastNameAdmin.getText(), textFieldTelephoneAdmin.getText(), textFieldEmailAdmin.getText(), textFieldLoginAdmin.getText(), valid.stringToCode(textFieldPasswordAdmin.getText()), sd.getIdUser())) {
+							lblMsgAdmin.setText("<HTML>Dodano nowego administratora!</HTML>");
+							textFieldLoginAdmin.setText("");
+							textFieldPasswordAdmin.setText("");
+							textFieldFirstNameAdmin.setText("");
+							textFieldLastNameAdmin.setText("");
+							textFieldTelephoneAdmin.setText("");
+							textFieldEmailAdmin.setText("");
+							loadTableAdminData(ubr);
+						} else
+							lblMsgAdmin.setText("<HTML>Nie udało się dodać nowego administratora!</HTML>");
+					} catch (IllegalStateException | SecurityException | SystemException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
 				}
 			}
 		});
@@ -486,12 +501,11 @@ public class AdminPanel extends JFrame {
 					int checked = 0;
 					String login = null, firstName = null, lastName = null, phoneNo = null, email = null;
 					boolean active = false;
-					int idAdmin = 0, idUser = 0;
+					int idAdmin = 0;
 					for (int i = 0; i < tableAdmin.getRowCount(); i++) {
 						if (tableAdmin.getValueAt(i, 6) != null)
 							if ((boolean) tableAdmin.getValueAt(i, 6) == true) {
 								idAdmin = ubr.getAdminsData().get(i).getId();
-								idUser = ubr.getUsersAdminData().get(i).getId();
 								login = (String) tableAdmin.getValueAt(i, 0);
 								active = (boolean) tableAdmin.getValueAt(i, 1);
 								firstName = (String) tableAdmin.getValueAt(i, 2);
@@ -502,12 +516,17 @@ public class AdminPanel extends JFrame {
 							}
 					}
 					if (checked == 1) {
-						if (ubr.updateAdminData(idUser, idAdmin, login, active, firstName, lastName, phoneNo, email)) {
-							lblMsgAdmin.setText("<HTML>Dokonano edycji usera o loginie: " + login + "!</HTML>");
-							loadTableAdminData(ubr);
-						} else {
-							lblMsgAdmin.setText("<HTML>Nie udało sie dokonać edeycji usera o loginie: " + login + "!</HTML>");
-							loadTableAdminData(ubr);
+						try {
+							if (ubr.updateAdminData(sd.getIdUser(), idAdmin, login, active, firstName, lastName, phoneNo, email)) {
+								lblMsgAdmin.setText("<HTML>Dokonano edycji usera o loginie: " + login + "!</HTML>");
+								loadTableAdminData(ubr);
+							} else {
+								lblMsgAdmin.setText("<HTML>Nie udało sie dokonać edeycji usera o loginie: " + login + "!</HTML>");
+								loadTableAdminData(ubr);
+							}
+						} catch (IllegalStateException | SecurityException | SystemException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
 					} else
 						lblMsgAdmin.setText("<HTML>Proszę zaznaczyć jeden wiersz do edycji!</HTML>");					
@@ -630,12 +649,17 @@ public class AdminPanel extends JFrame {
 						}
 				}
 				if (checked == 1) {
-					if (ubr.setActiveCustomer(idUser, active == true ? false : true)) {
-						lblMsgCustomer.setText("<HTML>Dokonano edycji klienta o loginie: " + login + "!</HTML>");
-						loadTableCustomer(ubr, sizeCustomerList);
-					} else {
-						lblMsgCustomer.setText("<HTML>Nie udało sie dokonać edeycji klienta o loginie: " + login + "!</HTML>");
-						loadTableCustomer(ubr, sizeCustomerList);
+					try {
+						if (ubr.setActiveCustomer(idUser, active == true ? false : true)) {
+							lblMsgCustomer.setText("<HTML>Dokonano edycji klienta o loginie: " + login + "!</HTML>");
+							loadTableCustomer(ubr, sizeCustomerList);
+						} else {
+							lblMsgCustomer.setText("<HTML>Nie udało sie dokonać edeycji klienta o loginie: " + login + "!</HTML>");
+							loadTableCustomer(ubr, sizeCustomerList);
+						}
+					} catch (IllegalStateException | SecurityException | SystemException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				} else
 					lblMsgCustomer.setText("<HTML>Proszę zaznaczyć jeden wiersz do edycji!</HTML>");
@@ -763,11 +787,16 @@ public class AdminPanel extends JFrame {
 				}
 				
 				if(validOK) {
-					if(ubr.setSettingsApp(Integer.valueOf(textFieldMinCharInPass.getText()), Integer.valueOf(textFieldMaxCharInPass.getText()), Integer.valueOf(textFieldUpperCaseCharInPass.getText()), Integer.valueOf(textFieldNumbersInPass.getText()), Integer.valueOf(textFieldMinCharInLogin.getText()), Integer.valueOf(textFieldMaxCharInLogin.getText()), Integer.valueOf(textFieldSessionTime.getText()), sd.getIdUser())) {
-						textFieldMinCharInLogin.setText("");
-						lblMsgSettings.setText("<HTML>Nowe ustawienia zostały zapisane!</HTML>");						
-					} else
-						lblMsgSettings.setText("<HTML>Nie udało się zapisać nowych ustawień!</HTML>");					
+					try {
+						if(ubr.setSettingsApp(Integer.valueOf(textFieldMinCharInPass.getText()), Integer.valueOf(textFieldMaxCharInPass.getText()), Integer.valueOf(textFieldUpperCaseCharInPass.getText()), Integer.valueOf(textFieldNumbersInPass.getText()), Integer.valueOf(textFieldMinCharInLogin.getText()), Integer.valueOf(textFieldMaxCharInLogin.getText()), Integer.valueOf(textFieldSessionTime.getText()), sd.getIdUser())) {
+							textFieldMinCharInLogin.setText("");
+							lblMsgSettings.setText("<HTML>Nowe ustawienia zostały zapisane!</HTML>");						
+						} else
+							lblMsgSettings.setText("<HTML>Nie udało się zapisać nowych ustawień!</HTML>");
+					} catch (NumberFormatException | IllegalStateException | SecurityException | SystemException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
 				}
 				
 				loadSettingsApp(ubr);

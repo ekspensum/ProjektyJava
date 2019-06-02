@@ -85,7 +85,7 @@ class IntegrationTest {
 		for (int i = 55; i < 100; i++)
 			actual += (char) ctx[i];
 		
-		assertEquals("<collection><mainBoardXml><base64Image></base", actual);
+		assertEquals("<collection><mainBoardXml><base64Image>/9j/4A", actual);
 	}
 
 	@Test
@@ -111,7 +111,7 @@ class IntegrationTest {
 		for (int i = 0; i < 6; i++)
 			actual += (char) ctx[i];
 		
-		assertEquals("[[45,\"", actual);
+		assertEquals("[{\"id\"", actual);
 	}
 
 	@Test
@@ -124,7 +124,7 @@ class IntegrationTest {
 		for (int i = 0; i < 6; i++)
 			actual += (char) ctx[i];
 		
-		assertEquals("[[47,\"", actual);
+		assertEquals("[{\"id\"", actual);
 	}
 
 	@Test
@@ -137,7 +137,7 @@ class IntegrationTest {
 		for (int i = 0; i < 6; i++)
 			actual += (char) ctx[i];
 		
-		assertEquals("[[48,\"", actual);
+		assertEquals("[{\"id\"", actual);
 	}
 
 	@Test
@@ -150,7 +150,7 @@ class IntegrationTest {
 		for (int i = 0; i < 6; i++)
 			actual += (char) ctx[i];
 		
-		assertEquals("[[46,\"", actual);
+		assertEquals("[{\"id\"", actual);
 	}
 
 	@Test

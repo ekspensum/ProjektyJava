@@ -10,7 +10,6 @@ import javax.persistence.*;
  *
  */
 @Entity
-
 public class SettingsApp implements Serializable {
 	   
 	@Id

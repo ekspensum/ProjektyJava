@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import javax.transaction.SystemException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -85,7 +86,7 @@ class OperatorPanelTest {
 
 	@SuppressWarnings("serial")
 	@Test
-	final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException {
+	final void testDoPostHttpServletRequestHttpServletResponse() throws ServletException, IOException, IllegalStateException, SecurityException, SystemException {
 		doNothing().when(request).setCharacterEncoding("UTF-8");
 		
 //		for buttonAddProduct parameter
@@ -282,7 +283,7 @@ class OperatorPanelTest {
 
 //		for saveButton parameter
 		when(request.getParameter("saveButton")).thenReturn("saveButton");
-		when(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, 3, new int [] {1,2}, (int)filePartProduct.getSize(), sd.getIdUser(), helperListCat)).thenReturn(true);
+		when(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, 3, (int)filePartProduct.getSize(), sd.getIdUser(), helperListCat)).thenReturn(true);
 		when(sc.getAttribute("button")).thenReturn("searchQuantityButton");	
 		
 //		for buttonSearchNoExecOrder parameter
@@ -309,7 +310,7 @@ class OperatorPanelTest {
 //		for buttonAddCategory parameter
 		assertTrue(pbl.addCategory(categoryName, buffer, sd.getIdUser()));
 //		for saveButton parameter
-		assertTrue(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, 3, new int [] {1,2}, (int)filePartProduct.getSize(), sd.getIdUser(), helperListCat));
+		assertTrue(pbl.updateProduct(productName, productDescription, productPrice, productUnitsInStock, buffer, 3, (int)filePartProduct.getSize(), sd.getIdUser(), helperListCat));
 //		for buttonExecOrder parameter		
 		assertTrue(tbl.execOrder(request.getParameterValues("idTransaction"), sd.getIdUser()));
 	}

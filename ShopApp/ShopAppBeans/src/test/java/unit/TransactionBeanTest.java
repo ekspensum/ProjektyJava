@@ -11,11 +11,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.junit.jupiter.api.AfterAll;
@@ -79,49 +74,29 @@ class TransactionBeanTest {
 		bd2.setQuantity(3);
 		basketList.add(bd1);
 		basketList.add(bd2);
-		int newUnitInStock = 0;		
-		try {
-			ut.begin();
-			u.setId(5);
-			when(em.find(User.class, u.getId())).thenReturn(u);
-			Customer c = new Customer();
-			c.setId(1);
-			c.setEmail("email@gmailtest.com");
-			@SuppressWarnings("unchecked")
-			TypedQuery<Customer> mockedCustomerQuery = mock(TypedQuery.class);
-			when(em.createNamedQuery("customerQuery", Customer.class)).thenReturn(mockedCustomerQuery);
-			when(mockedCustomerQuery.setParameter("user", u)).thenReturn(mockedCustomerQuery);
-			when(mockedCustomerQuery.getSingleResult()).thenReturn(c);
-			Transaction t;
-			Product p = new Product();
-			for(int i=0; i<basketList.size(); i++) {
-				when(em.find(Product.class, basketList.get(i).getProductId())).thenReturn(p);
-				newUnitInStock = p.getUnitsInStock() - basketList.get(i).getQuantity();
-				String queryUpdate = "UPDATE Product SET unitsInStock = "+newUnitInStock+" WHERE id = "+p.getId()+"";
-				Query mockedUpdateQuery = mock(Query.class);
-				when(em.createQuery(queryUpdate)).thenReturn(mockedUpdateQuery);
-				when(mockedUpdateQuery.executeUpdate()).thenReturn(1);
-				t = new Transaction();
-				t.setQuantity(basketList.get(i).getQuantity());
-				t.setCustomer(c);
-				t.setProductName(p.getName());
-				t.setPrice(p.getPrice());
-				t.setProduct(p);
-				t.setDateTime(LocalDateTime.now());
-				em.persist(t);		
-			}
-			ut.commit();
-		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
-				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			try {
-				ut.rollback();
-			} catch (IllegalStateException | SecurityException | SystemException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		int newUnitInStock = 0;
+
+		u.setId(5);
+		when(em.find(User.class, u.getId())).thenReturn(u);
+		Customer c = new Customer();
+		c.setId(1);
+		c.setEmail("email@gmailtest.com");
+		@SuppressWarnings("unchecked")
+		TypedQuery<Customer> mockedCustomerQuery = mock(TypedQuery.class);
+		when(em.createNamedQuery("customerQuery", Customer.class)).thenReturn(mockedCustomerQuery);
+		when(mockedCustomerQuery.setParameter("user", u)).thenReturn(mockedCustomerQuery);
+		when(mockedCustomerQuery.getSingleResult()).thenReturn(c);
+
+		Product p = new Product();
+		for (int i = 0; i < basketList.size(); i++) {
+			when(em.find(Product.class, basketList.get(i).getProductId())).thenReturn(p);
+			newUnitInStock = p.getUnitsInStock() - basketList.get(i).getQuantity();
+			String queryUpdate = "UPDATE Product SET unitsInStock = " + newUnitInStock + " WHERE id = " + p.getId()	+ "";
+			Query mockedUpdateQuery = mock(Query.class);
+			when(em.createQuery(queryUpdate)).thenReturn(mockedUpdateQuery);
+			when(mockedUpdateQuery.executeUpdate()).thenReturn(1);
 		}
+
 		assertTrue(tb.newTransaction(5, basketList));
 	}
 
