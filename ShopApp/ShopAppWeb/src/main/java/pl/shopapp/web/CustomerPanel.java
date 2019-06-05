@@ -174,10 +174,24 @@ public class CustomerPanel extends HttpServlet {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
 			String dateTo = request.getParameter("searchProductDateTo")+" 23:59:59";
+			String sortBy = "productIdDescending";
 			try {
-				request.setAttribute("transactionsDataList", tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter)));
+				request.setAttribute("transactionsDataList", tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), sortBy));
 			} catch (DateTimeParseException e) {
-				// TODO Auto-generated catch block
+				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
+				e.printStackTrace();
+			}
+		}
+		
+		if(request.getParameter("sortBy") != null) {
+			String sortBy = request.getParameter("sortBy");
+			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
+			String dateTo = request.getParameter("searchProductDateTo")+" 23:59:59";
+			try {
+				request.setAttribute("transactionsDataList", tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), sortBy));
+			} catch (DateTimeParseException e) {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();
 			}

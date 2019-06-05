@@ -52,7 +52,14 @@
 <p>Wyszukiwanie transakcji wg daty</p>
 <p>Data od: <input type="date" name="searchProductDateFrom" value="${param['searchProductDateFrom']}" />	Data do: <input type="date" name="searchProductDateTo" value="${param['searchProductDateTo']}" />	<button type="submit" name="buttonSearchTransaction" value="yes" form="customerTransactionForm">Wyszukaj</button></p>
 <table>
-<tr><th>Lp</th><th>Data zakupu</th><th>Nazwa produktu</th><th>Cena</th><th>Zakupiona ilość</th><th>Wartość zakupu</th><th>Realizacja</th><th>Data wysyłki</th></tr>
+<tr><th>Lp</th><th>Data zakupu</th>
+<th><button type="submit" name="sortBy" value="productNameAscending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_az_905641.png"></button>
+Nazwa produktu
+<button type="submit" name="sortBy" value="productNameDescending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_za_905640.png"></button></th>
+<th><button type="submit" name="sortBy" value="productPriceAscending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_09_905643.png"></button>
+Cena
+<button type="submit" name="sortBy" value="productPriceDescending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_90_905642.png"></button></th>
+<th>Zakupiona ilość</th><th>Wartość zakupu</th><th>Realizacja</th><th>Data wysyłki</th></tr>
 <c:forEach items="${transactionsDataList}" var="tr" begin="0" varStatus="loop">
 <tr><td>${loop.count }</td><td>${tr.dateTime }</td><td>${tr.productName }</td><td>${tr.price }</td><td>${tr.quantity }</td><td>${tr.price * tr.quantity }</td><td>${tr.execOrder == true ? "Tak" : "Nie" }</td><td>${tr.execOrderDate }</td></tr>
 </c:forEach>

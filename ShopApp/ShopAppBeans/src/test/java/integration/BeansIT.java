@@ -227,6 +227,6 @@ public class BeansIT {
 		testBasket();
 		List<BasketData> basketList = bbl.getBasketData();
 		assertTrue(tb.newTransaction(1, basketList));
-		assertEquals(133, tb.getTransactionsData(1, LocalDateTime.now().minusDays(1), LocalDateTime.now()).get(0).getQuantity());
+		assertEquals(133, tb.getTransactionsData(1, LocalDateTime.now().minusDays(1), LocalDateTime.now(), "productIdDescending").get(0).getQuantity());
 	}
 }

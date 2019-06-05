@@ -124,7 +124,7 @@ class TransactionBeanTest {
 		when(mockedTransactionQuery.setParameter("dateFrom", dateFrom)).thenReturn(mockedTransactionQuery);
 		when(mockedTransactionQuery.setParameter("dateTo", dateTo)).thenReturn(mockedTransactionQuery);
 		when(mockedTransactionQuery.getResultList()).thenReturn(expected);
-		List<Transaction> actual = tb.getTransactionsData(u.getId(), dateFrom, dateTo);
+		List<Transaction> actual = tb.getTransactionsData(u.getId(), dateFrom, dateTo, "productIdDescending");
 		assertEquals(expected, actual);
 	}
 	
