@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +18,7 @@ import pl.shopapp.beans.SessionData;
 import pl.shopapp.beans.TransactionBeanLocal;
 import pl.shopapp.beans.UserBeanLocal;
 import pl.shopapp.beans.Validation;
+import pl.shopapp.entites.Transaction;
 import pl.shopapp.entites.User;
 
 /**
@@ -41,6 +44,12 @@ public class CustomerPanel extends HttpServlet {
 	this.ubl = ubl;
 	this.tbl = tbl;
 }
+
+	private int rowStart = 0;
+	private int rowPositionHelper = 0;
+	private int rowOnPage = 0;
+	private String sortBy = "productIdDescending";
+	
 	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,7 +63,7 @@ public class CustomerPanel extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
 		request.setCharacterEncoding("UTF-8");
 		
 		String login, password, firstName, lastName, pesel, zipCode, country, city, street, streetNo, unitNo, email, companyName, taxNo, regon;
@@ -104,7 +113,7 @@ public class CustomerPanel extends HttpServlet {
 		}
 		
 		if(request.getParameter("buttonOpenEdit") != null) {
-			// TODO Auto-generated method stub
+
 			Validation valid = new Validation(ubl.getSettingsApp());
 			String pass = valid.stringToCode(request.getParameter("password"));
 			if (valid.loginValidation(request.getParameter("login"))) {
@@ -125,7 +134,7 @@ public class CustomerPanel extends HttpServlet {
 		}
 		
 		if(request.getParameter("buttonSaveEdit") != null) {
-			// TODO Auto-generated method stub
+
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			
 			login = request.getParameter("login");
@@ -162,7 +171,6 @@ public class CustomerPanel extends HttpServlet {
 					} else
 						request.setAttribute("message", "Nie udało się zaktualizować danych klienta!");
 				} catch (IllegalStateException | SecurityException | SystemException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	
 			} else
@@ -174,9 +182,13 @@ public class CustomerPanel extends HttpServlet {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
 			String dateTo = request.getParameter("searchProductDateTo")+" 23:59:59";
-			String sortBy = "productIdDescending";
+			rowStart = 0;
+			rowPositionHelper = 0;
+			rowOnPage = Integer.valueOf(request.getParameter("showRowTransactions"));
+			sortBy = "productIdDescending";
 			try {
-				request.setAttribute("transactionsDataList", tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), sortBy));
+				List<Transaction> transactionsData = tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), sortBy, rowStart, rowOnPage);
+				request.setAttribute("transactionsDataList", transactionsData.subList(rowStart, rowOnPage));
 			} catch (DateTimeParseException e) {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();
@@ -184,17 +196,81 @@ public class CustomerPanel extends HttpServlet {
 		}
 		
 		if(request.getParameter("sortBy") != null) {
-			String sortBy = request.getParameter("sortBy");
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
 			String dateTo = request.getParameter("searchProductDateTo")+" 23:59:59";
+			sortBy = request.getParameter("sortBy");
 			try {
-				request.setAttribute("transactionsDataList", tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), sortBy));
+				List<Transaction> transactionsData = tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), 
+						LocalDateTime.parse(dateTo, formatter), sortBy, rowStart, rowOnPage);
+				request.setAttribute("transactionsDataList", transactionsData);
 			} catch (DateTimeParseException e) {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();
 			}
+		}
+		
+		if(request.getParameter("rowResultDriver") != null) {
+			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
+			String dateTo = request.getParameter("searchProductDateTo")+" 23:59:59";
+			rowOnPage = Integer.valueOf(request.getParameter("showRowTransactions"));		
+			int countRowTransactions = 0;
+			try {
+				countRowTransactions = (int) tbl.countRowTransactions(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter));
+			} catch (DateTimeParseException e1) {
+				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
+				e1.printStackTrace();
+			}
+			
+			if(request.getParameter("sortBy") != null) {
+				sortBy = request.getParameter("sortBy");				
+			}
+			
+			if(request.getParameter("rowResultDriver").equals("stepLeftEnd")) {
+				rowStart = 0;
+				rowPositionHelper = rowStart;
+				request.setAttribute("buttonMoveLeftDiesabled", "YES");	
+			}
+			if(request.getParameter("rowResultDriver").equals("stepLeft")) {
+				rowStart = rowPositionHelper - rowOnPage;
+				rowPositionHelper = rowStart;					
+				if(rowStart <= 0) {
+					rowOnPage = rowOnPage + rowStart % rowOnPage;
+					rowStart = 0;
+					rowPositionHelper = rowOnPage - Integer.valueOf(request.getParameter("showRowTransactions"));;
+					request.setAttribute("buttonMoveLeftDiesabled", "YES");					
+				}
+			}			
+			if(request.getParameter("rowResultDriver").equals("stepRight")) {
+				rowStart = rowPositionHelper + rowOnPage;
+				rowPositionHelper = rowStart;				
+				if(rowStart >= countRowTransactions) {
+					rowStart = countRowTransactions % rowStart;
+					rowPositionHelper = rowStart;
+					request.setAttribute("buttonMoveRightDiesabled", "YES");
+				}
+				if(rowStart >= countRowTransactions - rowOnPage) {
+					request.setAttribute("buttonMoveRightDiesabled", "YES");					
+				}
+			}			
+			if(request.getParameter("rowResultDriver").equals("stepRightEnd")) {
+				rowStart = countRowTransactions - rowOnPage;
+				rowPositionHelper = rowStart;
+				request.setAttribute("buttonMoveRightDiesabled", "YES");	
+			}
+
+			try {
+				List<Transaction> transactionsData = tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), 
+						LocalDateTime.parse(dateTo, formatter), sortBy, rowStart, rowOnPage);
+				request.setAttribute("transactionsDataList", transactionsData);
+			} catch (DateTimeParseException e) {
+				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
+				e.printStackTrace();
+			}				
+			
 		}
 		
 		doGet(request, response);

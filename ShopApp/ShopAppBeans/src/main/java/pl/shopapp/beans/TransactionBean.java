@@ -100,7 +100,6 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 			return true;
 		} catch (SecurityException | IllegalStateException | NotSupportedException | SystemException | RollbackException
 				| HeuristicMixedException | HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			try {
 				ut.rollback();
@@ -113,10 +112,16 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 	}
 
 	@Override
-	public List<Transaction> getTransactionsData(int idUser, LocalDateTime dateFrom, LocalDateTime dateTo, String sortBy) {
+	public List<Transaction> getTransactionsData(int idUser, LocalDateTime dateFrom, LocalDateTime dateTo, String sortBy, int rowStart, int rowOnPage) {
 		User u = em.find(User.class, idUser);
 		Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", u).getSingleResult();
-		List<Transaction> tl = em.createNamedQuery("findTransactionsQuery", Transaction.class).setParameter("customer", c).setParameter("dateFrom", dateFrom).setParameter("dateTo", dateTo).getResultList();
+		List<Transaction> tl = em.createNamedQuery("findTransactionsQuery", Transaction.class)
+				.setParameter("customer", c)
+				.setParameter("dateFrom", dateFrom)
+				.setParameter("dateTo", dateTo)
+				.setFirstResult(rowStart)
+				.setMaxResults(rowOnPage)
+				.getResultList();
 		tl.sort(new Comparator<Transaction>() {
 
 			@Override
@@ -127,21 +132,33 @@ public class TransactionBean implements TransactionBeanRemote, TransactionBeanLo
 				}
 				if(sortBy.equals("productPriceDescending")) {
 					if(o2.getPrice() > o1.getPrice())
-						return -1;
+						return 1;
 				}
 				if(sortBy.equals("productNameAscending")) {
-					return o1.getProductName().compareTo(o2.getProductName());
+					return o1.getProductName().compareToIgnoreCase(o2.getProductName());
 				}
 				if(sortBy.equals("productNameDescending")) {
-					return o2.getProductName().compareTo(o1.getProductName());
+					return o2.getProductName().compareToIgnoreCase(o1.getProductName());
 				}
 				if(sortBy.equals("productIdDescending")) {
-					return -1;
+					if(o2.getId() > o1.getId())
+						return 1;
 				}
 				return -1;
 			}
 		});
 		return tl;
+	}
+	
+	@Override
+	public long countRowTransactions(int idUser, LocalDateTime dateFrom, LocalDateTime dateTo) {
+		User u = em.find(User.class, idUser);
+		Customer c = em.createNamedQuery("customerQuery", Customer.class).setParameter("user", u).getSingleResult();
+		Long result = em.createNamedQuery("countTransactionsUserByDate", Long.class)
+					.setParameter("customer", c)
+					.setParameter("dateFrom", dateFrom)
+					.setParameter("dateTo", dateTo).getSingleResult();
+		return result;
 	}
 
 	@Override

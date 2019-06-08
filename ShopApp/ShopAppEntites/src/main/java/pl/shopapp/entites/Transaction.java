@@ -11,9 +11,10 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="findTransactionsQuery", query="SELECT tr FROM Transaction tr WHERE tr.customer = :customer AND tr.dateTime BETWEEN :dateFrom AND :dateTo"),
+	@NamedQuery(name="findTransactionsQuery", query="SELECT tr FROM Transaction tr WHERE tr.customer = :customer AND tr.dateTime BETWEEN :dateFrom AND :dateTo ORDER BY tr.id DESC"),
 	@NamedQuery(name="findNoExecTransactionQuery", query="SELECT tr FROM Transaction tr WHERE tr.execOrder = false AND tr.dateTime BETWEEN :dateFrom AND :dateTo"),
-	@NamedQuery(name="findTransactionToExecQuery", query="SELECT tr FROM Transaction tr WHERE tr.id IN :idTransaction")
+	@NamedQuery(name="findTransactionToExecQuery", query="SELECT tr FROM Transaction tr WHERE tr.id IN :idTransaction"),
+	@NamedQuery(name="countTransactionsUserByDate", query="SELECT count(tr.id) FROM Transaction tr WHERE tr.customer = :customer AND tr.dateTime BETWEEN :dateFrom AND :dateTo")
 })
 @Table(name = "\"Transaction\"") //for integration test with Derby database
 public class Transaction implements Serializable {

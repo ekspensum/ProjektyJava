@@ -141,7 +141,8 @@ class CustomerPanelTest {
 		Transaction tr = new Transaction();
 		tr.setId(1);
 		tl.add(tr);
-		when(tbl.getTransactionsData(sdTrnsaction.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), "productIdDescending")).thenReturn(tl);	
+		when(request.getParameter("showRowTransactions")).thenReturn("1");
+		when(tbl.getTransactionsData(sdTrnsaction.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), "productIdDescending", 0, 1)).thenReturn(tl);	
 
 		when(request.getRequestDispatcher("/jsp/customerPanel.jsp")).thenReturn(rd);
 		cp.doPost(request, response);
@@ -154,7 +155,7 @@ class CustomerPanelTest {
 //		for buttonSaveEdit parameter
 		assertTrue(ubl.updateCustomer("login1", "Admin11", "firstName", "lastName", "01234567890", "11-222", "country", "city", "street", "01", "01", "abC.def@Abc.com", true, "companyName", "1234567890", "123456789", sdEditButton.getIdUser()));
 //		for buttonSearchTransaction parameter
-		assertEquals(1, tbl.getTransactionsData(sdTrnsaction.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), "productIdDescending").get(0).getId());
+		assertEquals(1, tbl.getTransactionsData(sdTrnsaction.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), "productIdDescending", 0, 1).get(0).getId());
 	}
 	
 }

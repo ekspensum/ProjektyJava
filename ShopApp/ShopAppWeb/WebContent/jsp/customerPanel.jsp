@@ -50,7 +50,19 @@
 <c:if test="${SessionData.idRole == 2}">
 <form action="/ShopAppWeb/CustomerPanel" method="POST" id="customerTransactionForm">
 <p>Wyszukiwanie transakcji wg daty</p>
-<p>Data od: <input type="date" name="searchProductDateFrom" value="${param['searchProductDateFrom']}" />	Data do: <input type="date" name="searchProductDateTo" value="${param['searchProductDateTo']}" />	<button type="submit" name="buttonSearchTransaction" value="yes" form="customerTransactionForm">Wyszukaj</button></p>
+<p>Data od: <input type="date" name="searchProductDateFrom" value="${param['searchProductDateFrom']}" />	
+Data do: <input type="date" name="searchProductDateTo" value="${param['searchProductDateTo']}" />	
+Wyświetl: <select name="showRowTransactions">
+	<option value="5" ${param['showRowTransactions'] == '5' ? 'selected' : ''} >5 transakcji</option>
+	<option value="10" ${param['showRowTransactions'] == '10' ? 'selected' : ''} >10 transakcji</option>
+	<option value="15" ${param['showRowTransactions'] == '15' ? 'selected' : ''} >15 transakcji</option>
+</select>
+<button type="submit" name="buttonSearchTransaction" value="yes" form="customerTransactionForm">Wyszukaj</button></p>
+<p>
+<button name="rowResultDriver" value="stepLeftEnd"><img src="icons/16x16_move_left_to_end.png"></button>
+<button name="rowResultDriver" value="stepLeft" ${buttonMoveLeftDiesabled eq 'YES' ? 'disabled' : ''} ><img src="icons/16x16_move_left.png"></button>
+<button name="rowResultDriver" value="stepRight" ${buttonMoveRightDiesabled eq 'YES' ? 'disabled' : ''} ><img src="icons/16x16_move_right.png"></button>
+<button name="rowResultDriver" value="stepRightEnd"><img src="icons/16x16_move_right_to_end.png"></button></p>
 <table>
 <tr><th>Lp</th><th>Data zakupu</th>
 <th><button type="submit" name="sortBy" value="productNameAscending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_az_905641.png"></button>
