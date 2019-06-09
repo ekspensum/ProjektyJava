@@ -70,38 +70,38 @@ public class ProductByCategory extends HttpServlet {
 		if(request.getParameter(String.valueOf(listCategory.get(1).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(1));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(1).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(2).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(2));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(2).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(3).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(3));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(3).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(4).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(4));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(4).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(5).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(5));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(5).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(6).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(6));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(6).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(7).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(7));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(7).getId()));
-		}
+		} else
 		if(request.getParameter(String.valueOf(listCategory.get(8).getId())) != null) {
 			request.setAttribute("curentCategory", listCategory.get(8));
 			request.setAttribute("productList", pbl.listProductByCategory(listCategory.get(8).getId()));
 		}
 		
-//		allows add product to basket
 		if(request.getParameter("buttonToBasketFromCategory") != null) {
+//		allows add product to basket
 			Product product = pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromCategory")));
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");			
 			if(sd != null) {
@@ -110,10 +110,8 @@ public class ProductByCategory extends HttpServlet {
 				bbl.addBasketRow(product.getId(), Integer.valueOf(request.getParameter(quantity)), product.getName(), product.getPrice(), bbl.getBasketData());
 			} else
 				request.setAttribute("message", "Aby dodać produkt do koszyka należy się zalogować!");	
-		}
-		
+		} else	if (request.getParameter("buttonDeleteRowBasket") != null) {
 //		allows delete product from basket
-		if (request.getParameter("buttonDeleteRowBasket") != null) {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			bbl = sd.getBasketBeanLocal();
 			String[] deletedId = request.getParameterValues("chbxDeleteRow");
@@ -129,7 +127,7 @@ public class ProductByCategory extends HttpServlet {
 				request.setAttribute("message", "Proszę zaznaczyć co njmniej jeden produkt do usunięcia!");
 		}
 		
-		doGet(request, response);
+		doGet(request, response);	
 	}
 
 }

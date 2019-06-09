@@ -106,13 +106,10 @@ public class OperatorPanel extends HttpServlet {
 					} else
 						request.setAttribute("message", "Nie udało się dodać produktu!");
 				} catch (IllegalStateException | SecurityException | SystemException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}
-		
-		if (request.getParameter("buttonAddCategory") != null) {
+		} else	if (request.getParameter("buttonAddCategory") != null) {
 			boolean validOK = true;
 			Validation valid = new Validation();
 			if (request.getParameter("categoryName").equals("")
@@ -136,32 +133,25 @@ public class OperatorPanel extends HttpServlet {
 					request.setAttribute("message", "Rozmiar pliku jest zbyt duży!");
 					e.printStackTrace();
 				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SystemException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}
-		
-		if(request.getParameter("searchPruductButton") != null) {
+		} else	if(request.getParameter("searchPruductButton") != null) {
 			if(!request.getParameter("searchPruductByName").equals("")) {
 				request.setAttribute("Products", pbl.findProduct(request.getParameter("searchPruductByName")));	
 				request.getServletContext().setAttribute("button", "searchPruductButton");
 			} else
 				request.setAttribute("message", "Proszę wprowadzić fragment nazwy wyszukiwanego produktu!");
-		}
-		
-		if(request.getParameter("searchQuantityButton") != null) {
+			
+		} else	if(request.getParameter("searchQuantityButton") != null) {
 				request.setAttribute("Products", pbl.findProduct(Integer.valueOf(request.getParameter("searchPruductByQuantity"))));	
 				request.getServletContext().setAttribute("button", "searchQuantityButton");
-		}
-		
-		if(request.getParameter("editButton") != null) {
+				
+		} else	if(request.getParameter("editButton") != null) {
 			if(request.getParameter("idProduct") != null) {
 				if(request.getParameterValues("idProduct").length == 1) {
 					Product product = pbl.getProduct(Integer.valueOf(request.getParameter("idProduct")));
@@ -181,9 +171,7 @@ public class OperatorPanel extends HttpServlet {
 				request.setAttribute("Products", pbl.findProduct(Integer.valueOf(request.getParameter("searchPruductByQuantity"))));
 				request.getServletContext().setAttribute("searchPruductByQuantity", request.getParameter("searchPruductByQuantity"));
 			}
-		}
-		
-		if(request.getParameter("saveButton") != null) {
+		} else	if(request.getParameter("saveButton") != null) {
 			if(validation(request)) {
 				SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 				
@@ -215,7 +203,6 @@ public class OperatorPanel extends HttpServlet {
 					} else
 						request.setAttribute("message", "Nie udało się zaktualizować produktu!");
 				} catch (IllegalStateException | SecurityException | SystemException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
@@ -228,13 +215,10 @@ public class OperatorPanel extends HttpServlet {
 					request.setAttribute("productToEdit", pbl.getProduct(productIdToEdit));
 				}
 			}
-		}
-		
-		if(request.getParameter("buttonSearchNoExecOrder") != null) {
+		} else	if(request.getParameter("buttonSearchNoExecOrder") != null) {
 			searchNoExecOrder(request);
-		}
-
-		if(request.getParameter("buttonExecOrder") != null) {
+			
+		} else	if(request.getParameter("buttonExecOrder") != null) {
 			if(request.getParameter("buttonExecOrder").equals("yes")) {
 				if(request.getParameterValues("idTransaction") != null) {
 						SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");

@@ -110,9 +110,7 @@ public class CustomerPanel extends HttpServlet {
 						+ "Na Twój adres e-mail został wysłany mail z linkien aktywacyjnym.<br>"
 						+ "Prosimy o potwierdzenie aktywacji poprzez klikniecie na link aktywacyjny.");			
 			}		
-		}
-		
-		if(request.getParameter("buttonOpenEdit") != null) {
+		} else if(request.getParameter("buttonOpenEdit") != null) {
 
 			Validation valid = new Validation(ubl.getSettingsApp());
 			String pass = valid.stringToCode(request.getParameter("password"));
@@ -131,9 +129,7 @@ public class CustomerPanel extends HttpServlet {
 					request.setAttribute("message", "Niepoprawne dane logowania lub użytkownik nie jest aktywny!");
 			} else
 				request.setAttribute("message", "Niepoprawne dane logowania!");
-		}
-		
-		if(request.getParameter("buttonSaveEdit") != null) {
+		} else if(request.getParameter("buttonSaveEdit") != null) {
 
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			
@@ -173,11 +169,11 @@ public class CustomerPanel extends HttpServlet {
 				} catch (IllegalStateException | SecurityException | SystemException e) {
 					e.printStackTrace();
 				}	
-			} else
-				request.setAttribute("saveEdit", "yes");
-		}
-		
-		if(request.getParameter("buttonSearchTransaction") != null) {
+			} else {
+				request.setAttribute("saveEdit", "yes");				
+			}
+			
+		} else if(request.getParameter("buttonSearchTransaction") != null) {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
@@ -193,9 +189,8 @@ public class CustomerPanel extends HttpServlet {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();
 			}
-		}
-		
-		if(request.getParameter("sortBy") != null) {
+			
+		} else if(request.getParameter("sortBy") != null) {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
@@ -209,9 +204,8 @@ public class CustomerPanel extends HttpServlet {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();
 			}
-		}
-		
-		if(request.getParameter("rowResultDriver") != null) {
+			
+		} else if(request.getParameter("rowResultDriver") != null) {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String dateFrom = request.getParameter("searchProductDateFrom")+" 00:00:00";
@@ -226,15 +220,14 @@ public class CustomerPanel extends HttpServlet {
 			}
 			
 			if(request.getParameter("sortBy") != null) {
-				sortBy = request.getParameter("sortBy");				
-			}
-			
-			if(request.getParameter("rowResultDriver").equals("stepLeftEnd")) {
+				sortBy = request.getParameter("sortBy");
+				
+			} else	if(request.getParameter("rowResultDriver").equals("stepLeftEnd")) {
 				rowStart = 0;
 				rowPositionHelper = rowStart;
-				request.setAttribute("buttonMoveLeftDiesabled", "YES");	
-			}
-			if(request.getParameter("rowResultDriver").equals("stepLeft")) {
+				request.setAttribute("buttonMoveLeftDiesabled", "YES");
+				
+			} else	if(request.getParameter("rowResultDriver").equals("stepLeft")) {
 				rowStart = rowPositionHelper - rowOnPage;
 				rowPositionHelper = rowStart;					
 				if(rowStart <= 0) {
@@ -243,8 +236,8 @@ public class CustomerPanel extends HttpServlet {
 					rowPositionHelper = rowOnPage - Integer.valueOf(request.getParameter("showRowTransactions"));;
 					request.setAttribute("buttonMoveLeftDiesabled", "YES");					
 				}
-			}			
-			if(request.getParameter("rowResultDriver").equals("stepRight")) {
+				
+			} else	if(request.getParameter("rowResultDriver").equals("stepRight")) {
 				rowStart = rowPositionHelper + rowOnPage;
 				rowPositionHelper = rowStart;				
 				if(rowStart >= countRowTransactions) {
@@ -255,8 +248,8 @@ public class CustomerPanel extends HttpServlet {
 				if(rowStart >= countRowTransactions - rowOnPage) {
 					request.setAttribute("buttonMoveRightDiesabled", "YES");					
 				}
-			}			
-			if(request.getParameter("rowResultDriver").equals("stepRightEnd")) {
+				
+			} else	if(request.getParameter("rowResultDriver").equals("stepRightEnd")) {
 				rowStart = countRowTransactions - rowOnPage;
 				rowPositionHelper = rowStart;
 				request.setAttribute("buttonMoveRightDiesabled", "YES");	
@@ -269,8 +262,7 @@ public class CustomerPanel extends HttpServlet {
 			} catch (DateTimeParseException e) {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();
-			}				
-			
+			}						
 		}
 		
 		doGet(request, response);

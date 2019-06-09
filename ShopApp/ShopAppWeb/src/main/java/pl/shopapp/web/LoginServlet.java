@@ -56,9 +56,9 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
 	    request.setAttribute("catList", pbl.listCategory());
+	    
 		SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 		if(sd != null) {
 			total = 0.0;
@@ -74,8 +74,7 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		if (request.getParameter("loginButton") != null) {
 			Validation valid = new Validation(ubl.getSettingsApp());
@@ -99,10 +98,9 @@ public class LoginServlet extends HttpServlet {
 					request.setAttribute("message", "Niepoprawne dane logowania lub użytkownik nie jest aktywny!");
 			} else
 				request.setAttribute("message", "Niepoprawne dane logowania!");
-		}
-		
+			
+		} else	if (request.getParameter("buttonDeleteRowBasket") != null) {
 //		allows delete product from basket
-		if (request.getParameter("buttonDeleteRowBasket") != null) {
 			SessionData sd = (SessionData) request.getSession().getAttribute("SessionData");
 			bbl = sd.getBasketBeanLocal();
 			String[] deletedId = request.getParameterValues("chbxDeleteRow");
@@ -116,10 +114,9 @@ public class LoginServlet extends HttpServlet {
 				}
 			} else
 				request.setAttribute("message", "Proszę zaznaczyć co njmniej jeden produkt do usunięcia!");
-		}
-		
+			
+		} else	if(request.getParameter("searchProductButton") != null) {
 //		for searching products
-		if(request.getParameter("searchProductButton") != null) {
 			request.setAttribute("resultSearchProducts", pbl.findProduct(request.getParameter("searchProductInput")));	
 		}
 		

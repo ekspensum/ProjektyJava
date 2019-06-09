@@ -65,16 +65,16 @@ public class ProductDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		
 		if (request.getParameter("buttonToProductDetailsFromCategory") != null) {
 			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonToProductDetailsFromCategory"))));
-		}
-		if (request.getParameter("buttonToProductDetailsFromMain") != null) {
+			
+		} else if (request.getParameter("buttonToProductDetailsFromMain") != null) {
 			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonToProductDetailsFromMain"))));
-		}
-		if (request.getParameter("buttonToBasketFromDetails") != null) {
+			
+		} else	if (request.getParameter("buttonToBasketFromDetails") != null) {
 //			allows holds the same searching category result
 			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))));
 
@@ -85,9 +85,8 @@ public class ProductDetails extends HttpServlet {
 				bbl.addBasketRow(pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))).getId(), Integer.valueOf(request.getParameter(quantity)), pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))).getName(), pbl.getProduct(Integer.valueOf(request.getParameter("buttonToBasketFromDetails"))).getPrice(),	bbl.getBasketData());
 			} else
 				request.setAttribute("message", "Aby dodać produkt do koszyka należy się zalogować!");
-		}
-
-		if (request.getParameter("buttonDeleteRowBasket") != null) {
+			
+		} else	if (request.getParameter("buttonDeleteRowBasket") != null) {
 //			allows holds the same searching category result
 			request.setAttribute("pd", pbl.getProduct(Integer.valueOf(request.getParameter("buttonDeleteRowBasket"))));
 
