@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="ShopApp">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="ShopAppBeans.jar" deploy-path="/" handle="module:/resource/ShopAppBeans/ShopAppBeans">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppWeb.war" deploy-path="/" handle="module:/resource/ShopAppWeb/ShopAppWeb">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppClient.jar" deploy-path="/" handle="module:/resource/ShopAppClient/ShopAppClient">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppEntites.jar" deploy-path="/lib" handle="module:/resource/ShopAppEntites/ShopAppEntites">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppEntites.jar" deploy-path="/lib" handle="module:/resource/ShopAppEntites/ShopAppEntites">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppEntites.jar" deploy-path="/lib" handle="module:/resource/ShopAppEntites/ShopAppEntites">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppEntites.jar" deploy-path="/lib" handle="module:/resource/ShopAppEntites/ShopAppEntites">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppEntites.jar" deploy-path="/lib" handle="module:/resource/ShopAppEntites/ShopAppEntites">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ShopAppWebService.war" deploy-path="/" handle="module:/resource/ShopAppWebService/ShopAppWebService">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>
