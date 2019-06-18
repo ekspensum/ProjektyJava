@@ -6,18 +6,21 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.TreatmentCategory;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRED)
 public class TreatmentRepositoryImpl implements TreatmentRepository {
 	
 	@Autowired
-	private SessionFactory session;
+	private SessionFactory sessionFactory;
 	
 	protected Session getSession() {
-		return session.getCurrentSession();
+		return sessionFactory.getCurrentSession();
 	}
 
 	@Override
@@ -58,35 +61,51 @@ public class TreatmentRepositoryImpl implements TreatmentRepository {
 	}
 
 	@Override
-	public DentalTreatment readDentalTreatment(String treatmentName) {
-		getSession().createNamedQuery("readDentalTreatmentByNme", DentalTreatment.class).setParameter("name", treatmentName).getResultList();
-		return null;
+	public List<DentalTreatment> readDentalTreatment(String treatmentName) {
+		return getSession().createNamedQuery("readDentalTreatmentByNme", DentalTreatment.class).setParameter("name", "%"+treatmentName+"%").getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<DentalTreatment> readAllDentalTreatment() {
-		return getSession().createNamedQuery("readAllDentalTreatment", DentalTreatment.class).getResultList();
+		return getSession().createQuery("from DentalTreatment").getResultList();
 	}
 
 	@Override
 	public boolean saveTreatmentCategory(String category) {
-		return false;
+		try {
+			TreatmentCategory treatmentCategory = new TreatmentCategory();
+			treatmentCategory.setCategoryName(category);
+			getSession().persist(treatmentCategory);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
-	public boolean updateTreatmentCategory(String category) {
-		return false;
+	public boolean updateTreatmentCategory(int id, String categoryName) {
+		try {
+			TreatmentCategory treatmentCategory = getSession().find(TreatmentCategory.class, id);
+			treatmentCategory.setCategoryName(categoryName);
+			getSession().update(treatmentCategory);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public TreatmentCategory readTreatmentCategory(int id) {
-		return null;
+		return getSession().find(TreatmentCategory.class, id);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TreatmentCategory> readAllTreatmentCategory() {
-		return null;
+		return getSession().createQuery("from TreatmentCategory").getResultList();
 	}
 
-	
 }

@@ -3,8 +3,6 @@ package pl.dentistoffice.config;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "pl.dentistoffice")
-@PropertySource(value="/static/properties/database.properties")
+//@PropertySource(value="/static/properties/database.properties")
+@PropertySource(value="classpath:/pl/dentistoffice/config/database.properties") //for tests
 @EnableTransactionManagement
 public class RootConfig {
 
@@ -43,9 +42,9 @@ public class RootConfig {
 	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
-		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-		factoryBean.setDataSource(dataSource());
-		factoryBean.setPackagesToScan("pl.dentistoffice.entity");
+		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+		sessionFactory.setDataSource(dataSource());
+		sessionFactory.setPackagesToScan("pl.dentistoffice.entity");
 		
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
@@ -53,9 +52,9 @@ public class RootConfig {
         hibernateProperties.setProperty("hibernate.format_sql", "false");
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         hibernateProperties.setProperty("jadira.usertype.autoRegisterUserTypes", "true");
-		factoryBean.setHibernateProperties(hibernateProperties);
+		sessionFactory.setHibernateProperties(hibernateProperties);
 		
-		return factoryBean;
+		return sessionFactory;
 	}
 	
     @Bean

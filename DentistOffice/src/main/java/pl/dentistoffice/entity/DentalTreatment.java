@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -19,8 +18,8 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@NamedQueries({@NamedQuery(name = "readAllDentalTreatment", query = "SELECT dt FROM DentalTratment dt"),
-	@NamedQuery(name = "readDentalTreatmentByNme", query = "SELECT dt FROM DentalTratment dt WHERE dt.name LIKE :name")
+@NamedQueries({
+	@NamedQuery(name = "readDentalTreatmentByNme", query = "SELECT dt FROM DentalTreatment dt WHERE dt.name LIKE :name")
 })
 public class DentalTreatment implements Serializable {
 
@@ -33,7 +32,7 @@ public class DentalTreatment implements Serializable {
 	private String description;
 	private double price;
 	
-	@OneToMany
+	@ManyToMany
 	private List<TreatmentCategory> treatmentCategory;
 	
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "treatments")
