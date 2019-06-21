@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -37,4 +38,7 @@ public class DentalTreatment implements Serializable {
 	
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "treatments")
 	private List<Visit> visits;
+	
+	@OneToOne
+	private User userLogged;
 }
