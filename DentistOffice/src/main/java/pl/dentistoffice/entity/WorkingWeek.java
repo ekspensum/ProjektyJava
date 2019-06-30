@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 @Entity
-public class WorkingTime implements Serializable {
+public class WorkingWeek implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,10 +29,10 @@ public class WorkingTime implements Serializable {
 	private int id;
 	
 	@Lob
-	byte [] workingTimeMapByte;
+	byte [] workingWeekMapByte;
 	
 	@Transient
-	private Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> workingTimeMap;
+	private Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap;
 	
 	@OneToOne
 	private User userLogged;
@@ -45,38 +45,38 @@ public class WorkingTime implements Serializable {
 		this.id = id;
 	}
 
-	public byte[] getWorkingTimeMapByte() {
-		return workingTimeMapByte;
+	public byte[] getWorkingWeekMapByte() {
+		return workingWeekMapByte;
 	}
 
-	public void setWorkingTimeMapByte(byte[] workingTimeMapByte) {
-		this.workingTimeMapByte = workingTimeMapByte;
+	public void setWorkingWeekMapByte(byte[] workingWeekMapByte) {
+		this.workingWeekMapByte = workingWeekMapByte;
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> getWorkingTimeMap() {
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(workingTimeMapByte);
-		Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> workingTimeMap = null;
+	public Map<DayOfWeek, Map<LocalTime, Boolean>> getWorkingWeekMap() {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(workingWeekMapByte);
+		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = null;
 		try {
 			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-			workingTimeMap = (Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>>) objectInputStream.readObject();
+			workingWeekMap = (Map<DayOfWeek, Map<LocalTime, Boolean>>) objectInputStream.readObject();
 			inputStream.close();
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-		return workingTimeMap;
+		return workingWeekMap;
 	}
 
-	public void setWorkingTimeMap(Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> workingTimeMap) {
+	public void setWorkingWeekMap(Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap) {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
 		try {
 			ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-			outputStream.writeObject(workingTimeMap);
+			outputStream.writeObject(workingWeekMap);
 			outputStream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.workingTimeMapByte = byteArrayOutputStream.toByteArray();
+		this.workingWeekMapByte = byteArrayOutputStream.toByteArray();
 	}
 
 	public User getUserLogged() {

@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "pl.dentistoffice")
-//@PropertySource(value="/static/properties/database.properties")
-@PropertySource(value="classpath:/pl/dentistoffice/config/database.properties") //for tests
+@PropertySource(value="/static/properties/database.properties")
+//@PropertySource(value="classpath:/pl/dentistoffice/config/database.properties") //for tests
 @EnableTransactionManagement
 public class RootConfig {
 

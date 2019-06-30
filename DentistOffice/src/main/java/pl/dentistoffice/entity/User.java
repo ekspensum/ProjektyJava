@@ -12,6 +12,9 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +41,7 @@ public class User implements Serializable {
 	private String passwordField;
 	
 	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Role> roles;
 
 }

@@ -1,5 +1,6 @@
 package pl.dentistoffice.main;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,7 +24,7 @@ import pl.dentistoffice.entity.TreatmentCategory;
 import pl.dentistoffice.entity.User;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
-import pl.dentistoffice.entity.WorkingTime;
+import pl.dentistoffice.entity.WorkingWeek;
 import pl.dentistoffice.service.UserService;
 
 public class RunClass {
@@ -42,12 +43,12 @@ public class RunClass {
 //		visitStatus.setStatusName("PLANNED");
 //		visitBean.saveVistStatus(visitStatus);
 		
-		Visit visit = new Visit();
-		visit.setVisitDateTime(LocalDateTime.now());
-		visit.setStatus(visitBean.readVisitStaus(2));
-		Doctor doctor2 = userBean.readDoctor(2);
-		visit.setDoctor(doctor2);
-		visitBean.saveVisit(visit);
+//		Visit visit = new Visit();
+//		visit.setVisitDateTime(LocalDateTime.now());
+//		visit.setStatus(visitBean.readVisitStaus(2));
+//		Doctor doctor2 = userBean.readDoctor(2);
+//		visit.setDoctor(doctor2);
+//		visitBean.saveVisit(visit);
 		
 //		Map<LocalDate, Boolean> workingDate1 = new HashMap<>();
 //		workingDate1.put(LocalDate.now(), true);
@@ -55,7 +56,7 @@ public class RunClass {
 //		workingDate1.put(LocalDate.now().plusDays(12), true);
 //		workingDate1.put(LocalDate.now().plusDays(13), false);
 //		Map<LocalTime, Boolean> workingHours1 = new HashMap<>();
-//		WorkingTime workingTime1 = new WorkingTime();
+//		WorkingWeek workingTime1 = new WorkingWeek();
 //		Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> workingTimeMap = new HashMap<>();
 //		workingTimeMap.put(workingDate1, workingHours1);
 //		workingTime1.setWorkingTimeMap(workingTimeMap);
@@ -95,7 +96,7 @@ public class RunClass {
 //		
 //		Doctor doctor = new Doctor();
 //		doctor.setFirstName("firstName");
-//		WorkingTime workingTime = new WorkingTime();
+//		WorkingWeek workingTime = new WorkingWeek();
 //		workingTime.setWorkingTimeMap(workingTimeMap);
 //		doctor.setWorkingTime(workingTime);
 //		
@@ -114,18 +115,16 @@ public class RunClass {
 //		for(int i=0; i<readVisits.size(); i++)
 //			System.out.println(readVisits.get(i).getVisitDateTime()+" "+readVisits.get(i).getStatus().getStatusName());
 		
-//		Doctor doctor2 = userBean.readDoctor(2);
-//		WorkingTime workingTime2 = doctor2.getWorkingTime();
-//		Map<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> map = workingTime2.getWorkingTimeMap();
-//
-//		for(Map.Entry<Map<LocalDate, Boolean>, Map<LocalTime, Boolean>> entry : map.entrySet()) {
-//			for(int i=0; i<entry.getKey().size(); i++) {
-//				System.out.println("Day Key "+entry.getKey().keySet().toArray()[i]+" Day Value "+entry.getKey().values().toArray()[i]);
-//				for(int j=0; j<entry.getValue().size(); j++) {
-//					System.out.println("Hours Key "+entry.getValue().keySet().toArray()[j]+" Hours Value "+entry.getValue().values().toArray()[j]);									
-//				}
-//			}
-//		}
+		Doctor doctor2 = userBean.readDoctor(2);
+		WorkingWeek workingTime2 = doctor2.getWorkingWeek();
+		Map<DayOfWeek, Map<LocalTime, Boolean>> map = workingTime2.getWorkingWeekMap();
+
+		for(Map.Entry<DayOfWeek, Map<LocalTime, Boolean>> entry : map.entrySet()) {
+			System.out.println("Day Key "+entry.getKey());
+			for(int j=0; j<entry.getValue().size(); j++) {
+				System.out.println("Hours Key "+entry.getValue().keySet().toArray()[j]+" Hours Value "+entry.getValue().values().toArray()[j]);									
+			}
+		}
 		
 		context.close();
 	}

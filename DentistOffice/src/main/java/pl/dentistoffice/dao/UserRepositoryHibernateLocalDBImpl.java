@@ -15,7 +15,7 @@ import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
-import pl.dentistoffice.entity.WorkingTime;
+import pl.dentistoffice.entity.WorkingWeek;
 
 
 @Repository
@@ -28,23 +28,6 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	protected Session getSession() {
 		return session.getCurrentSession();
 	}
-	
-	@Override
-	public boolean saveUser(User user) {
-		try {
-			getSession().persist(user);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	@Override
-	public User readUser(int id) {
-		return getSession().find(User.class, id);
-	}
-
 	
 	@Override
 	public boolean saveRole(Role role) {
@@ -72,9 +55,24 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 		try {
 			User user = doctor.getUser();
 			getSession().persist(user);
-			WorkingTime workingTime = doctor.getWorkingTime();
-			getSession().persist(workingTime);
+			WorkingWeek workingWeek = doctor.getWorkingWeek();
+			getSession().persist(workingWeek);
 			getSession().persist(doctor);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateDoctor(Doctor doctor) {
+		try {
+			User user = doctor.getUser();
+			getSession().saveOrUpdate(user);
+			WorkingWeek workingWeek = doctor.getWorkingWeek();
+			getSession().saveOrUpdate(workingWeek);
+			getSession().saveOrUpdate(doctor);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

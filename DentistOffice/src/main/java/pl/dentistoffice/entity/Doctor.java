@@ -34,5 +34,5 @@ public class Doctor implements Serializable {
 	private User user;
 	
 	@OneToOne
-	private WorkingTime workingTime;
+	private WorkingWeek workingWeek;
 }

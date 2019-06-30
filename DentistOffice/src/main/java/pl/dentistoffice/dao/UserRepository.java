@@ -7,19 +7,16 @@ import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
-import pl.dentistoffice.entity.User;
 
 
 public interface UserRepository {
-
-	boolean saveUser(User user);
-	User readUser(int id);
 	
 	boolean saveRole(Role role);
 	Role readRole(int id);
 	List<Role> readAllRoles(); 
 	
 	boolean saveDoctor(Doctor doctor);
+	boolean updateDoctor(Doctor doctor);
 	Doctor readDoctor(int id);
 	List<Doctor> readAllDoctors();
 
