@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 @ControllerAdvice
-//@PropertySource(value="classpath:/messages.properties")
+@PropertySource(value="classpath:/messages.properties")
 public class AdviceController {
 	
 	@Autowired

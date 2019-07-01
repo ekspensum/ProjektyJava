@@ -29,14 +29,8 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	}
 	
 	@Override
-	public boolean saveVisit(Visit visit) {
-		try {
+	public void saveVisit(Visit visit) {
 			getSession().persist(visit);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 	@Override

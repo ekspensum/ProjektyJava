@@ -84,15 +84,3 @@
 		</table>
 	</form:form>
 
-
-
-	<c:if test="${alert == 'YES' }">
-		<script>
-			userAdded();
-		</script>
-	</c:if>
-	<c:if test="${alert == 'NO' }">
-		<script>
-			alert("Did not added new user!");
-		</script>
-	</c:if>

@@ -12,7 +12,7 @@ import pl.dentistoffice.entity.VisitStatus;
 
 public interface VisitRepository {
 
-	public boolean saveVisit(Visit visit);
+	public void saveVisit(Visit visit);
 	public Visit readVisit(int id);
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, VisitStatus visitStatus);

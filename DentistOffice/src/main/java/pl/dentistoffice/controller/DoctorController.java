@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,9 @@ import pl.dentistoffice.service.UserService;
 @SessionAttributes("doctor")
 public class DoctorController {
 
+	@Autowired
+	private Environment env;
+	
 	@Autowired
 	private UserService userService;
 	
@@ -53,19 +57,26 @@ public class DoctorController {
 			String [] fridayTime, String [] fridayTimeBool,
 			Model model) throws IOException {
 		
-		doctor.setPhoto(photo.getBytes());
-		WorkingWeek workingWeek = new WorkingWeek();
-		
-		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = new LinkedHashMap<>();
-		setWorkingWeekMap(workingWeekMap, mondayTime, mondayTimeBool, tuesdayTime, tuesdayTimeBool, wednesdayTime, 
-				wednesdayTimeBool, thursdayTime, thursdayTimeBool, fridayTime, fridayTimeBool);
-		
-		workingWeek.setWorkingWeekMap(workingWeekMap);
-		doctor.setWorkingWeek(workingWeek);
-		userService.addNewDoctor(doctor);
-		
-		model.addAttribute("rolesList", userService.getAllRoles());
-		return "doctorRegister";
+			doctor.setPhoto(photo.getBytes());
+			WorkingWeek workingWeek = new WorkingWeek();
+
+			Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = new LinkedHashMap<>();
+			setWorkingWeekMap(workingWeekMap, mondayTime, mondayTimeBool, tuesdayTime, tuesdayTimeBool, wednesdayTime,
+					wednesdayTimeBool, thursdayTime, thursdayTimeBool, fridayTime, fridayTimeBool);
+
+			workingWeek.setWorkingWeekMap(workingWeekMap);
+			doctor.setWorkingWeek(workingWeek);
+			
+			if (!result.hasErrors()) {
+			userService.addNewDoctor(doctor);
+			model.addAttribute("success", env.getProperty("successRegisterDoctor"));
+			
+			return "forward:success";
+		} else {
+			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("templateWorkingWeekMap", workingWeekMap);
+			return "doctorRegister";
+		}
 	}
 	
 	@RequestMapping(path = "/doctorEdit")
@@ -98,8 +109,7 @@ public class DoctorController {
 			String [] thursdayTime, String [] thursdayTimeBool,
 			String [] fridayTime, String [] fridayTimeBool,
 			Model model) throws IOException {
-		model.addAttribute("rolesList", userService.getAllRoles());
-		doctor.setPhoto(photo.getBytes());		
+		
 		
 ////		MONDAY
 //		Map<LocalTime, Boolean> mondayTimeMap = new LinkedHashMap<>();
@@ -114,23 +124,30 @@ public class DoctorController {
 //			tuesdayTimeMap.put(LocalTime.parse(tuesdayTime[i], DateTimeFormatter.ofPattern("HH:mm")), Boolean.valueOf(tuesdayTimeBool[i]));
 //		}
 //		workingWeekMap.put(DayOfWeek.TUESDAY, tuesdayTimeMap);
-		
+
 //		for(Entry<DayOfWeek, Map<LocalTime, Boolean>> entry : workingWeekMap.entrySet()) {
 //			System.out.println(entry.getKey()+ " "+entry.getValue());
 //		}
-		
+
 		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
-		
-		setWorkingWeekMap(workingWeekMap, mondayTime, mondayTimeBool, tuesdayTime, tuesdayTimeBool, wednesdayTime, 
+
+		setWorkingWeekMap(workingWeekMap, mondayTime, mondayTimeBool, tuesdayTime, tuesdayTimeBool, wednesdayTime,
 				wednesdayTimeBool, thursdayTime, thursdayTimeBool, fridayTime, fridayTimeBool);
-		
+
 		workingWeek.setWorkingWeekMap(workingWeekMap);
 		doctor.setWorkingWeek(workingWeek);
-		userService.editDoctor(doctor);
-		
-		model.addAttribute("workingWeekMap", workingWeekMap);
-		return "doctorEdit";
+
+		if (!result.hasErrors()) {
+			doctor.setPhoto(photo.getBytes());
+			userService.editDoctor(doctor);
+			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
+			return "forward:success";
+		} else {
+			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("workingWeekMap", workingWeekMap);
+			return "doctorEdit";
+		}
 	}
 	
 	private void setWorkingWeekMap(Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap,

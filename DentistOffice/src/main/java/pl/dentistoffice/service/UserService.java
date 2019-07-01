@@ -37,18 +37,12 @@ public class UserService {
 //		return doctor.getWorkingWeek();
 //	}
 	
-	public boolean addNewDoctor(Doctor doctor) {
-		if(userRepository.saveDoctor(doctor)) {
-			return true;
-		}
-		return false;
+	public void addNewDoctor(Doctor doctor) {
+		userRepository.saveDoctor(doctor);
 	}
 	
-	public boolean editDoctor(Doctor doctor) {
-		if(userRepository.updateDoctor(doctor)) {
-			return true;
-		}
-		return false;		
+	public void editDoctor(Doctor doctor) {
+		userRepository.updateDoctor(doctor);
 	}
 	
 	public Doctor getDoctor(int id) {

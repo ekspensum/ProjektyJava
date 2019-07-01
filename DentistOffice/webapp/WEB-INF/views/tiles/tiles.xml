@@ -45,5 +45,10 @@
 		<put-attribute name="title" value="Exceptions" />
 		<put-attribute name="body" value="/WEB-INF/views/pages/handleError.jsp" />
 	</definition>
+	<!-- Success page -->
+	<definition name="success" extends="base">
+		<put-attribute name="title" value="Exceptions" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/success.jsp" />
+	</definition>
 
 </tiles-definitions>

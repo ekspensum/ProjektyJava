@@ -15,8 +15,8 @@ public interface UserRepository {
 	Role readRole(int id);
 	List<Role> readAllRoles(); 
 	
-	boolean saveDoctor(Doctor doctor);
-	boolean updateDoctor(Doctor doctor);
+	void saveDoctor(Doctor doctor);
+	void updateDoctor(Doctor doctor);
 	Doctor readDoctor(int id);
 	List<Doctor> readAllDoctors();
 

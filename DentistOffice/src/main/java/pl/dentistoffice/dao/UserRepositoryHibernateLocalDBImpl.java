@@ -51,33 +51,21 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean saveDoctor(Doctor doctor) {
-		try {
-			User user = doctor.getUser();
-			getSession().persist(user);
-			WorkingWeek workingWeek = doctor.getWorkingWeek();
-			getSession().persist(workingWeek);
-			getSession().persist(doctor);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	public void saveDoctor(Doctor doctor) {
+		User user = doctor.getUser();
+		getSession().persist(user);
+		WorkingWeek workingWeek = doctor.getWorkingWeek();
+		getSession().persist(workingWeek);
+		getSession().persist(doctor);
 	}
 
 	@Override
-	public boolean updateDoctor(Doctor doctor) {
-		try {
-			User user = doctor.getUser();
-			getSession().saveOrUpdate(user);
-			WorkingWeek workingWeek = doctor.getWorkingWeek();
-			getSession().saveOrUpdate(workingWeek);
-			getSession().saveOrUpdate(doctor);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	public void updateDoctor(Doctor doctor) {
+		User user = doctor.getUser();
+		getSession().saveOrUpdate(user);
+		WorkingWeek workingWeek = doctor.getWorkingWeek();
+		getSession().saveOrUpdate(workingWeek);
+		getSession().saveOrUpdate(doctor);
 	}
 
 	@Override
