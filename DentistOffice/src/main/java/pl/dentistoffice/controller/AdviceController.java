@@ -23,11 +23,11 @@ public class AdviceController {
 	@Autowired
 	private Environment env;
 
-	@ExceptionHandler(Exception.class)
-	public String handleException(Model model, Exception e) {
-		model.addAttribute("exception", "Wystapił wyjątek: "+e);
-		return "handleError";
-	}
+//	@ExceptionHandler(Exception.class)
+//	public String handleException(Model model, Exception e) {
+//		model.addAttribute("exception", "Wystapił wyjątek: "+e);
+//		return "handleError";
+//	}
 	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {

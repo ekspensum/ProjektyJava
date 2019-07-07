@@ -39,6 +39,21 @@
 		<put-attribute name="body" value="/WEB-INF/views/pages/doctorEdit.jsp" />
 	</definition>
 
+	<!-- Visit pages -->
+	<definition name="visitSelectDoctorByPatient" extends="base">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/visitSelectDoctorByPatient.jsp" />
+	</definition>	
+	<definition name="visitToReserveByPatient" extends="base">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/visitToReserveByPatient.jsp" />
+	</definition>
+		<definition name="visitReservationByPatient" extends="base">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/visitReservationByPatient.jsp" />
+	</definition>
+	
+	
 
 	<!-- Exception page -->
 	<definition name="handleError" extends="base">

@@ -19,7 +19,7 @@
 				</tr>
 				<tr>
 					<td>Aktywny:</td>
-					<td><form:checkbox path="user.enabled" checked="true" /></td>
+					<td><form:checkbox path="user.enabled" /></td>
 					<td><form:errors path="user.enabled" class="msgError" /></td>
 				</tr>
 				<tr>
@@ -72,7 +72,8 @@
 	<c:forEach items="${map.value }" var="time" varStatus="vs2">
 					<input type="text" name="${fn:toLowerCase(map.key)}Time" readonly="readonly" value="${time.key }" />
 					<input id="in${vs1.count}${vs2.count }" type="hidden" name="${fn:toLowerCase(map.key)}TimeBool" value="${time.value }" />
-					<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />		
+					<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />&emsp;&emsp;
+					${vs2.count % 6 == 0 ? '<br>' : '' }	
 	</c:forEach>
 	</p>
 </c:forEach>
