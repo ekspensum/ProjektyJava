@@ -1,15 +1,11 @@
 package pl.dentistoffice.controller;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import pl.dentistoffice.service.UserService;
 
@@ -21,17 +17,31 @@ public class HomeController {
 	private UserService userService;
 
 
-	@RequestMapping(value="/", method=RequestMethod.GET)
+	@RequestMapping(path="/")
 	public String home(Model model) {
 
 		
 		return "home";
 	}
 	
-	@RequestMapping(value="/", method=RequestMethod.POST)
-	public String selectDoctor(Model model) {
+	@RequestMapping(path="/doctors")
+	public String doctors(Model model) {
 
-		return "home";
+		
+		return "doctors";
 	}
+	@RequestMapping(path="/services")
+	public String services(Model model) {
+
+		
+		return "services";
+	}
+	@RequestMapping(path="/agenda")
+	public String agenda(Model model) {
+
+		
+		return "agenda";
+	}
+
 }
 

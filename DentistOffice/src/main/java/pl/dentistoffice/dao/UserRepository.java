@@ -20,15 +20,18 @@ public interface UserRepository {
 	Doctor readDoctor(int id);
 	List<Doctor> readAllDoctors();
 
-	boolean savePatient(Patient patient);
+	void savePatient(Patient patient);
+	void updatePatient(Patient patient);
 	Patient readPatient(int id);
 	List<Patient> readAllPatients();
 	
-	boolean saveAssistant(Assistant assistant);
+	void saveAssistant(Assistant assistant);
+	void updateAssistant(Assistant assistant);
 	Assistant readAssistant(int id);
 	List<Assistant> readAllAssistants();
 	
-	boolean saveAdmin(Admin admin);
+	void saveAdmin(Admin admin);
+	void updateAdmin(Admin admin);
 	Admin readAdmin(int id);
 	List<Admin> readAllAdmins();
 }

@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 <h1>Visit page - select visit parameters</h1>
 
-<form method="POST" action="${pageContext.request.contextPath}/visitReservationByPatient">
+<form method="POST" action="${pageContext.request.contextPath}/visit/patient/reservation">
 <select name="treatment">
 	<option value="0">treatment 1</option>
 	<option value="1">treatment 2</option>
@@ -20,12 +20,12 @@
 	<option value="2">treatment 3</option>
 </select>
 <br><br>
-<c:forEach items="${datesList}" var="dl">
- ${dl } <input type="checkbox" name="date" value="${dl }" />	${dl.dayOfWeek }
+<%-- <c:forEach items="${datesList}" var="dl"> --%>
+<%--  ${dl } <input type="checkbox" name="date" value="${dl }" />	${dl.dayOfWeek } --%>
  
- Time <input type="checkbox" name="time" value="18:00" /><br>
+<!--  Time <input type="checkbox" name="time" value="18:00" /><br> -->
  
-</c:forEach>
+<%-- </c:forEach> --%>
 
 
 

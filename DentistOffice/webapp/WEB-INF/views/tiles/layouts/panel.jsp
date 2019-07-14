@@ -17,9 +17,12 @@
             <tiles:insertAttribute name="menu" />
         </section>
              
-        <section id="content">
-            <tiles:insertAttribute name="body" />
+        <section id="userContent">
+            <tiles:insertAttribute name="userContent" />
         </section>
+         <section id="userMenu">
+            <tiles:insertAttribute name="userMenu"/>
+         </section>
          
         <footer id="footer">
             <tiles:insertAttribute name="footer" />

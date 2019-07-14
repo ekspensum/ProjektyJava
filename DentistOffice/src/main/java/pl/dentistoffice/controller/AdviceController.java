@@ -3,6 +3,8 @@ package pl.dentistoffice.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.PropertySource;
@@ -19,6 +21,8 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 @ControllerAdvice
 @PropertySource(value="classpath:/messages.properties")
 public class AdviceController {
+	
+//	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private Environment env;
@@ -43,9 +47,9 @@ public class AdviceController {
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 	
-//	@ModelAttribute
-//	public void addAttributes(Model model) {
-//	    model.addAttribute("head", env.getProperty("head"));
-//	    model.addAttribute("footer", env.getProperty("footer"));
-//	}
+	@ModelAttribute
+	public void globalAttributes(Model model) {
+	    model.addAttribute("head", env.getProperty("head"));
+	    model.addAttribute("footer", env.getProperty("footer"));
+	}
 }

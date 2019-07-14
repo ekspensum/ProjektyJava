@@ -79,16 +79,17 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean savePatient(Patient patient) {
-		try {
+	public void savePatient(Patient patient) {
 			User user = patient.getUser();
 			getSession().persist(user);
 			getSession().persist(patient);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	}
+
+	@Override
+	public void updatePatient(Patient patient) {
+		User user = patient.getUser();
+		getSession().saveOrUpdate(user);
+		getSession().saveOrUpdate(patient);
 	}
 
 	@Override
@@ -102,16 +103,17 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean saveAssistant(Assistant assistant) {
-		try {
+	public void saveAssistant(Assistant assistant) {
 			User user = assistant.getUser();
 			getSession().persist(user);
 			getSession().persist(assistant);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	}
+
+	@Override
+	public void updateAssistant(Assistant assistant) {
+		User user = assistant.getUser();
+		getSession().saveOrUpdate(user);
+		getSession().saveOrUpdate(assistant);
 	}
 
 	@Override
@@ -125,16 +127,17 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean saveAdmin(Admin admin) {
-		try {
+	public void saveAdmin(Admin admin) {
 			User user = admin.getUser();
 			getSession().persist(user);
 			getSession().persist(admin);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	}
+
+	@Override
+	public void updateAdmin(Admin admin) {
+		User user = admin.getUser();
+		getSession().saveOrUpdate(user);
+		getSession().saveOrUpdate(admin);
 	}
 
 	@Override

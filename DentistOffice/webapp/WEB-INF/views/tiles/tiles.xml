@@ -11,16 +11,22 @@
 		<put-attribute name="footer" value="/WEB-INF/views/tiles/template/footer.jsp" />
 	</definition>
 
-	<!-- Login -->
-	<definition name="login" extends="base">
-		<put-attribute name="title" value="Login" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/login.jsp" />
-	</definition>
-
-	<!-- Home Page -->
+	<!-- Home Pages -->
 	<definition name="home" extends="base">
-		<put-attribute name="title" value="Welcome" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/home.jsp" />
+		<put-attribute name="title" value="Witamy" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/home/home.jsp" />
+	</definition>
+	<definition name="services" extends="base">
+		<put-attribute name="title" value="Usługi" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/home/services.jsp" />
+	</definition>
+	<definition name="doctors" extends="base">
+		<put-attribute name="title" value="Lekarze" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/home/doctors.jsp" />
+	</definition>
+	<definition name="agenda" extends="base">
+		<put-attribute name="title" value="Terminarz" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/home/agenda.jsp" />
 	</definition>
 
 	<!-- Contact-us Page -->
@@ -29,37 +35,146 @@
 		<put-attribute name="body" value="/WEB-INF/views/pages/contact.jsp" />
 	</definition>
 	
-	<!-- Register & edit pages -->
-	<definition name="doctorRegister" extends="base">
-		<put-attribute name="title" value="Doctor registration" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/doctorRegister.jsp" />
+	<!-- User panels -->
+	<definition name="userPanel" extends="base" template="/WEB-INF/views/tiles/layouts/panel.jsp">
+		<put-attribute name="title" value="User panel" />
+		<put-attribute name="userMenu" value="/WEB-INF/views/tiles/template/userMenu.jsp" />
 	</definition>
-	<definition name="doctorEdit" extends="base">
+	<definition name="patientPanel" extends="userPanel">
+		<put-attribute name="title" value="Patient panel" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/panels/patientPanel.jsp" />
+		<put-attribute name="userMenu" value="/WEB-INF/views/pages/panels/patientMenu.jsp" />
+	</definition>
+	<definition name="employeePanel" extends="userPanel">
+		<put-attribute name="title" value="Employee panel" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/panels/employeePanel.jsp" />
+		<put-attribute name="userMenu" value="/WEB-INF/views/pages/panels/employeeMenu.jsp" />
+	</definition>
+	<definition name="adminPanel" extends="employeePanel">
+		<put-attribute name="title" value="Admin panel" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/panels/adminPanel.jsp" />
+		<put-attribute name="userMenu" value="/WEB-INF/views/pages/panels/adminMenu.jsp" />
+	</definition>
+	<definition name="assistantPanel" extends="employeePanel">
+		<put-attribute name="title" value="Assistant panel" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/panels/assistantPanel.jsp" />
+		<put-attribute name="userMenu" value="/WEB-INF/views/pages/panels/assistantMenu.jsp" />
+	</definition>
+	<definition name="doctorPanel" extends="employeePanel">
+		<put-attribute name="title" value="Doctor panel" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/panels/doctorPanel.jsp" />
+		<put-attribute name="userMenu" value="/WEB-INF/views/pages/panels/doctorMenu.jsp" />
+	</definition>	
+		
+	<!-- User pages -->
+	<!-- Doctor registration and editing by admin -->	
+	<definition name="/users/doctor/admin/register" extends="adminPanel">
+		<put-attribute name="title" value="Doctor registration" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/admin/register.jsp" />
+	</definition>
+	<definition name="/users/doctor/admin/selectToEdit" extends="adminPanel">
+		<put-attribute name="title" value="Select doctor to edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/admin/selectToEdit.jsp" />
+	</definition>
+	<definition name="/users/doctor/admin/edit" extends="adminPanel">
 		<put-attribute name="title" value="Doctor data edit" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/doctorEdit.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/admin/edit.jsp" />
+	</definition>
+	<!-- Doctor self edit -->
+	<definition name="/users/doctor/edit" extends="doctorPanel">
+		<put-attribute name="title" value="Doctor data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/edit.jsp" />
+	</definition>
+	<!-- Assistant registration and editing by admin -->	
+	<definition name="/users/assistant/admin/register" extends="adminPanel">
+		<put-attribute name="title" value="Assistant registration" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/assistant/admin/register.jsp" />
+	</definition>
+	<definition name="/users/assistant/admin/selectToEdit" extends="adminPanel">
+		<put-attribute name="title" value="Select assistant to edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/assistant/admin/selectToEdit.jsp" />
+	</definition>
+	<definition name="/users/assistant/admin/edit" extends="adminPanel">
+		<put-attribute name="title" value="Assistant data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/assistant/admin/edit.jsp" />
+	</definition>
+	<!-- Assistant self edit -->
+	<definition name="/users/assistant/edit" extends="assistantPanel">
+		<put-attribute name="title" value="Assistant data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/assistant/edit.jsp" />
 	</definition>
 
-	<!-- Visit pages -->
-	<definition name="visitSelectDoctorByPatient" extends="base">
+	<!-- Patient self register and edit -->	
+	<definition name="/users/patient/register" extends="patientPanel">
+		<put-attribute name="title" value="Patient registration" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/register.jsp" />
+	</definition>
+	<definition name="/users/patient/edit" extends="patientPanel">
+		<put-attribute name="title" value="Patient data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/edit.jsp" />
+	</definition>
+	<!-- Patient registration and editing by assistant-->	
+	<definition name="/users/patient/assistant/register" extends="assistantPanel">
+		<put-attribute name="title" value="Patient registration" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/register.jsp" />
+	</definition>
+	<definition name="/users/patient/assistant/selectToEdit" extends="assistantPanel">
+		<put-attribute name="title" value="Select patient to edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/selectToEdit.jsp" />
+	</definition>
+	<definition name="/users/patient/assistant/edit" extends="assistantPanel">
+		<put-attribute name="title" value="Patient data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/edit.jsp" />
+	</definition>
+
+
+
+	<!-- Reservation visit pages -->
+	<!-- By patient -->
+	<definition name="/visit/patient/selectDoctor" extends="patientPanel">
 		<put-attribute name="title" value="Visit" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/visitSelectDoctorByPatient.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/patient/selectDoctor.jsp" />
 	</definition>	
-	<definition name="visitToReserveByPatient" extends="base">
+	<definition name="/visit/patient/toReserve" extends="patientPanel">
 		<put-attribute name="title" value="Visit" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/visitToReserveByPatient.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/patient/toReserve.jsp" />
 	</definition>
-		<definition name="visitReservationByPatient" extends="base">
+		<definition name="/visit/patient/reservation" extends="patientPanel">
 		<put-attribute name="title" value="Visit" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/visitReservationByPatient.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/patient/reservation.jsp" />
+	</definition>
+	<!-- By assistant -->
+	<definition name="/visit/assistant/selectPatient" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/selectPatient.jsp" />
+	</definition>	
+	<definition name="/visit/assistant/selectDoctor" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/selectDoctor.jsp" />
+	</definition>	
+	<definition name="/visit/assistant/toReserve" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/toReserve.jsp" />
+	</definition>
+		<definition name="/visit/assistant/reservation" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/reservation.jsp" />
 	</definition>
 	
 	
+
+	<!-- Login page -->
+	<definition name="login" extends="base">
+		<put-attribute name="title" value="Login" />
+		<put-attribute name="body" value="/WEB-INF/views/pages/login.jsp" />
+	</definition>
 
 	<!-- Exception page -->
 	<definition name="handleError" extends="base">
 		<put-attribute name="title" value="Exceptions" />
 		<put-attribute name="body" value="/WEB-INF/views/pages/handleError.jsp" />
 	</definition>
+
 	<!-- Success page -->
 	<definition name="success" extends="base">
 		<put-attribute name="title" value="Exceptions" />

@@ -55,4 +55,5 @@ public class Visit implements Serializable {
 	
 	@OneToOne
 	private User userLogged;
+	private LocalDateTime reservationDateTime;
 }

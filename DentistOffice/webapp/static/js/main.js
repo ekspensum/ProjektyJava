@@ -30,7 +30,7 @@ function dateTime() {
     var seconde = today.getSeconds();
     if (seconde < 10)
         seconde = "0" + seconde;
-    document.getElementById("clock").innerHTML = "Date & time now: " + day +
+    document.getElementById("clock").innerHTML = "Aktualna data i czas: " + day +
         "/" + month + "/" + year + " " + " " + hours + ":" + minute + ":" +
         seconde;
     setTimeout("dateTime()", 1000);

@@ -25,18 +25,18 @@ body {
     left: 0%;
     width: 100%;
     top: 0%;
-    height: 20%;
+    height: 15%;
+    margin-left: 1%;
     position: fixed;
     float: left;
-    border-bottom: 2px solid hsl(180, 70%, 55%);
     text-align: left;
 }
 
 #footer {
     left: 0%;
     width: 100%;
-    top: 90%;
-    height: 10%;
+    top: 95%;
+    height: 5%;
     position: fixed;
     border-top: 2px solid hsl(180, 70%, 55%);
     text-align: center;
@@ -45,25 +45,51 @@ body {
 #menu {
     left: 0%;
     width: 100%;
-    top: 20%;
+    top: 15%;
     height: 5%;
+    border-top: 2px solid hsl(180, 70%, 55%);
+    border-bottom: 2px solid hsl(180, 70%, 55%);
+    text-align: center;
     position: fixed;
-    border-right: 2px solid hsl(180, 70%, 55%);
-    text-align: left;
 }
 
 #content {
     left: 0%;
     width: 100%;
-    top: 25%;
-    height: 65%;
-    bottom: 10%;
+    top: 20%;
+    height: 75%;
+    bottom: 5%;
     overflow: auto;
+    margin-left: 1%;
+    position: fixed;
+}
+
+#userMenu {
+    left: 85%;
+    width: 15%;
+    top: 20%;
+    height: 75%;
+    bottom: 5%;
+    overflow: auto;
+    margin-left: 2%;
+    position: fixed;
+}
+
+#userContent {
+    left: 0%;
+    width: 85%;
+    top: 20%;
+    height: 75%;
+    bottom: 5%;
+    overflow: auto;
+    margin-left: 1%;
+    margin-top: 2px;
+    border-right: 2px solid hsl(180, 70%, 55%);
     position: fixed;
 }
 
 #clock {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -78,7 +104,7 @@ body {
 }
 
 #logout {
-	position: absolute;
-	right: 10px;
-	top: 10px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
