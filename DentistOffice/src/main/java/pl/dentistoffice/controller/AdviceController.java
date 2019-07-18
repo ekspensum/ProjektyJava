@@ -27,23 +27,26 @@ public class AdviceController {
 	@Autowired
 	private Environment env;
 
-//	@ExceptionHandler(Exception.class)
-//	public String handleException(Model model, Exception e) {
-//		model.addAttribute("exception", "Wystapił wyjątek: "+e);
-//		return "handleError";
-//	}
+	@ExceptionHandler(Exception.class)
+	public String handleException(Model model, Exception e) {
+		model.addAttribute("exception", "Wystapił wyjątek: "+e);
+		return "error";
+	}
 	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {
 		model.addAttribute("exception", env.getProperty("msgExceedSizeFile"));
-		return "handleError";
+		return "error";
+	}
+	
+	@ExceptionHandler(javax.persistence.NoResultException.class)
+	public String handleNoResultException(Model model) {
+		model.addAttribute("exception", env.getProperty("msgNoResultException"));
+		return "error";
 	}
 	
 	@InitBinder
 	public void dataBinding(WebDataBinder binder) {
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//		dateFormat.setLenient(false);
-//		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 	

@@ -1,15 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h1>Visit page - select doctor</h1>
-
+<h3>Rezerwacja wizyty - wybór lekarza</h3>
+<h4>Pacjent: ${patient.firstName} ${patient.lastName}</h4>
 <form method="POST" action="${pageContext.request.contextPath}/visit/assistant/toReserve">
 <select name="doctorId">
-	<option value="1">Doctor 1</option>
-	<option value="2">Doctor 2</option>
-	<option value="3">Doctor 3</option>
-	<option value="4">Doctor 4</option>
+	<c:forEach items="${allDoctorsList }" var="doctors">
+		<option value="${doctors.id }">${doctors.firstName } ${doctors.lastName }</option>
+	</c:forEach>
 </select>
 
-<input type="submit" />
+<input type="submit" value="Dalej"/>
 </form>

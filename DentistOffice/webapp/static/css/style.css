@@ -26,10 +26,11 @@ body {
     width: 100%;
     top: 0%;
     height: 15%;
-    margin-left: 1%;
+    padding-left: 1%;
     position: fixed;
     float: left;
     text-align: left;
+    border-bottom: 2px solid hsl(180, 70%, 55%);
 }
 
 #footer {
@@ -47,10 +48,13 @@ body {
     width: 100%;
     top: 15%;
     height: 5%;
-    border-top: 2px solid hsl(180, 70%, 55%);
     border-bottom: 2px solid hsl(180, 70%, 55%);
     text-align: center;
     position: fixed;
+}
+
+.menu {
+	padding-top: 7px;
 }
 
 #content {
@@ -60,7 +64,7 @@ body {
     height: 75%;
     bottom: 5%;
     overflow: auto;
-    margin-left: 1%;
+    padding-left: 1%;
     position: fixed;
 }
 
@@ -71,7 +75,7 @@ body {
     height: 75%;
     bottom: 5%;
     overflow: auto;
-    margin-left: 2%;
+    padding-left: 2%;
     position: fixed;
 }
 
@@ -82,8 +86,7 @@ body {
     height: 75%;
     bottom: 5%;
     overflow: auto;
-    margin-left: 1%;
-    margin-top: 2px;
+    padding-left: 1%;
     border-right: 2px solid hsl(180, 70%, 55%);
     position: fixed;
 }
@@ -97,14 +100,41 @@ body {
     font: bold 12px Arial;
     width: 170px;
     height: 30px;
+    border-radius: 12px;
 }
 
 .button:hover {
     background-color: rgb(133, 155, 89);
 }
 
+#login {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    width: 100px;
+    height: 24px;
+    background-color: aqua;
+}
+
+#login:hover {
+    background-color: beige;
+}
+
 #logout {
     position: absolute;
-    right: 10px;
+    right: 30px;
+    top: 10px;
+    width: 100px;
+    height: 24px;
+    background-color: aqua;
+}
+
+#logout:hover {
+    background-color: beige;
+}
+
+#loggedUser {
+    position: absolute;
+    right: 200px;
     top: 10px;
 }

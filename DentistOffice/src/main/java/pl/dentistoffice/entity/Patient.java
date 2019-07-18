@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -16,6 +18,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import lombok.AccessLevel;
@@ -24,6 +29,10 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@NamedQueries({
+	@NamedQuery(name = "findPatientByUserName", query = "SELECT patient FROM Patient patient INNER JOIN patient.user user WHERE user.username = :username")
+})
+@Indexed
 public class Patient implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -38,9 +47,11 @@ public class Patient implements Serializable {
 	
 	@Size(min = 3, max = 25)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Field(index = Index.YES)
 	private String lastName;
 
 	@PESEL
+	@Field(index = Index.YES)
 	private String pesel;
 	
 	@Size(min = 2, max = 20)

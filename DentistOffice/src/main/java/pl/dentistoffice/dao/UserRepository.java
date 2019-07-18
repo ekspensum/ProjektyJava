@@ -18,20 +18,24 @@ public interface UserRepository {
 	void saveDoctor(Doctor doctor);
 	void updateDoctor(Doctor doctor);
 	Doctor readDoctor(int id);
+	Doctor readDoctor(String username);
 	List<Doctor> readAllDoctors();
 
 	void savePatient(Patient patient);
 	void updatePatient(Patient patient);
 	Patient readPatient(int id);
+	Patient readPatient(String username);
 	List<Patient> readAllPatients();
 	
 	void saveAssistant(Assistant assistant);
 	void updateAssistant(Assistant assistant);
 	Assistant readAssistant(int id);
+	Assistant readAssistant(String username);
 	List<Assistant> readAllAssistants();
 	
 	void saveAdmin(Admin admin);
 	void updateAdmin(Admin admin);
 	Admin readAdmin(int id);
+	Admin readAdmin(String username);
 	List<Admin> readAllAdmins();
 }

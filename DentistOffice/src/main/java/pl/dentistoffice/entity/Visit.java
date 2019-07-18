@@ -14,6 +14,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +31,7 @@ import lombok.Setter;
 	@NamedQuery(name = "readVisitsByPatientAndStatus", query = "SELECT visit FROM Visit visit WHERE visit.patient = :patient AND visit.status = :visitStatus"),
 	@NamedQuery(name = "readVisitsByDateTimeAndDoctor", query = "SELECT visit FROM Visit visit WHERE visit.visitDateTime BETWEEN :dateTimeFrom AND :dateTimeTo AND visit.doctor = :doctor"),
 })
+@Indexed
 public class Visit implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -35,6 +40,7 @@ public class Visit implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Field(index = Index.YES)
 	private LocalDateTime visitDateTime;
 	private boolean visitConfirmation;
 	

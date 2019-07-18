@@ -60,12 +60,16 @@
 					<td><form:errors path="phone" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Image</td>
+					<td>Zdjęcie:</td>
 					<td><form:input type="file" name="photo" accept="image/*"
 							path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
-
+				<tr>
+					<td>Profil zawodowy:</td>
+					<td><form:textarea path="description" id="description" /></td>
+					<td><form:errors path="description" class="msgError" /></td>
+				</tr>
 			</tbody>
 		</table>
 		

@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h1>Visit page - select patient</h1>
+<h3>Rezerwacja wizyty - wybór pacjenta</h3>
 
-<form method="POST" action="${pageContext.request.contextPath}/visit/assistant/selectDoctor">
+<form method="POST" action="${pageContext.request.contextPath}/visit/assistant/selectPatient">
 <select name="patientId">
 
 	<option value="1">Patient 1</option>
@@ -12,5 +11,5 @@
 	<option value="4">Patient 4</option>
 </select>
 
-<input type="submit" />
+<input type="submit" value="Dalej"/>
 </form>

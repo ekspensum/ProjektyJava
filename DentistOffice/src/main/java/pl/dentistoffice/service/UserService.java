@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import pl.dentistoffice.dao.UserRepository;
@@ -52,10 +53,16 @@ public class UserService {
 //	}
 	
 	public void addNewDoctor(Doctor doctor) {
+		User user = doctor.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		userRepository.saveDoctor(doctor);
 	}
 	
 	public void editDoctor(Doctor doctor) {
+		User user = doctor.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		List<Role> currentRolesList = createCurrentRolesList(user);
+		user.setRoles(currentRolesList);
 		userRepository.updateDoctor(doctor);
 	}
 	
@@ -75,11 +82,24 @@ public class UserService {
 		return allDoctors;
 	}
 	
+	public Doctor getLoggedDoctor() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		Doctor doctor = userRepository.readDoctor(username);
+		return doctor;
+	}
+	
 	public void addNewAssistant(Assistant assistant) {
+		User user = assistant.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		userRepository.saveAssistant(assistant);
 	}
 	
 	public void editAssistant(Assistant assistant) {
+		User user = assistant.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		List<Role> currentRolesList = createCurrentRolesList(user);
+		user.setRoles(currentRolesList);
 		userRepository.updateAssistant(assistant);
 	}
 	
@@ -88,14 +108,35 @@ public class UserService {
 	}
 	
 	public List<Assistant> getAllAssistants(){
-		return userRepository.readAllAssistants();
+		List<Assistant> allAssistants = userRepository.readAllAssistants();
+		allAssistants.sort(new Comparator<Assistant>() {
+
+			@Override
+			public int compare(Assistant o1, Assistant o2) {
+				return o1.getLastName().compareTo(o2.getLastName());
+			}
+		});
+		return allAssistants;
+	}
+
+	public Assistant getLoggedAssistant() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		Assistant assistant = userRepository.readAssistant(username);
+		return assistant;
 	}
 	
 	public void addNewPatient(Patient patient) {
+		User user = patient.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		List<Role> currentRolesList = createCurrentRolesList(user);
+		user.setRoles(currentRolesList);
 		userRepository.savePatient(patient);
 	}
 	
 	public void editPatient(Patient patient) {
+		User user = patient.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		userRepository.updatePatient(patient);
 	}
 	
@@ -109,30 +150,20 @@ public class UserService {
 
 	public Patient getLoggedPatient() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User loggedUser = (User) authentication.getPrincipal();
-		Patient patient = userRepository.readPatient(loggedUser.getId());
+		String username = authentication.getName();
+		Patient patient = userRepository.readPatient(username);
 		return patient;
 	}
 	
+	
+	
+	
+	
 	public Admin getLoggedAdmin() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User loggedUser = (User) authentication.getPrincipal();
-		Admin admin = userRepository.readAdmin(loggedUser.getId());
+		String username = authentication.getName();
+		Admin admin = userRepository.readAdmin(username);
 		return admin;
-	}
-	
-	public Doctor getLoggedDoctor() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User loggedUser = (User) authentication.getPrincipal();
-		Doctor doctor = userRepository.readDoctor(loggedUser.getId());
-		return doctor;
-	}
-	
-	public Assistant getLoggedAssistant() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User loggedUser = (User) authentication.getPrincipal();
-		Assistant assistant = userRepository.readAssistant(loggedUser.getId());
-		return assistant;
 	}
 	
 	public Collection<? extends GrantedAuthority> getAuthoritiesLoggedUser() {
@@ -182,5 +213,17 @@ public class UserService {
 		}
 		
 		return templateMap;
+	}
+	
+	private List<Role> createCurrentRolesList(User user){
+		List<Role> selectedIdRoles = user.getRoles(); //only id is selected on page. Role and roleName was't change
+		List<Role> currentRolesList = new ArrayList<>(selectedIdRoles);
+		Role currentRole;
+		for (Role role : selectedIdRoles) {
+			currentRole = new Role();
+			currentRole.setId(role.getId());
+			currentRolesList.add(currentRole);
+		}
+		return currentRolesList;
 	}
 }

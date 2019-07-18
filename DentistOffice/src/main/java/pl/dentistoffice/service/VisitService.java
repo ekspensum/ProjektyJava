@@ -31,7 +31,7 @@ public class VisitService {
 	@Autowired
 	private UserService userService;
 
-	public void addNewVisitByPatient(Doctor doctor, String dateTime, List<DentalTreatment> treatments) {
+	public void addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		Patient patient = userService.getLoggedPatient();
@@ -44,15 +44,19 @@ public class VisitService {
 		visit.setTreatments(treatments);
 		visit.setVisitConfirmation(false);
 		
-		String[] splitDateTime = dateTime.split(";");
+		String[] splitDateTime = dateTime[0].split(";");
 		
 		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
 		visit.setVisitDateTime(visitDateTime);
-		
-		visitRepository.saveVisit(visit);
+		visit.setReservationDateTime(LocalDateTime.now());
+		try {
+			visitRepository.saveVisit(visit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void addNewVisitByAssistant(Patient patient, Doctor doctor, String dateTime, List<DentalTreatment> treatments) {
+	public void addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		
@@ -68,12 +72,16 @@ public class VisitService {
 		visit.setTreatments(treatments);
 		visit.setVisitConfirmation(false);
 		
-		String[] splitDateTime = dateTime.split(";");
+		String[] splitDateTime = dateTime[0].split(";");
 		
 		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
 		visit.setVisitDateTime(visitDateTime);
-		
-		visitRepository.saveVisit(visit);
+		visit.setReservationDateTime(LocalDateTime.now());
+		try {
+			visitRepository.saveVisit(visit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Map<LocalDate, Map<LocalTime, Boolean>> getWorkingWeekFreeTimeMap(Doctor doctor){

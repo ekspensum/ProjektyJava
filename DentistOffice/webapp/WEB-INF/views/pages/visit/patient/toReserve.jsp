@@ -1,22 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h1>Visit page - select visit parameters</h1>
+<h3>Rezerwacja wizyty - wybór terminu i rodzaju zabiegów.</h3>
 
 <form method="POST" action="${pageContext.request.contextPath}/visit/patient/reservation">
-<select name="treatment">
+<select name="treatment1">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>
 </select>
 <br>
-<select name="treatment">
+<select name="treatment2">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>
 </select>
 <br>
-<select name="treatment">
+<select name="treatment3">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>

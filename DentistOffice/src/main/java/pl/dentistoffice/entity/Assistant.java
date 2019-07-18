@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -24,6 +26,9 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@NamedQueries({
+	@NamedQuery(name = "findAssistantByUserName", query = "SELECT assist FROM Assistant assist INNER JOIN assist.user user WHERE user.username = :username")
+})
 public class Assistant implements Serializable {
 
 	private static final long serialVersionUID = 1L;

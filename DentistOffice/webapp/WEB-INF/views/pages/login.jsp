@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h3>Strona logowania</h3>
-<form name="loginForm" action="login" method="POST">
+<form name="loginForm" action="${pageContext.request.contextPath}/login" method="POST">
 	<table>
 		<tr>
 			<td>Użytkownik:</td>

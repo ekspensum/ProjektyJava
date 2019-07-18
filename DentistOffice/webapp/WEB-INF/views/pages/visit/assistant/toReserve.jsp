@@ -1,27 +1,27 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h1>Visit page - select visit parameters</h1>
+<h3>Rezerwacja wizyty - wybór terminu i rodzaju zabiegów.</h3>
 
-<form method="POST" action="${pageContext.request.contextPath}/visit/patient/reservation">
-<select name="treatment">
+<form method="POST" action="${pageContext.request.contextPath}/visit/assistant/reservation">
+<select name="treatment1">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>
 </select>
 <br>
-<select name="treatment">
+<select name="treatment2">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>
 </select>
 <br>
-<select name="treatment">
+<select name="treatment3">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>
 </select>
 <br>
+<p>Pacjent: ${patient.firstName} ${patient.lastName}</p>
 <p>Lekarz stomatolog: ${doctor.firstName} ${doctor.lastName}</p>
 <c:forEach items="${workingWeekFreeTimeMap}" var="map" varStatus="vs1">
 	<b>${map.key } ${map.key.dayOfWeek.value == 1 ? 'Poniedziałek' : map.key.dayOfWeek.value == 2 ? 'Wtorek' : map.key.dayOfWeek.value == 3 ? 'Środa' : map.key.dayOfWeek.value == 4 ? 'Czwartek' : map.key.dayOfWeek.value == 5 ? 'Piątek' : map.key.dayOfWeek.value == 6 ? 'Sobota' : ''}</b>

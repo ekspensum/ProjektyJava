@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,6 +76,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
+	public Doctor readDoctor(String username) {
+		return getSession().createNamedQuery("findDoctorByUserName", Doctor.class).setParameter("username", username).getSingleResult();
+	}
+
+	@Override
 	public List<Doctor> readAllDoctors() {
 		return getSession().createQuery("from Doctor", Doctor.class).getResultList();
 	}
@@ -95,6 +102,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	@Override
 	public Patient readPatient(int id) {
 		return getSession().find(Patient.class, id);
+	}
+
+	@Override
+	public Patient readPatient(String username) {
+		return getSession().createNamedQuery("findPatientByUserName", Patient.class).setParameter("username", username).getSingleResult();
 	}
 
 	@Override
@@ -122,6 +134,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
+	public Assistant readAssistant(String username) {
+		return getSession().createNamedQuery("findAssistantByUserName", Assistant.class).setParameter("username", username).getSingleResult();
+	}
+
+	@Override
 	public List<Assistant> readAllAssistants() {
 		return getSession().createQuery("from Assistant", Assistant.class).getResultList();
 	}
@@ -146,8 +163,16 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	}
 
 	@Override
+	public Admin readAdmin(String username) {
+		return null;
+	}
+
+	@Override
 	public List<Admin> readAllAdmins() {
 		return getSession().createQuery("from Admin", Admin.class).getResultList();
 	}
 
+	private FullTextSession getFullTextSession() {
+		return Search.getFullTextSession(getSession());
+	}
 }

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -24,6 +26,9 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@NamedQueries({
+	@NamedQuery(name = "findDoctorByUserName", query = "SELECT doctor FROM Doctor doctor INNER JOIN doctor.user user WHERE user.username = :username")
+})
 public class Doctor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -39,6 +44,10 @@ public class Doctor implements Serializable {
 	@Size(min = 3, max = 25)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
 	private String lastName;
+	
+	@Size(min = 10, max = 500)
+	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	private String description;
 	
 	@Email
 	@NotEmpty

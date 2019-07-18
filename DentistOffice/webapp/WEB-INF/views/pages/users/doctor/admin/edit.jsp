@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h2>Doctor edit page</h2>
+<h2>Edycja danych lekarza</h2>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/doctor/admin/edit"
 		modelAttribute="doctor" enctype="multipart/form-data">
@@ -57,10 +57,15 @@
 					<td><form:errors path="phone" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Image</td>
+					<td>Zdjęcie</td>
 					<td><form:input type="file" name="photo" accept="image/*"
 							path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
+				</tr>
+				<tr>
+					<td>Profil zawodowy:</td>
+					<td><form:textarea path="description" id="description" /></td>
+					<td><form:errors path="description" class="msgError" /></td>
 				</tr>
 			</tbody>
 		</table>

@@ -162,7 +162,7 @@ public class DoctorController {
 		model.addAttribute("rolesList", userService.getAllRoles());				
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = loggedDoctor.getWorkingWeek().getWorkingWeekMap();
 		model.addAttribute("workingWeekMap", workingWeekMap);
-		return "/users/doctor/admin/edit";
+		return "/users/doctor/edit";
 	}
 	
 	@RequestMapping(path = "/users/doctor/edit", method = RequestMethod.POST)
@@ -202,7 +202,7 @@ public class DoctorController {
 			}
 			model.addAttribute("rolesList", userService.getAllRoles());
 			model.addAttribute("workingWeekMap", workingWeekMap);
-			return "/users/doctor/admin/edit";
+			return "/users/doctor/edit";
 		}
 	}
 	
