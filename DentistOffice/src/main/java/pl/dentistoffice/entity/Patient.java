@@ -67,6 +67,7 @@ public class Patient implements Serializable {
 	
 	@Size(min = 2, max = 20)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Field(index = Index.YES)
 	private String street;
 	
 	@Size(min = 1, max = 10)
@@ -83,6 +84,7 @@ public class Patient implements Serializable {
 	
 	@Size(min = 8, max = 20)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Field(index = Index.YES)
 	private String phone;
 	
 	@Size(min=0, max=600000)

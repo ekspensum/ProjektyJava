@@ -70,9 +70,7 @@ public class PatientController {
 	}
 	
 	@RequestMapping(path = "/users/patient/assistant/selectToEdit")
-	public String selectPatientToEditByAssistant(Model model) {		
-		List<Patient> allPatientsList = userService.getAllPatients();
-		model.addAttribute("allPatientsList", allPatientsList);
+	public String selectPatientToEditByAssistant() {		
 		return "/users/patient/assistant/selectToEdit";
 	}
 	
@@ -107,6 +105,18 @@ public class PatientController {
 		} else {
 			return "/users/patient/assistant/edit";
 		}
+	}
+	
+	@RequestMapping(path = "/users/patient/assistant/search")
+	public String searchPatientByAssistant() {
+		return "/users/patient/assistant/search";
+	}
+	
+	@RequestMapping(path = "/users/patient/assistant/searchResult", method = RequestMethod.POST)
+	public String searchPatientByAssistant(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
+		List<Patient> searchedPatientList = userService.searchPatient(patientData);
+		redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		return "redirect:/users/patient/assistant/selectToEdit";
 	}
 	
 	@RequestMapping(path = "/users/patient/register")

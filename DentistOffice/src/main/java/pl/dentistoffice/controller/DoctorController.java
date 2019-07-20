@@ -140,7 +140,7 @@ public class DoctorController {
 		doctor.setWorkingWeek(workingWeek);
 		doctor.setPhoto(photo.getBytes());
 		doctor.setEditedDateTime(LocalDateTime.now());
-
+		
 		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
 			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));

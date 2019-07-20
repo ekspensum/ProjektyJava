@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
@@ -93,22 +94,32 @@ public class VisitController {
 			model.addAttribute("treatments", treatments);
 			Map<LocalDate, Map<LocalTime, Boolean>> workingWeekFreeTimeMap = visitService.getWorkingWeekFreeTimeMap(doctor);			
 			model.addAttribute("workingWeekFreeTimeMap", workingWeekFreeTimeMap);
-		}
-		
+		}		
 		return "/visit/patient/reservation";
 	}
 
+	@RequestMapping(path = "/visit/assistant/searchPatient")
+	public String visitSearchPatientByAssistant() {	
+		return "/visit/assistant/searchPatient";
+	}
+
+	@RequestMapping(path = "/visit/assistant/searchResult", method = RequestMethod.POST)
+	public String visitSearchPatientByAssistant(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
+		List<Patient> searchedPatientList = userService.searchPatient(patientData);
+		redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		return "redirect:/visit/assistant/selectPatient";
+	}
+	
 	@RequestMapping(path = "/visit/assistant/selectPatient")
-	public String visitSelectPatientByAssistant() {
-		
+	public String visitSelectPatientByAssistant() {		
 		return "/visit/assistant/selectPatient";
 	}
 
 	@RequestMapping(path = "/visit/assistant/selectPatient", method = RequestMethod.POST)
-	public String visitSelectPatientByAssistant(@RequestParam("patientId") String idPatient, Model model) {
+	public String visitSelectPatientByAssistant(@RequestParam(name="patientId", required = false) String idPatient, Model model) {
 		Patient patient = userService.getPatient(Integer.valueOf(idPatient));
 		model.addAttribute("patient", patient);
-		return "redirect:/visit/assistant/selectDoctor";
+		return "redirect:/visit/assistant/selectDoctor";			
 	}
 	
 	@RequestMapping(path = "/visit/assistant/selectDoctor")

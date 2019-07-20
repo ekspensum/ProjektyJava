@@ -4,7 +4,7 @@ body {
 }
 
 .msg {
-    color: blue;
+    color: orange;
     font-size: 16px;
 }
 
@@ -13,12 +13,21 @@ body {
     font-size: 16px;
 }
 
-.tableHomePage th {
-    border: 2px solid black;
+table.search {
+    width: 70%;
+    border-collapse: collapse;
+    background-color: rgb(138, 138, 125);
 }
 
-.tableHomePage td {
+table.search th,
+table.search td {
     border: 1px solid black;
+    height: 30px;
+    text-align: center;
+}
+
+table.search tr:hover {
+    background-color: #bbe7bd;
 }
 
 #header {
@@ -54,7 +63,7 @@ body {
 }
 
 .menu {
-	padding-top: 7px;
+    padding-top: 7px;
 }
 
 #content {
@@ -101,6 +110,7 @@ body {
     width: 170px;
     height: 30px;
     border-radius: 12px;
+    background-color: #bbe7bd;
 }
 
 .button:hover {

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h2>Doctor page</h2>
@@ -15,8 +14,7 @@
 				</tr>
 				<tr>
 					<td>Hasło:</td>
-					<td><form:input path="user.passwordField" id="password"
-							type="password" /></td>
+					<td><form:input path="user.passwordField" id="password"	type="password" /></td>
 					<td><form:errors path="user.passwordField" class="msgError" /></td>
 				</tr>
 				<tr>

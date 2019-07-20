@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
+
 <h2>Edycja danych lekarza</h2>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/doctor/admin/edit"

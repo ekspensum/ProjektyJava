@@ -58,8 +58,7 @@
 				</tr>
 				<tr>
 					<td>Image</td>
-					<td><form:input type="file" name="photo" accept="image/*"
-							path="photo" /></td>
+					<td><form:input type="file" name="photo" accept="image/*" path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>

@@ -113,7 +113,7 @@
 		<put-attribute name="title" value="Patient data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/edit.jsp" />
 	</definition>
-	<!-- Patient registration and editing by assistant-->	
+	<!-- Patient registration, editing and searching by assistant-->	
 	<definition name="/users/patient/assistant/register" extends="assistantPanel">
 		<put-attribute name="title" value="Patient registration" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/register.jsp" />
@@ -126,7 +126,10 @@
 		<put-attribute name="title" value="Patient data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/edit.jsp" />
 	</definition>
-
+	<definition name="/users/patient/assistant/search" extends="assistantPanel">
+		<put-attribute name="title" value="Patient search" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/search.jsp" />
+	</definition>
 
 
 	<!-- Reservation visit pages -->
@@ -144,6 +147,10 @@
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/patient/reservation.jsp" />
 	</definition>
 	<!-- By assistant -->
+	<definition name="/visit/assistant/searchPatient" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/searchPatient.jsp" />
+	</definition>
 	<definition name="/visit/assistant/selectPatient" extends="assistantPanel">
 		<put-attribute name="title" value="Visit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/selectPatient.jsp" />

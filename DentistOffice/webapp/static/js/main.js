@@ -1,11 +1,6 @@
 /**
  * 
  */
-function taskAdded() {
-    alert("New task was added!");
-    document.getElementById("subject").value = "";
-    document.getElementById("taskNo").value = "";
-}
 
 function sentEmailConfirm() {
     alert("Mail has been sent!");
@@ -48,13 +43,49 @@ function validateLoginForm() {
     }
     if (document.loginForm.username.value == "") {
         alert("Proszę podać login!");
-        document.loginForm.userName.focus();
+        document.loginForm.username.focus();
         return false;
     }
     if (document.loginForm.password.value == "") {
         alert("Proszę podać hasło");
         document.loginForm.password.focus();
         return false;
+    }
+    return true;
+}
+
+function validateSelectChbxPatient() {
+    let idChbx = document.forms.selectPatientForm.elements['patientId'];
+    if (idChbx.length > 1) {
+    	let j = 0;
+    	for (i = 0; i < idChbx.length; i++) {
+    		if (idChbx[i].checked) {
+    			j++;
+    		}
+    	}
+    	if (j != 1) {
+    		alert("Proszę wybrać jeden rekord!");
+    		return false;
+    	} else {
+    		return true;
+    	}
+    } else {
+        if (document.selectPatientForm.patientId.checked) {
+            return true;
+        } else {
+            alert("Proszę zaznaczyć wybór pacjenta!");
+            return false;
+        }
+    }
+}
+
+function validateInputFieldPatientData() {
+    if (document.searchDataPatientForm.patientData.value == "") {
+        alert("Proszę wprowadzić dane do wyszukania!");
+        document.searchDataPatientForm.patientData.focus();
+        return false;
+    } else {
+        return true;
     }
 }
 

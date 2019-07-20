@@ -13,7 +13,7 @@
 			<td><input name="password" type="password" /></td>
 		</tr>
 		<tr>
-			<td><input value="Zaloguj" type="submit" name="submit" onclick="validateLoginForm()" /></td>
+			<td><input type="submit" value="Zaloguj" onclick="return validateLoginForm()" /></td>
 		</tr>
 	</table>
 </form>

@@ -155,7 +155,17 @@ public class UserService {
 		return patient;
 	}
 	
-	
+	public List<Patient> searchPatient(String text){
+		List<Patient> searchPatient = userRepository.searchPatientNamePeselStreetPhoneByKeywordQuery(text);
+		searchPatient.sort(new Comparator<Patient>() {
+
+			@Override
+			public int compare(Patient o1, Patient o2) {
+				return o1.getLastName().compareTo(o2.getLastName());
+			}
+		});
+		return searchPatient;
+	}
 	
 	
 	
@@ -217,7 +227,7 @@ public class UserService {
 	
 	private List<Role> createCurrentRolesList(User user){
 		List<Role> selectedIdRoles = user.getRoles(); //only id is selected on page. Role and roleName was't change
-		List<Role> currentRolesList = new ArrayList<>(selectedIdRoles);
+		List<Role> currentRolesList = new ArrayList<>();
 		Role currentRole;
 		for (Role role : selectedIdRoles) {
 			currentRole = new Role();

@@ -2,10 +2,14 @@ package pl.dentistoffice.dao;
 
 import java.util.List;
 
+import javax.jws.Oneway;
+
+import org.apache.lucene.search.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -114,6 +118,29 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 		return getSession().createQuery("from Patient", Patient.class).getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Patient> searchPatientNamePeselStreetPhoneByKeywordQuery(String text){
+		FullTextSession fullTextSession = getFullTextSession();
+		
+		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+									.buildQueryBuilder()
+									.forEntity(Patient.class)
+									.get();
+		
+		Query luceneQuery = queryBuilder
+							.keyword()
+							.fuzzy()
+				            .withEditDistanceUpTo(2)
+				            .withPrefixLength(0)
+							.onFields("lastName", "pesel", "street", "phone")
+							.matching(text)
+							.createQuery();
+		
+		return fullTextSession.createFullTextQuery(luceneQuery, Patient.class).getResultList();
+	}
+	
+	
 	@Override
 	public void saveAssistant(Assistant assistant) {
 			User user = assistant.getUser();
@@ -172,7 +199,16 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 		return getSession().createQuery("from Admin", Admin.class).getResultList();
 	}
 
+	
+
 	private FullTextSession getFullTextSession() {
-		return Search.getFullTextSession(getSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(getSession());
+		try {
+			fullTextSession.createIndexer().startAndWait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return fullTextSession;
 	}
+
 }
