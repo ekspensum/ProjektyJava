@@ -65,7 +65,7 @@
 				</tr>
 				<tr>
 					<td>Profil zawodowy:</td>
-					<td><form:textarea path="description" id="description" /></td>
+					<td><form:textarea path="description" id="description" class="textareaDescription" /></td>
 					<td><form:errors path="description" class="msgError" /></td>
 				</tr>
 			</tbody>
@@ -75,10 +75,10 @@
 	<b>${map.key.value == 1 ? 'Poniedziałek' : map.key.value == 2 ? 'Wtorek' : map.key.value == 3 ? 'Środa' : map.key.value == 4 ? 'Czwartek' : map.key.value == 5 ? 'Piątek' : map.key.value == 6 ? 'Sobota' : ''}</b>
 	<p>
 	<c:forEach items="${map.value }" var="time" varStatus="vs2">	
-			<input type="text" name="${fn:toLowerCase(map.key)}Time" readonly="readonly" value="${time.key }" />
+			<input type="text" name="${fn:toLowerCase(map.key)}Time" readonly="readonly" value="${time.key }" class="inputTime" />
 			<input id="in${vs1.count}${vs2.count }" type="hidden" name="${fn:toLowerCase(map.key)}TimeBool" value="${time.value }" />
 			<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />&emsp;&emsp;
-			${vs2.count % 6 == 0 ? '<br>' : '' }
+			${vs2.count % 8 == 0 ? '<br>' : '' }
 	</c:forEach>
 	</p>
 </c:forEach>

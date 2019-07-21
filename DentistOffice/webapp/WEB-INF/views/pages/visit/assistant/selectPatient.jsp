@@ -46,6 +46,6 @@
 		</tbody>
 	</c:forEach>
 </table>
-<br>
-	<input type="submit" value="Wybierz pacjenta" onclick="return validateSelectChbxPatient()" />
+<h3 class="msg">${searchedPatientList.size() == 0 ? 'Brak wyników wyszukiwania.' : '' }</h3>
+<input type="submit" value="Wybierz pacjenta" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" />
 </form>

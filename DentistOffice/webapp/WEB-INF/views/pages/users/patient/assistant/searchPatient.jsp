@@ -5,6 +5,6 @@
 
 <p>Wyszukaj pacjenta do edycji danych:</p>
 <form name="searchDataPatientForm" method="POST" action="${pageContext.request.contextPath}/users/patient/assistant/searchResult">
-	<input type="search" name="patientData" placeholder="Wpisz nazwisko lub pesel lub ..."/>
+	<input type="search" name="patientData" placeholder="Wpisz nazwisko lub pesel lub nr telefonu lub nazwę ulicy - max 20 znaków" size="70"/>
 	<input type="submit" value="Wyszukaj pacjenta" onclick="return validateInputFieldPatientData()" />
 </form>

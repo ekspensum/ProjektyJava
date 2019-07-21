@@ -4,12 +4,12 @@ body {
 }
 
 .msg {
-    color: orange;
+    color: blue;
     font-size: 16px;
 }
 
 .msgError {
-    color: orange;
+    color: rgb(194, 9, 9);
     font-size: 16px;
 }
 
@@ -27,7 +27,7 @@ table.search td {
 }
 
 table.search tr:hover {
-    background-color: #bbe7bd;
+    background-color: #ade2af;
 }
 
 #header {
@@ -122,12 +122,12 @@ table.search tr:hover {
     right: 30px;
     top: 10px;
     width: 100px;
-    height: 24px;
-    background-color: aqua;
+    height: 26px;
+    background-color: beige;
 }
 
 #login:hover {
-    background-color: beige;
+    background-color: lightsteelblue;
 }
 
 #logout {
@@ -135,16 +135,37 @@ table.search tr:hover {
     right: 30px;
     top: 10px;
     width: 100px;
-    height: 24px;
-    background-color: aqua;
+    height: 26px;
+    background-color: beige;
 }
 
 #logout:hover {
-    background-color: beige;
+    background-color: lightcoral;
 }
 
 #loggedUser {
     position: absolute;
     right: 200px;
     top: 10px;
+}
+
+input[type=text],
+input[type=search],
+input[type=password],
+input[type=image],
+select {
+    background-color: #ade2af;
+}
+
+textarea {
+    background-color: #ade2af;
+}
+
+.inputTime {
+    width: 40px;
+}
+
+.textareaDescription {
+    width: 500px;
+    height: 150px;
 }

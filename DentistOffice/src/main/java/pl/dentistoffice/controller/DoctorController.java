@@ -20,16 +20,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.Doctor;
+import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.WorkingWeek;
 import pl.dentistoffice.service.UserService;
 
 @Controller
-@SessionAttributes({"doctor", "loggedDoctor"})
+@SessionAttributes({"doctor", "loggedDoctor", "patient"})
 public class DoctorController {
 
 	@Autowired
@@ -205,7 +207,44 @@ public class DoctorController {
 			return "/users/doctor/edit";
 		}
 	}
+		
+	@RequestMapping(path = "/users/doctor/searchPatient")
+	public String searchPatientByDoctor() {
+		return "/users/doctor/searchPatient";
+	}
 	
+	@RequestMapping(path = "/users/doctor/searchResult", method = RequestMethod.POST)
+	public String searchPatientByDoctor(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
+		if(patientData.length() > 20) {
+			String substringPatientData = patientData.substring(0, 20);
+			List<Patient> searchedPatientList = userService.searchPatient(substringPatientData);			
+			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		} else {
+			List<Patient> searchedPatientList = userService.searchPatient(patientData);			
+			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		}
+		return "redirect:/users/doctor/selectPatient";
+	}
+	
+	@RequestMapping(path = "/users/doctor/selectPatient")
+	public String selectPatientByDoctor() {
+		return "/users/doctor/selectPatient";
+	}
+	
+	@RequestMapping(path = "/users/doctor/selectPatient", method = RequestMethod.POST)
+	public String selectPatientToEditByDoctor(@RequestParam("patientId") String patientId, RedirectAttributes redirectAttributes) {		
+		Patient patient = userService.getPatient(Integer.valueOf(patientId));
+		redirectAttributes.addFlashAttribute("patient", patient);
+		return "redirect:/users/doctor/showPatient";
+	}
+		
+	@RequestMapping(path = "/users/doctor/showPatient")
+	public String showPatientByDoctor(@ModelAttribute(name = "patient") Patient patient, Model model) {
+		model.addAttribute("patient", patient);
+		return "/users/doctor/showPatient";
+	}
+	
+//	Private methods
 	private void setWorkingWeekMap(Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap,
 			String [] mondayTime, String [] mondayTimeBool,
 			String [] tuesdayTime, String [] tuesdayTimeBool,

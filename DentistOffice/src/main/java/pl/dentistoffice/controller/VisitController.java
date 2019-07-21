@@ -105,8 +105,14 @@ public class VisitController {
 
 	@RequestMapping(path = "/visit/assistant/searchResult", method = RequestMethod.POST)
 	public String visitSearchPatientByAssistant(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
-		List<Patient> searchedPatientList = userService.searchPatient(patientData);
-		redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		if(patientData.length() > 20) {
+			String substringPatientData = patientData.substring(0, 20);
+			List<Patient> searchedPatientList = userService.searchPatient(substringPatientData);			
+			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		} else {
+			List<Patient> searchedPatientList = userService.searchPatient(patientData);			
+			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		}
 		return "redirect:/visit/assistant/selectPatient";
 	}
 	

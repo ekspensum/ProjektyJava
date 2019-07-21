@@ -29,9 +29,9 @@
 	</c:if>
 	<p>
 	<c:forEach items="${map.value }" var="time" varStatus="vs2">	
-			<input type="text" name="time" readonly="readonly" value="${time.key }" />
+			<input type="text" name="time" readonly="readonly" value="${time.key }" class="inputTime" />
 			<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" name="dateTime" value="${map.key};${time.key}" />&emsp;&emsp;
-			${vs2.count % 6 == 0 ? '<br>' : '' }
+			${vs2.count % 8 == 0 ? '<br>' : '' }
 	</c:forEach>
 	</p>
 </c:forEach>

@@ -98,6 +98,7 @@ public class Patient implements Serializable {
 	@Valid
 	@OneToOne
 	private User user;
+	
 	private LocalDateTime registeredDateTime;
 	private LocalDateTime editedDateTime;
 	

@@ -27,21 +27,27 @@ public class AdviceController {
 	@Autowired
 	private Environment env;
 
-	@ExceptionHandler(Exception.class)
-	public String handleException(Model model, Exception e) {
-		model.addAttribute("exception", "Wystapił wyjątek: "+e);
-		return "error";
-	}
+//	@ExceptionHandler(Exception.class)
+//	public String handleException(Model model, Exception e) {
+//		model.addAttribute("exception", "Wystapił wyjątek: "+e);
+//	    model.addAttribute("head", env.getProperty("head"));
+//	    model.addAttribute("footer", env.getProperty("footer"));
+//		return "error";
+//	}
 	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {
 		model.addAttribute("exception", env.getProperty("msgExceedSizeFile"));
+	    model.addAttribute("head", env.getProperty("head"));
+	    model.addAttribute("footer", env.getProperty("footer"));
 		return "error";
 	}
 	
 	@ExceptionHandler(javax.persistence.NoResultException.class)
 	public String handleNoResultException(Model model) {
 		model.addAttribute("exception", env.getProperty("msgNoResultException"));
+	    model.addAttribute("head", env.getProperty("head"));
+	    model.addAttribute("footer", env.getProperty("footer"));
 		return "error";
 	}
 	

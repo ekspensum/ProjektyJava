@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-
-<h3>Panel asystenta</h3>
-
-<p>Wybierz pacjenta do edycji danych:</p>
-<form name="selectPatientForm" method="POST" action="${pageContext.request.contextPath}/users/patient/assistant/selectToEdit">
+<h3>Panel lekarza - wybór pacjenta</h3>
+<form name="selectPatientForm" method="POST" action="${pageContext.request.contextPath}/users/doctor/selectPatient">
 <table border="1" class="search">
 	<thead>
 		<tr>

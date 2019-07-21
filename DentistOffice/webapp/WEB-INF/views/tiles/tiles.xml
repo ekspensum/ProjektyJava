@@ -38,6 +38,7 @@
 	<!-- User panels -->
 	<definition name="userPanel" extends="base" template="/WEB-INF/views/tiles/layouts/panel.jsp">
 		<put-attribute name="title" value="User panel" />
+		<put-attribute name="userContent" value="/WEB-INF/views/tiles/template/userContent.jsp" />
 		<put-attribute name="userMenu" value="/WEB-INF/views/tiles/template/userMenu.jsp" />
 	</definition>
 	<definition name="patientPanel" extends="userPanel">
@@ -85,6 +86,20 @@
 		<put-attribute name="title" value="Doctor data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/edit.jsp" />
 	</definition>
+	<!-- Doctor searching and glance through patient -->
+	<definition name="/users/doctor/searchPatient" extends="doctorPanel">
+		<put-attribute name="title" value="Doctor search patient" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/searchPatient.jsp" />
+	</definition>
+	<definition name="/users/doctor/selectPatient" extends="doctorPanel">
+		<put-attribute name="title" value="Doctor select patient" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/selectPatient.jsp" />
+	</definition>		
+	<definition name="/users/doctor/showPatient" extends="doctorPanel">
+		<put-attribute name="title" value="Doctor show patient" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/showPatient.jsp" />
+	</definition>
+	
 	<!-- Assistant registration and editing by admin -->	
 	<definition name="/users/assistant/admin/register" extends="adminPanel">
 		<put-attribute name="title" value="Assistant registration" />
@@ -102,6 +117,12 @@
 	<definition name="/users/assistant/edit" extends="assistantPanel">
 		<put-attribute name="title" value="Assistant data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/assistant/edit.jsp" />
+	</definition>
+	
+	<!-- Admin indexing database -->
+	<definition name="/users/admin/indexing" extends="adminPanel">
+		<put-attribute name="title" value="Admin database indexing" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/admin/indexing.jsp" />
 	</definition>
 
 	<!-- Patient self register and edit -->	
@@ -126,9 +147,9 @@
 		<put-attribute name="title" value="Patient data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/edit.jsp" />
 	</definition>
-	<definition name="/users/patient/assistant/search" extends="assistantPanel">
+	<definition name="/users/patient/assistant/searchPatient" extends="assistantPanel">
 		<put-attribute name="title" value="Patient search" />
-		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/search.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/searchPatient.jsp" />
 	</definition>
 
 
@@ -171,21 +192,21 @@
 	
 
 	<!-- Login page -->
-	<definition name="login" extends="base">
+	<definition name="login" extends="userPanel">
 		<put-attribute name="title" value="Login" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/login.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/login.jsp" />
 	</definition>
 
 	<!-- Exception page -->
-	<definition name="error" extends="base">
+	<definition name="error" extends="userPanel">
 		<put-attribute name="title" value="Exceptions" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/error.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/error.jsp" />
 	</definition>
 
 	<!-- Success page -->
-	<definition name="success" extends="base">
-		<put-attribute name="title" value="Exceptions" />
-		<put-attribute name="body" value="/WEB-INF/views/pages/success.jsp" />
+	<definition name="success" extends="userPanel">
+		<put-attribute name="title" value="Success" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/success.jsp" />
 	</definition>
 
 </tiles-definitions>

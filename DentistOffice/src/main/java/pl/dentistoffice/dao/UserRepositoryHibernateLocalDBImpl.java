@@ -2,8 +2,6 @@ package pl.dentistoffice.dao;
 
 import java.util.List;
 
-import javax.jws.Oneway;
-
 import org.apache.lucene.search.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -203,11 +201,6 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 
 	private FullTextSession getFullTextSession() {
 		FullTextSession fullTextSession = Search.getFullTextSession(getSession());
-		try {
-			fullTextSession.createIndexer().startAndWait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		return fullTextSession;
 	}
 

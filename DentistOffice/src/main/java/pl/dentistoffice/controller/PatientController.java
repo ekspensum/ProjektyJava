@@ -107,15 +107,21 @@ public class PatientController {
 		}
 	}
 	
-	@RequestMapping(path = "/users/patient/assistant/search")
+	@RequestMapping(path = "/users/patient/assistant/searchPatient")
 	public String searchPatientByAssistant() {
-		return "/users/patient/assistant/search";
+		return "/users/patient/assistant/searchPatient";
 	}
 	
 	@RequestMapping(path = "/users/patient/assistant/searchResult", method = RequestMethod.POST)
 	public String searchPatientByAssistant(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
-		List<Patient> searchedPatientList = userService.searchPatient(patientData);
-		redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		if(patientData.length() > 20) {
+			String substringPatientData = patientData.substring(0, 20);
+			List<Patient> searchedPatientList = userService.searchPatient(substringPatientData);			
+			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		} else {
+			List<Patient> searchedPatientList = userService.searchPatient(patientData);			
+			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
+		}
 		return "redirect:/users/patient/assistant/selectToEdit";
 	}
 	
