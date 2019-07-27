@@ -6,7 +6,6 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
@@ -27,13 +26,13 @@ public class AdviceController {
 	@Autowired
 	private Environment env;
 
-//	@ExceptionHandler(Exception.class)
-//	public String handleException(Model model, Exception e) {
-//		model.addAttribute("exception", "Wystapił wyjątek: "+e);
-//	    model.addAttribute("head", env.getProperty("head"));
-//	    model.addAttribute("footer", env.getProperty("footer"));
-//		return "error";
-//	}
+	@ExceptionHandler(Exception.class)
+	public String handleException(Model model, Exception e) {
+		model.addAttribute("exception", "Wystapił wyjątek: "+e.getMessage());
+	    model.addAttribute("head", env.getProperty("head"));
+	    model.addAttribute("footer", env.getProperty("footer"));
+		return "error";
+	}
 	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {

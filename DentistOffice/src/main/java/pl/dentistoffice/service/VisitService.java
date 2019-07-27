@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -84,19 +85,34 @@ public class VisitService {
 		}
 	}
 	
-	public Map<LocalDate, Map<LocalTime, Boolean>> getWorkingWeekFreeTimeMap(Doctor doctor){
+	public Map<LocalDate, Map<LocalTime, Boolean>> getWorkingWeekFreeTimeMap(Doctor doctor, int dayStart, int dayEnd){
 		Map<LocalDate, Map<LocalTime, Boolean>> workingWeekFreeTimeMap = new LinkedHashMap<>();
 		
 		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
 		
-		List<Visit> visitsList = visitRepository.readVisits(LocalDateTime.now(), LocalDateTime.now().plusDays(7), doctor);
+		List<Visit> visitsList = visitRepository.readVisits(LocalDateTime.now().plusDays(dayStart), LocalDateTime.now().plusDays(dayEnd), doctor);
 		
 		Iterator<Entry<DayOfWeek, Map<LocalTime, Boolean>>> iteratorWorkingWeekMap;
 		Iterator<Entry<LocalTime, Boolean>> iteratorDayTimeMap;
 
 		/*
-		 * In this method part, working week map for this doctor is processing - removing is every record from time map, which is taken or value is false  
+		 * In this method part, working week map for this doctor is processing - removing is every record from time map, which value is false  
+		 */
+		iteratorWorkingWeekMap = workingWeekMap.entrySet().iterator();
+		while (iteratorWorkingWeekMap.hasNext()) {
+			Entry<DayOfWeek, Map<LocalTime, Boolean>> nextDay = iteratorWorkingWeekMap.next();
+			iteratorDayTimeMap = nextDay.getValue().entrySet().iterator();
+			while (iteratorDayTimeMap.hasNext()) {
+				Entry<LocalTime, Boolean> nextTime = iteratorDayTimeMap.next();
+				if (!nextTime.getValue()) {
+					iteratorDayTimeMap.remove();
+				}
+			}
+		}
+
+		/**
+		 * In this method part, if visit list size is greaten then 0, working week map for this doctor is processing - removing is every record from time map, which is taken 
 		 */
 		for (Visit visit : visitsList) {
 			iteratorWorkingWeekMap = workingWeekMap.entrySet().iterator();
@@ -108,16 +124,7 @@ public class VisitService {
 					while (iteratorDayTimeMap.hasNext()) {
 						Entry<LocalTime, Boolean> nextTime = iteratorDayTimeMap.next();
 						LocalTime keyTime = nextTime.getKey();
-						Boolean valueTime = nextTime.getValue();
-						if (keyTime.equals(visit.getVisitDateTime().toLocalTime()) || !valueTime) {
-							iteratorDayTimeMap.remove();
-						}
-					}
-				} else {
-					iteratorDayTimeMap = nextDay.getValue().entrySet().iterator();
-					while (iteratorDayTimeMap.hasNext()) {
-						Entry<LocalTime, Boolean> nextTime = iteratorDayTimeMap.next();
-						if (!nextTime.getValue()) {
+						if (keyTime.equals(visit.getVisitDateTime().toLocalTime())) {
 							iteratorDayTimeMap.remove();
 						}
 					}
@@ -129,7 +136,7 @@ public class VisitService {
 		 * This part of method create map, which keys are date 7 days forward. From created map removing is working hours after current time (LocalTime.now())
 		 */
 		Iterator<Entry<DayOfWeek, Map<LocalTime, Boolean>>> iteratorForFreeWorkingWeekMap;
-		for (int i=0; i<7; i++) {
+		for (int i=dayStart; i<dayEnd; i++) {
 			iteratorForFreeWorkingWeekMap = workingWeekMap.entrySet().iterator();
 			while(iteratorForFreeWorkingWeekMap.hasNext()) {
 				Entry<DayOfWeek, Map<LocalTime, Boolean>> nextFreeDay = iteratorForFreeWorkingWeekMap.next();
@@ -148,7 +155,34 @@ public class VisitService {
 				}
 			}
 		}
-		
 		return workingWeekFreeTimeMap;
+	}
+	
+	public List<Visit> getVisitsByPatientAndStatus(Patient patient, VisitStatus visitStatus){
+		List<Visit> visits = visitRepository.readVisits(patient, visitStatus);
+		visits.sort(new Comparator<Visit>() {
+
+			@Override
+			public int compare(Visit o1, Visit o2) {
+				return o1.getVisitDateTime().compareTo(o2.getVisitDateTime());
+			}
+		});
+		return visits;
+	}
+	
+	public List<VisitStatus> getVisitStatusList(){
+		List<VisitStatus> allVisitStatus = visitRepository.readAllVisitStatus();
+		allVisitStatus.sort(new Comparator<VisitStatus>() {
+
+			@Override
+			public int compare(VisitStatus o1, VisitStatus o2) {
+				return o1.getId() - o2.getId();
+			}
+		});
+		return allVisitStatus;
+	}
+	
+	public VisitStatus getVisitStatus(int stausId) {
+		return visitRepository.readVisitStaus(stausId);
 	}
 }

@@ -1,5 +1,7 @@
 package pl.dentistoffice.config;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -16,31 +18,47 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "pl.dentistoffice")
-@PropertySource(value="/static/properties/database.properties")
+//@PropertySource(value="/static/properties/database.properties")
 @EnableTransactionManagement
 public class RootConfig {
 
-	@Autowired
-	private Environment env;
+//	@Autowired
+//	private Environment env;
+//	
+//	@Bean
+//	public BasicDataSource dataSource() {
+//		BasicDataSource dataSource = new BasicDataSource();
+//		dataSource.setUrl(env.getProperty("url"));
+//		dataSource.setDriverClassName(env.getProperty("driver"));
+//		dataSource.setUsername(env.getProperty("db_user"));
+//		dataSource.setPassword(env.getProperty("db_password"));
+////		if 0 then no limits
+//		dataSource.setMaxOpenPreparedStatements(0);
+////		pool waiting to infinity: -1
+//		dataSource.setMaxWait(3000);
+////		if 0 then no limits
+//		dataSource.setMaxActive(10);
+//		return dataSource;
+//	}
+	
+  @Bean
+  public BasicDataSource dataSource() throws URISyntaxException {
+      URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+      String username = dbUri.getUserInfo().split(":")[0];
+      String password = dbUri.getUserInfo().split(":")[1];
+      String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+      BasicDataSource basicDataSource = new BasicDataSource();
+      basicDataSource.setUrl(dbUrl);
+      basicDataSource.setUsername(username);
+      basicDataSource.setPassword(password);
+
+      return basicDataSource;
+  }
 	
 	@Bean
-	public BasicDataSource dataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl(env.getProperty("url"));
-		dataSource.setDriverClassName(env.getProperty("driver"));
-		dataSource.setUsername(env.getProperty("db_user"));
-		dataSource.setPassword(env.getProperty("db_password"));
-//		if 0 then no limits
-		dataSource.setMaxOpenPreparedStatements(0);
-//		pool waiting to infinity: -1
-		dataSource.setMaxWait(3000);
-//		if 0 then no limits
-		dataSource.setMaxActive(10);
-		return dataSource;
-	}
-	
-	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
+	public LocalSessionFactoryBean sessionFactory() throws URISyntaxException {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource());
 		sessionFactory.setPackagesToScan("pl.dentistoffice.entity");
@@ -57,7 +75,7 @@ public class RootConfig {
 	}
 	
     @Bean
-    public PlatformTransactionManager hibernateTransactionManager() {
+    public PlatformTransactionManager hibernateTransactionManager() throws URISyntaxException {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;

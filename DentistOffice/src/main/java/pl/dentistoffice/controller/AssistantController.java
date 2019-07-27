@@ -1,7 +1,6 @@
 package pl.dentistoffice.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -57,7 +56,6 @@ public class AssistantController {
 					Model model) throws IOException {
 		
 		assistant.setPhoto(photo.getBytes());
-		assistant.setRegisteredDateTime(LocalDateTime.now());
 		if(!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
 			userService.addNewAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successRegisterAssistant"));
@@ -100,9 +98,9 @@ public class AssistantController {
 			@RequestParam("photo") 
 			MultipartFile photo,
 			Model model) throws IOException {
-
-		assistant.setPhoto(photo.getBytes());
-		assistant.setEditedDateTime(LocalDateTime.now());
+		if(photo.getBytes().length > 0) {
+			assistant.setPhoto(photo.getBytes());			
+		}
 		if (!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
 			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
@@ -133,8 +131,9 @@ public class AssistantController {
 			MultipartFile photo,
 			Model model) throws IOException {
 
-		loggedAssistant.setPhoto(photo.getBytes());
-		loggedAssistant.setEditedDateTime(LocalDateTime.now());
+		if(photo.getBytes().length > 0) {
+			loggedAssistant.setPhoto(photo.getBytes());			
+		}
 		if (!result.hasErrors()) {
 			userService.editAssistant(loggedAssistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));

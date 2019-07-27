@@ -84,7 +84,7 @@
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td><input type="submit" value="Zarejestruj" /></td>
+					<td><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>

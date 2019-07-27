@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 <h3>Edycja danych asystenta</h3>
 	<form:form method="POST"
@@ -8,6 +7,7 @@
 		<table>
 			<tbody>
 				<tr>
+					<td rowspan="9"><img src="data:image;base64,${loggedAssistant.base64Photo }" height="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td><form:errors path="user.username" class="msgError" /></td>
@@ -43,13 +43,12 @@
 					<td><form:errors path="phone" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Image</td>
-					<td><form:input type="file" name="photo" accept="image/*"
-							path="photo" /></td>
+					<td>Zdjęcie:</td>
+					<td><form:input type="file" name="photo" accept="image/*" path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td><input type="submit" value="Zpisz zmiany" /></td>
+					<td></td><td><input type="submit" value="Zpisz zmiany" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>

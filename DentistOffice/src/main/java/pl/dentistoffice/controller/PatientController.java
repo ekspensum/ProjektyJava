@@ -1,7 +1,6 @@
 package pl.dentistoffice.controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.Patient;
-import pl.dentistoffice.entity.Role;
-import pl.dentistoffice.entity.User;
 import pl.dentistoffice.service.UserService;
 
 @Controller
@@ -54,12 +51,7 @@ public class PatientController {
 					@RequestParam("photo") 
 					MultipartFile photo,
 					Model model) throws IOException {
-		List<Role> patientRole = userService.getPatientRole();
-		User user = patient.getUser();
-		user.setRoles(patientRole);
-		patient.setUser(user);
 		patient.setPhoto(photo.getBytes());
-		patient.setRegisteredDateTime(LocalDateTime.now());
 		if(!result.hasErrors()) {
 			userService.addNewPatient(patient);
 			model.addAttribute("success", env.getProperty("successRegisterPatient"));
@@ -95,9 +87,9 @@ public class PatientController {
 			@RequestParam("photo") 
 			MultipartFile photo,
 			Model model) throws IOException {
-
-		patient.setPhoto(photo.getBytes());
-		patient.setEditedDateTime(LocalDateTime.now());
+		if(photo.getBytes().length > 0) {			
+			patient.setPhoto(photo.getBytes());
+		}
 		if (!result.hasErrors()) {
 			userService.editPatient(patient);
 			model.addAttribute("success", env.getProperty("successUpdatePatient"));
@@ -140,12 +132,7 @@ public class PatientController {
 					@RequestParam("photo") 
 					MultipartFile photo,
 					Model model) throws IOException {
-		List<Role> patientRole = userService.getPatientRole();
-		User user = newPatient.getUser();
-		user.setRoles(patientRole);
-		newPatient.setUser(user);
 		newPatient.setPhoto(photo.getBytes());
-		newPatient.setRegisteredDateTime(LocalDateTime.now());
 		if(!result.hasErrors()) {
 			userService.addNewPatient(newPatient);
 			model.addAttribute("success", env.getProperty("successRegisterPatient"));
@@ -172,8 +159,9 @@ public class PatientController {
 			MultipartFile photo,
 			Model model) throws IOException {
 
-		loggedPatient.setPhoto(photo.getBytes());
-		loggedPatient.setEditedDateTime(LocalDateTime.now());
+		if(photo.getBytes().length > 0) {			
+			loggedPatient.setPhoto(photo.getBytes());
+		}
 		if (!result.hasErrors()) {
 			userService.editPatient(loggedPatient);
 			model.addAttribute("success", env.getProperty("successUpdatePatient"));

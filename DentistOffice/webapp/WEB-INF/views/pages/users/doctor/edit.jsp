@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h2>Edycja danych lekarza</h2>
+<h3>Pane lekarza - edycja swoich danych.</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/doctor/edit"
 		modelAttribute="loggedDoctor" enctype="multipart/form-data">
 		<table>
 			<tbody>
 				<tr>
+					<td rowspan="9"><img src="data:image;base64,${loggedDoctor.base64Photo }" height="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td><form:errors path="user.username" class="msgError" /></td>
@@ -43,8 +44,7 @@
 				</tr>
 				<tr>
 					<td>Zdjęcie:</td>
-					<td><form:input type="file" name="photo" accept="image/*"
-							path="photo" /></td>
+					<td><form:input type="file" name="photo" accept="image/*" path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
@@ -54,23 +54,27 @@
 				</tr>
 			</tbody>
 		</table>
-		
+<br>
+<table border="1" class="workingTime">		
 <c:forEach items="${workingWeekMap}" var="map" varStatus="vs1">
-	<b>${map.key.value == 1 ? 'Poniedziałek' : map.key.value == 2 ? 'Wtorek' : map.key.value == 3 ? 'Środa' : map.key.value == 4 ? 'Czwartek' : map.key.value == 5 ? 'Piątek' : map.key.value == 6 ? 'Sobota' : ''}</b>
-	<p>
+	<tr><th colspan="8">${dayOfWeekPolish[map.key.value] }</th></tr>
+	<tr>
 	<c:forEach items="${map.value }" var="time" varStatus="vs2">
-					<input type="text" name="${fn:toLowerCase(map.key)}Time" readonly="readonly" value="${time.key }" class="inputTime" />
-					<input id="in${vs1.count}${vs2.count }" type="hidden" name="${fn:toLowerCase(map.key)}TimeBool" value="${time.value }" />
-					<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />&emsp;&emsp;
-					${vs2.count % 8 == 0 ? '<br>' : '' }	
+		<td>
+			<input type="text" name="${fn:toLowerCase(map.key)}Time" readonly="readonly" value="${time.key }" class="inputTime" />
+			<input id="in${vs1.count}${vs2.count }" type="hidden" name="${fn:toLowerCase(map.key)}TimeBool" value="${time.value }" />
+			<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />
+		</td>	
+		${vs2.count % 8 == 0 ? '</tr>' : '' }
 	</c:forEach>
-	</p>
 </c:forEach>
-		
-		<table>		
-			<tr>
-				<td><input type="submit" value="Zapisz zmiany" /></td>
-			</tr>
-		</table>
-	</form:form>
+</table>		
+<br>
+<table>
+	<tr>
+		<td align="right" width="820px"><input type="submit" value="Zapisz zmiany" class="navigateButton" /></td>
+	</tr>
+</table>
+<br>
+</form:form>
 

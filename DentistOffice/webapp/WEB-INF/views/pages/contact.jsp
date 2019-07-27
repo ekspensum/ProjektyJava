@@ -19,7 +19,7 @@
 	<form:input path="attachment" type="file" name="attachment" placeholder="${attachmentPrompt }" />
 	<form:errors path="attachment" class="msgError"></form:errors>
 	</p>
-	<p><input type="submit" value="Submit" id="button-1"/></p>
+	<p><input type="submit" value="Submit" class="navigateButton" /></p>
 </form:form>
 	<c:if test="${alert == 'YES' }">
 		<script>

@@ -21,6 +21,7 @@ public class VisitStatus implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String statusName;
+	private String description;
 	
 	@OneToOne
 	private User userLogged;

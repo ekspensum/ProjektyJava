@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h3>Panel lekarza - wybór pacjenta</h3>
+<h3>Panel lekarza - wybór pacjenta.</h3>
 <form name="selectPatientForm" method="POST" action="${pageContext.request.contextPath}/users/doctor/selectPatient">
 <table border="1" class="search">
 	<thead>
@@ -47,5 +47,5 @@
 	</c:forEach>
 </table>
 <h3 class="msg">${searchedPatientList.size() == 0 ? 'Brak wyników wyszukiwania.' : '' }</h3>
-<input type="submit" value="Wybierz pacjenta" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" />
+<input type="submit" value="Wybierz pacjenta" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" class="navigateButton" />
 </form>

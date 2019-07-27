@@ -57,23 +57,52 @@ function validateLoginForm() {
 function validateSelectChbxPatient() {
     let idChbx = document.forms.selectPatientForm.elements['patientId'];
     if (idChbx.length > 1) {
-    	let j = 0;
-    	for (i = 0; i < idChbx.length; i++) {
-    		if (idChbx[i].checked) {
-    			j++;
-    		}
-    	}
-    	if (j != 1) {
-    		alert("Proszę wybrać jeden rekord!");
-    		return false;
-    	} else {
-    		return true;
-    	}
+        let j = 0;
+        for (i = 0; i < idChbx.length; i++) {
+            if (idChbx[i].checked) {
+                j++;
+            }
+        }
+        if (j != 1) {
+            alert("Proszę wybrać jeden rekord!");
+            return false;
+        } else {
+            return true;
+        }
     } else {
         if (document.selectPatientForm.patientId.checked) {
             return true;
         } else {
             alert("Proszę zaznaczyć wybór pacjenta!");
+            return false;
+        }
+    }
+}
+
+function validateSelectChbxVisitDate() {
+    let idChbx = document.forms.selectVisitDateForm.elements['dateTime'];
+    if (idChbx == undefined) {
+        alert("Brak wolnych terminów wizyt w tym tgodniu!")
+        return false;
+    }
+    if (idChbx.length > 1) {
+        let j = 0;
+        for (i = 0; i < idChbx.length; i++) {
+            if (idChbx[i].checked) {
+                j++;
+            }
+        }
+        if (j != 1) {
+            alert("Proszę wybrać jeden termin wizyty!");
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        if (document.selectVisitDateForm.dateTime.checked) {
+            return true;
+        } else {
+            alert("Proszę zaznaczyć wybór terminu wizyty!");
             return false;
         }
     }
@@ -95,6 +124,27 @@ function setValueOnInputFromChbx(chbx_id) {
     } else {
         document.getElementById("in" + chbx_id).value = false;
     }
+}
+
+//slider
+var number = Math.ceil(Math.random() * 6);
+
+function collapse() {
+    $("#slider").fadeOut(500);
+}
+
+function changeSlide() {
+
+    number++;
+    if (number == 7) {
+        number = 1;
+    }
+    let file = "<img src=\"static/images/slides/slide" + number + ".jpg\" />";
+    document.getElementById("slider").innerHTML = file;
+    $("#slider").fadeIn(500);
+    setTimeout("changeSlide();", 4000);
+    setTimeout("collapse();", 3500);
+    console.log(number);
 }
 
 // function setEnableInputFromChbx(chbx_id) {

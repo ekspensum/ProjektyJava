@@ -41,20 +41,20 @@ public class LoginController {
 	}
 	
 	@RequestMapping(path = "/login", method = RequestMethod.POST)
-	public String login(Model model) {
+	public String login() {
 
-		return "redirect:/patientPanel";
+		return "forward:/patientPanel";
 	}
 	
 	@RequestMapping(path = "/loginSuccess")
-	public String loginSuccess(Model model) {
+	public String loginSuccess() {
 		Collection<? extends GrantedAuthority> authoritiesLoggedUser = userService.getAuthoritiesLoggedUser();
 		for (GrantedAuthority grantedAuthority : authoritiesLoggedUser) {
 			if(grantedAuthority.getAuthority().equals("ROLE_PATIENT")) {
-				return "redirect:/panels/patientPanel";	
+				return "forward:/panels/patientPanel";	
 			}			
 		}
-		return "redirect:/panels/employeePanel";
+		return "forward:/panels/employeePanel";
 	}
 	
 	@RequestMapping(path = "/403")

@@ -1,13 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
-<h3>Edycja danych pacjenta</h3>
+<h3>Panel pacjenta</h3>
+<h4>Edycja swoich danych</h4>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/patient/edit"
 		modelAttribute="loggedPatient" enctype="multipart/form-data">
 		<table>
 			<tbody>
 				<tr>
+					<td rowspan="15"><img src="data:image;base64,${loggedPatient.base64Photo }" height="400px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td><form:errors path="user.username" class="msgError" /></td>
@@ -78,7 +80,7 @@
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td><input type="submit" value="Zpisz zmiany" /></td>
+					<td></td><td><input type="submit" value="Zpisz zmiany" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>

@@ -2,8 +2,7 @@
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h3>Panel asystenta</h3>
-
-<p>Wybierz pacjenta do edycji danych:</p>
+<h4>Wybierz pacjenta do edycji danych:</h4>
 <form name="selectPatientForm" method="POST" action="${pageContext.request.contextPath}/users/patient/assistant/selectToEdit">
 <table border="1" class="search">
 	<thead>
@@ -50,5 +49,5 @@
 	</c:forEach>
 </table>
 <h3 class="msg">${searchedPatientList.size() == 0 ? 'Brak wyników wyszukiwania.' : '' }</h3>
-<input type="submit" value="Wybierz pacjenta" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" />
+<input type="submit" value="Wybierz pacjenta" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" class="navigateButton" />
 </form>

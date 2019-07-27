@@ -1,13 +1,11 @@
 package pl.dentistoffice.service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -28,7 +26,6 @@ import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
-import pl.dentistoffice.entity.WorkingWeek;
 
 
 
@@ -37,24 +34,11 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
-
-//	public void setWorkingWeek(int idDoctor, DayOfWeek workingDays, Map<LocalTime, Boolean> workingHours) {
-//		Doctor doctor = userRepository.readDoctor(idDoctor);
-//		WorkingWeek workingWeek = doctor.getWorkingWeek();
-//		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
-//		workingWeekMap.put(workingDays, workingHours);
-//		workingWeek.setWorkingWeekMap(workingWeekMap);
-//		doctor.setWorkingWeek(workingWeek);
-//		userRepository.saveDoctor(doctor);
-//	}
-//	
-//	public WorkingWeek getWorkingWeek(Doctor doctor) {
-//		return doctor.getWorkingWeek();
-//	}
 	
 	public void addNewDoctor(Doctor doctor) {
 		User user = doctor.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		doctor.setRegisteredDateTime(LocalDateTime.now());
 		userRepository.saveDoctor(doctor);
 	}
 	
@@ -63,6 +47,7 @@ public class UserService {
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		List<Role> currentRolesList = createCurrentRolesList(user);
 		user.setRoles(currentRolesList);
+		doctor.setEditedDateTime(LocalDateTime.now());
 		userRepository.updateDoctor(doctor);
 	}
 	
@@ -92,12 +77,14 @@ public class UserService {
 	public void addNewAssistant(Assistant assistant) {
 		User user = assistant.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		assistant.setRegisteredDateTime(LocalDateTime.now());
 		userRepository.saveAssistant(assistant);
 	}
 	
 	public void editAssistant(Assistant assistant) {
 		User user = assistant.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		assistant.setEditedDateTime(LocalDateTime.now());
 		List<Role> currentRolesList = createCurrentRolesList(user);
 		user.setRoles(currentRolesList);
 		userRepository.updateAssistant(assistant);
@@ -129,14 +116,18 @@ public class UserService {
 	public void addNewPatient(Patient patient) {
 		User user = patient.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
-		List<Role> currentRolesList = createCurrentRolesList(user);
-		user.setRoles(currentRolesList);
+		List<Role> patientRole = getPatientRole();
+		user.setRoles(patientRole);
+		user.setEnabled(true);
+		patient.setUser(user);
+		patient.setRegisteredDateTime(LocalDateTime.now());		
 		userRepository.savePatient(patient);
 	}
 	
 	public void editPatient(Patient patient) {
 		User user = patient.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		patient.setEditedDateTime(LocalDateTime.now());
 		userRepository.updatePatient(patient);
 	}
 	
@@ -210,7 +201,7 @@ public class UserService {
 	public Map<DayOfWeek, Map<LocalTime, Boolean>> getTemplateWorkingWeekMap() {
 		Map<DayOfWeek, Map<LocalTime, Boolean>> templateMap = new LinkedHashMap<>();
 		Map<LocalTime, Boolean> weekDayTimeMap;
-		DayOfWeek [] daysOfWeek = {DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY};
+		DayOfWeek [] daysOfWeek = {DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
 		String [] weekDayTime = {"08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", 
 								"15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"};
 		
@@ -235,5 +226,10 @@ public class UserService {
 			currentRolesList.add(currentRole);
 		}
 		return currentRolesList;
+	}
+	
+	public String [] dayOfWeekPolish() {
+		String [] dayOfWeekPolish = {"Zero", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
+		return dayOfWeekPolish;
 	}
 }

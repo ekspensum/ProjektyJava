@@ -9,5 +9,5 @@
 	</c:forEach>
 </select>
 
-<input type="submit" value="Dalej"/>
+<input type="submit" value="Dalej" class="navigateButton" />
 </form>

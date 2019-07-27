@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h3>Panel administratora</h3>
@@ -12,5 +11,5 @@
 	</c:forEach>
 </select>
 
-	<input type="submit" value="Edytuj dane asystenta">
+	<input type="submit" value="Edytuj dane asystenta" class="navigateButton" />
 </form>

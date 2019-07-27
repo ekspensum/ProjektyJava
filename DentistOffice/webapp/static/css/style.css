@@ -39,7 +39,7 @@ table.search tr:hover {
     position: fixed;
     float: left;
     text-align: left;
-    border-bottom: 2px solid hsl(180, 70%, 55%);
+    border-bottom: 2px solid beige;
 }
 
 #footer {
@@ -48,7 +48,7 @@ table.search tr:hover {
     top: 95%;
     height: 5%;
     position: fixed;
-    border-top: 2px solid hsl(180, 70%, 55%);
+    border-top: 2px solid beige;
     text-align: center;
 }
 
@@ -57,7 +57,7 @@ table.search tr:hover {
     width: 100%;
     top: 15%;
     height: 5%;
-    border-bottom: 2px solid hsl(180, 70%, 55%);
+    border-bottom: 2px solid beige;
     text-align: center;
     position: fixed;
 }
@@ -78,8 +78,8 @@ table.search tr:hover {
 }
 
 #userMenu {
-    left: 85%;
-    width: 15%;
+    left: 80%;
+    width: 20%;
     top: 20%;
     height: 75%;
     bottom: 5%;
@@ -90,13 +90,13 @@ table.search tr:hover {
 
 #userContent {
     left: 0%;
-    width: 85%;
+    width: 80%;
     top: 20%;
     height: 75%;
     bottom: 5%;
     overflow: auto;
     padding-left: 1%;
-    border-right: 2px solid hsl(180, 70%, 55%);
+    border-right: 2px solid beige;
     position: fixed;
 }
 
@@ -105,7 +105,19 @@ table.search tr:hover {
     font-weight: bold;
 }
 
-.button {
+.menuButton {
+    font: bold 12px Arial;
+    width: 135px;
+    height: 30px;
+    border-radius: 12px;
+    background-color: #bbe7bd;
+}
+
+.menuButton:hover {
+    background-color: rgb(133, 155, 89);
+}
+
+.sideMenuButton {
     font: bold 12px Arial;
     width: 170px;
     height: 30px;
@@ -113,7 +125,17 @@ table.search tr:hover {
     background-color: #bbe7bd;
 }
 
-.button:hover {
+.sideMenuButton:hover {
+    background-color: rgb(133, 155, 89);
+}
+
+.navigateButton {
+    font: bold 12px Arial;
+    height: 28px;
+    width: 150px;
+}
+
+.navigateButton:hover {
     background-color: rgb(133, 155, 89);
 }
 
@@ -152,9 +174,15 @@ table.search tr:hover {
 input[type=text],
 input[type=search],
 input[type=password],
-input[type=image],
+input[type=file],
 select {
     background-color: #ade2af;
+}
+
+input[type=file],
+input[type=search],
+select {
+    height: 26px;
 }
 
 textarea {
@@ -168,4 +196,28 @@ textarea {
 .textareaDescription {
     width: 500px;
     height: 150px;
+}
+
+table.workingTime {
+    border-collapse: collapse;
+    border-color: beige;
+}
+
+table.workingTime th {
+    padding: 5px;
+    height: 35px;
+    text-align: left;
+    border-color: beige;
+}
+
+table.workingTime td {
+    padding: 5px;
+    width: 100px;
+    height: 35px;
+    text-align: center;
+    border-color: beige;
+}
+
+.workingTime input[type="checkbox"]:checked {
+    box-shadow: 0 0 0 5px green;
 }

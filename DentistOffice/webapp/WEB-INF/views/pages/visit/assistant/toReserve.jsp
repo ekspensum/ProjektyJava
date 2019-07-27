@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 <h3>Rezerwacja wizyty - wybór terminu i rodzaju zabiegów.</h3>
-
-<form method="POST" action="${pageContext.request.contextPath}/visit/assistant/reservation">
+<form method="POST" action="${pageContext.request.contextPath}/visit/assistant/toReserve">
+	<button type="submit" name="weekResultDriver" value="stepLeft" ${disableLeftArrow eq 'YES' ? 'disabled' : '' } class="navigateButton" >Poprzednie 7 dni</button>
+	<button type="submit" name="weekResultDriver" value="stepRight" ${disableRightArrow eq 'YES' ? 'disabled' : '' } class="navigateButton" >Następne 7 dni</button>
+</form>
+<br>
+<form name="selectVisitDateForm" method="POST" action="${pageContext.request.contextPath}/visit/assistant/reservation">
 <select name="treatment1">
 	<c:forEach items="${treatments}" var="treat">
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
@@ -20,23 +24,31 @@
 		<option value="${treat.id }">${treat.name } ${treat.price }</option>
 	</c:forEach>
 </select>
-<br>
 <h4>Pacjent: ${patient.firstName} ${patient.lastName}</h4>
 <h4>Lekarz stomatolog: ${doctor.firstName} ${doctor.lastName}</h4>
-<c:forEach items="${workingWeekFreeTimeMap}" var="map" varStatus="vs1">
-	<b>${map.key } ${map.key.dayOfWeek.value == 1 ? 'Poniedziałek' : map.key.dayOfWeek.value == 2 ? 'Wtorek' : map.key.dayOfWeek.value == 3 ? 'Środa' : map.key.dayOfWeek.value == 4 ? 'Czwartek' : map.key.dayOfWeek.value == 5 ? 'Piątek' : map.key.dayOfWeek.value == 6 ? 'Sobota' : ''}</b>
-	<c:if test="${map.value.size() == 0 }">
-		Brak wolnych terminów na ten dzień.
-	</c:if>
-	<p>
-	<c:forEach items="${map.value }" var="time" varStatus="vs2">	
-			<input type="text" name="time" readonly="readonly" value="${time.key }" class="inputTime" />
-			<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" name="dateTime" value="${map.key};${time.key}" />&emsp;&emsp;
-			${vs2.count % 8 == 0 ? '<br>' : '' }
+<table border="1" class="workingTime">
+	<c:forEach items="${workingWeekFreeTimeMap}" var="map" varStatus="vs1">
+		<tr><th colspan="8">${map.key } ${dayOfWeekPolish[map.key.dayOfWeek.value] }</th></tr>
+		<c:if test="${map.value.size() == 0 }">
+			<tr><td colspan="8" style="text-align: left;">
+				Brak wolnych terminów na ten dzień.
+			</td></tr>
+		</c:if>
+		<tr>
+		<c:forEach items="${map.value }" var="time" varStatus="vs2">
+			<td>	
+				<input type="text" name="time" readonly="readonly" value="${time.key }" class="inputTime" />
+				<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" name="dateTime" value="${map.key};${time.key}" />
+			</td>
+			${vs2.count % 8 == 0 ? '</tr>' : '' }
+		</c:forEach>
 	</c:forEach>
-	</p>
-</c:forEach>
-
-
-<input type="submit" value="Zaplanuj wizytę" />
+</table>
+<br>
+<table>
+	<tr>
+		<td align="right" width="820px"><input type="submit" value="Zaplanuj wizytę" onclick="return validateSelectChbxVisitDate()" class="navigateButton" /></td>
+	</tr>
+</table>
+<br>
 </form>

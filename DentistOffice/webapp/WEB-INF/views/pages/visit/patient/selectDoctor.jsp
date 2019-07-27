@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h1>Visit page - select doctor</h1>
+<h3>Umawianie wizyty - wybór lekarza</h3>
 
 <form method="POST" action="${pageContext.request.contextPath}/visit/patient/toReserve">
 <select name="doctorId">
@@ -10,5 +9,5 @@
 	</c:forEach>
 </select>
 
-<input type="submit" value="Wybierz" />
+<input type="submit" value="Wybierz" class="navigateButton" />
 </form>

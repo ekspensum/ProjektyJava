@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
-<h2>Doctor page</h2>
+<h3>Panel administratora - rejestracja lekarza.</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/doctor/admin/register"
 		modelAttribute="doctor" enctype="multipart/form-data">
@@ -70,22 +70,26 @@
 				</tr>
 			</tbody>
 		</table>
-		
+<br>		
+<table border="1" class="workingTime">		
 <c:forEach items="${templateWorkingWeekMap}" var="map" varStatus="vs1">
-	<b>${map.key.value == 1 ? 'Poniedziałek' : map.key.value == 2 ? 'Wtorek' : map.key.value == 3 ? 'Środa' : map.key.value == 4 ? 'Czwartek' : map.key.value == 5 ? 'Piątek' : map.key.value == 6 ? 'Sobota' : ''}</b>
-	<p>
-	<c:forEach items="${map.value }" var="time" varStatus="vs2">	
+	<tr><th colspan="8">${dayOfWeekPolish[map.key.value] }</th></tr>
+	<tr>
+	<c:forEach items="${map.value }" var="time" varStatus="vs2">
+		<td>	
 			<input type="text" name="${fn:toLowerCase(map.key)}Time" readonly="readonly" value="${time.key }" class="inputTime" />
 			<input id="in${vs1.count}${vs2.count }" type="hidden" name="${fn:toLowerCase(map.key)}TimeBool" value="${time.value }" />
-			<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />&emsp;&emsp;
-			${vs2.count % 8 == 0 ? '<br>' : '' }
+			<input id="${vs1.count}${vs2.count}" type="checkbox" onclick="setValueOnInputFromChbx(this.id)" ${time.value == true ? 'checked' : '' } />
+		</td>
+		${vs2.count % 8 == 0 ? '</tr>' : '' }
 	</c:forEach>
-	</p>
 </c:forEach>
-
+</table>
+<br>
 <table>
 	<tr>
-		<td><input type="submit" value="Zarejestruj" /></td>
+		<td align="right" width="820px"><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
 	</tr>
 </table>
+<br>
 </form:form>
