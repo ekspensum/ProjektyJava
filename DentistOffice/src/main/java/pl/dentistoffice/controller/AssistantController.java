@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,7 +24,7 @@ import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.service.UserService;
 
 @Controller
-@SessionAttributes({"assistant", "loggedAssistant"})
+@SessionAttributes({"assistant", "image"})
 public class AssistantController {
 
 	@Autowired
@@ -50,10 +51,10 @@ public class AssistantController {
 	public String registrationAssistantByAdmin(
 					@Valid 
 					Assistant assistant, 			
-					BindingResult result, 
+					BindingResult result,
+					Model model,
 					@RequestParam("photo") 
-					MultipartFile photo,
-					Model model) throws IOException {
+					MultipartFile photo) throws IOException {
 		
 		assistant.setPhoto(photo.getBytes());
 		if(!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
@@ -86,7 +87,8 @@ public class AssistantController {
 	@RequestMapping(path = "/users/assistant/admin/edit")
 	public String editAssistantByAdmin(@ModelAttribute("assistant") Assistant assistant, Model model) {
 		model.addAttribute("assistant", assistant);
-		model.addAttribute("rolesList", userService.getAllRoles());						
+		model.addAttribute("rolesList", userService.getAllRoles());	
+		model.addAttribute("image", assistant.getPhoto());
 		return "/users/assistant/admin/edit";
 	}
 	
@@ -94,12 +96,15 @@ public class AssistantController {
 	public String editDataAssistantByAdmin(
 			@Valid
 			Assistant assistant,
-			BindingResult result, 
+			BindingResult result,
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
-			Model model) throws IOException {
-		if(photo.getBytes().length > 0) {
-			assistant.setPhoto(photo.getBytes());			
+			@SessionAttribute(name = "image")
+			byte [] image) throws IOException {
+		
+		if(photo.getBytes().length == 0) {
+			assistant.setPhoto(image);			
 		}
 		if (!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
 			userService.editAssistant(assistant);
@@ -116,26 +121,29 @@ public class AssistantController {
 	
 	@RequestMapping(path = "/users/assistant/edit")
 	public String selfEditAssistant(Model model) {
-		Assistant loggedAssistant = userService.getLoggedAssistant();
-		model.addAttribute("loggedAssistant", loggedAssistant);
+		Assistant assistant = userService.getLoggedAssistant();
+		model.addAttribute("assistant", assistant);
+		model.addAttribute("image", assistant.getPhoto());
 		return "/users/assistant/edit";
 	}
 	
 	@RequestMapping(path = "/users/assistant/edit", method = RequestMethod.POST)
 	public String selfEditDataAssistant(
 			@Valid
-			@ModelAttribute(name = "loggedAssistant")
-			Assistant loggedAssistant,
+			@ModelAttribute(name = "assistant")
+			Assistant assistant,
 			BindingResult result, 
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
-			Model model) throws IOException {
+			@SessionAttribute(name = "image")
+			byte [] image) throws IOException {
 
-		if(photo.getBytes().length > 0) {
-			loggedAssistant.setPhoto(photo.getBytes());			
+		if(photo.getBytes().length == 0) {
+			assistant.setPhoto(image);			
 		}
 		if (!result.hasErrors()) {
-			userService.editAssistant(loggedAssistant);
+			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
 			return "forward:/success";
 		} else {

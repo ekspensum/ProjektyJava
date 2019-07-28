@@ -3,11 +3,11 @@
 <h3>Edycja danych asystenta</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/assistant/edit"
-		modelAttribute="loggedAssistant" enctype="multipart/form-data">
+		modelAttribute="assistant" enctype="multipart/form-data">
 		<table>
 			<tbody>
 				<tr>
-					<td rowspan="9"><img src="data:image;base64,${loggedAssistant.base64Photo }" height="300px" /></td>
+					<td rowspan="9"><img src="data:image;base64,${assistant.base64Photo }" width="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td><form:errors path="user.username" class="msgError" /></td>

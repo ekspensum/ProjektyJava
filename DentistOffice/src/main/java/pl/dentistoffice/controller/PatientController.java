@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,7 +23,7 @@ import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.service.UserService;
 
 @Controller
-@SessionAttributes({"patient", "loggedPatient", "newPatient"})
+@SessionAttributes({"patient", "image"})
 public class PatientController {
 
 	@Autowired
@@ -48,9 +49,10 @@ public class PatientController {
 					@Valid 
 					Patient patient, 			
 					BindingResult result, 
+					Model model,
 					@RequestParam("photo") 
-					MultipartFile photo,
-					Model model) throws IOException {
+					MultipartFile photo) throws IOException {
+		
 		patient.setPhoto(photo.getBytes());
 		if(!result.hasErrors()) {
 			userService.addNewPatient(patient);
@@ -76,6 +78,7 @@ public class PatientController {
 	@RequestMapping(path = "/users/patient/assistant/edit")
 	public String editPatientByAssistant(@ModelAttribute("patient") Patient patient, Model model) {
 		model.addAttribute("patient", patient);
+		model.addAttribute("image", patient.getPhoto());
 		return "/users/patient/assistant/edit";
 	}
 	
@@ -84,11 +87,14 @@ public class PatientController {
 			@Valid
 			Patient patient,
 			BindingResult result, 
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
-			Model model) throws IOException {
-		if(photo.getBytes().length > 0) {			
-			patient.setPhoto(photo.getBytes());
+			@SessionAttribute(name = "image")
+			byte [] image) throws IOException {
+		
+		if(photo.getBytes().length == 0) {
+			patient.setPhoto(image);			
 		}
 		if (!result.hasErrors()) {
 			userService.editPatient(patient);
@@ -119,22 +125,23 @@ public class PatientController {
 	
 	@RequestMapping(path = "/users/patient/register")
 	public String selfRegistrationPatient(Model model) {
-		model.addAttribute("newPatient", new Patient());
+		model.addAttribute("patient", new Patient());
 		return "/users/patient/register";
 	}
 	
 	@RequestMapping(path = "/users/patient/register", method = RequestMethod.POST)
 	public String selfRegistrationPatient(
 					@Valid 
-					@ModelAttribute(name = "newPatient")
-					Patient newPatient, 			
+					@ModelAttribute(name = "patient")
+					Patient patient, 			
 					BindingResult result, 
+					Model model,
 					@RequestParam("photo") 
-					MultipartFile photo,
-					Model model) throws IOException {
-		newPatient.setPhoto(photo.getBytes());
+					MultipartFile photo) throws IOException {
+		
+		patient.setPhoto(photo.getBytes());
 		if(!result.hasErrors()) {
-			userService.addNewPatient(newPatient);
+			userService.addNewPatient(patient);
 			model.addAttribute("success", env.getProperty("successRegisterPatient"));
 			return "forward:/success";
 		} else {
@@ -144,26 +151,29 @@ public class PatientController {
 	
 	@RequestMapping(path = "/users/patient/edit")
 	public String selfEditPatient(Model model) {
-		Patient loggedPatient = userService.getLoggedPatient();
-		model.addAttribute("loggedPatient", loggedPatient);
+		Patient patient = userService.getLoggedPatient();
+		model.addAttribute("patient", patient);
+		model.addAttribute("image", patient.getPhoto());
 		return "/users/patient/edit";
 	}
 	
 	@RequestMapping(path = "/users/patient/edit", method = RequestMethod.POST)
 	public String selfEditDataPatient(
 			@Valid
-			@ModelAttribute(name = "loggedPatient")
-			Patient loggedPatient,
-			BindingResult result, 
+			@ModelAttribute(name = "patient")
+			Patient patient,
+			BindingResult result,
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
-			Model model) throws IOException {
+			@SessionAttribute(name = "image")
+			byte [] image) throws IOException {
 
-		if(photo.getBytes().length > 0) {			
-			loggedPatient.setPhoto(photo.getBytes());
+		if(photo.getBytes().length == 0) {
+			patient.setPhoto(image);			
 		}
 		if (!result.hasErrors()) {
-			userService.editPatient(loggedPatient);
+			userService.editPatient(patient);
 			model.addAttribute("success", env.getProperty("successUpdatePatient"));
 			return "forward:/success";
 		} else {

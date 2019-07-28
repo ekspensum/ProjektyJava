@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h3>Pane lekarza - edycja swoich danych.</h3>
+<h3>Panel lekarza - edycja swoich danych.</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/doctor/edit"
-		modelAttribute="loggedDoctor" enctype="multipart/form-data">
+		modelAttribute="doctor" enctype="multipart/form-data">
 		<table>
 			<tbody>
 				<tr>
-					<td rowspan="9"><img src="data:image;base64,${loggedDoctor.base64Photo }" height="300px" /></td>
+					<td rowspan="9"><img src="data:image;base64,${doctor.base64Photo }" width="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td><form:errors path="user.username" class="msgError" /></td>

@@ -4,7 +4,7 @@
 <h3>Panel lekarza - przegląd danych pacjenta</h3>
 <table border="1">
 	<tr><td>Dane pacjenta:</td><td>${patient.firstName }</td><td colspan="2">${patient.lastName }</td>
-	<td rowspan="5"><img src="data:image;base64,${patient.base64Photo }" height="300px" /></td></tr>
+	<td rowspan="5"><img src="data:image;base64,${patient.base64Photo }" width="300px" /></td></tr>
 	<tr><td>Pesel:</td><td colspan="3">${patient.pesel }</td></tr>
 	<tr><td>Adres zamieszkania:</td><td>${patient.country }</td><td>${patient.zipCode }</td><td>${patient.city }</td></tr>
 	<tr><td>Ulica:</td><td>${patient.street }</td><td>${patient.streetNo }</td><td>${patient.unitNo }</td></tr>

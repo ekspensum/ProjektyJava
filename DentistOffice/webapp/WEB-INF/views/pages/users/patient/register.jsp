@@ -4,7 +4,7 @@
 <h3>Rejestracja pacjenta</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/patient/register"
-		modelAttribute="newPatient" enctype="multipart/form-data">
+		modelAttribute="patient" enctype="multipart/form-data">
 		<table>
 			<tbody>
 				<tr>

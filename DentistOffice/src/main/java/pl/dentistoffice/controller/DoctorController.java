@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,7 +33,7 @@ import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
 @Controller
-@SessionAttributes({"doctor", "loggedDoctor", "patient", "visitsByPatientAndStatus"})
+@SessionAttributes({"doctor", "image", "patient", "visitsByPatientAndStatus"})
 public class DoctorController {
 
 	@Autowired
@@ -63,7 +64,8 @@ public class DoctorController {
 	public String registerDoctor(
 			@Valid
 			Doctor doctor,
-			BindingResult result, 
+			BindingResult result,
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
 			String [] mondayTime, String [] mondayTimeBool,
@@ -72,8 +74,8 @@ public class DoctorController {
 			String [] thursdayTime, String [] thursdayTimeBool,
 			String [] fridayTime, String [] fridayTimeBool,
 			String [] saturdayTime, String [] saturdayTimeBool,
-			String [] sundayTime, String [] sundayTimeBool,
-			Model model) throws IOException {
+			String [] sundayTime, String [] sundayTimeBool
+			) throws IOException {
 		
 		WorkingWeek workingWeek = new WorkingWeek();
 
@@ -117,6 +119,7 @@ public class DoctorController {
 	@RequestMapping(path = "/users/doctor/admin/edit")
 	public String editDoctor(@ModelAttribute("doctor") Doctor doctor, Model model) {
 		model.addAttribute("doctor", doctor);
+		model.addAttribute("image", doctor.getPhoto());
 		model.addAttribute("rolesList", userService.getAllRoles());				
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = doctor.getWorkingWeek().getWorkingWeekMap();
 		model.addAttribute("workingWeekMap", workingWeekMap);
@@ -129,16 +132,19 @@ public class DoctorController {
 			@Valid
 			Doctor doctor,
 			BindingResult result, 
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
+			@SessionAttribute(name = "image")
+			byte [] image,
 			String [] mondayTime, String [] mondayTimeBool,
 			String [] tuesdayTime, String [] tuesdayTimeBool,
 			String [] wednesdayTime, String [] wednesdayTimeBool,
 			String [] thursdayTime, String [] thursdayTimeBool,
 			String [] fridayTime, String [] fridayTimeBool,
 			String [] saturdayTime, String [] saturdayTimeBool,
-			String [] sundayTime, String [] sundayTimeBool,
-			Model model) throws IOException {
+			String [] sundayTime, String [] sundayTimeBool
+			) throws IOException {
 
 		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
@@ -148,8 +154,8 @@ public class DoctorController {
 
 		workingWeek.setWorkingWeekMap(workingWeekMap);
 		doctor.setWorkingWeek(workingWeek);
-		if(photo.getBytes().length > 0) {
-			doctor.setPhoto(photo.getBytes());			
+		if(photo.getBytes().length == 0) {
+			doctor.setPhoto(image);			
 		}
 		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
 			userService.editDoctor(doctor);
@@ -168,10 +174,11 @@ public class DoctorController {
 	
 	@RequestMapping(path = "/users/doctor/edit")
 	public String selfEditDoctor(Model model) {
-		Doctor loggedDoctor = userService.getLoggedDoctor();
-		model.addAttribute("loggedDoctor", loggedDoctor);
+		Doctor doctor = userService.getLoggedDoctor();
+		model.addAttribute("doctor", doctor);
+		model.addAttribute("image", doctor.getPhoto());
 		model.addAttribute("rolesList", userService.getAllRoles());				
-		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = loggedDoctor.getWorkingWeek().getWorkingWeekMap();
+		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = doctor.getWorkingWeek().getWorkingWeekMap();
 		model.addAttribute("workingWeekMap", workingWeekMap);
 		model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 		return "/users/doctor/edit";
@@ -180,37 +187,40 @@ public class DoctorController {
 	@RequestMapping(path = "/users/doctor/edit", method = RequestMethod.POST)
 	public String selfEditDataDoctor(
 			@Valid
-			@ModelAttribute(name = "loggedDoctor")
-			Doctor loggedDoctor,
-			BindingResult result, 
+			@ModelAttribute(name = "doctor")
+			Doctor doctor,
+			BindingResult result,
+			Model model,
 			@RequestParam("photo") 
 			MultipartFile photo,
+			@SessionAttribute(name = "image")
+			byte [] image,
 			String [] mondayTime, String [] mondayTimeBool,
 			String [] tuesdayTime, String [] tuesdayTimeBool,
 			String [] wednesdayTime, String [] wednesdayTimeBool,
 			String [] thursdayTime, String [] thursdayTimeBool,
 			String [] fridayTime, String [] fridayTimeBool,
 			String [] saturdayTime, String [] saturdayTimeBool,
-			String [] sundayTime, String [] sundayTimeBool,
-			Model model) throws IOException {
+			String [] sundayTime, String [] sundayTimeBool
+			) throws IOException {
 
-		WorkingWeek workingWeek = loggedDoctor.getWorkingWeek();
+		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
 
 		setWorkingWeekMap(workingWeekMap, mondayTime, mondayTimeBool, tuesdayTime, tuesdayTimeBool, wednesdayTime,
 				wednesdayTimeBool, thursdayTime, thursdayTimeBool, fridayTime, fridayTimeBool, saturdayTime, saturdayTimeBool, sundayTime, sundayTimeBool);
 
 		workingWeek.setWorkingWeekMap(workingWeekMap);
-		loggedDoctor.setWorkingWeek(workingWeek);
-		if(photo.getBytes().length > 0) {
-			loggedDoctor.setPhoto(photo.getBytes());			
+		doctor.setWorkingWeek(workingWeek);
+		if(photo.getBytes().length == 0) {
+			doctor.setPhoto(image);			
 		}
-		if(!result.hasErrors() && loggedDoctor.getUser().getRoles().get(0).getId() != loggedDoctor.getUser().getRoles().get(1).getId()) {
-			userService.editDoctor(loggedDoctor);
+		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
+			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
 			return "forward:/success";
 		} else {
-			if(loggedDoctor.getUser().getRoles().get(0).getId() == loggedDoctor.getUser().getRoles().get(1).getId()) {
+			if(doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
 			}
 			model.addAttribute("rolesList", userService.getAllRoles());

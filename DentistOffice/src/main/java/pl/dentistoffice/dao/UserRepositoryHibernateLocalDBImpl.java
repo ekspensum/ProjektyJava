@@ -149,8 +149,8 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	@Override
 	public void updateAssistant(Assistant assistant) {
 		User user = assistant.getUser();
-		getSession().saveOrUpdate(user);
-		getSession().saveOrUpdate(assistant);
+		getSession().update(user);
+		getSession().update(assistant);
 	}
 
 	@Override
