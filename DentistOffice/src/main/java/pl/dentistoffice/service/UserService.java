@@ -35,6 +35,10 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	
+    @Autowired
+    private HibernateSearchService searchsService;
+	
 	public void addNewDoctor(Doctor doctor) {
 		User user = doctor.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
@@ -147,7 +151,7 @@ public class UserService {
 	}
 	
 	public List<Patient> searchPatient(String text){
-		List<Patient> searchPatient = userRepository.searchPatientNamePeselStreetPhoneByKeywordQuery(text);
+		List<Patient> searchPatient = searchsService.searchPatientNamePeselStreetPhoneByKeywordQuery(text);
 		searchPatient.sort(new Comparator<Patient>() {
 
 			@Override

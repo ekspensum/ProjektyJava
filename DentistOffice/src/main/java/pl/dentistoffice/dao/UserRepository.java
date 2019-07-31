@@ -26,7 +26,6 @@ public interface UserRepository {
 	Patient readPatient(int id);
 	Patient readPatient(String username);
 	List<Patient> readAllPatients();
-	List<Patient> searchPatientNamePeselStreetPhoneByKeywordQuery(String text);
 	
 	void saveAssistant(Assistant assistant);
 	void updateAssistant(Assistant assistant);

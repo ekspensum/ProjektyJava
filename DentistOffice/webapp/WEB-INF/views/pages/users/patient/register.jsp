@@ -73,12 +73,12 @@
 					<td><form:errors path="phone" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Image</td>
+					<td>Zdjęcie:</td>
 					<td><form:input type="file" name="photo" accept="image/*" path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
+					<td></td><td><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>

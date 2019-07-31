@@ -8,7 +8,7 @@
 	<form:errors path="subject" class="msgError"></form:errors>
 	</p>
 	<p>
-	<form:textarea id="message" path="message" cols="40" rows="8" placeholder="${messagePrompt}" />
+	<form:textarea id="message" path="message" class="textareaDescription" placeholder="${messagePrompt}" />
 	<form:errors path="message" class="msgError"></form:errors>
 	</p>
 	<p>

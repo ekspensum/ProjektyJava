@@ -14,9 +14,6 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +21,6 @@ import lombok.Setter;
 
 @Entity(name = "Users")
 @Getter @Setter
-@Indexed
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -35,7 +31,6 @@ public class User implements Serializable {
 	
 	@Size(min = 3, max = 12)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
-	@Field(index = Index.YES)
 	private String username;
 	
 	private String password;

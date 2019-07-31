@@ -6,9 +6,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -118,14 +115,4 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 		return getSession().createNamedQuery("readBilingsByDateAndDoctor", Billing.class).setParameter("dateFrom", dateFrom).setParameter("dateTo", dateTo).setParameter("doctor", doctor).getResultList();
 	}
 
-	
-	
-	
-	private QueryBuilder getQueryBuilderForVisitEntity() {
-		FullTextSession fullTextSession = Search.getFullTextSession(getSession());
-		return fullTextSession.getSearchFactory()
-				.buildQueryBuilder()
-				.forEntity(Visit.class)
-				.get();
-	}
 }

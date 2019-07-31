@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import pl.dentistoffice.service.IndexingService;
+import pl.dentistoffice.service.HibernateSearchService;
 import pl.dentistoffice.service.UserService;
 
 @Controller
@@ -19,7 +19,7 @@ public class AdminController {
 	private UserService userService;
 	
 	@Autowired
-	private IndexingService indexingService; 
+	private HibernateSearchService searchsService; 
 	
 	@RequestMapping(path = "/panels/adminPanel")
 	public String adminPanel(Model model) {
@@ -29,7 +29,7 @@ public class AdminController {
 
 	@RequestMapping(path = "/users/admin/indexing")
 	public String indexingDatabase(Model model) {
-		if(indexingService.createOrUpdateIndexesDatabase()) {
+		if(searchsService.initializeHibernateSearch()) {
 			model.addAttribute("msg", env.getProperty("indexingOk"));
 		} else {
 			model.addAttribute("msgError", env.getProperty("indexingError"));

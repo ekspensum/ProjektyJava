@@ -16,15 +16,16 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+
 @Configuration
 @ComponentScan(basePackages = "pl.dentistoffice")
 //@PropertySource(value="/static/properties/database.properties")
 @EnableTransactionManagement
 public class RootConfig {
 
-//	@Autowired
-//	private Environment env;
-//	
+	@Autowired
+	private Environment env;
+	
 //	@Bean
 //	public BasicDataSource dataSource() {
 //		BasicDataSource dataSource = new BasicDataSource();
@@ -80,4 +81,5 @@ public class RootConfig {
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;
     }
+
 }
