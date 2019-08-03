@@ -29,7 +29,7 @@ public class AdminController {
 
 	@RequestMapping(path = "/users/admin/indexing")
 	public String indexingDatabase(Model model) {
-		if(searchsService.initializeHibernateSearch()) {
+		if(searchsService.updateIndex()) {
 			model.addAttribute("msg", env.getProperty("indexingOk"));
 		} else {
 			model.addAttribute("msgError", env.getProperty("indexingError"));

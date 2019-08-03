@@ -31,6 +31,9 @@ public class VisitService {
 	
 	@Autowired
 	private UserService userService;
+	
+    @Autowired
+    private HibernateSearchService searchsService;
 
 	public void addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
@@ -39,7 +42,7 @@ public class VisitService {
 		visit.setPatient(patient);
 		visit.setUserLogged(patient.getUser());
 		
-		VisitStatus visitStatus = visitRepository.readVisitStaus(1);
+		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
 		visit.setStatus(visitStatus);
 		
 		visit.setTreatments(treatments);
@@ -67,7 +70,7 @@ public class VisitService {
 		visit.setUserLogged(assistant.getUser());
 		visit.setPatient(patient);
 		
-		VisitStatus visitStatus = visitRepository.readVisitStaus(1);
+		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
 		visit.setStatus(visitStatus);
 		
 		visit.setTreatments(treatments);
@@ -183,6 +186,24 @@ public class VisitService {
 	}
 	
 	public VisitStatus getVisitStatus(int stausId) {
-		return visitRepository.readVisitStaus(stausId);
+		return visitRepository.readVisitStatus(stausId);
+	}
+	
+	public List<Visit> getVisitsToFinalize(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
+//		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
+//		List<Visit> visits = visitRepository.readVisits(dateTimeFrom, dateTimeTo, visitStatus);
+		List<Visit> visits = searchsService.searchVisitDateAndStatusByKeywordQuery(dateTimeFrom, dateTimeTo);
+		visits.sort(new Comparator<Visit>() {
+
+			@Override
+			public int compare(Visit o1, Visit o2) {
+				return o2.getVisitDateTime().compareTo(o1.getVisitDateTime());
+			}
+		});
+		return visits;
+	}
+	
+	public Visit getVisit(int visitId) {
+		return visitRepository.readVisit(visitId);
 	}
 }

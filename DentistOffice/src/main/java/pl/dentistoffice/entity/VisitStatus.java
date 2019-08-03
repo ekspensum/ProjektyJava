@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.hibernate.search.annotations.Field;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +22,8 @@ public class VisitStatus implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Field
 	private String statusName;
 	private String description;
 	

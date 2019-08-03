@@ -2,7 +2,9 @@ package pl.dentistoffice.controller;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.service.DentalTreatmentService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
@@ -263,4 +266,38 @@ public class VisitController {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!");
 		}
 	}
+	
+
+	@RequestMapping(path = "/visit/assistant/searchVisit")
+	public String searchVisitsToFinalizeByAssistant(Model model) {
+		LocalDate today = LocalDate.now();
+		model.addAttribute("dateFrom", today.minusDays(3));
+		model.addAttribute("dateTo", today);
+		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(today.atStartOfDay().minusDays(3), LocalDateTime.now());
+		model.addAttribute("visitsToFinalize", visitsToFinalize);
+		return "/visit/assistant/searchVisit";
+	}
+
+	@RequestMapping(path = "/visit/assistant/searchVisit", method = RequestMethod.POST)
+	public String searchVisitsToFinalizeByAssistant(@RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo, Model model) {
+		LocalDateTime dateTimeFrom = LocalDateTime.parse(dateFrom + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		LocalDateTime dateTimeTo = LocalDateTime.parse(dateTo + " "+LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(dateTimeFrom, dateTimeTo);
+		model.addAttribute("dateFrom", dateFrom);
+		model.addAttribute("dateTo", dateTo);
+		model.addAttribute("visitsToFinalize", visitsToFinalize);
+		return "/visit/assistant/searchVisit";
+	}
+	
+	@RequestMapping(path = "/visit/assistant/visitToFinalize", method = RequestMethod.POST)
+	public String searchVisitsToFinalizeByAssistant(@RequestParam("visitId") String visitId, Model model) {
+
+		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+		model.addAttribute("visit", visit);
+		
+		return "/visit/assistant/visitToFinalize";
+	}	
+	
+	
+	
 }

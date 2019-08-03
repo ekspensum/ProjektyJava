@@ -167,6 +167,8 @@
 		<put-attribute name="title" value="Visit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/patient/reservation.jsp" />
 	</definition>
+	
+	<!-- Reservation & finalize visit pages -->
 	<!-- By assistant -->
 	<definition name="/visit/assistant/searchPatient" extends="assistantPanel">
 		<put-attribute name="title" value="Visit" />
@@ -188,8 +190,16 @@
 		<put-attribute name="title" value="Visit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/reservation.jsp" />
 	</definition>
+	<definition name="/visit/assistant/searchVisit" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/searchVisit.jsp" />
+	</definition>
+	<definition name="/visit/assistant/visitToFinalize" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/visitToFinalize.jsp" />
+	</definition>	
 	
-	
+
 
 	<!-- Login page -->
 	<definition name="login" extends="userPanel">

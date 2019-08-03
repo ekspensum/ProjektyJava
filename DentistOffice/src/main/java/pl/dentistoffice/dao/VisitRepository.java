@@ -21,7 +21,7 @@ public interface VisitRepository {
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, Doctor doctor);
 	
 	public boolean saveVistStatus(VisitStatus visitStaus);
-	public VisitStatus readVisitStaus(int id);
+	public VisitStatus readVisitStatus(int id);
 	public List<VisitStatus> readAllVisitStatus();
 	
 	public boolean saveBilling(Billing billing);

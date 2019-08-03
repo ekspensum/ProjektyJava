@@ -75,7 +75,7 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	}
 
 	@Override
-	public VisitStatus readVisitStaus(int id) {
+	public VisitStatus readVisitStatus(int id) {
 		return getSession().find(VisitStatus.class, id);
 	}
 

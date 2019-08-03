@@ -79,6 +79,31 @@ function validateSelectChbxPatient() {
     }
 }
 
+function validateSelectChbxVisit() {
+    let idChbx = document.forms.selectVisitForm.elements['visitId'];
+    if (idChbx.length > 1) {
+        let j = 0;
+        for (i = 0; i < idChbx.length; i++) {
+            if (idChbx[i].checked) {
+                j++;
+            }
+        }
+        if (j != 1) {
+            alert("Proszę wybrać jeden rekord!");
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        if (document.selectVisitForm.visitId.checked) {
+            return true;
+        } else {
+            alert("Proszę zaznaczyć wybór wizyty!");
+            return false;
+        }
+    }
+}
+
 function validateSelectChbxVisitDate() {
     let idChbx = document.forms.selectVisitDateForm.elements['dateTime'];
     if (idChbx == undefined) {
@@ -123,6 +148,15 @@ function setValueOnInputFromChbx(chbx_id) {
         document.getElementById("in" + chbx_id).value = true;
     } else {
         document.getElementById("in" + chbx_id).value = false;
+    }
+}
+
+function validateInputFieldsDateSearchVisits() {
+    if (document.serchVisitForm.dateFrom.value == "" || document.serchVisitForm.dateTo.value == "") {
+        alert("Proszę wprowadzić daty wizyt do wyszukania!");
+        return false;
+    } else {
+        return true;
     }
 }
 

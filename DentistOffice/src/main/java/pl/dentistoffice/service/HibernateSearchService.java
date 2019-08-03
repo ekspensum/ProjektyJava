@@ -1,5 +1,6 @@
 package pl.dentistoffice.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.lucene.search.Query;
@@ -10,8 +11,11 @@ import org.hibernate.search.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.entity.Visit;
 
 
 @Service
@@ -23,11 +27,6 @@ public class HibernateSearchService {
 	public HibernateSearchService(SessionFactory session) {
 		super();
 		this.session = session;
-		initializeHibernateSearch();
-	}
-
-	public boolean initializeHibernateSearch() {
-
 		FullTextSession fullTextSession = Search.getFullTextSession(session.openSession());
 		try {
 			fullTextSession.createIndexer()
@@ -37,14 +36,25 @@ public class HibernateSearchService {
 			.startAndWait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public boolean updateIndex() {
+
+		FullTextSession fullTextSession = Search.getFullTextSession(session.openSession());
+		try {
+			fullTextSession.getSearchFactory().optimize();
+		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Patient> searchPatientNamePeselStreetPhoneByKeywordQuery(String text){
-		FullTextSession fullTextSession = Search.getFullTextSession(session.openSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
 		
 		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
 									.buildQueryBuilder()
@@ -63,5 +73,29 @@ public class HibernateSearchService {
 		return fullTextSession.createFullTextQuery(luceneQuery, Patient.class).getResultList();
 	}
 
-
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<Visit> searchVisitDateAndStatusByKeywordQuery(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo){
+		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		
+		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+									.buildQueryBuilder()
+									.forEntity(Visit.class)
+									.get();
+		
+		Query luceneQuery = queryBuilder.bool()
+							.must(queryBuilder
+							.range()
+							.onField("visitDateTime")
+							.from(dateTimeFrom)
+							.to(dateTimeTo)
+							.createQuery())
+							.must(queryBuilder
+							.keyword()
+							.onField("status.statusName")
+							.matching("PLANNED")
+							.createQuery()).createQuery();
+		
+		return fullTextSession.createFullTextQuery(luceneQuery, Visit.class).getResultList();
+	}
 }

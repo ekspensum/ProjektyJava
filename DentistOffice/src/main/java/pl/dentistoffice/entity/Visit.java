@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +46,7 @@ public class Visit implements Serializable {
 	private boolean visitConfirmation;
 	
 	@OneToOne
+	@IndexedEmbedded
 	private VisitStatus status;
 	
 	@OneToOne
