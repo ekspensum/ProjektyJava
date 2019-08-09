@@ -23,22 +23,24 @@
 	<tr><td>Obecny staus wizyty:</td><td colspan="3">${visit.status.description }</td></tr>	
 </table>
 <br>
-<form  method="POST" action="${pageContext.request.contextPath}/visit/assistant/finalizedVisit">
+<form method="POST" action="${pageContext.request.contextPath}/visit/assistant/finalizedVisit">
 	<table border="1" style="width:50%">
 		<c:forEach items="${visit.treatments}" var="treat" varStatus="loop">
 			<tr>
 			<td>${loop.count }.</td>
 			<td>
 				<select name="treatment${loop.count }">
+					<c:set var="treatmentParam" value="treatment${loop.count }" scope="session"/>
 					<c:forEach items="${dentalTreatmentsList }" var="dtl">
-						<option value="${dtl.id }" ${dtl.id == treat.id ? 'selected' : ''} >${dtl.name } ${dtl.price }</option>
+						<option value="${dtl.id }" ${param[treatmentParam] == dtl.id ? 'selected' : dtl.id == treat.id ? 'selected' : '' } >${dtl.name } ${dtl.price }</option>
 					</c:forEach>
 				</select>
 			</td>
-			<td align="center"><textarea name="treatmentCommentVisit${loop.count }"  rows="3" cols="60"></textarea></td>
+			<c:set var="treatmentCommentVisit" value="treatmentCommentVisit${loop.count }" scope="session"/>
+			<td align="center"><textarea name="treatmentCommentVisit${loop.count }" rows="3" cols="60">${param[treatmentCommentVisit] }</textarea></td>
 			</tr>
 		</c:forEach>
-		<tr><td colspan="3"><br></td></tr>
+		<tr><td colspan="3" class="msgError">${msgError }<br></td></tr>
 		<tr><td colspan="3" align="right"><input type="submit" value="Finalizacja wizyty" class="navigateButton" ></td></tr>
 	</table>
 	<br>

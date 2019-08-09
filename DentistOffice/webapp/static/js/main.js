@@ -104,6 +104,39 @@ function validateSelectChbxVisit() {
     }
 }
 
+function validateSelectChbxVisitAndConfirmRemove() {
+    let idChbx = document.forms.selectVisitForm.elements['visitId'];
+    if (idChbx.length > 1) {
+        let j = 0;
+        for (i = 0; i < idChbx.length; i++) {
+            if (idChbx[i].checked) {
+                j++;
+            }
+        }
+        if (j != 1) {
+            alert("Proszę wybrać jeden rekord!");
+            return false;
+        } else {
+            if (confirm("Naciśnij OK aby zatwierdzić odwołanie wybranej wizyty!")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } else {
+        if (document.selectVisitForm.visitId.checked) {
+            if (confirm("Naciśnij OK aby zatwierdzić odwołanie wybranej wizyty!")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            alert("Proszę zaznaczyć wybór wizyty!");
+            return false;
+        }
+    }
+}
+
 function validateSelectChbxVisitDate() {
     let idChbx = document.forms.selectVisitDateForm.elements['dateTime'];
     if (idChbx == undefined) {
@@ -152,7 +185,7 @@ function setValueOnInputFromChbx(chbx_id) {
 }
 
 function validateInputFieldsDateSearchVisits() {
-    if (document.serchVisitForm.dateFrom.value == "" || document.serchVisitForm.dateTo.value == "") {
+    if (document.selectVisitForm.dateFrom.value == "" || document.selectVisitForm.dateTo.value == "") {
         alert("Proszę wprowadzić daty wizyt do wyszukania!");
         return false;
     } else {

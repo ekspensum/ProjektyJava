@@ -19,16 +19,18 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class WorkingWeek implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
 	
-	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
 	byte [] workingWeekMapByte;
 	
 	@Transient

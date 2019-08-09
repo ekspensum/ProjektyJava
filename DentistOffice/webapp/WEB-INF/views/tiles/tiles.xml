@@ -190,16 +190,27 @@
 		<put-attribute name="title" value="Visit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/reservation.jsp" />
 	</definition>
-	<definition name="/visit/assistant/searchVisit" extends="assistantPanel">
+	<definition name="/visit/assistant/searchVisitToFinalize" extends="assistantPanel">
 		<put-attribute name="title" value="Visit" />
-		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/searchVisit.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/searchVisitToFinalize.jsp" />
 	</definition>
 	<definition name="/visit/assistant/visitToFinalize" extends="assistantPanel">
 		<put-attribute name="title" value="Visit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/visitToFinalize.jsp" />
 	</definition>	
+	<definition name="/visit/assistant/finalizedVisit" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/finalizedVisit.jsp" />
+	</definition>
+	<definition name="/visit/assistant/searchVisitToRemove" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/searchVisitToRemove.jsp" />
+	</definition>	
+	<definition name="/visit/assistant/removeVisit" extends="assistantPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/removeVisit.jsp" />
+	</definition>
 	
-
 
 	<!-- Login page -->
 	<definition name="login" extends="userPanel">

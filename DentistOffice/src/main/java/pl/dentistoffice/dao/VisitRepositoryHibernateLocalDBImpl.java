@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.dentistoffice.entity.Billing;
+import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
+import pl.dentistoffice.entity.VisitTreatmentComment;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRED)
@@ -29,8 +31,18 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	}
 	
 	@Override
-	public void saveVisit(Visit visit) {
+	public boolean saveVisit(Visit visit) {
+		try {
+			List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
+			for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
+				getSession().persist(visitTreatmentComment);				
+			}
 			getSession().persist(visit);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -64,7 +76,42 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	}
 
 	@Override
-	public boolean saveVistStatus(VisitStatus visitStaus) {
+	public boolean updateVisitOnFinalize(Visit visit) {
+		try {
+			List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
+			for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
+				getSession().saveOrUpdate(visitTreatmentComment);				
+			}
+			getSession().saveOrUpdate(visit);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean removeVisit(Visit visit) {
+		try {
+			List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
+			for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
+				getSession().createNativeQuery("delete from visit_visittreatmentcomment where visit_id = :visit_id AND visittreatmentcomment_id = :visittreatmentcomment_id").setParameter("visit_id", visit.getId()).setParameter("visittreatmentcomment_id", visitTreatmentComment.getId()).executeUpdate();
+				getSession().createNativeQuery("delete from VisitTreatmentComment where id = :id").setParameter("id", visitTreatmentComment.getId()).executeUpdate();
+			}
+			List<DentalTreatment> treatments = visit.getTreatments();
+			for (DentalTreatment dentalTreatment : treatments) {
+				getSession().createNativeQuery("delete from visit_dentaltreatment where visits_id = :visits_id AND treatments_id = :treatments_id").setParameter("visits_id", visit.getId()).setParameter("treatments_id", dentalTreatment.getId()).executeUpdate();
+			}
+			getSession().delete(visit);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean saveVisitStatus(VisitStatus visitStaus) {
 		try {
 			getSession().persist(visitStaus);
 			return true;
@@ -113,6 +160,10 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	@Override
 	public List<Billing> readBilings(LocalDate dateFrom, LocalDate dateTo, Doctor doctor) {
 		return getSession().createNamedQuery("readBilingsByDateAndDoctor", Billing.class).setParameter("dateFrom", dateFrom).setParameter("dateTo", dateTo).setParameter("doctor", doctor).getResultList();
+	}
+
+	@Override
+	public void saveVisitTreatmentComment(VisitTreatmentComment visitTreatmentComment) {
 	}
 
 }

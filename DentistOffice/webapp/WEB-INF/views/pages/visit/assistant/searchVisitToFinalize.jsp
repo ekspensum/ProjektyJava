@@ -6,8 +6,8 @@
 <table>
 	<tr>
 		<td><input type="date" name="dateFrom" value="${dateFrom }" /></td>
-		<td><input type="date" name="dateTo" value="${dateTo }" /></td>
-		<td><button type="submit" formmethod="POST" formaction="${pageContext.request.contextPath}/visit/assistant/searchVisit" class="navigateButton" onclick="return validateInputFieldsDateSearchVisits()" >Wyszukaj ponownie</button></td>
+		<td><input type="date" name="dateTo" value="${dateTo }" readonly="readonly" /></td>
+		<td><button type="submit" formmethod="POST" formaction="${pageContext.request.contextPath}/visit/assistant/searchVisitToFinalize" class="navigateButton" onclick="return validateInputFieldsDateSearchVisits()" >Wyszukaj ponownie</button></td>
 	</tr>
 </table>
 <br>
@@ -56,3 +56,4 @@
 <h3 class="msg">${visitsToFinalize.size() == 0 ? 'Brak wyników wyszukiwania.' : '' }</h3>
 <input type="submit" value="Wybierz wizytę" ${visitsToFinalize.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxVisit()" class="navigateButton" />
 </form>
+<br><br>

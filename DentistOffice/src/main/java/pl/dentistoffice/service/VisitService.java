@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -21,6 +22,7 @@ import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
+import pl.dentistoffice.entity.VisitTreatmentComment;
 import pl.dentistoffice.entity.WorkingWeek;
 
 @Service
@@ -60,7 +62,7 @@ public class VisitService {
 		}
 	}
 	
-	public void addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
+	public boolean addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		
@@ -76,15 +78,25 @@ public class VisitService {
 		visit.setTreatments(treatments);
 		visit.setVisitConfirmation(false);
 		
+		List<VisitTreatmentComment> visitTreatmentCommentsList = new ArrayList<>();
+		VisitTreatmentComment visitTreatmentComment;
+		for (int i = 0; i < 3; i++) {
+			visitTreatmentComment = new VisitTreatmentComment();
+			visitTreatmentComment.setComment("");
+			visitTreatmentComment.setTreatment(treatments.get(i));
+			visitTreatmentCommentsList.add(visitTreatmentComment);
+		}
+		visit.setVisitTreatmentComment(visitTreatmentCommentsList);
+		
 		String[] splitDateTime = dateTime[0].split(";");
 		
 		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
 		visit.setVisitDateTime(visitDateTime);
 		visit.setReservationDateTime(LocalDateTime.now());
-		try {
-			visitRepository.saveVisit(visit);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(visitRepository.saveVisit(visit)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -167,7 +179,7 @@ public class VisitService {
 
 			@Override
 			public int compare(Visit o1, Visit o2) {
-				return o1.getVisitDateTime().compareTo(o2.getVisitDateTime());
+				return o2.getVisitDateTime().compareTo(o1.getVisitDateTime());
 			}
 		});
 		return visits;
@@ -205,5 +217,34 @@ public class VisitService {
 	
 	public Visit getVisit(int visitId) {
 		return visitRepository.readVisit(visitId);
+	}
+	
+	public boolean setFinalzedVisit(Visit visit, List<DentalTreatment> selectedTreatments, String [] treatmentCommentVisit) {
+		List<VisitTreatmentComment> visitTreatmentCommentsList = new ArrayList<>();
+		VisitTreatmentComment visitTreatmentComment;
+		for (int i = 0; i < treatmentCommentVisit.length; i++) {
+			visitTreatmentComment = new VisitTreatmentComment();
+			visitTreatmentComment.setComment(treatmentCommentVisit[i]);
+			visitTreatmentComment.setTreatment(selectedTreatments.get(i));
+			visitTreatmentCommentsList.add(visitTreatmentComment);
+		}
+		visit.setVisitTreatmentComment(visitTreatmentCommentsList);
+		VisitStatus visitStatus = visitRepository.readVisitStatus(2);
+		visit.setStatus(visitStatus);
+		visit.setFinalizedVisitDateTime(LocalDateTime.now());
+		visit.setTreatments(selectedTreatments);
+		if (visitRepository.updateVisitOnFinalize(visit)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+		
+	public boolean cancelVisit(Visit visit) {
+		if(visitRepository.removeVisit(visit)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

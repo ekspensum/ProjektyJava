@@ -12,8 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -38,7 +41,7 @@ public class Visit implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
 	
 	@Field(index = Index.YES)
@@ -61,7 +64,13 @@ public class Visit implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<DentalTreatment> treatments;
 	
+	@OneToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<VisitTreatmentComment> visitTreatmentComment;
+	
 	@OneToOne
 	private User userLogged;
 	private LocalDateTime reservationDateTime;
+	
+	private LocalDateTime finalizedVisitDateTime;
 }

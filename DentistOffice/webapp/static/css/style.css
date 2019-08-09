@@ -190,7 +190,7 @@ input[type=date] {
 }
 
 select {
-    min-width: 150px;
+    min-width: 200px;
 }
 
 textarea {
@@ -209,6 +209,7 @@ textarea {
 table.workingTime {
     border-collapse: collapse;
     border-color: beige;
+    width: 60%;
 }
 
 table.workingTime th {

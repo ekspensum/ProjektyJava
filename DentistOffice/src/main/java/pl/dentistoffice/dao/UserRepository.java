@@ -13,7 +13,7 @@ public interface UserRepository {
 	
 	boolean saveRole(Role role);
 	Role readRole(int id);
-	List<Role> readAllRoles(); 
+	List<Role> readAllRoles();
 	
 	void saveDoctor(Doctor doctor);
 	void updateDoctor(Doctor doctor);

@@ -1,5 +1,6 @@
 package pl.dentistoffice.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,15 @@ public class DentalTreatmentService {
 	private TreatmentRepository treatmentRepository;
 
 	public List<DentalTreatment> getDentalTreatmentsList(){
-		return treatmentRepository.readAllDentalTreatment();
+		List<DentalTreatment> allDentalTreatments = treatmentRepository.readAllDentalTreatment();
+		allDentalTreatments.sort(new Comparator<DentalTreatment>() {
+
+			@Override
+			public int compare(DentalTreatment o1, DentalTreatment o2) {
+				return o1.getId() - o2.getId();
+			}
+		});
+		return allDentalTreatments;
 	}
 	
 	public DentalTreatment getDentalTreatment(int id) {

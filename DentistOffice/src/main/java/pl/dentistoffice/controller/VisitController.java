@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
@@ -30,7 +31,7 @@ import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
 @Controller
-@SessionAttributes({"doctor", "patient", "dayStart"})
+@SessionAttributes({"doctor", "patient", "dayStart", "visit"})
 @PropertySource(value="classpath:/messages.properties")
 public class VisitController {
 	
@@ -118,25 +119,15 @@ public class VisitController {
 											@RequestParam("treatment2") String treatment2Id,
 											@RequestParam("treatment3") String treatment3Id,
 											Model model) throws Exception {
-//		Only one query to database
-		List<DentalTreatment> treatments = treatmentService.getDentalTreatmentsList();
-		List<DentalTreatment> selectedTreatments = new ArrayList<>();
-		String [] treatmentId = {treatment1Id, treatment2Id, treatment3Id};
-		for (int i = 0; i < treatmentId.length; i++) {
-			for (int j = 0; j < treatments.size(); j++) {
-				if (Integer.valueOf(treatmentId[i]) == treatments.get(j).getId()) {
-					selectedTreatments.add(treatments.get(j));
-					break;
-				}
-			}
-		}
+		
+		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
 		
 		if (dateTime != null && dateTime.length == 1) {
 			visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments);
 			model.addAttribute("success", env.getProperty("successAddVisit"));
 			return "forward:/success";
 		} else {
-			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!");
+			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
 		}		
 	}
 
@@ -234,8 +225,7 @@ public class VisitController {
 		model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 		return "/visit/assistant/toReserve";
 	}
-		
-	
+			
 	@RequestMapping(path = "/visit/assistant/reservation", method = RequestMethod.POST)
 	public String visitReservationByAssistant(@SessionAttribute("doctor") Doctor doctor,
 											@SessionAttribute("patient") Patient patient,
@@ -245,40 +235,32 @@ public class VisitController {
 											@RequestParam("treatment3") String treatment3Id,
 											Model model) throws Exception {
 		
-//		Only one query to database
-		List<DentalTreatment> treatments = treatmentService.getDentalTreatmentsList();
-		List<DentalTreatment> selectedTreatments = new ArrayList<>();
-		String [] treatmentId = {treatment1Id, treatment2Id, treatment3Id};
-		for(int i=0; i<treatmentId.length; i++) {
-			for(int j=0; j<treatments.size(); j++) {
-				if(Integer.valueOf(treatmentId[i]) == treatments.get(j).getId()) {					
-					selectedTreatments.add(treatments.get(j));
-					break;
-				}
-			}
-		}
+		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
 				
 		if (dateTime != null && dateTime.length == 1) {
-			visitService.addNewVisitByAssistant(patient, doctor, dateTime, selectedTreatments);
-			model.addAttribute("success", env.getProperty("successAddVisit"));
-			return "forward:/success";
+			if(visitService.addNewVisitByAssistant(patient, doctor, dateTime, selectedTreatments)) {
+				model.addAttribute("success", env.getProperty("successAddVisit"));
+				return "forward:/success";							
+			} else {
+				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
+				return "forward:/error";
+			}
 		} else {
-			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!");
+			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
 		}
 	}
 	
-
-	@RequestMapping(path = "/visit/assistant/searchVisit")
+	@RequestMapping(path = "/visit/assistant/searchVisitToFinalize")
 	public String searchVisitsToFinalizeByAssistant(Model model) {
 		LocalDate today = LocalDate.now();
 		model.addAttribute("dateFrom", today.minusDays(3));
 		model.addAttribute("dateTo", today);
 		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(today.atStartOfDay().minusDays(3), LocalDateTime.now());
 		model.addAttribute("visitsToFinalize", visitsToFinalize);
-		return "/visit/assistant/searchVisit";
+		return "/visit/assistant/searchVisitToFinalize";
 	}
 
-	@RequestMapping(path = "/visit/assistant/searchVisit", method = RequestMethod.POST)
+	@RequestMapping(path = "/visit/assistant/searchVisitToFinalize", method = RequestMethod.POST)
 	public String searchVisitsToFinalizeByAssistant(@RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo, Model model) {
 		LocalDateTime dateTimeFrom = LocalDateTime.parse(dateFrom + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		LocalDateTime dateTimeTo = LocalDateTime.parse(dateTo + " "+LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -286,11 +268,14 @@ public class VisitController {
 		model.addAttribute("dateFrom", dateFrom);
 		model.addAttribute("dateTo", dateTo);
 		model.addAttribute("visitsToFinalize", visitsToFinalize);
-		return "/visit/assistant/searchVisit";
+		return "/visit/assistant/searchVisitToFinalize";
 	}
 	
 	@RequestMapping(path = "/visit/assistant/visitToFinalize", method = RequestMethod.POST)
-	public String searchVisitsToFinalizeByAssistant(@RequestParam("visitId") String visitId, Model model) {
+	public String setVisitsToFinalizeByAssistant(@RequestParam("visitId") String visitId, Model model) {
+		
+		List<DentalTreatment> dentalTreatmentsList = treatmentService.getDentalTreatmentsList();
+		model.addAttribute("dentalTreatmentsList", dentalTreatmentsList);
 
 		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
 		model.addAttribute("visit", visit);
@@ -298,6 +283,109 @@ public class VisitController {
 		return "/visit/assistant/visitToFinalize";
 	}	
 	
+	@RequestMapping(path = "/visit/assistant/finalizedVisit", method = RequestMethod.POST)
+	public String saveFinalizedVisitByAssistant(@SessionAttribute("visit") Visit visit,
+												@RequestParam("treatmentCommentVisit1") String treatmentCommentVisit1,
+												@RequestParam("treatmentCommentVisit2") String treatmentCommentVisit2,
+												@RequestParam("treatmentCommentVisit3") String treatmentCommentVisit3,
+												@RequestParam("treatment1") String treatment1Id,
+												@RequestParam("treatment2") String treatment2Id,
+												@RequestParam("treatment3") String treatment3Id,
+												Model model) throws Exception {
+			
+		String [] treatmentCommentVisit = {treatmentCommentVisit1, treatmentCommentVisit2, treatmentCommentVisit3};
+		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
+		Assistant loggedAssistant = userService.getLoggedAssistant();
+		visit.setUserLogged(loggedAssistant.getUser());
+			
+		if(validComments(treatmentCommentVisit, selectedTreatments, model)) {
+			if(visitService.setFinalzedVisit(visit, selectedTreatments, treatmentCommentVisit)) {
+				model.addAttribute("success", env.getProperty("successFinalizedVisit"));
+				return "forward:/success";							
+			} else {
+				model.addAttribute("exception", env.getProperty("exceptionFinalizedVisit"));
+				return "forward:/error";
+			}
+		} else {
+			List<DentalTreatment> dentalTreatmentsList = treatmentService.getDentalTreatmentsList();
+			model.addAttribute("dentalTreatmentsList", dentalTreatmentsList);
+			return "/visit/assistant/finalizedVisit";
+		}
+	}
 	
+	@RequestMapping(path = "/visit/assistant/searchVisitToRemove")
+	public String searchVisitsToRemoveByAssistant(Model model) {
+		LocalDate today = LocalDate.now();
+		model.addAttribute("dateFrom", today);
+		model.addAttribute("dateTo", today.plusDays(7));
+		List<Visit> visitsToRemove = visitService.getVisitsToFinalize(today.atStartOfDay(), today.atStartOfDay().plusDays(7));
+		model.addAttribute("visitsToRemove", visitsToRemove);
+		return "/visit/assistant/searchVisitToRemove";
+	}
+
+	@RequestMapping(path = "/visit/assistant/searchVisitToRemove", method = RequestMethod.POST)
+	public String searchVisitsToRemoveByAssistant(@RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo, Model model) {
+		LocalDateTime dateTimeFrom = LocalDateTime.parse(dateFrom + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		LocalDateTime dateTimeTo = LocalDateTime.parse(dateTo + " "+LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		List<Visit> visitsToRemove = visitService.getVisitsToFinalize(dateTimeFrom, dateTimeTo);
+		model.addAttribute("dateFrom", dateFrom);
+		model.addAttribute("dateTo", dateTo);
+		model.addAttribute("visitsToRemove", visitsToRemove);
+		return "/visit/assistant/searchVisitToRemove";
+	}
+	
+	@RequestMapping(path = "/visit/assistant/removeVisit", method = RequestMethod.POST)
+	public String removeVisit(@RequestParam("visitId") String visitId, Model model) {
+		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+		if(visitService.cancelVisit(visit)) {
+			model.addAttribute("success", env.getProperty("successCanceledVisit"));
+			return "forward:/success";
+		} else {
+			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
+			return "forward:/error";
+		}
+	}
+
+	
+	
+//PRIVATE METHODS
+	private boolean validComments(String [] treatmentCommentVisit, List<DentalTreatment> selectedTreatments, Model model) {
+		String forbidenChar = "|'\":%^#~}{\\]\\[;=<>`";
+		int treatmentCount = 0;
+		for (int i = 0; i < treatmentCommentVisit.length; i++) {
+			if(!treatmentCommentVisit[i].matches("^[^"+forbidenChar+"]{0,250}$")) {
+				model.addAttribute("msgError", "Komentarz do zabiegu nr "+ (i+1) +" zawiera niedozwolone znaki ("+forbidenChar+ ") lub zbyt dużą ilość znaków (max 250)!");
+				return false;
+			}
+			if(selectedTreatments.get(i).getId() == 1 && !treatmentCommentVisit[i].equals("")) {
+				model.addAttribute("msgError", "Zawarto komentarz do zabiegu nr "+ (i+1) +" lecz nie wybrano nazwy zabiegu!");
+				return false;
+			}
+			if(selectedTreatments.get(i).getId() == 1) {
+				treatmentCount++;
+			}
+		}
+		if(treatmentCount == 3) {
+			model.addAttribute("msgError", "Należy wybrać conajmniej jeden rodzaj zabiegu!");
+			return false;
+		}
+		return true;
+	}
+	
+	private List<DentalTreatment> setDentalTreatmentsList(String treatment1Id, String treatment2Id, String treatment3Id){
+//		Only one query to database
+		List<DentalTreatment> treatments = treatmentService.getDentalTreatmentsList();
+		List<DentalTreatment> selectedTreatments = new ArrayList<>();
+		String[] treatmentId = { treatment1Id, treatment2Id, treatment3Id };
+		for (int i = 0; i < treatmentId.length; i++) {
+			for (int j = 0; j < treatments.size(); j++) {
+				if (Integer.valueOf(treatmentId[i]) == treatments.get(j).getId()) {
+					selectedTreatments.add(treatments.get(j));
+					break;
+				}
+			}
+		}
+		return selectedTreatments;
+	}
 	
 }

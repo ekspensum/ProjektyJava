@@ -13,15 +13,20 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class TreatmentCategory implements Serializable {
+public class VisitTreatmentComment implements Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
-	private String categoryName;
+	
+	private String comment;
 	
 	@OneToOne
-	private User userLogged;
+	private DentalTreatment treatment;
+
 }
