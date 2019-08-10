@@ -6,13 +6,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MessageController {
 
-	@RequestMapping(path = "/success")
+	@RequestMapping(path = "/message/employee/success")
 	public String success() {
-		return "success";
+		return "/message/employee/success";
 	}
 	
-	@RequestMapping(path = "/error")
+	@RequestMapping(path = "/message/employee/error")
 	public String error() {
-		return "error";
+		return "/message/employee/error";
+	}
+	
+	@RequestMapping(path = "/message/patient/success")
+	public String patientSuccess() {
+		return "/message/patient/success";
 	}
 }

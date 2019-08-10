@@ -18,6 +18,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import lombok.AccessLevel;
@@ -34,7 +36,7 @@ public class Assistant implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Size(min = 3, max = 15)
@@ -66,6 +68,7 @@ public class Assistant implements Serializable {
 	
 	@Valid
 	@OneToOne
+	@Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
 	private User user;
 	private LocalDateTime registeredDateTime;
 	private LocalDateTime editedDateTime;

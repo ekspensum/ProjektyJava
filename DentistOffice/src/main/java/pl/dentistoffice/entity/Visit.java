@@ -15,6 +15,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.search.annotations.Field;
@@ -41,7 +43,7 @@ public class Visit implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Field(index = Index.YES)
@@ -66,6 +68,7 @@ public class Visit implements Serializable {
 	
 	@OneToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
+	@Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
 	private List<VisitTreatmentComment> visitTreatmentComment;
 	
 	@OneToOne

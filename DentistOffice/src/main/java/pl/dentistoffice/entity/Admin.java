@@ -8,8 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.Valid;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import lombok.Getter;
@@ -22,7 +24,7 @@ public class Admin implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String firstName;
 	private String lastName;
@@ -33,7 +35,9 @@ public class Admin implements Serializable {
 	private String email;
 	private String phone;
 	
+	@Valid
 	@OneToOne
+	@Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
 	private User user;
 	private LocalDateTime registeredDateTime;
 	private LocalDateTime editedDateTime;

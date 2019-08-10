@@ -43,7 +43,12 @@ public class HibernateSearchService {
 
 		FullTextSession fullTextSession = Search.getFullTextSession(session.openSession());
 		try {
-			fullTextSession.getSearchFactory().optimize();
+//			fullTextSession.getSearchFactory().optimize();
+			fullTextSession.createIndexer()
+			.batchSizeToLoadObjects(15)
+			.cacheMode(CacheMode.NORMAL)
+			.threadsToLoadObjects(3)
+			.startAndWait();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

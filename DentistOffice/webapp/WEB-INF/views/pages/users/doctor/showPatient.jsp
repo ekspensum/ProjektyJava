@@ -29,7 +29,9 @@
 			<tbody>
 				<tr><td>${loop.count}</td><td>${visit.visitDateTime}</td><td>${visit.doctor.firstName }</td><td>${visit.doctor.lastName }</td><td></td><td></td></tr>
 					<c:forEach items="${visit.visitTreatmentComment }" var="treat" varStatus="loop2">
-						<tr><td>${loop.count}.${loop2.count}</td><td></td><td></td><td></td><td>${treat.treatment.name}</td><td>${treat.comment}</td></tr>
+						<c:if test="${treat.treatment.id != 1 }">
+							<tr><td>${loop.count}.${loop2.count}</td><td></td><td></td><td></td><td>${treat.treatment.name}</td><td>${treat.comment}</td></tr>
+						</c:if>
 					</c:forEach>			
 			</tbody>
 	</c:forEach>

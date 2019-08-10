@@ -125,7 +125,7 @@ public class VisitController {
 		if (dateTime != null && dateTime.length == 1) {
 			visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments);
 			model.addAttribute("success", env.getProperty("successAddVisit"));
-			return "forward:/success";
+			return "forward:/message/patient/success";
 		} else {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
 		}		
@@ -240,10 +240,10 @@ public class VisitController {
 		if (dateTime != null && dateTime.length == 1) {
 			if(visitService.addNewVisitByAssistant(patient, doctor, dateTime, selectedTreatments)) {
 				model.addAttribute("success", env.getProperty("successAddVisit"));
-				return "forward:/success";							
+				return "forward:/message/employee/success";							
 			} else {
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
-				return "forward:/error";
+				return "forward:/message/employee/error";
 			}
 		} else {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
@@ -301,10 +301,10 @@ public class VisitController {
 		if(validComments(treatmentCommentVisit, selectedTreatments, model)) {
 			if(visitService.setFinalzedVisit(visit, selectedTreatments, treatmentCommentVisit)) {
 				model.addAttribute("success", env.getProperty("successFinalizedVisit"));
-				return "forward:/success";							
+				return "forward:/message/employee/success";							
 			} else {
 				model.addAttribute("exception", env.getProperty("exceptionFinalizedVisit"));
-				return "forward:/error";
+				return "forward:/message/employee/error";
 			}
 		} else {
 			List<DentalTreatment> dentalTreatmentsList = treatmentService.getDentalTreatmentsList();
@@ -339,10 +339,10 @@ public class VisitController {
 		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
 		if(visitService.cancelVisit(visit)) {
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
-			return "forward:/error";
+			return "forward:/message/employee/error";
 		}
 	}
 

@@ -15,12 +15,11 @@ import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
-import pl.dentistoffice.entity.WorkingWeek;
 
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
+public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 
 	@Autowired
 	private SessionFactory session;
@@ -52,19 +51,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 
 	@Override
 	public void saveDoctor(Doctor doctor) {
-		User user = doctor.getUser();
-		getSession().persist(user);
-		WorkingWeek workingWeek = doctor.getWorkingWeek();
-		getSession().persist(workingWeek);
 		getSession().persist(doctor);
 	}
 
 	@Override
 	public void updateDoctor(Doctor doctor) {
-		User user = doctor.getUser();
-		getSession().saveOrUpdate(user);
-		WorkingWeek workingWeek = doctor.getWorkingWeek();
-		getSession().saveOrUpdate(workingWeek);
 		getSession().saveOrUpdate(doctor);
 	}
 
@@ -85,15 +76,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 
 	@Override
 	public void savePatient(Patient patient) {
-			User user = patient.getUser();
-			getSession().persist(user);
 			getSession().persist(patient);
 	}
 
 	@Override
 	public void updatePatient(Patient patient) {
-		User user = patient.getUser();
-		getSession().saveOrUpdate(user);
 		getSession().saveOrUpdate(patient);
 	}
 
@@ -114,15 +101,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 
 	@Override
 	public void saveAssistant(Assistant assistant) {
-			User user = assistant.getUser();
-			getSession().persist(user);
 			getSession().persist(assistant);
 	}
 
 	@Override
 	public void updateAssistant(Assistant assistant) {
-		User user = assistant.getUser();
-		getSession().update(user);
 		getSession().update(assistant);
 	}
 
@@ -143,15 +126,11 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 
 	@Override
 	public void saveAdmin(Admin admin) {
-			User user = admin.getUser();
-			getSession().persist(user);
 			getSession().persist(admin);
 	}
 
 	@Override
 	public void updateAdmin(Admin admin) {
-		User user = admin.getUser();
-		getSession().saveOrUpdate(user);
 		getSession().saveOrUpdate(admin);
 	}
 
@@ -169,5 +148,27 @@ public class UserRepositoryHibernateLocalDBImpl implements UserRepository {
 	public List<Admin> readAllAdmins() {
 		return getSession().createQuery("from Admin", Admin.class).getResultList();
 	}
+	
+	@Override
+	public User readUser(String username) {
+		return getSession().createNamedQuery("findUserByUserName", User.class).setParameter("username", username).getSingleResult();
+	}
 
+	//	with restore database Postgre from backup
+	@Override
+	public boolean adjustSequenceGeneratorPrimaryKey() {
+		try {
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Role', 'id'), max(id)) FROM Role").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Users', 'id'), max(id)) FROM Users").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Doctor', 'id'), max(id)) FROM Doctor").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Patient', 'id'), max(id)) FROM Patient").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Assistant', 'id'), max(id)) FROM Assistant").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Admin', 'id'), max(id)) FROM Admin").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('WorkingWeek', 'id'), max(id)) FROM WorkingWeek").uniqueResult();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

@@ -14,7 +14,7 @@ import pl.dentistoffice.entity.TreatmentCategory;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRED)
-public class TreatmentRepositoryHibernateLocalDBImpl implements TreatmentRepository {
+public class TreatmentRepositoryHibernatePostgreSQLImpl implements TreatmentRepository {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -27,6 +27,17 @@ public class TreatmentRepositoryHibernateLocalDBImpl implements TreatmentReposit
 	public boolean saveDentalTreatment(DentalTreatment treatment) {
 		try {
 			getSession().persist(treatment);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateDentalTreatment(DentalTreatment treatment) {
+		try {
+			getSession().saveOrUpdate(treatment);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,6 +79,19 @@ public class TreatmentRepositoryHibernateLocalDBImpl implements TreatmentReposit
 	@Override
 	public List<TreatmentCategory> readAllTreatmentCategory() {
 		return getSession().createQuery("from TreatmentCategory", TreatmentCategory.class).getResultList();
+	}
+
+//	with restore database Postgre from backup
+	@Override
+	public boolean adjustSequenceGeneratorPrimaryKey() {
+		try {
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('dentaltreatment', 'id'), max(id)) FROM dentaltreatment").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('treatmentcategory', 'id'), max(id)) FROM treatmentcategory").uniqueResult();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

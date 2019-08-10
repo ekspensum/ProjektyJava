@@ -7,4 +7,8 @@
 	<p><a href="${pageContext.request.contextPath}/users/doctor/admin/selectToEdit"><button class="sideMenuButton">Edycja lekarza</button></a></p>
 	<p><a href="${pageContext.request.contextPath}/users/assistant/admin/register"><button class="sideMenuButton">Dodaj nowego asystenta</button></a></p>
 	<p><a href="${pageContext.request.contextPath}/users/assistant/admin/selectToEdit"><button class="sideMenuButton">Edycja asystenta</button></a></p>
-	<p><a href="${pageContext.request.contextPath}/users/admin/indexing"><button class="sideMenuButton">Aktualizuj indeksy bazy d.</button></a></p>
+	<p><a href="${pageContext.request.contextPath}/control/addTreatment"><button class="sideMenuButton">Dodaj nowy zabieg</button></a></p>
+	<p><a href="${pageContext.request.contextPath}/control/addTreatmentCategory"><button class="sideMenuButton">Nowa kategoria zabiegu</button></a></p>
+	<br>
+	<p><a href="${pageContext.request.contextPath}/control/indexing"><button class="sideMenuButton" style="font-size: 10px;">Aktualizuj indeksy bazy danych</button></a></p>
+	<p><a href="${pageContext.request.contextPath}/control/adjusting"><button class="sideMenuButton" style="font-size: 10px;">Dopasuj generatory kluczy głównych w bazie danych</button></a></p>

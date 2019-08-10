@@ -21,7 +21,7 @@ import pl.dentistoffice.entity.VisitTreatmentComment;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRED)
-public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
+public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -33,10 +33,6 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	@Override
 	public boolean saveVisit(Visit visit) {
 		try {
-			List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
-			for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
-				getSession().persist(visitTreatmentComment);				
-			}
 			getSession().persist(visit);
 			return true;
 		} catch (Exception e) {
@@ -78,10 +74,6 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 	@Override
 	public boolean updateVisitOnFinalize(Visit visit) {
 		try {
-			List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
-			for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
-				getSession().saveOrUpdate(visitTreatmentComment);				
-			}
 			getSession().saveOrUpdate(visit);
 			return true;
 		} catch (Exception e) {
@@ -164,6 +156,21 @@ public class VisitRepositoryHibernateLocalDBImpl implements VisitRepository {
 
 	@Override
 	public void saveVisitTreatmentComment(VisitTreatmentComment visitTreatmentComment) {
+	}
+
+//	with restore database Postgre from backup
+	@Override
+	public boolean adjustSequenceGeneratorPrimaryKey() {
+		try {
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Visit', 'id'), max(id)) FROM Visit").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('VisitStatus', 'id'), max(id)) FROM VisitStatus").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Billing', 'id'), max(id)) FROM Billing").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('VisitTreatmentComment', 'id'), max(id)) FROM VisitTreatmentComment").uniqueResult();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

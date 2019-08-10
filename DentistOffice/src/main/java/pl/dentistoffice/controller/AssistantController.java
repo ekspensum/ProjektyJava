@@ -60,7 +60,7 @@ public class AssistantController {
 		if(!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
 			userService.addNewAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successRegisterAssistant"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			if(assistant.getUser().getRoles().get(0).getId() == assistant.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
@@ -109,7 +109,7 @@ public class AssistantController {
 		if (!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
 			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			if(assistant.getUser().getRoles().get(0).getId() == assistant.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
@@ -145,7 +145,7 @@ public class AssistantController {
 		if (!result.hasErrors()) {
 			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			return "/users/assistant/edit";
 		}

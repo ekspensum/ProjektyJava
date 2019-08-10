@@ -13,7 +13,7 @@
 
 	<!-- Home Pages -->
 	<definition name="home" extends="base">
-		<put-attribute name="title" value="Witamy" />
+		<put-attribute name="title" value="Gabinet dentystyczny" />
 		<put-attribute name="body" value="/WEB-INF/views/pages/home/home.jsp" />
 	</definition>
 	<definition name="services" extends="base">
@@ -118,12 +118,6 @@
 		<put-attribute name="title" value="Assistant data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/assistant/edit.jsp" />
 	</definition>
-	
-	<!-- Admin indexing database -->
-	<definition name="/users/admin/indexing" extends="adminPanel">
-		<put-attribute name="title" value="Admin database indexing" />
-		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/admin/indexing.jsp" />
-	</definition>
 
 	<!-- Patient self register and edit -->	
 	<definition name="/users/patient/register" extends="patientPanel">
@@ -152,6 +146,26 @@
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/searchPatient.jsp" />
 	</definition>
 
+	<!-- Control -->
+	<!-- Admin indexing database -->
+	<definition name="/control/indexing" extends="adminPanel">
+		<put-attribute name="title" value="Admin database indexing" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/indexing.jsp" />
+	</definition>
+	<!-- Admin indexing database -->
+	<definition name="/control/adjusting" extends="adminPanel">
+		<put-attribute name="title" value="Admin database adjusting" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/adjusting.jsp" />
+	</definition>
+	<!-- Admin dental treatment -->
+	<definition name="/control/addTreatment" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/addTreatment.jsp" />
+	</definition>
+	<definition name="/control/addTreatmentCategory" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/addTreatmentCategory.jsp" />
+	</definition>
 
 	<!-- Reservation visit pages -->
 	<!-- By patient -->
@@ -219,15 +233,19 @@
 	</definition>
 
 	<!-- Exception page -->
-	<definition name="error" extends="userPanel">
+	<definition name="/message/employee/error" extends="employeePanel">
 		<put-attribute name="title" value="Exceptions" />
-		<put-attribute name="userContent" value="/WEB-INF/views/pages/error.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/employee/error.jsp" />
 	</definition>
 
 	<!-- Success page -->
-	<definition name="success" extends="userPanel">
+	<definition name="/message/employee/success" extends="employeePanel">
 		<put-attribute name="title" value="Success" />
-		<put-attribute name="userContent" value="/WEB-INF/views/pages/success.jsp" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/employee/success.jsp" />
+	</definition>
+		<definition name="/message/patient/success" extends="patientPanel">
+		<put-attribute name="title" value="Success" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/patient/success.jsp" />
 	</definition>
 
 </tiles-definitions>

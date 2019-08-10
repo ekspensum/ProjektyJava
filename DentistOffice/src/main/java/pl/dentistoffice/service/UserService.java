@@ -220,6 +220,19 @@ public class UserService {
 		return templateMap;
 	}
 	
+	public String [] dayOfWeekPolish() {
+		String [] dayOfWeekPolish = {"Zero", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
+		return dayOfWeekPolish;
+	}
+	
+	public User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		User user = userRepository.readUser(username);
+		return user;
+	}
+	
+//	PRIVATE METHODS
 	private List<Role> createCurrentRolesList(User user){
 		List<Role> selectedIdRoles = user.getRoles(); //only id is selected on page. Role and roleName was't change
 		List<Role> currentRolesList = new ArrayList<>();
@@ -230,10 +243,5 @@ public class UserService {
 			currentRolesList.add(currentRole);
 		}
 		return currentRolesList;
-	}
-	
-	public String [] dayOfWeekPolish() {
-		String [] dayOfWeekPolish = {"Zero", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
-		return dayOfWeekPolish;
-	}
+	}	
 }

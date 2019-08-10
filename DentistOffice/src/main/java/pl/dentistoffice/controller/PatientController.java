@@ -57,7 +57,7 @@ public class PatientController {
 		if(!result.hasErrors()) {
 			userService.addNewPatient(patient);
 			model.addAttribute("success", env.getProperty("successRegisterPatient"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			return "/users/patient/assistant/register";
 		}
@@ -99,7 +99,7 @@ public class PatientController {
 		if (!result.hasErrors()) {
 			userService.editPatient(patient);
 			model.addAttribute("success", env.getProperty("successUpdatePatient"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			return "/users/patient/assistant/edit";
 		}
@@ -143,7 +143,7 @@ public class PatientController {
 		if(!result.hasErrors()) {
 			userService.addNewPatient(patient);
 			model.addAttribute("success", env.getProperty("successRegisterPatient"));
-			return "forward:/success";
+			return "forward:/message/patient/success";
 		} else {
 			return "/users/patient/register";
 		}
@@ -175,7 +175,7 @@ public class PatientController {
 		if (!result.hasErrors()) {
 			userService.editPatient(patient);
 			model.addAttribute("success", env.getProperty("successUpdatePatient"));
-			return "forward:/success";
+			return "forward:/message/patient/success";
 		} else {
 			return "/users/patient/edit";
 		}

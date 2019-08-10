@@ -90,7 +90,7 @@ public class DoctorController {
 		if (!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
 			userService.addNewDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successRegisterDoctor"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			if (doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
@@ -160,7 +160,7 @@ public class DoctorController {
 		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
 			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			if(doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
@@ -218,7 +218,7 @@ public class DoctorController {
 		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
 			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
-			return "forward:/success";
+			return "forward:/message/employee/success";
 		} else {
 			if(doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));

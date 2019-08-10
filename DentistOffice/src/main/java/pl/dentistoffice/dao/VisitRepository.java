@@ -34,4 +34,6 @@ public interface VisitRepository {
 	public List<Billing> readBilings(LocalDate dateFrom, LocalDate dateTo, Doctor doctor);
 	
 	public void saveVisitTreatmentComment(VisitTreatmentComment visitTreatmentComment);
+	
+	public boolean adjustSequenceGeneratorPrimaryKey();
 }

@@ -8,6 +8,7 @@ import pl.dentistoffice.entity.TreatmentCategory;
 public interface TreatmentRepository {
 	
 	boolean saveDentalTreatment(DentalTreatment treatment);
+	boolean updateDentalTreatment(DentalTreatment treatment);
 	DentalTreatment readDentalTreatment(int id);
 	List<DentalTreatment> readDentalTreatment(String treatmentName);
 	List<DentalTreatment> readAllDentalTreatment();
@@ -15,4 +16,6 @@ public interface TreatmentRepository {
 	boolean saveTreatmentCategory(TreatmentCategory treatmentCategory);
 	TreatmentCategory readTreatmentCategory(int id);
 	List<TreatmentCategory> readAllTreatmentCategory();
+	
+	public boolean adjustSequenceGeneratorPrimaryKey();
 }

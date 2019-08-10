@@ -66,7 +66,7 @@ public class InitApplicationService {
 		if(allDentalTreatment.size() == 0) {
 			DentalTreatment dentalTreatment = new DentalTreatment();
 			dentalTreatment.setName("Wybierz zabieg");
-			dentalTreatment.setDescription("");
+			dentalTreatment.setDescription("Domyślne pole wyboru.");
 			dentalTreatment.setPrice(0.0);
 			if(treatmentRepository.saveDentalTreatment(dentalTreatment)) {
 				log.info("Added DentalTreatment record: "+dentalTreatment.getName());				
@@ -82,4 +82,14 @@ public class InitApplicationService {
 			}
 		}
     }
+	
+	public boolean adjustSequenceGeneratorPrimaryKeyPostgreDB() {
+		if(visitRepository.adjustSequenceGeneratorPrimaryKey() 
+				&& userRepository.adjustSequenceGeneratorPrimaryKey() 
+				&& treatmentRepository.adjustSequenceGeneratorPrimaryKey()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

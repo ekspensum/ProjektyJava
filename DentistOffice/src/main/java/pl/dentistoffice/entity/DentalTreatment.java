@@ -1,6 +1,7 @@
 package pl.dentistoffice.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,6 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -27,10 +32,18 @@ public class DentalTreatment implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Size(min = 3, max = 100)
+	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
 	private String name;
+	
+	@Size(min = 10, max = 200)
+	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
 	private String description;
+	
+	@DecimalMax("1000.0") @DecimalMin("0.0") 
 	private double price;
 	
 	@ManyToMany
@@ -41,4 +54,7 @@ public class DentalTreatment implements Serializable {
 	
 	@OneToOne
 	private User userLogged;
+	
+	private LocalDateTime registeredDateTime;
+	private LocalDateTime editedDateTime;
 }

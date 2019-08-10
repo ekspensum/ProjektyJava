@@ -7,6 +7,7 @@ import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
+import pl.dentistoffice.entity.User;
 
 
 public interface UserRepository {
@@ -38,4 +39,7 @@ public interface UserRepository {
 	Admin readAdmin(int id);
 	Admin readAdmin(String username);
 	List<Admin> readAllAdmins();
+	
+	User readUser(String username);
+	public boolean adjustSequenceGeneratorPrimaryKey();
 }
