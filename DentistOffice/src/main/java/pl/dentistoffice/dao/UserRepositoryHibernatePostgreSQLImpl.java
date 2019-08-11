@@ -154,7 +154,12 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 		return getSession().createNamedQuery("findUserByUserName", User.class).setParameter("username", username).getSingleResult();
 	}
 
-	//	with restore database Postgre from backup
+	@Override
+	public List<User> readAllUsers() {
+		return getSession().createQuery("from Users", User.class).getResultList();
+	}
+
+	//	with restore Postgre database from backup
 	@Override
 	public boolean adjustSequenceGeneratorPrimaryKey() {
 		try {

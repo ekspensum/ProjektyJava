@@ -41,5 +41,6 @@ public interface UserRepository {
 	List<Admin> readAllAdmins();
 	
 	User readUser(String username);
+	List<User> readAllUsers();
 	public boolean adjustSequenceGeneratorPrimaryKey();
 }

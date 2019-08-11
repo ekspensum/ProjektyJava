@@ -162,8 +162,13 @@ public class UserService {
 		return searchPatient;
 	}
 	
-	
-	
+	public void addNewAdmin(Admin admin) {
+		User user = admin.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		admin.setRegisteredDateTime(LocalDateTime.now());
+		userRepository.saveAdmin(admin);
+	}
+		
 	public Admin getLoggedAdmin() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();

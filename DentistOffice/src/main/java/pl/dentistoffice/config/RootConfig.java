@@ -19,44 +19,44 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "pl.dentistoffice")
-@PropertySource(value="/static/properties/database.properties")
+//@PropertySource(value="/static/properties/database.properties")
 @EnableTransactionManagement
 public class RootConfig {
 
 	@Autowired
 	private Environment env;
 	
-	@Bean
-	public BasicDataSource dataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl(env.getProperty("url"));
-		dataSource.setDriverClassName(env.getProperty("driver"));
-		dataSource.setUsername(env.getProperty("db_user"));
-		dataSource.setPassword(env.getProperty("db_password"));
-//		if 0 then no limits
-		dataSource.setMaxOpenPreparedStatements(0);
-//		pool waiting to infinity: -1
-		dataSource.setMaxWait(3000);
-//		if 0 then no limits
-		dataSource.setMaxActive(10);
-		return dataSource;
-	}
+//	@Bean
+//	public BasicDataSource dataSource() {
+//		BasicDataSource dataSource = new BasicDataSource();
+//		dataSource.setUrl(env.getProperty("url"));
+//		dataSource.setDriverClassName(env.getProperty("driver"));
+//		dataSource.setUsername(env.getProperty("db_user"));
+//		dataSource.setPassword(env.getProperty("db_password"));
+////		if 0 then no limits
+//		dataSource.setMaxOpenPreparedStatements(0);
+////		pool waiting to infinity: -1
+//		dataSource.setMaxWait(3000);
+////		if 0 then no limits
+//		dataSource.setMaxActive(10);
+//		return dataSource;
+//	}
 	
-//  @Bean
-//  public BasicDataSource dataSource() throws URISyntaxException {
-//      URI dbUri = new URI(System.getenv("DATABASE_URL"));
-//
-//      String username = dbUri.getUserInfo().split(":")[0];
-//      String password = dbUri.getUserInfo().split(":")[1];
-//      String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
-//
-//      BasicDataSource basicDataSource = new BasicDataSource();
-//      basicDataSource.setUrl(dbUrl);
-//      basicDataSource.setUsername(username);
-//      basicDataSource.setPassword(password);
-//
-//      return basicDataSource;
-//  }
+  @Bean
+  public BasicDataSource dataSource() throws URISyntaxException {
+      URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+      String username = dbUri.getUserInfo().split(":")[0];
+      String password = dbUri.getUserInfo().split(":")[1];
+      String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+      BasicDataSource basicDataSource = new BasicDataSource();
+      basicDataSource.setUrl(dbUrl);
+      basicDataSource.setUsername(username);
+      basicDataSource.setPassword(password);
+
+      return basicDataSource;
+  }
 	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() throws URISyntaxException {

@@ -20,7 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.entity.Visit;
+import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.UserService;
+import pl.dentistoffice.service.VisitService;
 
 @Controller
 @SessionAttributes({"patient", "image"})
@@ -31,6 +34,9 @@ public class PatientController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private VisitService visitService;
 	
 	@RequestMapping(path = "/panels/patientPanel")
 	public String patientPanel(Model model) {
@@ -179,5 +185,29 @@ public class PatientController {
 		} else {
 			return "/users/patient/edit";
 		}
+	}
+	
+	@RequestMapping(path = "/visit/patient/myVisits")
+	public String showMyVisits(Model model) {
+		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
+		Patient loggedPatient = userService.getLoggedPatient();
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(loggedPatient, defaultVisitStatus);
+		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+		model.addAttribute("visitStatusList", visitStatusList);
+		model.addAttribute("defaultVisitStatus", defaultVisitStatus);
+		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		model.addAttribute("patient", loggedPatient);
+		return "/visit/patient/myVisits";
+	}
+	
+	@RequestMapping(path = "/visit/patient/myVisits", method = RequestMethod.POST)
+	public String showMyVisits(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, Model model) {
+		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
+		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+		model.addAttribute("visitStatusList", visitStatusList);
+		model.addAttribute("actualVisitStatus", actualVisitStatus);
+		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		return "/visit/patient/myVisits";
 	}
 }

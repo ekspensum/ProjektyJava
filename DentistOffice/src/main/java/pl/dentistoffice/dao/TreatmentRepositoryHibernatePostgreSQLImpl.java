@@ -81,7 +81,7 @@ public class TreatmentRepositoryHibernatePostgreSQLImpl implements TreatmentRepo
 		return getSession().createQuery("from TreatmentCategory", TreatmentCategory.class).getResultList();
 	}
 
-//	with restore database Postgre from backup
+//	with restore Postgre database from backup
 	@Override
 	public boolean adjustSequenceGeneratorPrimaryKey() {
 		try {

@@ -8,5 +8,7 @@
 </security:authorize>
 <security:authorize access="hasRole('ROLE_PATIENT')" >
 	<p><a href="${pageContext.request.contextPath}/visit/patient/selectDoctor"><button class="sideMenuButton">Umów wizytę</button></a></p>
+	<p><a href="${pageContext.request.contextPath}/visit/patient/myVisits"><button class="sideMenuButton">Pokaż moje wizyty</button></a></p>
+	<br>
 	<p><a href="${pageContext.request.contextPath}/users/patient/edit"><button class="sideMenuButton">Edytuj swoje dane</button></a></p>
 </security:authorize>

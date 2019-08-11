@@ -158,7 +158,7 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	public void saveVisitTreatmentComment(VisitTreatmentComment visitTreatmentComment) {
 	}
 
-//	with restore database Postgre from backup
+//	with restore Postgre database from backup
 	@Override
 	public boolean adjustSequenceGeneratorPrimaryKey() {
 		try {

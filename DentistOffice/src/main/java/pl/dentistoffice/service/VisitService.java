@@ -37,7 +37,7 @@ public class VisitService {
     @Autowired
     private HibernateSearchService searchsService;
 
-	public void addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
+	public boolean addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		Patient patient = userService.getLoggedPatient();
@@ -50,15 +50,25 @@ public class VisitService {
 		visit.setTreatments(treatments);
 		visit.setVisitConfirmation(false);
 		
+		List<VisitTreatmentComment> visitTreatmentCommentsList = new ArrayList<>();
+		VisitTreatmentComment visitTreatmentComment;
+		for (int i = 0; i < 3; i++) {
+			visitTreatmentComment = new VisitTreatmentComment();
+			visitTreatmentComment.setComment("");
+			visitTreatmentComment.setTreatment(treatments.get(i));
+			visitTreatmentCommentsList.add(visitTreatmentComment);
+		}
+		visit.setVisitTreatmentComment(visitTreatmentCommentsList);
+		
 		String[] splitDateTime = dateTime[0].split(";");
 		
 		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
 		visit.setVisitDateTime(visitDateTime);
 		visit.setReservationDateTime(LocalDateTime.now());
-		try {
-			visitRepository.saveVisit(visit);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(visitRepository.saveVisit(visit)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

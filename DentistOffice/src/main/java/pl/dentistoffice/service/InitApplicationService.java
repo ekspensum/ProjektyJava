@@ -1,19 +1,24 @@
 package pl.dentistoffice.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import pl.dentistoffice.dao.TreatmentRepository;
 import pl.dentistoffice.dao.UserRepository;
 import pl.dentistoffice.dao.VisitRepository;
+import pl.dentistoffice.entity.Admin;
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.TreatmentCategory;
+import pl.dentistoffice.entity.User;
 import pl.dentistoffice.entity.VisitStatus;
 
 @Service
@@ -80,6 +85,29 @@ public class InitApplicationService {
 			if(treatmentRepository.saveTreatmentCategory(treatmentCategory)) {
 				log.info("Added TreatmentCategory record: "+treatmentCategory.getCategoryName());
 			}
+		}
+		
+		List<User> allUsers = userRepository.readAllUsers();
+		if(allUsers.size() == 0) {
+			Role selectedRole = new Role();
+			selectedRole.setId(5); //Role Admin
+			List<Role> selectedRoleList = new ArrayList<>();
+			selectedRoleList.add(selectedRole);
+			User user = new User();
+			user.setEnabled(true);
+			user.setUsername("admin");
+			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+			user.setRoles(selectedRoleList);
+			Admin admin = new Admin();
+			admin.setFirstName("Administrator");
+			admin.setLastName("Administrator");
+			admin.setPesel("00000000000");
+			admin.setPhone("00000000");
+			admin.setEmail("admin@mail.com");
+			admin.setRegisteredDateTime(LocalDateTime.now());
+			admin.setUser(user);
+			userRepository.saveAdmin(admin);
+			log.info("Added User record: "+admin.getFirstName());
 		}
     }
 	

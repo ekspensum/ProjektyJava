@@ -123,9 +123,13 @@ public class VisitController {
 		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
 		
 		if (dateTime != null && dateTime.length == 1) {
-			visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments);
-			model.addAttribute("success", env.getProperty("successAddVisit"));
-			return "forward:/message/patient/success";
+			if(visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments)) {
+				model.addAttribute("success", env.getProperty("successAddVisit"));
+				return "forward:/message/patient/success";				
+			} else {
+				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
 		}		
@@ -335,7 +339,7 @@ public class VisitController {
 	}
 	
 	@RequestMapping(path = "/visit/assistant/removeVisit", method = RequestMethod.POST)
-	public String removeVisit(@RequestParam("visitId") String visitId, Model model) {
+	public String removeVisitByAssistant(@RequestParam("visitId") String visitId, Model model) {
 		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
 		if(visitService.cancelVisit(visit)) {
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
@@ -346,6 +350,17 @@ public class VisitController {
 		}
 	}
 
+	@RequestMapping(path = "/visit/patient/removeVisit", method = RequestMethod.POST)
+	public String removeVisitByPatient(@RequestParam("visitId") String visitId, Model model) {
+		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+		if(visitService.cancelVisit(visit)) {
+			model.addAttribute("success", env.getProperty("successCanceledVisit"));
+			return "forward:/message/patient/success";
+		} else {
+			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
+			return "forward:/message/patient/error";
+		}
+	}
 	
 	
 //PRIVATE METHODS
