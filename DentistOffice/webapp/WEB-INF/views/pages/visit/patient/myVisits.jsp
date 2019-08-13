@@ -20,7 +20,7 @@
 			<tbody>
 				<tr><td>${loop.count}</td><td>${visit.visitDateTime}</td><td>${visit.doctor.firstName }</td><td>${visit.doctor.lastName }</td><td></td>
 				<td align="center">
-				<c:if test="${visit.status.id == 1 }"><button form="myVisitsForm" type="submit" name="visitId" value="${visit.id }" formmethod="POST" formaction="${pageContext.request.contextPath}/visit/patient/removeVisit">Odwołaj wizytę</button></c:if>
+				<c:if test="${visit.status.id == 1 }"><button form="myVisitsForm" type="submit" name="visitId" value="${visit.id }" formmethod="POST" formaction="${pageContext.request.contextPath}/visit/patient/removeVisit"  onclick="return confirmRemoveVisit()">Odwołaj wizytę</button></c:if>
 				</td>
 				</tr>
 					<c:forEach items="${visit.visitTreatmentComment }" var="treat" varStatus="loop2">

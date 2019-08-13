@@ -362,6 +362,74 @@ public class VisitController {
 		}
 	}
 	
+	@RequestMapping(path = "/visit/doctor/searchVisitToFinalize")
+	public String searchVisitsToFinalizeByDoctor(Model model) {
+		LocalDate today = LocalDate.now();
+		model.addAttribute("dateFrom", today.minusDays(7));
+		model.addAttribute("dateTo", today);
+		Doctor loggedDoctor = userService.getLoggedDoctor();
+		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(today.atStartOfDay().minusDays(3), LocalDateTime.now(), loggedDoctor);
+		model.addAttribute("visitsToFinalize", visitsToFinalize);
+		model.addAttribute("doctor", loggedDoctor);
+		return "/visit/doctor/searchVisitToFinalize";
+	}
+
+	@RequestMapping(path = "/visit/doctor/searchVisitToFinalize", method = RequestMethod.POST)
+	public String searchVisitsToFinalizeByDoctor(@SessionAttribute("doctor") Doctor doctor, @RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo, Model model) {
+		LocalDateTime dateTimeFrom = LocalDateTime.parse(dateFrom + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		LocalDateTime dateTimeTo = LocalDateTime.parse(dateTo + " "+LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(dateTimeFrom, dateTimeTo, doctor);
+		model.addAttribute("dateFrom", dateFrom);
+		model.addAttribute("dateTo", dateTo);
+		model.addAttribute("visitsToFinalize", visitsToFinalize);
+		return "/visit/doctor/searchVisitToFinalize";
+	}
+	
+	@RequestMapping(path = "/visit/doctor/visitToFinalize", method = RequestMethod.POST)
+	public String setVisitsToFinalizeByDoctor(@RequestParam("visitId") String visitId, Model model) {
+		
+		List<DentalTreatment> dentalTreatmentsList = treatmentService.getDentalTreatmentsList();
+		model.addAttribute("dentalTreatmentsList", dentalTreatmentsList);
+
+		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+		model.addAttribute("visit", visit);
+		
+		return "/visit/doctor/visitToFinalize";
+	}	
+	
+	@RequestMapping(path = "/visit/doctor/finalizedVisit", method = RequestMethod.POST)
+	public String saveFinalizedVisitByDoctor(@SessionAttribute("doctor") Doctor doctor,
+											@SessionAttribute("visit") Visit visit,
+											@RequestParam("treatmentCommentVisit1") String treatmentCommentVisit1,
+											@RequestParam("treatmentCommentVisit2") String treatmentCommentVisit2,
+											@RequestParam("treatmentCommentVisit3") String treatmentCommentVisit3,
+											@RequestParam("treatment1") String treatment1Id,
+											@RequestParam("treatment2") String treatment2Id,
+											@RequestParam("treatment3") String treatment3Id,
+											Model model) throws Exception {
+			
+		String [] treatmentCommentVisit = {treatmentCommentVisit1, treatmentCommentVisit2, treatmentCommentVisit3};
+		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
+		visit.setUserLogged(doctor.getUser());
+			
+		if(validComments(treatmentCommentVisit, selectedTreatments, model)) {
+			if(visitService.setFinalzedVisit(visit, selectedTreatments, treatmentCommentVisit)) {
+				model.addAttribute("success", env.getProperty("successFinalizedVisit"));
+				return "forward:/message/employee/success";							
+			} else {
+				model.addAttribute("exception", env.getProperty("exceptionFinalizedVisit"));
+				return "forward:/message/employee/error";
+			}
+		} else {
+			List<DentalTreatment> dentalTreatmentsList = treatmentService.getDentalTreatmentsList();
+			model.addAttribute("dentalTreatmentsList", dentalTreatmentsList);
+			return "/visit/doctor/finalizedVisit";
+		}
+	}
+	
+	
+	
+	
 	
 //PRIVATE METHODS
 	private boolean validComments(String [] treatmentCommentVisit, List<DentalTreatment> selectedTreatments, Model model) {

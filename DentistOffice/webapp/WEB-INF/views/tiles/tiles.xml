@@ -228,6 +228,20 @@
 		<put-attribute name="title" value="Visit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/assistant/removeVisit.jsp" />
 	</definition>
+	<!-- By doctor -->
+	<definition name="/visit/doctor/searchVisitToFinalize" extends="doctorPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/doctor/searchVisitToFinalize.jsp" />
+	</definition>
+	<definition name="/visit/doctor/visitToFinalize" extends="doctorPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/doctor/visitToFinalize.jsp" />
+	</definition>	
+	<definition name="/visit/doctor/finalizedVisit" extends="doctorPanel">
+		<put-attribute name="title" value="Visit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/visit/doctor/finalizedVisit.jsp" />
+	</definition>
+	
 	
 
 	<!-- Login page -->
@@ -240,6 +254,10 @@
 	<definition name="/message/employee/error" extends="employeePanel">
 		<put-attribute name="title" value="Exceptions" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/employee/error.jsp" />
+	</definition>
+	<definition name="/message/error" extends="userPanel">
+		<put-attribute name="title" value="Exceptions" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/error.jsp" />
 	</definition>
 
 	<!-- Success page -->

@@ -1,6 +1,7 @@
 package pl.dentistoffice.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.search.Query;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 
@@ -102,5 +104,52 @@ public class HibernateSearchService {
 							.createQuery()).createQuery();
 		
 		return fullTextSession.createFullTextQuery(luceneQuery, Visit.class).getResultList();
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<Patient> searchPatientNamePeselStreetPhoneByKeywordQueryAndDoctor(String text, Doctor doctor){
+		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		
+		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+									.buildQueryBuilder()
+									.forEntity(Visit.class)
+									.get();
+		
+		Query luceneQuery = queryBuilder.bool()
+							.must(queryBuilder
+							.keyword()
+							.onField("doctor.pesel")
+							.matching(doctor.getPesel())
+							.createQuery())
+							.must(queryBuilder
+							.keyword()
+							.fuzzy()
+				            .withEditDistanceUpTo(2)
+				            .withPrefixLength(0)
+							.onFields("patient.lastName", "patient.pesel", "patient.street", "patient.phone")
+							.matching(text)
+							.createQuery()).createQuery();
+		
+		List<Visit> visitsResultList = fullTextSession.createFullTextQuery(luceneQuery, Visit.class).getResultList();
+		List<Patient> patientList = new ArrayList<>();
+		boolean founded = false;
+		for (int i=0; i<visitsResultList.size(); i++) {
+			if(patientList.size() == 0) {
+				patientList.add(visitsResultList.get(i).getPatient());
+				continue;
+			}
+			for (int j=0; j<patientList.size(); j++) {
+				if(visitsResultList.get(i).getPatient().getId() == patientList.get(j).getId()) {
+					founded = true;
+					break;
+				}
+			}
+			if(!founded) {
+				patientList.add(visitsResultList.get(i).getPatient());				
+			}
+		}		
+		return patientList;
 	}
 }

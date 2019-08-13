@@ -36,6 +36,7 @@ import lombok.Setter;
 	@NamedQuery(name = "readVisitsByDateTimeAndConfirmation", query = "SELECT visit FROM Visit visit WHERE visit.visitDateTime BETWEEN :dateTimeFrom AND :dateTimeTo AND visit.visitConfirmation = :visitConfirmation"),
 	@NamedQuery(name = "readVisitsByPatientAndStatus", query = "SELECT visit FROM Visit visit WHERE visit.patient = :patient AND visit.status = :visitStatus"),
 	@NamedQuery(name = "readVisitsByDateTimeAndDoctor", query = "SELECT visit FROM Visit visit WHERE visit.visitDateTime BETWEEN :dateTimeFrom AND :dateTimeTo AND visit.doctor = :doctor"),
+	@NamedQuery(name = "readVisitsByDateTimeAndStatusAndDoctor", query = "SELECT visit FROM Visit visit WHERE visit.visitDateTime BETWEEN :dateTimeFrom AND :dateTimeTo AND visit.status = :visitStatus AND visit.doctor = :doctor"),
 })
 @Indexed
 public class Visit implements Serializable {
@@ -55,9 +56,11 @@ public class Visit implements Serializable {
 	private VisitStatus status;
 	
 	@OneToOne
+	@IndexedEmbedded
 	private Patient patient;
 	
 	@OneToOne
+	@IndexedEmbedded
 	private Doctor doctor;
 	
 	@OneToOne

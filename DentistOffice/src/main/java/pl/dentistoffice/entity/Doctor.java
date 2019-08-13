@@ -20,6 +20,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import lombok.AccessLevel;
@@ -31,6 +33,7 @@ import lombok.Setter;
 @NamedQueries({
 	@NamedQuery(name = "findDoctorByUserName", query = "SELECT doctor FROM Doctor doctor INNER JOIN doctor.user user WHERE user.username = :username")
 })
+@Indexed
 public class Doctor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -60,6 +63,7 @@ public class Doctor implements Serializable {
 	private String phone;
 
 	@PESEL
+	@Field
 	private String pesel;
 	
 	@Size(min=0, max=600000)

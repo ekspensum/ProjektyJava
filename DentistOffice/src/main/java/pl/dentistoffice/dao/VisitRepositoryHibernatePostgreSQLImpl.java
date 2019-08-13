@@ -55,7 +55,12 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, VisitStatus visitStatus) {
 		return getSession().createNamedQuery("readVisitsByDateTimeAndStatus", Visit.class).setParameter("dateTimeFrom", dateTimeFrom).setParameter("dateTimeTo", dateTimeTo).setParameter("visitStatus", visitStatus).getResultList();
 	}
-
+	
+	@Override
+	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, VisitStatus visitStatus, Doctor doctor) {
+		return getSession().createNamedQuery("readVisitsByDateTimeAndStatusAndDoctor", Visit.class).setParameter("dateTimeFrom", dateTimeFrom).setParameter("dateTimeTo", dateTimeTo).setParameter("visitStatus", visitStatus).setParameter("doctor", doctor).getResultList();
+	}
+	
 	@Override
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, boolean visitConfirmation) {
 		return getSession().createNamedQuery("readVisitsByDateTimeAndConfirmation", Visit.class).setParameter("dateTimeFrom", dateTimeFrom).setParameter("dateTimeTo", dateTimeTo).setParameter("visitConfirmation", visitConfirmation).getResultList();

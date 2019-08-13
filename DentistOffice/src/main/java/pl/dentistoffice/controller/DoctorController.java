@@ -29,6 +29,7 @@ import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.entity.WorkingWeek;
+import pl.dentistoffice.service.HibernateSearchService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
@@ -44,6 +45,9 @@ public class DoctorController {
 	
 	@Autowired
 	private VisitService visitService;
+	
+	@Autowired
+	private HibernateSearchService searchService;
 	
 	@RequestMapping(path = "/panels/doctorPanel")
 	public String doctorPanel(Model model) {
@@ -239,10 +243,20 @@ public class DoctorController {
 	public String searchPatientByDoctor(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
 		if(patientData.length() > 20) {
 			String substringPatientData = patientData.substring(0, 20);
-			List<Patient> searchedPatientList = userService.searchPatient(substringPatientData);			
+//			List<Patient> searchedPatientList = userService.searchPatient(substringPatientData);	
+			
+			Doctor loggedDoctor = userService.getLoggedDoctor();
+//			redirectAttributes.addAttribute("doctor", loggedDoctor);
+			List<Patient> searchedPatientList = searchService.searchPatientNamePeselStreetPhoneByKeywordQueryAndDoctor(substringPatientData, loggedDoctor);
+			
 			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
 		} else {
-			List<Patient> searchedPatientList = userService.searchPatient(patientData);			
+//			List<Patient> searchedPatientList = userService.searchPatient(patientData);		
+			
+			Doctor loggedDoctor = userService.getLoggedDoctor();
+//			redirectAttributes.addAttribute("doctor", loggedDoctor);
+			List<Patient> searchedPatientList = searchService.searchPatientNamePeselStreetPhoneByKeywordQueryAndDoctor(patientData, loggedDoctor);
+			
 			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
 		}
 		return "redirect:/users/doctor/selectPatient";

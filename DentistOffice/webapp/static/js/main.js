@@ -117,7 +117,7 @@ function validateSelectChbxVisitAndConfirmRemove() {
             alert("Proszę wybrać jeden rekord!");
             return false;
         } else {
-            if (confirm("Naciśnij OK aby zatwierdzić odwołanie wybranej wizyty!")) {
+            if (confirm("Czy na pewno odwołać wybraną wizytę!?")) {
                 return true;
             } else {
                 return false;
@@ -125,7 +125,7 @@ function validateSelectChbxVisitAndConfirmRemove() {
         }
     } else {
         if (document.selectVisitForm.visitId.checked) {
-            if (confirm("Naciśnij OK aby zatwierdzić odwołanie wybranej wizyty!")) {
+            if (confirm("Czy na pewno odwołać wybraną wizytę!?")) {
                 return true;
             } else {
                 return false;
@@ -134,6 +134,14 @@ function validateSelectChbxVisitAndConfirmRemove() {
             alert("Proszę zaznaczyć wybór wizyty!");
             return false;
         }
+    }
+}
+
+function confirmRemoveVisit() {
+    if (confirm("Czy na pewno odwołać wybraną wizytę!?")) {
+        return true;
+    } else {
+        return false;
     }
 }
 
