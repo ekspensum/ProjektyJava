@@ -5,6 +5,7 @@ import java.util.List;
 import pl.dentistoffice.entity.Admin;
 import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.Doctor;
+import pl.dentistoffice.entity.Owner;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
@@ -40,7 +41,11 @@ public interface UserRepository {
 	Admin readAdmin(String username);
 	List<Admin> readAllAdmins();
 	
+	void saveOwner(Owner owner);
+	
 	User readUser(String username);
+	User readUser(int id);
 	List<User> readAllUsers();
+	
 	public boolean adjustSequenceGeneratorPrimaryKey();
 }

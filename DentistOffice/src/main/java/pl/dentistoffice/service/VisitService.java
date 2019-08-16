@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.dentistoffice.dao.VisitRepository;
-import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.entity.User;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.entity.VisitTreatmentComment;
@@ -76,10 +76,10 @@ public class VisitService {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		
-		Assistant assistant = userService.getLoggedAssistant();
-		visit.setAssistant(assistant);
-		
-		visit.setUserLogged(assistant.getUser());
+//		Assistant assistant = userService.getLoggedAssistant();
+//		visit.setAssistant(assistant);
+		User loggedUser = userService.getLoggedUser();
+		visit.setUserLogged(loggedUser);
 		visit.setPatient(patient);
 		
 		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
@@ -256,6 +256,8 @@ public class VisitService {
 		visit.setStatus(visitStatus);
 		visit.setFinalizedVisitDateTime(LocalDateTime.now());
 		visit.setTreatments(selectedTreatments);
+		User loggedUser = userService.getLoggedUser();
+		visit.setUserLogged(loggedUser);
 		if (visitRepository.updateVisitOnFinalize(visit)) {
 			return true;
 		} else {

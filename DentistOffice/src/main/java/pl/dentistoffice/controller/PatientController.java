@@ -26,7 +26,7 @@ import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
 @Controller
-@SessionAttributes({"patient", "image"})
+@SessionAttributes({"patient", "image", "editUserId"})
 public class PatientController {
 
 	@Autowired
@@ -40,77 +40,10 @@ public class PatientController {
 	
 	@RequestMapping(path = "/panels/patientPanel")
 	public String patientPanel(Model model) {
-
 		return "patientPanel";
 	}
 	
-	@RequestMapping(path = "/users/patient/assistant/register")
-	public String registrationPatientByAssistant(Model model) {
-		model.addAttribute("patient", new Patient());
-		return "/users/patient/assistant/register";
-	}
-	
-	@RequestMapping(path = "/users/patient/assistant/register", method = RequestMethod.POST)
-	public String registrationPatientByAssistant(
-					@Valid 
-					Patient patient, 			
-					BindingResult result, 
-					Model model,
-					@RequestParam("photo") 
-					MultipartFile photo) throws IOException {
-		
-		patient.setPhoto(photo.getBytes());
-		if(!result.hasErrors()) {
-			userService.addNewPatient(patient);
-			model.addAttribute("success", env.getProperty("successRegisterPatient"));
-			return "forward:/message/employee/success";
-		} else {
-			return "/users/patient/assistant/register";
-		}
-	}
-	
-	@RequestMapping(path = "/users/patient/assistant/selectToEdit")
-	public String selectPatientToEditByAssistant() {		
-		return "/users/patient/assistant/selectToEdit";
-	}
-	
-	@RequestMapping(path = "/users/patient/assistant/selectToEdit", method = RequestMethod.POST)
-	public String selectPatientToEditByAssistant(@RequestParam("patientId") String patientId, RedirectAttributes redirectAttributes) {		
-		Patient patient = userService.getPatient(Integer.valueOf(patientId));
-		redirectAttributes.addFlashAttribute("patient", patient);
-		return "redirect:/users/patient/assistant/edit";
-	}
-	
-	@RequestMapping(path = "/users/patient/assistant/edit")
-	public String editPatientByAssistant(@ModelAttribute("patient") Patient patient, Model model) {
-		model.addAttribute("patient", patient);
-		model.addAttribute("image", patient.getPhoto());
-		return "/users/patient/assistant/edit";
-	}
-	
-	@RequestMapping(path = "/users/patient/assistant/edit", method = RequestMethod.POST)
-	public String editDataPatientByAssistant(
-			@Valid
-			Patient patient,
-			BindingResult result, 
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			@SessionAttribute(name = "image")
-			byte [] image) throws IOException {
-		
-		if(photo.getBytes().length == 0) {
-			patient.setPhoto(image);			
-		}
-		if (!result.hasErrors()) {
-			userService.editPatient(patient);
-			model.addAttribute("success", env.getProperty("successUpdatePatient"));
-			return "forward:/message/employee/success";
-		} else {
-			return "/users/patient/assistant/edit";
-		}
-	}
-	
+//	FOR SEARCHING PATIENT BY ASSISTANT
 	@RequestMapping(path = "/users/patient/assistant/searchPatient")
 	public String searchPatientByAssistant() {
 		return "/users/patient/assistant/searchPatient";
@@ -126,9 +59,118 @@ public class PatientController {
 			List<Patient> searchedPatientList = userService.searchPatient(patientData);			
 			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
 		}
-		return "redirect:/users/patient/assistant/selectToEdit";
+		return "redirect:/users/patient/assistant/selectPatient";
 	}
 	
+	@RequestMapping(path = "/users/patient/assistant/selectPatient")
+	public String selectPatientToEditByAssistant() {		
+		return "/users/patient/assistant/selectPatient";
+	}
+	
+//	FOR REGISTER PATIENT BY ASSISTANT
+	@RequestMapping(path = "/users/patient/assistant/register")
+	public String registrationPatientByAssistant(Model model) {
+		model.addAttribute("patient", new Patient());
+		return "/users/patient/assistant/register";
+	}
+	
+	@RequestMapping(path = "/users/patient/assistant/register", method = RequestMethod.POST)
+	public String registrationPatientByAssistant(
+												@Valid Patient patient, 			
+												BindingResult result, 
+												Model model,
+												@RequestParam("photo") MultipartFile photo
+												) throws IOException {
+		
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(patient.getUser().getUsername());
+		patient.setPhoto(photo.getBytes());
+		if(!result.hasErrors() && dinstinctLogin) {
+			userService.addNewPatient(patient);
+			model.addAttribute("success", env.getProperty("successRegisterPatient"));
+			return "forward:/message/employee/success";
+		} else {
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
+			}
+			return "/users/patient/assistant/register";
+		}
+	}
+	
+//	FOR EDIT DATA PATIENT BY ASSISTANT	
+	@RequestMapping(path = "/users/patient/assistant/selectedPatientToEdit", method = RequestMethod.POST)
+	public String selectPatientToEditByAssistant(@RequestParam("patientId") String patientId, RedirectAttributes redirectAttributes) {		
+		Patient patient = userService.getPatient(Integer.valueOf(patientId));
+		redirectAttributes.addFlashAttribute("patient", patient);
+		redirectAttributes.addFlashAttribute("editUserId", patient.getUser().getId());
+		return "redirect:/users/patient/assistant/edit";
+	}
+	
+	@RequestMapping(path = "/users/patient/assistant/edit")
+	public String editPatientByAssistant(@ModelAttribute("patient") Patient patient, Model model) {
+		model.addAttribute("patient", patient);
+		model.addAttribute("image", patient.getPhoto());
+		return "/users/patient/assistant/edit";
+	}
+	
+	@RequestMapping(path = "/users/patient/assistant/edit", method = RequestMethod.POST)
+	public String editDataPatientByAssistant(
+											@Valid Patient patient,
+											BindingResult result, 
+											Model model,
+											@SessionAttribute("editUserId") int editUserId,
+											@RequestParam("photo") MultipartFile photo,
+											@SessionAttribute(name = "image") byte [] image
+											) throws IOException {
+		
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(patient.getUser().getUsername(), editUserId);
+		if(photo.getBytes().length == 0) {
+			patient.setPhoto(image);			
+		}
+		if (!result.hasErrors() && dinstinctLogin) {
+			userService.editPatient(patient);
+			model.addAttribute("success", env.getProperty("successUpdatePatient"));
+			return "forward:/message/employee/success";
+		} else {
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
+			}
+			return "/users/patient/assistant/edit";
+		}
+	}
+
+//	FOR BROWSE PATIENT DATA BY ASSISTANT
+	@RequestMapping(path = "/users/patient/assistant/selectedPatientToShow", method = RequestMethod.POST)
+	public String selectPatientForBrowseByAssistant(@RequestParam("patientId") String patientId, RedirectAttributes redirectAttributes) {		
+		Patient patient = userService.getPatient(Integer.valueOf(patientId));
+		redirectAttributes.addFlashAttribute("patient", patient);
+		return "redirect:/users/patient/assistant/showPatient";
+	}
+		
+	@RequestMapping(path = "/users/patient/assistant/showPatient")
+	public String showPatientForBrowseByAssistant(@ModelAttribute(name = "patient") Patient patient, Model model) {
+		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, defaultVisitStatus);
+		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+		model.addAttribute("visitStatusList", visitStatusList);
+		model.addAttribute("defaultVisitStatus", defaultVisitStatus);
+		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		model.addAttribute("patient", patient);
+		return "/users/patient/assistant/showPatient";
+	}
+
+	@RequestMapping(path = "/users/patient/assistant/showPatient", method = RequestMethod.POST)
+	public String showPatientForBrowseByAssistant(@ModelAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, Model model) {
+		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
+		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+		model.addAttribute("visitStatusList", visitStatusList);
+		model.addAttribute("actualVisitStatus", actualVisitStatus);
+		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		model.addAttribute("patient", patient);
+		return "/users/patient/assistant/showPatient";
+	}
+	
+//	FOR SELF REGISTER PATIENT
 	@RequestMapping(path = "/users/patient/register")
 	public String selfRegistrationPatient(Model model) {
 		model.addAttribute("patient", new Patient());
@@ -137,56 +179,63 @@ public class PatientController {
 	
 	@RequestMapping(path = "/users/patient/register", method = RequestMethod.POST)
 	public String selfRegistrationPatient(
-					@Valid 
-					@ModelAttribute(name = "patient")
-					Patient patient, 			
-					BindingResult result, 
-					Model model,
-					@RequestParam("photo") 
-					MultipartFile photo) throws IOException {
+										  @Valid Patient patient, 			
+										  BindingResult result, 
+										  Model model,
+										  @RequestParam("photo") MultipartFile photo
+										  ) throws IOException {
 		
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(patient.getUser().getUsername());
 		patient.setPhoto(photo.getBytes());
-		if(!result.hasErrors()) {
+		if(!result.hasErrors() && dinstinctLogin) {
 			userService.addNewPatient(patient);
 			model.addAttribute("success", env.getProperty("successRegisterPatient"));
 			return "forward:/message/patient/success";
 		} else {
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
+			}
 			return "/users/patient/register";
 		}
 	}
-	
+
+//	FOR SELF EDIT DATA PATIENT
 	@RequestMapping(path = "/users/patient/edit")
 	public String selfEditPatient(Model model) {
 		Patient patient = userService.getLoggedPatient();
 		model.addAttribute("patient", patient);
+		model.addAttribute("editUserId", patient.getUser().getId());
 		model.addAttribute("image", patient.getPhoto());
 		return "/users/patient/edit";
 	}
 	
 	@RequestMapping(path = "/users/patient/edit", method = RequestMethod.POST)
 	public String selfEditDataPatient(
-			@Valid
-			@ModelAttribute(name = "patient")
-			Patient patient,
-			BindingResult result,
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			@SessionAttribute(name = "image")
-			byte [] image) throws IOException {
+										@Valid Patient patient,
+										BindingResult result,
+										Model model,
+										@SessionAttribute("editUserId") int editUserId,
+										@RequestParam("photo") MultipartFile photo,
+										@SessionAttribute(name = "image") byte [] image
+										) throws IOException {
 
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(patient.getUser().getUsername(), editUserId);
 		if(photo.getBytes().length == 0) {
 			patient.setPhoto(image);			
 		}
-		if (!result.hasErrors()) {
+		if (!result.hasErrors() && dinstinctLogin) {
 			userService.editPatient(patient);
 			model.addAttribute("success", env.getProperty("successUpdatePatient"));
 			return "forward:/message/patient/success";
 		} else {
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
+			}
 			return "/users/patient/edit";
 		}
 	}
 	
+//	FOR SELF BROWSE AND DELETE VISITS PATIENT
 	@RequestMapping(path = "/visit/patient/myVisits")
 	public String showMyVisits(Model model) {
 		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
@@ -210,4 +259,5 @@ public class PatientController {
 		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
 		return "/visit/patient/myVisits";
 	}
+
 }

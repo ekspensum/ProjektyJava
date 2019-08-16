@@ -51,11 +51,6 @@ public class TreatmentRepositoryHibernatePostgreSQLImpl implements TreatmentRepo
 	}
 
 	@Override
-	public List<DentalTreatment> readDentalTreatment(String treatmentName) {
-		return getSession().createNamedQuery("readDentalTreatmentByNme", DentalTreatment.class).setParameter("name", "%"+treatmentName+"%").getResultList();
-	}
-
-	@Override
 	public List<DentalTreatment> readAllDentalTreatment() {
 		return getSession().createQuery("from DentalTreatment", DentalTreatment.class).getResultList();
 	}
@@ -72,6 +67,17 @@ public class TreatmentRepositoryHibernatePostgreSQLImpl implements TreatmentRepo
 	}
 
 	@Override
+	public boolean updateTreatmentCategory(TreatmentCategory treatmentCategory) {
+		try {
+			getSession().saveOrUpdate(treatmentCategory);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
 	public TreatmentCategory readTreatmentCategory(int id) {
 		return getSession().find(TreatmentCategory.class, id);
 	}
@@ -79,6 +85,11 @@ public class TreatmentRepositoryHibernatePostgreSQLImpl implements TreatmentRepo
 	@Override
 	public List<TreatmentCategory> readAllTreatmentCategory() {
 		return getSession().createQuery("from TreatmentCategory", TreatmentCategory.class).getResultList();
+	}
+	
+	@Override
+	public List<TreatmentCategory> readAllTreatmentCategoryAboveFirstId() {
+		return getSession().createNamedQuery("findTreatmentCategoryAboveFirstId", TreatmentCategory.class).getResultList();
 	}
 
 //	with restore Postgre database from backup

@@ -11,3 +11,7 @@
 <security:authorize access="hasRole('ROLE_ASSISTANT')">
 	<p><a href="${pageContext.request.contextPath}/panels/assistantPanel"><button class="sideMenuButton">Panel asystenta</button></a></p>
 </security:authorize>
+<security:authorize access="hasRole('ROLE_OWNER')">
+	<p><a href="${pageContext.request.contextPath}/users/admin/owner/register"><button class="sideMenuButton">Dodaj administratora</button></a></p>
+	<p><a href="${pageContext.request.contextPath}/users/admin/owner/selectToEdit"><button class="sideMenuButton">Edytuj administratora</button></a></p>
+</security:authorize>

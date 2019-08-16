@@ -79,6 +79,31 @@ function validateSelectChbxPatient() {
     }
 }
 
+function validateSelectChbxTreatment() {
+    let idChbx = document.forms.selectTreatmentForm.elements['treatmentId'];
+    if (idChbx.length > 1) {
+        let j = 0;
+        for (i = 0; i < idChbx.length; i++) {
+            if (idChbx[i].checked) {
+                j++;
+            }
+        }
+        if (j != 1) {
+            alert("Proszę wybrać jeden rekord!");
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        if (document.selectTreatmentForm.treatmentId.checked) {
+            return true;
+        } else {
+            alert("Proszę zaznaczyć wybór pacjenta!");
+            return false;
+        }
+    }
+}
+
 function validateSelectChbxVisit() {
     let idChbx = document.forms.selectVisitForm.elements['visitId'];
     if (idChbx.length > 1) {
@@ -178,6 +203,16 @@ function validateInputFieldPatientData() {
     if (document.searchDataPatientForm.patientData.value == "") {
         alert("Proszę wprowadzić dane do wyszukania!");
         document.searchDataPatientForm.patientData.focus();
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function validateInputFieldTreatmentData() {
+    if (document.searchTreatmentForm.treatmentData.value == "") {
+        alert("Proszę wprowadzić dane do wyszukania!");
+        document.searchTreatmentForm.treatmentData.focus();
         return false;
     } else {
         return true;

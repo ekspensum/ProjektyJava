@@ -11,7 +11,7 @@
 				<tr>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
-					<td><form:errors path="user.username" class="msgError" /></td>
+					<td class="msgError" ><form:errors path="user.username" />${distinctLoginError }</td>
 				</tr>
 				<tr>
 					<td>Hasło:</td>
@@ -60,7 +60,7 @@
 					<td><form:errors path="phone" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Image</td>
+					<td>Zdjęcie:</td>
 					<td><form:input type="file" name="photo" accept="image/*" path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>

@@ -8,14 +8,13 @@ import javax.annotation.PostConstruct;
 
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import pl.dentistoffice.dao.TreatmentRepository;
 import pl.dentistoffice.dao.UserRepository;
 import pl.dentistoffice.dao.VisitRepository;
-import pl.dentistoffice.entity.Admin;
 import pl.dentistoffice.entity.DentalTreatment;
+import pl.dentistoffice.entity.Owner;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.TreatmentCategory;
 import pl.dentistoffice.entity.User;
@@ -39,8 +38,8 @@ public class InitApplicationService {
     public void insertBasicDataToDatabase() {
 		List<Role> allRoles = userRepository.readAllRoles();
 		if(allRoles.size() == 0) {
-			String [] roleArray = {"Select", "ROLE_DOCTOR", "ROLE_PATIENT", "ROLE_ASSISTANT", "ROLE_ADMIN"};
-			String [] roleNameArray = {"Wybierz rolę", "Stomatolog", "Pacjent", "Asystent", "Administrator"};
+			String [] roleArray = {"Select", "ROLE_DOCTOR", "ROLE_PATIENT", "ROLE_ASSISTANT", "ROLE_ADMIN", "ROLE_OWNER"};
+			String [] roleNameArray = {"Wybierz rolę", "Stomatolog", "Pacjent", "Asystent", "Administrator", "Właściciel"};
 			Role role;
 			for (int i = 0; i < 5; i++) {
 				role = new Role();
@@ -90,31 +89,31 @@ public class InitApplicationService {
 		List<User> allUsers = userRepository.readAllUsers();
 		if(allUsers.size() == 0) {
 			Role selectedRole = new Role();
-			selectedRole.setId(5); //Role Admin
+			selectedRole.setId(6); //Role Owner
 			List<Role> selectedRoleList = new ArrayList<>();
 			selectedRoleList.add(selectedRole);
 			User user = new User();
 			user.setEnabled(true);
-			user.setUsername("admin");
-			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+			user.setUsername("owner");
+			user.setPassword("$2a$10$7yz5gXu716tAxRppjgamxeqHx/JW.YAniVJJUc6odcxN45L2/cz0O");
 			user.setRoles(selectedRoleList);
-			Admin admin = new Admin();
-			admin.setFirstName("Administrator");
-			admin.setLastName("Administrator");
-			admin.setPesel("00000000000");
-			admin.setPhone("00000000");
-			admin.setEmail("admin@mail.com");
-			admin.setRegisteredDateTime(LocalDateTime.now());
-			admin.setUser(user);
-			userRepository.saveAdmin(admin);
-			log.info("Added User record: "+admin.getFirstName());
+			Owner owner = new Owner();
+			owner.setFirstName("Imie właścicela");
+			owner.setLastName("Nazwisko właścicela");
+			owner.setRegisteredDateTime(LocalDateTime.now());
+			owner.setUser(user);
+			userRepository.saveOwner(owner);
+			log.info("Added Owner record: "+owner.getFirstName());
 		}
+		
+//		String password = new BCryptPasswordEncoder().encode("???");
+//		System.out.println(password);
     }
 	
 	public boolean adjustSequenceGeneratorPrimaryKeyPostgreDB() {
 		if(visitRepository.adjustSequenceGeneratorPrimaryKey() 
-				&& userRepository.adjustSequenceGeneratorPrimaryKey() 
-				&& treatmentRepository.adjustSequenceGeneratorPrimaryKey()) {
+			&& userRepository.adjustSequenceGeneratorPrimaryKey() 
+			&& treatmentRepository.adjustSequenceGeneratorPrimaryKey()) {
 			return true;
 		} else {
 			return false;

@@ -23,13 +23,13 @@ public class AdviceController {
 	@Autowired
 	private Environment env;
 
-//	@ExceptionHandler(Exception.class)
-//	public String handleException(Model model, Exception e) {
-//		model.addAttribute("exception", "Wystapił wyjątek: "+e.getMessage());
-//	    model.addAttribute("head", env.getProperty("head"));
-//	    model.addAttribute("footer", env.getProperty("footer"));
-//		return "/message/error";
-//	}
+	@ExceptionHandler(Exception.class)
+	public String handleException(Model model, Exception e) {
+		model.addAttribute("exception", "Wystapił wyjątek: "+e.getMessage());
+	    model.addAttribute("head", env.getProperty("head"));
+	    model.addAttribute("footer", env.getProperty("footer"));
+		return "/message/error";
+	}
 	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {

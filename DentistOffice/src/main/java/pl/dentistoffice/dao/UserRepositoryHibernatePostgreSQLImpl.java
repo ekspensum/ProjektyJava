@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.dentistoffice.entity.Admin;
 import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.Doctor;
+import pl.dentistoffice.entity.Owner;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
@@ -46,7 +47,7 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 
 	@Override
 	public List<Role> readAllRoles() {
-		return getSession().createQuery("from Role", Role.class).getResultList();
+		return getSession().createNamedQuery("findRoleWithoutOwner", Role.class).getResultList();
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 
 	@Override
 	public Admin readAdmin(String username) {
-		return null;
+		return getSession().createNamedQuery("findAdminByUserName", Admin.class).setParameter("username", username).getSingleResult();
 	}
 
 	@Override
@@ -150,8 +151,18 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 	}
 	
 	@Override
+	public void saveOwner(Owner owner) {
+		getSession().persist(owner);
+	}
+
+	@Override
 	public User readUser(String username) {
 		return getSession().createNamedQuery("findUserByUserName", User.class).setParameter("username", username).getSingleResult();
+	}
+
+	@Override
+	public User readUser(int id) {
+		return getSession().find(User.class, id);
 	}
 
 	@Override
@@ -169,6 +180,7 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Patient', 'id'), max(id)) FROM Patient").uniqueResult();
 			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Assistant', 'id'), max(id)) FROM Assistant").uniqueResult();
 			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Admin', 'id'), max(id)) FROM Admin").uniqueResult();
+			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('Owner', 'id'), max(id)) FROM Owner").uniqueResult();
 			getSession().createNativeQuery("SELECT setval(pg_get_serial_sequence('WorkingWeek', 'id'), max(id)) FROM WorkingWeek").uniqueResult();
 			return true;
 		} catch (Exception e) {

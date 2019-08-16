@@ -14,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import pl.dentistoffice.entity.Assistant;
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
@@ -159,14 +159,14 @@ public class VisitController {
 	}
 
 	@RequestMapping(path = "/visit/assistant/selectPatient", method = RequestMethod.POST)
-	public String visitSelectPatientByAssistant(@RequestParam(name="patientId", required = false) String idPatient, Model model) {
+	public String visitSelectPatientByAssistant(@RequestParam(name="patientId", required = false) String idPatient, RedirectAttributes redirectAttributes) {
 		Patient patient = userService.getPatient(Integer.valueOf(idPatient));
-		model.addAttribute("patient", patient);
+		redirectAttributes.addFlashAttribute("patient", patient);
 		return "redirect:/visit/assistant/selectDoctor";			
 	}
 	
 	@RequestMapping(path = "/visit/assistant/selectDoctor")
-	public String visitSelectDoctorByAssistant(@SessionAttribute("patient") Patient patient, Model model) {
+	public String visitSelectDoctorByAssistant(@ModelAttribute("patient") Patient patient, Model model) {
 		model.addAttribute("patient", patient);
 		List<Doctor> allDoctorsList = userService.getAllDoctors();
 		model.addAttribute("allDoctorsList", allDoctorsList);
@@ -299,9 +299,6 @@ public class VisitController {
 			
 		String [] treatmentCommentVisit = {treatmentCommentVisit1, treatmentCommentVisit2, treatmentCommentVisit3};
 		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
-		Assistant loggedAssistant = userService.getLoggedAssistant();
-		visit.setUserLogged(loggedAssistant.getUser());
-			
 		if(validComments(treatmentCommentVisit, selectedTreatments, model)) {
 			if(visitService.setFinalzedVisit(visit, selectedTreatments, treatmentCommentVisit)) {
 				model.addAttribute("success", env.getProperty("successFinalizedVisit"));
@@ -410,7 +407,6 @@ public class VisitController {
 			
 		String [] treatmentCommentVisit = {treatmentCommentVisit1, treatmentCommentVisit2, treatmentCommentVisit3};
 		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
-		visit.setUserLogged(doctor.getUser());
 			
 		if(validComments(treatmentCommentVisit, selectedTreatments, model)) {
 			if(visitService.setFinalzedVisit(visit, selectedTreatments, treatmentCommentVisit)) {

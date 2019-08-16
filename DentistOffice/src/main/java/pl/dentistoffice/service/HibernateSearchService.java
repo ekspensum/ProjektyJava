@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
@@ -151,5 +152,31 @@ public class HibernateSearchService {
 			}
 		}		
 		return patientList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<DentalTreatment> searchDentalTreatmentNameDescriptionByKeywordQuery(String text){
+		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		
+		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+									.buildQueryBuilder()
+									.forEntity(DentalTreatment.class)
+									.get();
+		String wildcardText = "*"+text+"*";
+		Query luceneQuery = queryBuilder.bool()
+							.must(queryBuilder
+							.keyword()
+							.wildcard()
+							.onFields("name", "description")
+							.matching(wildcardText)
+							.createQuery())
+							.must(queryBuilder
+							.range()
+							.onField("id")
+							.above(1).excludeLimit()
+							.createQuery()).createQuery();
+		
+		return fullTextSession.createFullTextQuery(luceneQuery, DentalTreatment.class).getResultList();
 	}
 }

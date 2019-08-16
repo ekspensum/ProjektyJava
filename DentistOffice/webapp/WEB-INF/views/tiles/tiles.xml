@@ -137,9 +137,9 @@
 		<put-attribute name="title" value="Patient registration" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/register.jsp" />
 	</definition>
-	<definition name="/users/patient/assistant/selectToEdit" extends="assistantPanel">
-		<put-attribute name="title" value="Select patient to edit" />
-		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/selectToEdit.jsp" />
+	<definition name="/users/patient/assistant/selectPatient" extends="assistantPanel">
+		<put-attribute name="title" value="Select patient" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/selectPatient.jsp" />
 	</definition>
 	<definition name="/users/patient/assistant/edit" extends="assistantPanel">
 		<put-attribute name="title" value="Patient data edit" />
@@ -149,7 +149,29 @@
 		<put-attribute name="title" value="Patient search" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/searchPatient.jsp" />
 	</definition>
-
+	<definition name="/users/patient/assistant/showPatient" extends="assistantPanel">
+		<put-attribute name="title" value="Patient search" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/assistant/showPatient.jsp" />
+	</definition>
+	<!-- Admin registration and editing by Owner -->	
+	<definition name="/users/admin/owner/register" extends="employeePanel">
+		<put-attribute name="title" value="Admin registration" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/admin/owner/register.jsp" />
+	</definition>
+	<definition name="/users/admin/owner/selectToEdit" extends="employeePanel">
+		<put-attribute name="title" value="Select aadmin to edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/admin/owner/selectToEdit.jsp" />
+	</definition>
+	<definition name="/users/admin/owner/edit" extends="employeePanel">
+		<put-attribute name="title" value="Admin data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/admin/owner/edit.jsp" />
+	</definition>
+	<!-- Admin self edit -->
+	<definition name="/users/admin/edit" extends="employeePanel">
+		<put-attribute name="title" value="Admin data edit" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/admin/edit.jsp" />
+	</definition>
+	
 	<!-- Control -->
 	<!-- Admin indexing database -->
 	<definition name="/control/indexing" extends="adminPanel">
@@ -166,9 +188,29 @@
 		<put-attribute name="title" value="Admin treatment handle" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/addTreatment.jsp" />
 	</definition>
+	<definition name="/control/searchTreatment" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/searchTreatment.jsp" />
+	</definition>
+	<definition name="/control/selectTreatment" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/selectTreatment.jsp" />
+	</definition>
+	<definition name="/control/editTreatment" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/editTreatment.jsp" />
+	</definition>
 	<definition name="/control/addTreatmentCategory" extends="adminPanel">
 		<put-attribute name="title" value="Admin treatment handle" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/addTreatmentCategory.jsp" />
+	</definition>
+	<definition name="/control/selectTreatmentCategory" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/selectTreatmentCategory.jsp" />
+	</definition>
+	<definition name="/control/editTreatmentCategory" extends="adminPanel">
+		<put-attribute name="title" value="Admin treatment handle" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/control/editTreatmentCategory.jsp" />
 	</definition>
 
 	<!-- Reservation visit pages -->

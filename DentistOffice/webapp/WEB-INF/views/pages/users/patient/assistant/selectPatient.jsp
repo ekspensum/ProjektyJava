@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h3>Rezerwacja wizyty - wybór pacjenta</h3>
-<form name="selectPatientForm" method="POST" action="${pageContext.request.contextPath}/visit/assistant/selectPatient">
+
+<h3>Panel asystenta</h3>
+<h4>Wybierz pacjenta do edycji danych:</h4>
+<form name="selectPatientForm" id="selectPatientForm" >
 <table border="1" class="search">
 	<thead>
 		<tr>
@@ -31,5 +33,10 @@
 	</c:forEach>
 </table>
 <h3 class="msg">${searchedPatientList.size() == 0 ? 'Brak wyników wyszukiwania.' : '' }</h3>
-<input type="submit" value="Wybierz pacjenta" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" class="navigateButton" />
+<table style="width: 70%;">
+<tr>
+	<td align="left"><button form="selectPatientForm" type="submit" formmethod="POST" formaction="${pageContext.request.contextPath}/users/patient/assistant/selectedPatientToEdit" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" class="navigateButton">Edytuj dane pacjenta</button></td>
+	<td align="right"><button form="selectPatientForm" type="submit" formmethod="POST" formaction="${pageContext.request.contextPath}/users/patient/assistant/selectedPatientToShow" ${searchedPatientList.size() == 0 ? 'disabled' : '' } onclick="return validateSelectChbxPatient()" class="navigateButton">Pokaż wizyty pacjenta</button></td>
+</tr>
+</table>
 </form>

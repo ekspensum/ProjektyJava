@@ -3,8 +3,8 @@
 
 <h3>Panel asystenta</h3>
 
-<p>Wyszukaj pacjenta do edycji danych:</p>
+<p>Wyszukaj pacjenta do edycji lub przeglądu danych:</p>
 <form name="searchDataPatientForm" method="POST" action="${pageContext.request.contextPath}/users/patient/assistant/searchResult">
-	<input type="search" name="patientData" placeholder="Wpisz nazwisko lub pesel lub nr telefonu lub nazwę ulicy - max 20 znaków" size="70"/>
+	<input type="search" name="patientData" placeholder="Wpisz nazwisko i/lub pesel i/lub nr telefonu i/lub nazwę ulicy - max 20 znaków" size="70"/>
 	<input type="submit" value="Wyszukaj pacjenta" onclick="return validateInputFieldPatientData()" class="navigateButton" />
 </form>

@@ -76,7 +76,6 @@ public class Visit implements Serializable {
 	
 	@OneToOne
 	private User userLogged;
-	private LocalDateTime reservationDateTime;
-	
+	private LocalDateTime reservationDateTime;	
 	private LocalDateTime finalizedVisitDateTime;
 }

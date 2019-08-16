@@ -25,13 +25,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.dataSource(dataSource)
 		.usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username=?")
 		.authoritiesByUsernameQuery("SELECT username, role FROM users_role INNER JOIN users ON users_role.users_id = users.id INNER JOIN role ON users_role.roles_id = role.id WHERE username=?")
-		.passwordEncoder(new BCryptPasswordEncoder())
-		.and()
-		.inMemoryAuthentication()
-		.passwordEncoder(new BCryptPasswordEncoder())
-		.withUser("owner")
-		.password(new BCryptPasswordEncoder().encode("owner"))
-		.roles("ADMIN");
+		.passwordEncoder(new BCryptPasswordEncoder());
+//		.and()
+//		.inMemoryAuthentication()
+//		.passwordEncoder(new BCryptPasswordEncoder())
+//		.withUser("owner")
+//		.password(new BCryptPasswordEncoder().encode("owner"))
+//		.roles("ADMIN");
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.csrf().disable()
 		.authorizeRequests()
-		.mvcMatchers("/...", "/...")
+		.mvcMatchers("/visit/patient/*", "/users/patient/edit")
 		.hasRole("PATIENT")
 		.mvcMatchers("/...", "/...", "/...")
 		.hasRole("ADMIN")
@@ -47,6 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.hasRole("DOCTOR")
 		.mvcMatchers("/...")
 		.hasRole("ASSISTANT")
+		.mvcMatchers("/...")
+		.hasRole("OWNER")
+		.mvcMatchers("/loginSuccess")
+		.hasAnyRole("PATIENT", "ADMIN", "DOCTOR", "ASSISTANT", "OWNER")
 		.and()
 		.formLogin().loginPage("/login").defaultSuccessUrl("/loginSuccess").failureUrl("/login?error")
 		.and()

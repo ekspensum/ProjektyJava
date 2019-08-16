@@ -16,8 +16,12 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +31,7 @@ import lombok.Setter;
 @NamedQueries({
 	@NamedQuery(name = "readDentalTreatmentByNme", query = "SELECT dt FROM DentalTreatment dt WHERE dt.name LIKE :name")
 })
+@Indexed
 public class DentalTreatment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -37,16 +42,19 @@ public class DentalTreatment implements Serializable {
 	
 	@Size(min = 3, max = 100)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Field
 	private String name;
 	
 	@Size(min = 10, max = 200)
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Field
 	private String description;
 	
 	@DecimalMax("1000.0") @DecimalMin("0.0") 
 	private double price;
 	
 	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<TreatmentCategory> treatmentCategory;
 	
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "treatments")

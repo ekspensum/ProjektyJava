@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,8 +36,7 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
-	
-	
+		
     @Autowired
     private HibernateSearchService searchsService;
 	
@@ -176,6 +177,23 @@ public class UserService {
 		return admin;
 	}
 	
+	public Admin getAdmin(int id) {
+		return userRepository.readAdmin(id);
+	}
+	
+	public List<Admin> getAllAdmins(){
+		return userRepository.readAllAdmins();
+	}
+	
+	public void editAdmin(Admin admin) {
+		User user = admin.getUser();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
+		admin.setEditedDateTime(LocalDateTime.now());
+		List<Role> currentRolesList = createCurrentRolesList(user);
+		user.setRoles(currentRolesList);
+		userRepository.updateAdmin(admin);
+	}
+	
 	public Collection<? extends GrantedAuthority> getAuthoritiesLoggedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -235,6 +253,29 @@ public class UserService {
 		String username = authentication.getName();
 		User user = userRepository.readUser(username);
 		return user;
+	}
+	
+	public boolean checkDinstinctLoginWithRegisterUser(String login) {
+		try {
+			userRepository.readUser(login);
+		} catch (NoResultException e) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkDinstinctLoginWithEditUser(String login, int editUserId) {
+		User user = userRepository.readUser(editUserId);
+		if(user.getUsername().equals(login)) {
+			return true;
+		} else {
+			try {
+				userRepository.readUser(login);
+			} catch (NoResultException e) {
+				return true;
+			}			
+		}
+		return false;
 	}
 	
 //	PRIVATE METHODS

@@ -8,7 +8,7 @@
 	<a href="${pageContext.request.contextPath}/agenda"><button class="menuButton">Terminarz wizyt</button></a>
 	<a href="${pageContext.request.contextPath}/panels/patientPanel"><button class="menuButton">Strefa pacjenta</button></a>
 	<a href="${pageContext.request.contextPath}/contact"><button class="menuButton">Kontakt z nami</button></a>
-	<security:authorize access="hasAnyRole('ROLE_DOCTOR', 'ROLE_ASSISTANT', 'ROLE_ADMIN')">
+	<security:authorize access="hasAnyRole('ROLE_DOCTOR', 'ROLE_ASSISTANT', 'ROLE_ADMIN', 'ROLE_OWNER')">
 		<a href="${pageContext.request.contextPath}/panels/employeePanel"><button class="menuButton">Strefa pracownika</button></a>	
 	</security:authorize>
 </nav>

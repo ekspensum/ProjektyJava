@@ -23,6 +23,9 @@ public class DentalTreatmentService {
 	@Autowired
 	private UserService userService;
 	
+    @Autowired
+    private HibernateSearchService searchsService;
+	
 	public boolean addNewDentalTreatment(DentalTreatment dentalTreatment) {
 		dentalTreatment.setRegisteredDateTime(LocalDateTime.now());
 		User loggedUser = userService.getLoggedUser();
@@ -63,9 +66,23 @@ public class DentalTreatmentService {
 		return treatmentRepository.readDentalTreatment(id);
 	}
 	
+	public List<DentalTreatment> searchDentalTreatment(String text){
+		List<DentalTreatment> searchedTreatments = searchsService.searchDentalTreatmentNameDescriptionByKeywordQuery(text);
+		searchedTreatments.sort(new Comparator<DentalTreatment>() {
+
+			@Override
+			public int compare(DentalTreatment o1, DentalTreatment o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return searchedTreatments;
+	}
+	
+	
 	public boolean addTreatmentCategory(TreatmentCategory treatmentCategory) {
 		User loggedUser = userService.getLoggedUser();
 		treatmentCategory.setUserLogged(loggedUser);
+		treatmentCategory.setRegisteredDateTime(LocalDateTime.now());
 		if(treatmentRepository.saveTreatmentCategory(treatmentCategory)) {
 			return true;
 		} else {
@@ -84,7 +101,35 @@ public class DentalTreatmentService {
 		});
 		return allTreatmentCategory;
 	}
+
+	public List<TreatmentCategory> getTreatmentCategoriesListToEdit(){
+		List<TreatmentCategory> allTreatmentCategory = treatmentRepository.readAllTreatmentCategoryAboveFirstId();
+		allTreatmentCategory.sort(new Comparator<TreatmentCategory>() {
+
+			@Override
+			public int compare(TreatmentCategory o1, TreatmentCategory o2) {
+				return o1.getId() - o2.getId();
+			}
+		});
+		return allTreatmentCategory;
+	}
 	
+	public TreatmentCategory getTreatmentCategory(int id) {
+		return treatmentRepository.readTreatmentCategory(id);
+	}
+	
+	public boolean editTreatmentCategory(TreatmentCategory treatmentCategory) {
+		User loggedUser = userService.getLoggedUser();
+		treatmentCategory.setUserLogged(loggedUser);
+		treatmentCategory.setEditedDateTime(LocalDateTime.now());
+		if(treatmentRepository.updateTreatmentCategory(treatmentCategory)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+//	PRIVATE METHODS
 	private List<TreatmentCategory> createCurrentTreatmentsCategoryList(DentalTreatment dentalTreatment){
 		List<TreatmentCategory> selectedIdCategories = dentalTreatment.getTreatmentCategory(); //only id is selected on page. Role and roleName was't change
 		List<TreatmentCategory> currentCategoryList = new ArrayList<>();

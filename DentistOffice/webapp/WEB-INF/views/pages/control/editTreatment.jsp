@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
-<h4>Dodaj nowy zabieg</h4>
-<form:form method="POST" modelAttribute="dentalTreatment" action="${pageContext.request.contextPath}/control/addTreatment">
+
+<h4>Edytuj zabieg</h4>
+<form:form method="POST" modelAttribute="dentalTreatment" action="${pageContext.request.contextPath}/control/editTreatment">
 <table>
 	<tr>
 		<td>Nazwa zabiegu</td>
@@ -29,7 +30,7 @@
 	</tr>
 	<tr><td colspan="2"><br></td></tr>
 	<tr>
-		<td colspan="2" align="right"><input type="submit" value="Dodaj nowy zabieg" class="navigateButton" ></td>
+		<td colspan="2" align="right"><input type="submit" value="Zapisz zmiany" class="navigateButton" ></td>
 	</tr>
 </table>
 </form:form>

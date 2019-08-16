@@ -34,7 +34,7 @@ import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
 @Controller
-@SessionAttributes({"doctor", "image", "patient", "visitsByPatientAndStatus"})
+@SessionAttributes({"doctor", "image", "patient", "visitsByPatientAndStatus", "editUserId"})
 public class DoctorController {
 
 	@Autowired
@@ -66,21 +66,20 @@ public class DoctorController {
 	
 	@RequestMapping(path = "/users/doctor/admin/register", method = RequestMethod.POST)
 	public String registerDoctor(
-			@Valid
-			Doctor doctor,
-			BindingResult result,
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			String [] mondayTime, String [] mondayTimeBool,
-			String [] tuesdayTime, String [] tuesdayTimeBool,
-			String [] wednesdayTime, String [] wednesdayTimeBool,
-			String [] thursdayTime, String [] thursdayTimeBool,
-			String [] fridayTime, String [] fridayTimeBool,
-			String [] saturdayTime, String [] saturdayTimeBool,
-			String [] sundayTime, String [] sundayTimeBool
-			) throws IOException {
+								@Valid Doctor doctor,
+								BindingResult result,
+								Model model,
+								@RequestParam("photo") MultipartFile photo,
+								String [] mondayTime, String [] mondayTimeBool,
+								String [] tuesdayTime, String [] tuesdayTimeBool,
+								String [] wednesdayTime, String [] wednesdayTimeBool,
+								String [] thursdayTime, String [] thursdayTimeBool,
+								String [] fridayTime, String [] fridayTimeBool,
+								String [] saturdayTime, String [] saturdayTimeBool,
+								String [] sundayTime, String [] sundayTimeBool
+								) throws IOException {
 		
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(doctor.getUser().getUsername());
 		WorkingWeek workingWeek = new WorkingWeek();
 
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = new LinkedHashMap<>();
@@ -91,13 +90,16 @@ public class DoctorController {
 		doctor.setWorkingWeek(workingWeek);
 		doctor.setPhoto(photo.getBytes());
 
-		if (!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
+		if (!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId() && dinstinctLogin) {
 			userService.addNewDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successRegisterDoctor"));
 			return "forward:/message/employee/success";
 		} else {
 			if (doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
+			}
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
 			model.addAttribute("rolesList", userService.getAllRoles());
 			model.addAttribute("templateWorkingWeekMap", workingWeekMap);
@@ -117,6 +119,7 @@ public class DoctorController {
 	public String selectDoctorToEdit(@RequestParam("doctorId") String doctorId, RedirectAttributes redirectAttributes) {
 		Doctor doctor = userService.getDoctor(Integer.valueOf(doctorId));
 		redirectAttributes.addFlashAttribute("doctor", doctor);
+		redirectAttributes.addFlashAttribute("editUserId", doctor.getUser().getId());
 		return "redirect:/users/doctor/admin/edit";
 	}
 	
@@ -133,23 +136,22 @@ public class DoctorController {
 	
 	@RequestMapping(path = "/users/doctor/admin/edit", method = RequestMethod.POST)
 	public String editDataDoctor(
-			@Valid
-			Doctor doctor,
-			BindingResult result, 
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			@SessionAttribute(name = "image")
-			byte [] image,
-			String [] mondayTime, String [] mondayTimeBool,
-			String [] tuesdayTime, String [] tuesdayTimeBool,
-			String [] wednesdayTime, String [] wednesdayTimeBool,
-			String [] thursdayTime, String [] thursdayTimeBool,
-			String [] fridayTime, String [] fridayTimeBool,
-			String [] saturdayTime, String [] saturdayTimeBool,
-			String [] sundayTime, String [] sundayTimeBool
-			) throws IOException {
+								@Valid Doctor doctor,
+								BindingResult result, 
+								Model model,
+								@SessionAttribute("editUserId") int editUserId,
+								@RequestParam("photo") MultipartFile photo,
+								@SessionAttribute(name = "image") byte [] image,
+								String [] mondayTime, String [] mondayTimeBool,
+								String [] tuesdayTime, String [] tuesdayTimeBool,
+								String [] wednesdayTime, String [] wednesdayTimeBool,
+								String [] thursdayTime, String [] thursdayTimeBool,
+								String [] fridayTime, String [] fridayTimeBool,
+								String [] saturdayTime, String [] saturdayTimeBool,
+								String [] sundayTime, String [] sundayTimeBool
+								) throws IOException {
 
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(doctor.getUser().getUsername(), editUserId);
 		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
 
@@ -161,13 +163,16 @@ public class DoctorController {
 		if(photo.getBytes().length == 0) {
 			doctor.setPhoto(image);			
 		}
-		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
+		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId() && dinstinctLogin) {
 			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
 			return "forward:/message/employee/success";
 		} else {
 			if(doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
+			}
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
 			model.addAttribute("rolesList", userService.getAllRoles());
 			model.addAttribute("workingWeekMap", workingWeekMap);
@@ -180,6 +185,7 @@ public class DoctorController {
 	public String selfEditDoctor(Model model) {
 		Doctor doctor = userService.getLoggedDoctor();
 		model.addAttribute("doctor", doctor);
+		model.addAttribute("editUserId", doctor.getUser().getId());
 		model.addAttribute("image", doctor.getPhoto());
 		model.addAttribute("rolesList", userService.getAllRoles());				
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = doctor.getWorkingWeek().getWorkingWeekMap();
@@ -190,24 +196,22 @@ public class DoctorController {
 	
 	@RequestMapping(path = "/users/doctor/edit", method = RequestMethod.POST)
 	public String selfEditDataDoctor(
-			@Valid
-			@ModelAttribute(name = "doctor")
-			Doctor doctor,
-			BindingResult result,
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			@SessionAttribute(name = "image")
-			byte [] image,
-			String [] mondayTime, String [] mondayTimeBool,
-			String [] tuesdayTime, String [] tuesdayTimeBool,
-			String [] wednesdayTime, String [] wednesdayTimeBool,
-			String [] thursdayTime, String [] thursdayTimeBool,
-			String [] fridayTime, String [] fridayTimeBool,
-			String [] saturdayTime, String [] saturdayTimeBool,
-			String [] sundayTime, String [] sundayTimeBool
-			) throws IOException {
+									@Valid Doctor doctor,
+									BindingResult result,
+									Model model,
+									@SessionAttribute("editUserId") int editUserId,
+									@RequestParam("photo") MultipartFile photo,
+									@SessionAttribute(name = "image") byte [] image,
+									String [] mondayTime, String [] mondayTimeBool,
+									String [] tuesdayTime, String [] tuesdayTimeBool,
+									String [] wednesdayTime, String [] wednesdayTimeBool,
+									String [] thursdayTime, String [] thursdayTimeBool,
+									String [] fridayTime, String [] fridayTimeBool,
+									String [] saturdayTime, String [] saturdayTimeBool,
+									String [] sundayTime, String [] sundayTimeBool
+									) throws IOException {
 
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(doctor.getUser().getUsername(), editUserId);
 		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
 
@@ -219,15 +223,14 @@ public class DoctorController {
 		if(photo.getBytes().length == 0) {
 			doctor.setPhoto(image);			
 		}
-		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId()) {
+		if(!result.hasErrors() && dinstinctLogin) {
 			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
 			return "forward:/message/employee/success";
 		} else {
-			if(doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
 			model.addAttribute("workingWeekMap", workingWeekMap);
 			model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 			return "/users/doctor/edit";
@@ -243,20 +246,12 @@ public class DoctorController {
 	public String searchPatientByDoctor(@RequestParam(name = "patientData") String patientData, RedirectAttributes redirectAttributes) {
 		if(patientData.length() > 20) {
 			String substringPatientData = patientData.substring(0, 20);
-//			List<Patient> searchedPatientList = userService.searchPatient(substringPatientData);	
-			
 			Doctor loggedDoctor = userService.getLoggedDoctor();
-//			redirectAttributes.addAttribute("doctor", loggedDoctor);
 			List<Patient> searchedPatientList = searchService.searchPatientNamePeselStreetPhoneByKeywordQueryAndDoctor(substringPatientData, loggedDoctor);
-			
 			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
 		} else {
-//			List<Patient> searchedPatientList = userService.searchPatient(patientData);		
-			
 			Doctor loggedDoctor = userService.getLoggedDoctor();
-//			redirectAttributes.addAttribute("doctor", loggedDoctor);
 			List<Patient> searchedPatientList = searchService.searchPatientNamePeselStreetPhoneByKeywordQueryAndDoctor(patientData, loggedDoctor);
-			
 			redirectAttributes.addFlashAttribute("searchedPatientList", searchedPatientList);
 		}
 		return "redirect:/users/doctor/selectPatient";

@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
-<h3>Rejestracja pacjenta</h3>
+<h4>Edycja administratora</h4>
 	<form:form method="POST"
-		action="${pageContext.request.contextPath}/users/patient/register"
-		modelAttribute="patient" enctype="multipart/form-data">
+		action="${pageContext.request.contextPath}/users/admin/owner/edit"
+		modelAttribute="admin" enctype="multipart/form-data">
 		<table>
 			<tbody>
 				<tr>
+					<td rowspan="12"><img src="data:image;base64,${admin.base64Photo }" width="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td class="msgError" ><form:errors path="user.username" />${distinctLoginError }</td>
@@ -16,6 +17,21 @@
 					<td>Hasło:</td>
 					<td><form:input path="user.passwordField" id="password"	type="password" /></td>
 					<td><form:errors path="user.passwordField" class="msgError" /></td>
+				</tr>
+				<tr>
+					<td>Aktywny:</td>
+					<td><form:checkbox path="user.enabled" /></td>
+					<td><form:errors path="user.enabled" class="msgError" /></td>
+				</tr>
+				<tr>
+					<td>Rola 1:</td>
+					<td><form:select path="user.roles[0].id" items="${rolesList}" itemValue="id" itemLabel="roleName" multiple="false"/></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Rola 2:</td>
+					<td><form:select path="user.roles[1].id" items="${rolesList}" itemValue="id" itemLabel="roleName" multiple="false"/></td>
+					<td class="msgError">${roleError}</td>
 				</tr>
 				<tr>
 					<td>Imię:</td>
@@ -33,36 +49,6 @@
 					<td><form:errors path="pesel" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Kraj:</td>
-					<td><form:input path="country" id="country" /></td>
-					<td><form:errors path="country" class="msgError" /></td>
-				</tr>
-				<tr>
-					<td>Kod pocztowy:</td>
-					<td><form:input path="zipCode" id="zipCode" /></td>
-					<td><form:errors path="zipCode" class="msgError" /></td>
-				</tr>
-				<tr>
-					<td>Miasto:</td>
-					<td><form:input path="city" id="city" /></td>
-					<td><form:errors path="city" class="msgError" /></td>
-				</tr>
-				<tr>
-					<td>Ulica:</td>
-					<td><form:input path="street" id="street" /></td>
-					<td><form:errors path="street" class="msgError" /></td>
-				</tr>
-				<tr>
-					<td>Nr domu:</td>
-					<td><form:input path="streetNo" id="streetNo" /></td>
-					<td><form:errors path="streetNo" class="msgError" /></td>
-				</tr>
-				<tr>
-					<td>Nr lokalu:</td>
-					<td><form:input path="unitNo" id="unitNo" /></td>
-					<td><form:errors path="unitNo" class="msgError" /></td>
-				</tr>
-				<tr>
 					<td>Email:</td>
 					<td><form:input path="email" id="email" /></td>
 					<td><form:errors path="email" class="msgError" /></td>
@@ -78,8 +64,9 @@
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td></td><td><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
+					<td></td><td><input type="submit" value="Zpisz zmiany" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>
-</form:form>
+	</form:form>
+

@@ -24,7 +24,7 @@ import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.service.UserService;
 
 @Controller
-@SessionAttributes({"assistant", "image"})
+@SessionAttributes({"assistant", "image", "editUserId"})
 public class AssistantController {
 
 	@Autowired
@@ -49,21 +49,24 @@ public class AssistantController {
 	
 	@RequestMapping(path = "/users/assistant/admin/register", method = RequestMethod.POST)
 	public String registrationAssistantByAdmin(
-					@Valid 
-					Assistant assistant, 			
-					BindingResult result,
-					Model model,
-					@RequestParam("photo") 
-					MultipartFile photo) throws IOException {
+												@Valid Assistant assistant, 			
+												BindingResult result,
+												Model model,
+												@RequestParam("photo")	MultipartFile photo
+												) throws IOException {
 		
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(assistant.getUser().getUsername());
 		assistant.setPhoto(photo.getBytes());
-		if(!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
+		if(!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId() && dinstinctLogin) {
 			userService.addNewAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successRegisterAssistant"));
 			return "forward:/message/employee/success";
 		} else {
 			if(assistant.getUser().getRoles().get(0).getId() == assistant.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
+			}
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
 			model.addAttribute("rolesList", userService.getAllRoles());
 			return "/users/assistant/admin/register";
@@ -81,6 +84,7 @@ public class AssistantController {
 	public String selectAssistantToEditByAdmin(@RequestParam("assistantId") String assistantId, RedirectAttributes redirectAttributes) {		
 		Assistant assistant = userService.getAssistant(Integer.valueOf(assistantId));
 		redirectAttributes.addFlashAttribute("assistant", assistant);
+		redirectAttributes.addFlashAttribute("editUserId", assistant.getUser().getId());
 		return "redirect:/users/assistant/admin/edit";
 	}
 	
@@ -94,25 +98,28 @@ public class AssistantController {
 	
 	@RequestMapping(path = "/users/assistant/admin/edit", method = RequestMethod.POST)
 	public String editDataAssistantByAdmin(
-			@Valid
-			Assistant assistant,
-			BindingResult result,
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			@SessionAttribute(name = "image")
-			byte [] image) throws IOException {
+											@Valid Assistant assistant,
+											BindingResult result,
+											Model model,
+											@SessionAttribute("editUserId") int editUserId,
+											@RequestParam("photo") MultipartFile photo,
+											@SessionAttribute(name = "image") byte [] image
+											) throws IOException {
 		
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(assistant.getUser().getUsername(), editUserId);
 		if(photo.getBytes().length == 0) {
 			assistant.setPhoto(image);			
 		}
-		if (!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId()) {
+		if (!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId() && dinstinctLogin) {
 			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
 			return "forward:/message/employee/success";
 		} else {
 			if(assistant.getUser().getRoles().get(0).getId() == assistant.getUser().getRoles().get(1).getId()) {
 				model.addAttribute("roleError", env.getProperty("roleError"));
+			}
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
 			model.addAttribute("rolesList", userService.getAllRoles());
 			return "/users/assistant/admin/edit";
@@ -123,30 +130,33 @@ public class AssistantController {
 	public String selfEditAssistant(Model model) {
 		Assistant assistant = userService.getLoggedAssistant();
 		model.addAttribute("assistant", assistant);
+		model.addAttribute("editUserId", assistant.getUser().getId());
 		model.addAttribute("image", assistant.getPhoto());
 		return "/users/assistant/edit";
 	}
 	
 	@RequestMapping(path = "/users/assistant/edit", method = RequestMethod.POST)
 	public String selfEditDataAssistant(
-			@Valid
-			@ModelAttribute(name = "assistant")
-			Assistant assistant,
-			BindingResult result, 
-			Model model,
-			@RequestParam("photo") 
-			MultipartFile photo,
-			@SessionAttribute(name = "image")
-			byte [] image) throws IOException {
+										@Valid Assistant assistant,
+										BindingResult result, 
+										Model model,
+										@SessionAttribute("editUserId") int editUserId,
+										@RequestParam("photo") MultipartFile photo,
+										@SessionAttribute(name = "image") byte [] image
+										) throws IOException {
 
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(assistant.getUser().getUsername(), editUserId);
 		if(photo.getBytes().length == 0) {
 			assistant.setPhoto(image);			
 		}
-		if (!result.hasErrors()) {
+		if (!result.hasErrors() && dinstinctLogin) {
 			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
 			return "forward:/message/employee/success";
 		} else {
+			if(!dinstinctLogin) {
+				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
+			}
 			return "/users/assistant/edit";
 		}
 	}

@@ -11,7 +11,7 @@
 					<td rowspan="16"><img src="data:image;base64,${patient.base64Photo }" width="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
-					<td><form:errors path="user.username" class="msgError" /></td>
+					<td class="msgError" ><form:errors path="user.username" />${distinctLoginError }</td>
 				</tr>
 				<tr>
 					<td>Hasło:</td>
