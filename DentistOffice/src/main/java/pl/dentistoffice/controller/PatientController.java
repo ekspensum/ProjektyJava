@@ -119,7 +119,7 @@ public class PatientController {
 											Model model,
 											@SessionAttribute("editUserId") int editUserId,
 											@RequestParam("photo") MultipartFile photo,
-											@SessionAttribute(name = "image") byte [] image
+											@SessionAttribute(name = "image", required = false) byte [] image
 											) throws IOException {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(patient.getUser().getUsername(), editUserId);
@@ -216,7 +216,7 @@ public class PatientController {
 										Model model,
 										@SessionAttribute("editUserId") int editUserId,
 										@RequestParam("photo") MultipartFile photo,
-										@SessionAttribute(name = "image") byte [] image
+										@SessionAttribute(name = "image", required = false) byte [] image
 										) throws IOException {
 
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(patient.getUser().getUsername(), editUserId);

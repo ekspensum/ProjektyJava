@@ -41,7 +41,7 @@ public class InitApplicationService {
 			String [] roleArray = {"Select", "ROLE_DOCTOR", "ROLE_PATIENT", "ROLE_ASSISTANT", "ROLE_ADMIN", "ROLE_OWNER"};
 			String [] roleNameArray = {"Wybierz rolę", "Stomatolog", "Pacjent", "Asystent", "Administrator", "Właściciel"};
 			Role role;
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 				role = new Role();
 				role.setRole(roleArray[i]);
 				role.setRoleName(roleNameArray[i]);

@@ -110,7 +110,7 @@ public class AdminController {
 									Model model,
 									@SessionAttribute("editUserId") int editUserId,
 									@RequestParam("photo") MultipartFile photo,
-									@SessionAttribute(name = "image") byte [] image
+									@SessionAttribute(name = "image", required = false) byte [] image
 									) throws IOException {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(admin.getUser().getUsername(), editUserId);
@@ -150,7 +150,7 @@ public class AdminController {
 								Model model,
 								@SessionAttribute("editUserId") int editUserId,
 								@RequestParam("photo") MultipartFile photo,
-								@SessionAttribute(name = "image") byte [] image
+								@SessionAttribute(name = "image", required = false) byte [] image
 								) throws IOException {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithEditUser(admin.getUser().getUsername(), editUserId);

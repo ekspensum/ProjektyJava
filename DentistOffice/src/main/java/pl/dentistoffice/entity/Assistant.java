@@ -74,6 +74,10 @@ public class Assistant implements Serializable {
 	private LocalDateTime editedDateTime;
 	
 	public String getBase64Photo() {
-		return Base64.getEncoder().encodeToString(this.photo);
+		if(photo == null) {
+			return "";
+		} else {
+			return Base64.getEncoder().encodeToString(this.photo);			
+		}
 	}
 }

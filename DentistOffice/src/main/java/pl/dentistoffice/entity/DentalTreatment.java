@@ -45,12 +45,12 @@ public class DentalTreatment implements Serializable {
 	@Field
 	private String name;
 	
-	@Size(min = 10, max = 200)
-	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Size(min = 10, max = 500)
+	@Pattern(regexp="^[^|'%^#~}{\\]\\[;=<>`]*$")
 	@Field
 	private String description;
 	
-	@DecimalMax("1000.0") @DecimalMin("0.0") 
+	@DecimalMax("10000.0") @DecimalMin("0.0") 
 	private double price;
 	
 	@ManyToMany

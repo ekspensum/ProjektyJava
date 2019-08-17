@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Base64;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,8 +51,9 @@ public class Doctor implements Serializable {
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
 	private String lastName;
 	
-	@Size(min = 10, max = 500)
-	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
+	@Size(min = 10, max = 1024)
+	@Pattern(regexp="^[^|'%^#~}{\\]\\[;=<>`]*$")
+	@Column(length = 1024)
 	private String description;
 	
 	@Email
@@ -86,7 +88,11 @@ public class Doctor implements Serializable {
 	private LocalDateTime editedDateTime;
 	
 	public String getBase64Photo() {
-		return Base64.getEncoder().encodeToString(this.photo);
+		if(photo == null) {
+			return "";
+		} else {
+			return Base64.getEncoder().encodeToString(this.photo);			
+		}
 	}
 	
 }

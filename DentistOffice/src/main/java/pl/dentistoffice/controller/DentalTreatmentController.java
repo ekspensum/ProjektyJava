@@ -151,7 +151,7 @@ public class DentalTreatmentController {
 	}
 	
 	@RequestMapping(path = "/control/selectTreatmentCategory", method = RequestMethod.POST)
-	public String selectTreatmentCategory(@RequestParam() String categoryId, RedirectAttributes redirectAttributes) {
+	public String selectTreatmentCategory(@RequestParam("categoryId") String categoryId, RedirectAttributes redirectAttributes) {
 		TreatmentCategory selectedTreatmentCategory = dentalTreatmentService.getTreatmentCategory(Integer.valueOf(categoryId));
 		redirectAttributes.addFlashAttribute("treatmentCategory", selectedTreatmentCategory);
 		return "redirect:/control/editTreatmentCategory";

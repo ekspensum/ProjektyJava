@@ -18,7 +18,7 @@
 			<tr>
 				<td>${loop.count }</td>
 				<td>${treatment.name }</td>
-				<td>${treatment.description }</td>
+				<td style="text-align: left;">${treatment.description }</td>
 				<td>${treatment.price }</td>
 				<td><input type="checkbox" name="treatmentId" value="${treatment.id }"/></td>
 			</tr>
