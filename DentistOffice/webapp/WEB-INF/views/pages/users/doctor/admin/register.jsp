@@ -70,7 +70,7 @@
 				</tr>
 			</tbody>
 		</table>
-<br>		
+<p><b>Zaznacz planowane godziny pracy:</b></p>		
 <table border="1" class="workingTime">		
 <c:forEach items="${templateWorkingWeekMap}" var="map" varStatus="vs1">
 	<tr><th colspan="8">${dayOfWeekPolish[map.key.value] }</th></tr>

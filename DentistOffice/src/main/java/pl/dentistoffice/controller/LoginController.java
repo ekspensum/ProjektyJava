@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.dentistoffice.service.UserService;
@@ -27,9 +26,10 @@ public class LoginController {
 	
 	@RequestMapping(path = "/login")
 	public String login(
-			@RequestParam(value = "logout", required = false) String logout,
-			@RequestParam(value = "error", required = false) String error,
-			Model model) {
+						@RequestParam(value = "logout", required = false) String logout,
+						@RequestParam(value = "error", required = false) String error,
+						Model model) {
+		
 		if(error != null) {
 			model.addAttribute("msg", env.getProperty("loginError"));
 		}
@@ -39,13 +39,7 @@ public class LoginController {
 
 		return "login";
 	}
-	
-	@RequestMapping(path = "/login", method = RequestMethod.POST)
-	public String login() {
 
-		return "forward:/patientPanel";
-	}
-	
 	@RequestMapping(path = "/loginSuccess")
 	public String loginSuccess() {
 		Collection<? extends GrantedAuthority> authoritiesLoggedUser = userService.getAuthoritiesLoggedUser();

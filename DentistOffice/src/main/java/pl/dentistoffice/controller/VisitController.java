@@ -74,7 +74,7 @@ public class VisitController {
 			workingWeekFreeTimeMap = visitService.getWorkingWeekFreeTimeMap(doctor, 0, 7);
 			model.addAttribute("dayStart", 0);
 			model.addAttribute("disableLeftArrow", "YES");
-		} else if (weekResultDriver != null) {
+		} else {
 			if (weekResultDriver.equals("stepRight")) {
 				if (dayStartFromSession < 21) {
 					dayStart = dayStartFromSession + 7;
@@ -192,7 +192,7 @@ public class VisitController {
 			workingWeekFreeTimeMap = visitService.getWorkingWeekFreeTimeMap(doctor, 0, 7);
 			model.addAttribute("dayStart", 0);
 			model.addAttribute("disableLeftArrow", "YES");
-		} else if (weekResultDriver != null) {
+		} else {
 			if (weekResultDriver.equals("stepRight")) {
 				if (dayStartFromSession < 21) {
 					dayStart = dayStartFromSession + 7;

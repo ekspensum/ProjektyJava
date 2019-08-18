@@ -285,3 +285,26 @@ textarea.homePageTreatmentDescription {
     border: none;
     background-color: transparent;
 }
+
+table.homePageAgenda {
+    border-collapse: collapse;
+    background-color: rgb(132, 148, 131);
+    width: 150px;
+    height: 150px;
+}
+
+button.homePageAgenda {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    width: 125px;
+    height: 125px;
+}
+
+img.homePageAgenda {
+    height: 110px;
+    max-width: 110px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
