@@ -2,6 +2,8 @@ package pl.dentistoffice.controller;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -293,6 +295,29 @@ public class DoctorController {
 		return "/users/doctor/showPatient";
 	}
 	
+	@RequestMapping(path = "/users/doctor/showMyVisits")
+	public String showMyVisits(Model model) {
+		LocalDate today = LocalDate.now();
+		model.addAttribute("dateFrom", today);
+		Doctor loggedDoctor = userService.getLoggedDoctor();
+		model.addAttribute("doctor", loggedDoctor);
+		List<Visit> visitsToShow = visitService.getVisitsToShow(LocalDateTime.now(), loggedDoctor);
+		model.addAttribute("visitsToShow", visitsToShow);
+		return "/users/doctor/showMyVisits";
+	}
+	
+	@RequestMapping(path = "/users/doctor/showMyVisits", method = RequestMethod.POST)
+	public String showMyVisits(@SessionAttribute("doctor") Doctor loggedDoctor,
+							   @RequestParam("dateFrom") String dateFrom, 
+							   Model model) {
+		
+		LocalDate selectedDate = LocalDate.parse(dateFrom);
+		LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate, LocalTime.now());
+		model.addAttribute("dateFrom", selectedDate);
+		List<Visit> visitsToShow = visitService.getVisitsToShow(selectedDateTime, loggedDoctor);
+		model.addAttribute("visitsToShow", visitsToShow);
+		return "/users/doctor/showMyVisits";
+	}
 	
 	
 //	Private methods

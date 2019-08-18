@@ -99,6 +99,11 @@
 		<put-attribute name="title" value="Doctor show patient" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/showPatient.jsp" />
 	</definition>
+	<!-- Doctor glance his visits -->
+	<definition name="/users/doctor/showMyVisits" extends="doctorPanel">
+		<put-attribute name="title" value="Doctor show patient" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/doctor/showMyVisits.jsp" />
+	</definition>	
 	
 	<!-- Assistant registration and editing by admin -->	
 	<definition name="/users/assistant/admin/register" extends="adminPanel">

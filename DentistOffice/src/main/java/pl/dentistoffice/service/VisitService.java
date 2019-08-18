@@ -238,6 +238,19 @@ public class VisitService {
 		return visits;
 	}
 	
+	public List<Visit> getVisitsToShow(LocalDateTime dateTimeFrom, Doctor doctor){
+		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
+		List<Visit> visits = visitRepository.readVisits(dateTimeFrom, LocalDateTime.now().plusDays(30), visitStatus, doctor);
+		visits.sort(new Comparator<Visit>() {
+
+			@Override
+			public int compare(Visit o1, Visit o2) {
+				return o1.getVisitDateTime().compareTo(o2.getVisitDateTime());
+			}
+		});
+		return visits;
+	}
+	
 	public Visit getVisit(int visitId) {
 		return visitRepository.readVisit(visitId);
 	}

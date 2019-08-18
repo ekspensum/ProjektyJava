@@ -27,7 +27,7 @@
 			</c:forEach>
 	</table>
 	<c:if test="${workingWeekFreeTimeMap.size() > 0 }">
-		<b>Wybrany lekarz: ${doctor.firstName }	${doctor.lastName }</b><br><br>
+		<p><b>Wybrany lekarz: ${doctor.firstName }	${doctor.lastName }</b></p>
 		<button type="submit" name="weekResultDriver" formmethod="POST" formaction="${pageContext.request.contextPath}/agenda" value="stepLeft" ${disableLeftArrow eq 'YES' ? 'disabled' : '' } class="navigateButton" >Poprzednie 7 dni</button>
 		<button type="submit" name="weekResultDriver" formmethod="POST" formaction="${pageContext.request.contextPath}/agenda" value="stepRight" ${disableRightArrow eq 'YES' ? 'disabled' : '' } class="navigateButton" >Następne 7 dni</button>
 		<br><br>
