@@ -59,7 +59,7 @@ public class DoctorController {
 	
 	@RequestMapping(path = "/users/doctor/admin/register")
 	public String registrationDoctor(Model model) {
-		model.addAttribute("rolesList", userService.getAllRoles());
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));
 		model.addAttribute("doctor", new Doctor());
 		model.addAttribute("templateWorkingWeekMap", userService.getTemplateWorkingWeekMap());
 		model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
@@ -92,18 +92,15 @@ public class DoctorController {
 		doctor.setWorkingWeek(workingWeek);
 		doctor.setPhoto(photo.getBytes());
 
-		if (!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if (!result.hasErrors() && dinstinctLogin) {
 			userService.addNewDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successRegisterDoctor"));
 			return "forward:/message/employee/success";
 		} else {
-			if (doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));
 			model.addAttribute("templateWorkingWeekMap", workingWeekMap);
 			model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 			return "/users/doctor/admin/register";
@@ -129,7 +126,7 @@ public class DoctorController {
 	public String editDoctor(@ModelAttribute("doctor") Doctor doctor, Model model) {
 		model.addAttribute("doctor", doctor);
 		model.addAttribute("image", doctor.getPhoto());
-		model.addAttribute("rolesList", userService.getAllRoles());				
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));				
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = doctor.getWorkingWeek().getWorkingWeekMap();
 		model.addAttribute("workingWeekMap", workingWeekMap);
 		model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
@@ -165,18 +162,15 @@ public class DoctorController {
 		if(photo.getBytes().length == 0) {
 			doctor.setPhoto(image);			
 		}
-		if(!result.hasErrors() && doctor.getUser().getRoles().get(0).getId() != doctor.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if(!result.hasErrors() && dinstinctLogin) {
 			userService.editDoctor(doctor);
 			model.addAttribute("success", env.getProperty("successUpdateDoctor"));
 			return "forward:/message/employee/success";
 		} else {
-			if(doctor.getUser().getRoles().get(0).getId() == doctor.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));
 			model.addAttribute("workingWeekMap", workingWeekMap);
 			model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 			return "/users/doctor/admin/edit";

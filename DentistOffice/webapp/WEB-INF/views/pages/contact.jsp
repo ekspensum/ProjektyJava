@@ -27,5 +27,5 @@
 		</script>
 	</c:if>
 	<c:if test="${alert == 'NO' }">
-		<script>alert("Mail has not been sent!");</script>
+		<script>alert("Nie udało się wysłać listu!");</script>
 	</c:if>

@@ -42,7 +42,7 @@ table.search tr:hover {
     left: 0%;
     width: 100%;
     top: 0%;
-    height: 15%;
+    height: 17%;
     padding-left: 1%;
     position: fixed;
     float: left;
@@ -53,8 +53,8 @@ table.search tr:hover {
 #footer {
     left: 0%;
     width: 100%;
-    top: 95%;
-    height: 5%;
+    top: 94%;
+    height: 6%;
     position: fixed;
     border-top: 2px solid beige;
     text-align: center;
@@ -63,8 +63,8 @@ table.search tr:hover {
 #menu {
     left: 0%;
     width: 100%;
-    top: 15%;
-    height: 5%;
+    top: 17%;
+    height: 7%;
     border-bottom: 2px solid beige;
     text-align: center;
     position: fixed;
@@ -77,9 +77,9 @@ table.search tr:hover {
 #content {
     left: 0%;
     width: 100%;
-    top: 20%;
-    height: 75%;
-    bottom: 5%;
+    top: 24%;
+    height: 70%;
+    bottom: 6%;
     overflow: auto;
     padding-left: 1%;
     position: fixed;
@@ -88,9 +88,9 @@ table.search tr:hover {
 #userMenu {
     left: 80%;
     width: 20%;
-    top: 20%;
-    height: 75%;
-    bottom: 5%;
+    top: 24%;
+    height: 70%;
+    bottom: 6%;
     padding-left: 2%;
     position: fixed;
 }
@@ -98,9 +98,9 @@ table.search tr:hover {
 #userContent {
     left: 0%;
     width: 79%;
-    top: 20%;
-    height: 75%;
-    bottom: 5%;
+    top: 24%;
+    height: 70%;
+    bottom: 6%;
     overflow: auto;
     padding-left: 1%;
     border-right: 2px solid beige;
@@ -108,7 +108,7 @@ table.search tr:hover {
 }
 
 #clock {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
 }
 

@@ -26,13 +26,13 @@
 				</tr>
 				<tr>
 					<td>Rola 1:</td>
-					<td><form:select path="user.roles[0].id" multiple="false" items="${rolesList}" itemValue="id" itemLabel="roleName" /></td>
-					<td></td>
+					<td><form:select path="user.roles[0].id"  multiple="false" >
+						<form:option selected="true" value="4">Asystent</form:option>
+					</form:select></td>
 				</tr>
 				<tr>
 					<td>Rola 2:</td>
-					<td><form:select path="user.roles[1].id" multiple="false" items="${rolesList}" itemValue="id" itemLabel="roleName" /></td>
-					<td class="msgError">${roleError}</td>
+					<td><form:select path="user.roles[1].id" items="${rolesList}" itemValue="id" itemLabel="roleName" multiple="false" /></td>
 				</tr>
 				<tr>
 					<td>Imię:</td>

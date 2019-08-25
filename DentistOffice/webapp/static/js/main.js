@@ -3,7 +3,7 @@
  */
 
 function sentEmailConfirm() {
-    alert("Mail has been sent!");
+    alert("List został wysłany!");
     document.getElementById("subject").value = "";
     document.getElementById("message").value = "";
     document.getElementById("replyMail").value = "";

@@ -84,6 +84,7 @@ public class Doctor implements Serializable {
 	@OneToOne
 	@Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
 	private WorkingWeek workingWeek;
+
 	private LocalDateTime registeredDateTime;
 	private LocalDateTime editedDateTime;
 	

@@ -25,13 +25,21 @@
 				</tr>
 				<tr>
 					<td>Rola 1:</td>
-					<td><form:select path="user.roles[0].id" items="${rolesList}" itemValue="id" itemLabel="roleName" multiple="false"/></td>
-					<td></td>
+					<td><form:select path="user.roles[0].id"  multiple="false" >
+						<form:option selected="true" value="5">Administrator</form:option>
+					</form:select></td>
 				</tr>
 				<tr>
 					<td>Rola 2:</td>
-					<td><form:select path="user.roles[1].id" items="${rolesList}" itemValue="id" itemLabel="roleName" multiple="false"/></td>
-					<td class="msgError">${roleError}</td>
+					<td><form:select path="user.roles[1].id" multiple="false">
+						<c:forEach items="${admin.user.roles }" var="userRole">
+							<c:if test="${userRole.id != 5}">
+								<c:forEach items="${rolesList}" var="role">
+									<option ${role.id == userRole.id ? 'selected' : '' } value="${role.id}">${role.roleName }</option>
+								</c:forEach>
+							</c:if>
+						</c:forEach>
+					</form:select></td>
 				</tr>
 				<tr>
 					<td>Imię:</td>

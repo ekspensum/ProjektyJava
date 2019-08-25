@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.Assistant;
-import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.service.UserService;
 
 @Controller
@@ -41,8 +40,7 @@ public class AssistantController {
 
 	@RequestMapping(path = "/users/assistant/admin/register")
 	public String registrationAssistantByAdmin(Model model) {
-		List<Role> allRoles = userService.getAllRoles();
-		model.addAttribute("rolesList", allRoles);
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(4));
 		model.addAttribute("assistant", new Assistant());
 		return "/users/assistant/admin/register";
 	}
@@ -57,18 +55,15 @@ public class AssistantController {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(assistant.getUser().getUsername());
 		assistant.setPhoto(photo.getBytes());
-		if(!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if(!result.hasErrors() && dinstinctLogin) {
 			userService.addNewAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successRegisterAssistant"));
 			return "forward:/message/employee/success";
 		} else {
-			if(assistant.getUser().getRoles().get(0).getId() == assistant.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("rolesList", userService.getAllRolesWithoutId(4));
 			return "/users/assistant/admin/register";
 		}
 	}
@@ -91,7 +86,7 @@ public class AssistantController {
 	@RequestMapping(path = "/users/assistant/admin/edit")
 	public String editAssistantByAdmin(@ModelAttribute("assistant") Assistant assistant, Model model) {
 		model.addAttribute("assistant", assistant);
-		model.addAttribute("rolesList", userService.getAllRoles());	
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(4));	
 		model.addAttribute("image", assistant.getPhoto());
 		return "/users/assistant/admin/edit";
 	}
@@ -110,14 +105,11 @@ public class AssistantController {
 		if(photo.getBytes().length == 0) {
 			assistant.setPhoto(image);			
 		}
-		if (!result.hasErrors() && assistant.getUser().getRoles().get(0).getId() != assistant.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if (!result.hasErrors() && dinstinctLogin) {
 			userService.editAssistant(assistant);
 			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
 			return "forward:/message/employee/success";
 		} else {
-			if(assistant.getUser().getRoles().get(0).getId() == assistant.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}

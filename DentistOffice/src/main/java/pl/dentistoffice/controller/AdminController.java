@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.Admin;
-import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.service.HibernateSearchService;
 import pl.dentistoffice.service.InitApplicationService;
 import pl.dentistoffice.service.UserService;
@@ -48,8 +47,7 @@ public class AdminController {
 
 	@RequestMapping(path = "/users/admin/owner/register")
 	public String registrationAdmin(Model model) {
-		List<Role> allRoles = userService.getAllRoles();
-		model.addAttribute("rolesList", allRoles);
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
 		model.addAttribute("admin", new Admin());
 		return "/users/admin/owner/register";
 	}
@@ -64,18 +62,15 @@ public class AdminController {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(admin.getUser().getUsername());
 		admin.setPhoto(photo.getBytes());
-		if(!result.hasErrors() && admin.getUser().getRoles().get(0).getId() != admin.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if(!result.hasErrors() && dinstinctLogin) {
 			userService.addNewAdmin(admin);
 			model.addAttribute("success", env.getProperty("successRegisterAdmin"));
 			return "forward:/message/employee/success";
 		} else {
-			if(admin.getUser().getRoles().get(0).getId() == admin.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
 			return "/users/admin/owner/register";
 		}
 	}
@@ -98,7 +93,7 @@ public class AdminController {
 	@RequestMapping(path = "/users/admin/owner/edit")
 	public String editAdminByOwner(@ModelAttribute("admin") Admin admin, Model model) {
 		model.addAttribute("admin", admin);
-		model.addAttribute("rolesList", userService.getAllRoles());	
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));	
 		model.addAttribute("image", admin.getPhoto());
 		return "/users/admin/owner/edit";
 	}
@@ -117,18 +112,15 @@ public class AdminController {
 		if(photo.getBytes().length == 0) {
 			admin.setPhoto(image);			
 		}
-		if (!result.hasErrors() && admin.getUser().getRoles().get(0).getId() != admin.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if (!result.hasErrors() && dinstinctLogin) {
 			userService.editAdmin(admin);
 			model.addAttribute("success", env.getProperty("successUpdateAdmin"));
 			return "forward:/message/employee/success";
 		} else {
-			if(admin.getUser().getRoles().get(0).getId() == admin.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
 			return "/users/admin/owner/edit";
 		}
 	}
@@ -138,7 +130,7 @@ public class AdminController {
 		Admin loggedAdmin = userService.getLoggedAdmin();
 		model.addAttribute("admin", loggedAdmin);
 		model.addAttribute("editUserId", loggedAdmin.getUser().getId());
-		model.addAttribute("rolesList", userService.getAllRoles());	
+		model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));	
 		model.addAttribute("image", loggedAdmin.getPhoto());
 		return "/users/admin/edit";
 	}
@@ -157,18 +149,15 @@ public class AdminController {
 		if(photo.getBytes().length == 0) {
 			admin.setPhoto(image);			
 		}
-		if (!result.hasErrors() && admin.getUser().getRoles().get(0).getId() != admin.getUser().getRoles().get(1).getId() && dinstinctLogin) {
+		if (!result.hasErrors() && dinstinctLogin) {
 			userService.editAdmin(admin);
 			model.addAttribute("success", env.getProperty("successUpdateAdmin"));
 			return "forward:/message/employee/success";
 		} else {
-			if(admin.getUser().getRoles().get(0).getId() == admin.getUser().getRoles().get(1).getId()) {
-				model.addAttribute("roleError", env.getProperty("roleError"));
-			}
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRoles());
+			model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
 			return "/users/admin/edit";
 		}
 	}

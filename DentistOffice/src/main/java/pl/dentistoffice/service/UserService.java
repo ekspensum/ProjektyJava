@@ -182,7 +182,15 @@ public class UserService {
 	}
 	
 	public List<Admin> getAllAdmins(){
-		return userRepository.readAllAdmins();
+		List<Admin> allAdmins = userRepository.readAllAdmins();
+		allAdmins.sort(new Comparator<Admin>() {
+
+			@Override
+			public int compare(Admin o1, Admin o2) {
+				return o1.getLastName().compareTo(o2.getLastName());
+			}
+		});
+		return allAdmins;
 	}
 	
 	public void editAdmin(Admin admin) {
@@ -215,6 +223,25 @@ public class UserService {
 	
 	public List<Role> getAllRoles(){
 		List<Role> allRoles = userRepository.readAllRoles();
+		allRoles.sort(new Comparator<Role>() {
+
+			@Override
+			public int compare(Role o1, Role o2) {
+				return o1.getId() - o2.getId();
+			}
+		});
+		return allRoles;
+	}
+	
+	public List<Role> getAllRolesWithoutId(int withoutId){
+		List<Role> allRoles = userRepository.readAllRoles();
+		ListIterator<Role> listIterator = allRoles.listIterator();
+		while (listIterator.hasNext()) {
+			Role role = (Role) listIterator.next();
+			if(role.getId() == withoutId) {
+				listIterator.remove();
+			}
+		}
 		allRoles.sort(new Comparator<Role>() {
 
 			@Override

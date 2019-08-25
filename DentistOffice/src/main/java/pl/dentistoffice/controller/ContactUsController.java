@@ -51,7 +51,7 @@ public class ContactUsController {
 							+ "</font><br><br>";
 		if (!result.hasErrors()) {
 			if (sendEmail.sendEmail(env, "testjava55@gmail.com", emailContactService.getSubject(), mailText,
-					emailContactService.getReplyMail(), file.getBytes(), file.getOriginalFilename())) {
+				emailContactService.getReplyMail(), file.getBytes(), file.getOriginalFilename())) {
 				model.addAttribute("alert", "YES");
 			} else {
 				model.addAttribute("alert", "NO");
