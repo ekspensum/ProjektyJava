@@ -20,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.dentistoffice.dao.UserRepository;
 import pl.dentistoffice.entity.Admin;
@@ -40,13 +42,22 @@ public class UserService {
     @Autowired
     private HibernateSearchService searchsService;
 	
-	public void addNewDoctor(Doctor doctor) {
+	@Autowired
+	private ActivationService activationService;
+	
+	@Autowired
+	private NotificationService notificationService;
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void addNewDoctor(Doctor doctor) throws Exception {
 		User user = doctor.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		doctor.setRegisteredDateTime(LocalDateTime.now());
 		userRepository.saveDoctor(doctor);
+		notificationService.sendEmailWithRegisterNotification(doctor);
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void editDoctor(Doctor doctor) {
 		User user = doctor.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
@@ -79,13 +90,16 @@ public class UserService {
 		return doctor;
 	}
 	
-	public void addNewAssistant(Assistant assistant) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void addNewAssistant(Assistant assistant) throws Exception {
 		User user = assistant.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		assistant.setRegisteredDateTime(LocalDateTime.now());
 		userRepository.saveAssistant(assistant);
+		notificationService.sendEmailWithRegisterNotification(assistant);
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void editAssistant(Assistant assistant) {
 		User user = assistant.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
@@ -118,17 +132,22 @@ public class UserService {
 		return assistant;
 	}
 	
-	public void addNewPatient(Patient patient) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void addNewPatient(Patient patient, String contextPath) {
 		User user = patient.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		List<Role> patientRole = getPatientRole();
 		user.setRoles(patientRole);
-		user.setEnabled(true);
+		user.setEnabled(false);
 		patient.setUser(user);
-		patient.setRegisteredDateTime(LocalDateTime.now());		
+		patient.setRegisteredDateTime(LocalDateTime.now());	
+		String activationString = activationService.createActivationString(patient);
+		patient.setActivationString(activationString);
 		userRepository.savePatient(patient);
+		activationService.sendEmailWithActivationLink(patient, contextPath);
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void editPatient(Patient patient) {
 		User user = patient.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
@@ -163,11 +182,13 @@ public class UserService {
 		return searchPatient;
 	}
 	
-	public void addNewAdmin(Admin admin) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void addNewAdmin(Admin admin) throws Exception {
 		User user = admin.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		admin.setRegisteredDateTime(LocalDateTime.now());
 		userRepository.saveAdmin(admin);
+		notificationService.sendEmailWithRegisterNotification(admin);
 	}
 		
 	public Admin getLoggedAdmin() {
@@ -193,6 +214,7 @@ public class UserService {
 		return allAdmins;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void editAdmin(Admin admin) {
 		User user = admin.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));

@@ -257,6 +257,17 @@ function changeSlide() {
     console.log(number);
 }
 
+function checkCorrectPassword(){
+	let password = document.getElementById("password").value;
+	let password2 = document.getElementById("password2").value;
+	if(password == password2){
+		return true;
+	} else {
+		alert("Hasła nie są zgodne!");
+		return false;
+	}
+}
+
 // function setEnableInputFromChbx(chbx_id) {
 //     if (document.getElementById(chbx_id).checked == true) {
 //         for (let i = 0; i < document.getElementsByName(chbx_id).length; i++)

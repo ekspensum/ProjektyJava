@@ -123,12 +123,14 @@ public class VisitController {
 		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
 		
 		if (dateTime != null && dateTime.length == 1) {
-			if(visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments)) {
+			try {
+				visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments);
 				model.addAttribute("success", env.getProperty("successAddVisit"));
-				return "forward:/message/patient/success";				
-			} else {
+				return "forward:/message/patient/success";
+			} catch (Exception e) {
+				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
-				return "forward:/message/employee/error";
+				return "forward:/message/employee/error";				
 			}
 		} else {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
@@ -242,13 +244,15 @@ public class VisitController {
 		List<DentalTreatment> selectedTreatments = setDentalTreatmentsList(treatment1Id, treatment2Id, treatment3Id);
 				
 		if (dateTime != null && dateTime.length == 1) {
-			if(visitService.addNewVisitByAssistant(patient, doctor, dateTime, selectedTreatments)) {
+			try {
+				visitService.addNewVisitByAssistant(patient, doctor, dateTime, selectedTreatments);
 				model.addAttribute("success", env.getProperty("successAddVisit"));
-				return "forward:/message/employee/success";							
-			} else {
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
 				return "forward:/message/employee/error";
-			}
+			}										
 		} else {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
 		}
@@ -337,26 +341,30 @@ public class VisitController {
 	
 	@RequestMapping(path = "/visit/assistant/removeVisit", method = RequestMethod.POST)
 	public String removeVisitByAssistant(@RequestParam("visitId") String visitId, Model model) {
-		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
-		if(visitService.cancelVisit(visit)) {
+		try {
+			Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+			visitService.cancelVisit(visit);
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
 			return "forward:/message/employee/success";
-		} else {
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
 			return "forward:/message/employee/error";
-		}
+		}		
 	}
 
 	@RequestMapping(path = "/visit/patient/removeVisit", method = RequestMethod.POST)
 	public String removeVisitByPatient(@RequestParam("visitId") String visitId, Model model) {
-		Visit visit = visitService.getVisit(Integer.valueOf(visitId));
-		if(visitService.cancelVisit(visit)) {
+		try {
+			Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+			visitService.cancelVisit(visit);
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
 			return "forward:/message/patient/success";
-		} else {
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
 			return "forward:/message/patient/error";
-		}
+		}		
 	}
 	
 	@RequestMapping(path = "/visit/doctor/searchVisitToFinalize")

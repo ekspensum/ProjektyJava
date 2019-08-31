@@ -63,9 +63,15 @@ public class AdminController {
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(admin.getUser().getUsername());
 		admin.setPhoto(photo.getBytes());
 		if(!result.hasErrors() && dinstinctLogin) {
-			userService.addNewAdmin(admin);
-			model.addAttribute("success", env.getProperty("successRegisterAdmin"));
-			return "forward:/message/employee/success";
+			try {
+				userService.addNewAdmin(admin);
+				model.addAttribute("success", env.getProperty("successRegisterUser"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionRegisterUser"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
@@ -113,9 +119,15 @@ public class AdminController {
 			admin.setPhoto(image);			
 		}
 		if (!result.hasErrors() && dinstinctLogin) {
-			userService.editAdmin(admin);
-			model.addAttribute("success", env.getProperty("successUpdateAdmin"));
-			return "forward:/message/employee/success";
+			try {
+				userService.editAdmin(admin);
+				model.addAttribute("success", env.getProperty("successUpdateUser"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionUpdateUser"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
@@ -150,9 +162,15 @@ public class AdminController {
 			admin.setPhoto(image);			
 		}
 		if (!result.hasErrors() && dinstinctLogin) {
-			userService.editAdmin(admin);
-			model.addAttribute("success", env.getProperty("successUpdateAdmin"));
-			return "forward:/message/employee/success";
+			try {
+				userService.editAdmin(admin);
+				model.addAttribute("success", env.getProperty("successUpdateUser"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionUpdateUser"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));

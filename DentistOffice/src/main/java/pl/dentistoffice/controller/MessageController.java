@@ -25,4 +25,9 @@ public class MessageController {
 	public String patientSuccess() {
 		return "/message/patient/success";
 	}
+	
+	@RequestMapping(path = "/message/patient/error")
+	public String patientError() {
+		return "/message/patient/error";
+	}
 }

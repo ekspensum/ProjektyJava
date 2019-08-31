@@ -20,6 +20,12 @@
 					<td><form:errors path="user.passwordField" class="msgError" /></td>
 				</tr>
 				<tr>
+					<td>Powtórz hasło:</td>
+					<td><form>
+						<input type="password" name="password2" id="password2" value="${param.password2 }">
+					</form></td>
+				</tr>
+				<tr>
 					<td>Imię:</td>
 					<td><form:input path="firstName" id="firstName" /></td>
 					<td><form:errors path="firstName" class="msgError" /></td>
@@ -80,7 +86,7 @@
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td></td><td><input type="submit" value="Zpisz zmiany" class="navigateButton" /></td>
+					<td></td><td><input type="submit" value="Zpisz zmiany" onclick="return checkCorrectPassword()" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>

@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h3>Rejestracja pacjenta przez asystenta</h3>
+<h3>${pageContext.request.contextPath}</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/patient/assistant/register"
 		modelAttribute="patient" enctype="multipart/form-data">
@@ -16,6 +17,12 @@
 					<td>Hasło:</td>
 					<td><form:input path="user.passwordField" id="password"	type="password" /></td>
 					<td><form:errors path="user.passwordField" class="msgError" /></td>
+				</tr>
+				<tr>
+					<td>Powtórz hasło:</td>
+					<td><form>
+						<input type="password" name="password2" id="password2" value="${param.password2 }">
+					</form></td>
 				</tr>
 				<tr>
 					<td>Aktywny:</td>
@@ -78,13 +85,13 @@
 					<td><form:errors path="phone" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td>Image</td>
+					<td>Zdjęcie:</td>
 					<td><form:input type="file" name="photo" accept="image/*"
 							path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td></td><td><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
+					<td></td><td><input type="submit" value="Zarejestruj" onclick="return checkCorrectPassword()" class="navigateButton" /></td>
 				</tr>
 			</tbody>
 		</table>

@@ -3,6 +3,7 @@ package pl.dentistoffice.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
+import pl.dentistoffice.service.ActivationService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
@@ -37,6 +39,9 @@ public class PatientController {
 	
 	@Autowired
 	private VisitService visitService;
+	
+	@Autowired
+	private ActivationService activationService;
 	
 	@RequestMapping(path = "/panels/patientPanel")
 	public String patientPanel(Model model) {
@@ -79,15 +84,23 @@ public class PatientController {
 												@Valid Patient patient, 			
 												BindingResult result, 
 												Model model,
-												@RequestParam("photo") MultipartFile photo
+												@RequestParam("photo") MultipartFile photo,
+												HttpServletRequest servletRequest
 												) throws IOException {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(patient.getUser().getUsername());
 		patient.setPhoto(photo.getBytes());
-		if(!result.hasErrors() && dinstinctLogin) {
-			userService.addNewPatient(patient);
-			model.addAttribute("success", env.getProperty("successRegisterPatient"));
-			return "forward:/message/employee/success";
+
+		if(!result.hasErrors() && dinstinctLogin) {		
+			try {
+				userService.addNewPatient(patient, servletRequest.getContextPath());
+				model.addAttribute("success", env.getProperty("successRegisterPatient"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionRegisterPatient"));
+				return "forward:/message/patient/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
@@ -127,9 +140,15 @@ public class PatientController {
 			patient.setPhoto(image);			
 		}
 		if (!result.hasErrors() && dinstinctLogin) {
-			userService.editPatient(patient);
-			model.addAttribute("success", env.getProperty("successUpdatePatient"));
-			return "forward:/message/employee/success";
+			try {
+				userService.editPatient(patient);
+				model.addAttribute("success", env.getProperty("successUpdatePatient"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionUpdatePatient"));
+				return "forward:/message/employee/success";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
@@ -182,21 +201,39 @@ public class PatientController {
 										  @Valid Patient patient, 			
 										  BindingResult result, 
 										  Model model,
-										  @RequestParam("photo") MultipartFile photo
+										  @RequestParam("photo") MultipartFile photo,
+										  HttpServletRequest servletRequest
 										  ) throws IOException {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(patient.getUser().getUsername());
 		patient.setPhoto(photo.getBytes());
+		
 		if(!result.hasErrors() && dinstinctLogin) {
-			userService.addNewPatient(patient);
-			model.addAttribute("success", env.getProperty("successRegisterPatient"));
-			return "forward:/message/patient/success";
+			try {
+				userService.addNewPatient(patient, servletRequest.getContextPath());
+				model.addAttribute("success", env.getProperty("successRegisterPatient"));
+				return "forward:/message/patient/success";				
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionRegisterPatient"));
+				return "forward:/message/patient/error";	
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
 			return "/users/patient/register";
 		}
+	}
+	
+	@RequestMapping(value = "/users/patient/activation")
+	public String getActivationString(@RequestParam("activationString") String activationString, Model model) {
+		if(activationService.setActivePatient(activationString)) {
+			model.addAttribute("patientActivationMessage", env.getRequiredProperty("patientActivationTrue"));
+		} else {
+			model.addAttribute("patientActivationMessage", env.getRequiredProperty("patientActivationFalse"));
+		}		
+		return "/users/patient/activation";
 	}
 
 //	FOR SELF EDIT DATA PATIENT
@@ -210,8 +247,7 @@ public class PatientController {
 	}
 	
 	@RequestMapping(path = "/users/patient/edit", method = RequestMethod.POST)
-	public String selfEditDataPatient(
-										@Valid Patient patient,
+	public String selfEditDataPatient(	@Valid Patient patient,
 										BindingResult result,
 										Model model,
 										@SessionAttribute("editUserId") int editUserId,
@@ -224,9 +260,15 @@ public class PatientController {
 			patient.setPhoto(image);			
 		}
 		if (!result.hasErrors() && dinstinctLogin) {
-			userService.editPatient(patient);
-			model.addAttribute("success", env.getProperty("successUpdatePatient"));
-			return "forward:/message/patient/success";
+			try {
+				userService.editPatient(patient);
+				model.addAttribute("success", env.getProperty("successUpdatePatient"));
+				return "forward:/message/patient/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionUpdatePatient"));
+				return "forward:/message/employee/success";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));

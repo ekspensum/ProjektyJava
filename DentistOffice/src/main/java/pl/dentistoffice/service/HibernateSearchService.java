@@ -179,4 +179,22 @@ public class HibernateSearchService {
 		
 		return fullTextSession.createFullTextQuery(luceneQuery, DentalTreatment.class).getResultList();
 	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public Patient searchPatientToActivationByKeywordQuery(String activationString){
+		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		
+		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
+									.buildQueryBuilder()
+									.forEntity(Patient.class)
+									.get();
+		
+		Query luceneQuery = queryBuilder
+							.keyword()
+							.onField("activationString")
+							.matching(activationString)
+							.createQuery();
+		
+		return (Patient) fullTextSession.createFullTextQuery(luceneQuery, Patient.class).uniqueResult();
+	}
 }

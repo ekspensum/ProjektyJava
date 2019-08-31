@@ -56,9 +56,15 @@ public class AssistantController {
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(assistant.getUser().getUsername());
 		assistant.setPhoto(photo.getBytes());
 		if(!result.hasErrors() && dinstinctLogin) {
-			userService.addNewAssistant(assistant);
-			model.addAttribute("success", env.getProperty("successRegisterAssistant"));
-			return "forward:/message/employee/success";
+			try {
+				userService.addNewAssistant(assistant);
+				model.addAttribute("success", env.getProperty("successRegisterUser"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionRegisterUser"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
@@ -106,9 +112,15 @@ public class AssistantController {
 			assistant.setPhoto(image);			
 		}
 		if (!result.hasErrors() && dinstinctLogin) {
-			userService.editAssistant(assistant);
-			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
-			return "forward:/message/employee/success";
+			try {
+				userService.editAssistant(assistant);
+				model.addAttribute("success", env.getProperty("successUpdateUser"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionUpdateUser"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
@@ -142,9 +154,15 @@ public class AssistantController {
 			assistant.setPhoto(image);			
 		}
 		if (!result.hasErrors() && dinstinctLogin) {
-			userService.editAssistant(assistant);
-			model.addAttribute("success", env.getProperty("successUpdateAssistant"));
-			return "forward:/message/employee/success";
+			try {
+				userService.editAssistant(assistant);
+				model.addAttribute("success", env.getProperty("successUpdateUser"));
+				return "forward:/message/employee/success";
+			} catch (Exception e) {
+				e.printStackTrace();
+				model.addAttribute("exception", env.getProperty("exceptionUpdateUser"));
+				return "forward:/message/employee/error";
+			}
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));

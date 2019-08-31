@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.dentistoffice.dao.VisitRepository;
 import pl.dentistoffice.entity.DentalTreatment;
@@ -36,8 +38,12 @@ public class VisitService {
 	
     @Autowired
     private HibernateSearchService searchsService;
+    
+    @Autowired
+    private NotificationService notificationService;
 
-	public boolean addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
+    @Transactional(propagation = Propagation.REQUIRED)
+	public void addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		Patient patient = userService.getLoggedPatient();
@@ -65,19 +71,14 @@ public class VisitService {
 		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
 		visit.setVisitDateTime(visitDateTime);
 		visit.setReservationDateTime(LocalDateTime.now());
-		if(visitRepository.saveVisit(visit)) {
-			return true;
-		} else {
-			return false;
-		}
+		visitRepository.saveVisit(visit);
+		notificationService.sendEmailWithVisitDateNotification(visit);
 	}
 	
-	public boolean addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
+    @Transactional(propagation = Propagation.REQUIRED)
+	public void addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
-		
-//		Assistant assistant = userService.getLoggedAssistant();
-//		visit.setAssistant(assistant);
 		User loggedUser = userService.getLoggedUser();
 		visit.setUserLogged(loggedUser);
 		visit.setPatient(patient);
@@ -103,11 +104,8 @@ public class VisitService {
 		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
 		visit.setVisitDateTime(visitDateTime);
 		visit.setReservationDateTime(LocalDateTime.now());
-		if(visitRepository.saveVisit(visit)) {
-			return true;
-		} else {
-			return false;
-		}
+		visitRepository.saveVisit(visit);
+		notificationService.sendEmailWithVisitDateNotification(visit);
 	}
 	
 	public Map<LocalDate, Map<LocalTime, Boolean>> getWorkingWeekFreeTimeMap(Doctor doctor, int dayStart, int dayEnd){
@@ -277,12 +275,10 @@ public class VisitService {
 			return false;
 		}
 	}
-		
-	public boolean cancelVisit(Visit visit) {
-		if(visitRepository.removeVisit(visit)) {
-			return true;
-		} else {
-			return false;
-		}
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void cancelVisit(Visit visit) {
+		visitRepository.removeVisit(visit);
+		notificationService.sendEmailWithVisitCancelNotification(visit);
 	}
 }

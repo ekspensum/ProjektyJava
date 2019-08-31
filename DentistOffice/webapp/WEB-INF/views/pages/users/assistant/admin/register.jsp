@@ -20,6 +20,12 @@
 					<td><form:errors path="user.passwordField" class="msgError" /></td>
 				</tr>
 				<tr>
+					<td>Powtórz hasło:</td>
+					<td><form>
+						<input type="password" name="password2" id="password2" value="${param.password2 }">
+					</form></td>
+				</tr>
+				<tr>
 					<td>Aktywny:</td>
 					<td><form:checkbox path="user.enabled" checked="true" /></td>
 					<td><form:errors path="user.enabled" class="msgError" /></td>
@@ -65,7 +71,7 @@
 					<td><form:errors path="photo" class="msgError" /></td>
 				</tr>
 				<tr>
-					<td></td><td><input type="submit" value="Zarejestruj" class="navigateButton" /></td>
+					<td></td><td><input type="submit" value="Zarejestruj" class="navigateButton" onclick="return checkCorrectPassword()" /></td>
 				</tr>
 			</tbody>
 		</table>

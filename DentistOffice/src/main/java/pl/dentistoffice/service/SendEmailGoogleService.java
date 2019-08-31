@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -20,8 +19,44 @@ import org.springframework.stereotype.Service;
 public class SendEmailGoogleService implements SendEmail {
 
 	@Override
-	public boolean sendEmail(Environment env, String mailTo, String mailSubject, String mailText, String replyMail, byte[] attachment, String fileName) {
+	public void sendEmail(Environment env, String mailTo, String mailSubject, String mailText, String replyMail, byte[] attachment, String fileName) {
 		
+		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
+			
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setSubject(mailSubject);
+                helper.setFrom(env.getProperty("mailFrom"));
+                helper.setTo(mailTo);
+                helper.setText(mailText, true);
+                helper.addAttachment(fileName, new ByteArrayResource(attachment));
+			}
+		};
+		JavaMailSenderImpl configuredEmail = configureEmail(env);
+		configuredEmail.send(messagePreparator);
+	}
+
+	@Override
+	public void sendEmail(Environment env, String mailTo, String mailSubject, String mailText) {
+		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
+			
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setSubject(mailSubject);
+                helper.setFrom(env.getProperty("mailFrom"));
+                helper.setTo(mailTo);
+                helper.setText(mailText, true);
+			}
+		};
+		JavaMailSenderImpl configuredEmail = configureEmail(env);
+		configuredEmail.send(messagePreparator);		
+	}
+	
+	
+//	PRIVATE METHODS
+	private JavaMailSenderImpl configureEmail(Environment env) {
 		JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 		javaMailSender.setHost(env.getProperty("mail.smtp.host"));
 		javaMailSender.setPort(Integer.valueOf(env.getProperty("mail.smtp.port")));
@@ -35,26 +70,8 @@ public class SendEmailGoogleService implements SendEmail {
 //		javaMailProperties.put("mail.debug", env.getProperty("mail.debug"));
 
 		javaMailSender.setJavaMailProperties(javaMailProperties);
-		
-		MimeMessagePreparator messagePreparator = new MimeMessagePreparator() {
-			
-			@Override
-			public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-                helper.setSubject(mailSubject);
-                helper.setFrom(replyMail);
-                helper.setTo(mailTo);
-                helper.setText(mailText, true);
-                helper.addAttachment(fileName, new ByteArrayResource(attachment));
-			}
-		};
-		try {
-			javaMailSender.send(messagePreparator);
-		} catch (MailException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+	
+		return javaMailSender;
 	}
 	
 }

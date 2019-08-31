@@ -31,14 +31,8 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	}
 	
 	@Override
-	public boolean saveVisit(Visit visit) {
-		try {
-			getSession().persist(visit);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+	public void saveVisit(Visit visit) {
+		getSession().persist(visit);
 	}
 
 	@Override
@@ -88,23 +82,17 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	}
 
 	@Override
-	public boolean removeVisit(Visit visit) {
-		try {
-			List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
-			for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
-				getSession().createNativeQuery("delete from visit_visittreatmentcomment where visit_id = :visit_id AND visittreatmentcomment_id = :visittreatmentcomment_id").setParameter("visit_id", visit.getId()).setParameter("visittreatmentcomment_id", visitTreatmentComment.getId()).executeUpdate();
-				getSession().createNativeQuery("delete from VisitTreatmentComment where id = :id").setParameter("id", visitTreatmentComment.getId()).executeUpdate();
-			}
-			List<DentalTreatment> treatments = visit.getTreatments();
-			for (DentalTreatment dentalTreatment : treatments) {
-				getSession().createNativeQuery("delete from visit_dentaltreatment where visits_id = :visits_id AND treatments_id = :treatments_id").setParameter("visits_id", visit.getId()).setParameter("treatments_id", dentalTreatment.getId()).executeUpdate();
-			}
-			getSession().delete(visit);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+	public void removeVisit(Visit visit) {
+		List<VisitTreatmentComment> visitTreatmentCommentList = visit.getVisitTreatmentComment();
+		for (VisitTreatmentComment visitTreatmentComment : visitTreatmentCommentList) {
+			getSession().createNativeQuery("delete from visit_visittreatmentcomment where visit_id = :visit_id AND visittreatmentcomment_id = :visittreatmentcomment_id").setParameter("visit_id", visit.getId()).setParameter("visittreatmentcomment_id", visitTreatmentComment.getId()).executeUpdate();
+			getSession().createNativeQuery("delete from VisitTreatmentComment where id = :id").setParameter("id", visitTreatmentComment.getId()).executeUpdate();
 		}
+		List<DentalTreatment> treatments = visit.getTreatments();
+		for (DentalTreatment dentalTreatment : treatments) {
+			getSession().createNativeQuery("delete from visit_dentaltreatment where visits_id = :visits_id AND treatments_id = :treatments_id").setParameter("visits_id", visit.getId()).setParameter("treatments_id", dentalTreatment.getId()).executeUpdate();
+		}
+		getSession().delete(visit);
 	}
 
 	@Override

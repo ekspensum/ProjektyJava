@@ -18,6 +18,12 @@
 					<td><form:errors path="user.passwordField" class="msgError" /></td>
 				</tr>
 				<tr>
+					<td>Powtórz hasło:</td>
+					<td><form>
+						<input type="password" name="password2" id="password2" value="${param.password2 }">
+					</form></td>
+				</tr>
+				<tr>
 					<td>Imię:</td>
 					<td><form:input path="firstName" id="firstName" /></td>
 					<td><form:errors path="firstName" class="msgError" /></td>
@@ -72,7 +78,7 @@
 <br>
 <table>
 	<tr>
-		<td align="right" width="820px"><input type="submit" value="Zapisz zmiany" class="navigateButton" /></td>
+		<td align="right" width="820px"><input type="submit" value="Zapisz zmiany" class="navigateButton" onclick="return checkCorrectPassword()" /></td>
 	</tr>
 </table>
 <br>

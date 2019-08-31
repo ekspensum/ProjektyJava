@@ -102,6 +102,8 @@ public class Patient implements Serializable {
 	@Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
 	private User user;
 	
+	@Field
+	private String activationString;
 	private LocalDateTime registeredDateTime;
 	private LocalDateTime editedDateTime;
 	

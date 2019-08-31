@@ -1,7 +1,5 @@
 package pl.dentistoffice.controller;
 
-import java.io.IOException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +41,26 @@ public class ContactUsController {
 
 	@RequestMapping(path = "/contact", method = RequestMethod.POST)
 	public String sendMessage(@Valid EmailContactService emailContactService, BindingResult result,
-			@RequestParam("attachment") MultipartFile file, Model model) throws IOException {
+			@RequestParam("attachment") MultipartFile file, Model model) throws Exception {
 			String mailText = "<font color='blue' size='3'>"
 							+ emailContactService.getMessage()
 							+ "<br><br><br>"
 							+ "Adres e-mail nadawcy: "+emailContactService.getReplyMail() + "\n"
 							+ "</font><br><br>";
 		if (!result.hasErrors()) {
-			if (sendEmail.sendEmail(env, "testjava55@gmail.com", emailContactService.getSubject(), mailText,
-				emailContactService.getReplyMail(), file.getBytes(), file.getOriginalFilename())) {
+			try {
+				sendEmail.sendEmail(env, 
+									env.getProperty("mailFrom"), // in this case mailTo == mailFrom
+									emailContactService.getSubject(), 
+									mailText,
+									emailContactService.getReplyMail(), 
+									file.getBytes(), 
+									file.getOriginalFilename());
 				model.addAttribute("alert", "YES");
-			} else {
+			} catch (Exception e) {
+				e.printStackTrace();
 				model.addAttribute("alert", "NO");
-			}
+			}			
 		}
 		return "contact";
 	}

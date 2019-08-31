@@ -129,6 +129,10 @@
 		<put-attribute name="title" value="Patient registration" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/register.jsp" />
 	</definition>
+	<definition name="/users/patient/activation" extends="patientPanel">
+		<put-attribute name="title" value="Patient registration" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/activation.jsp" />
+	</definition>
 	<definition name="/users/patient/edit" extends="patientPanel">
 		<put-attribute name="title" value="Patient data edit" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/users/patient/edit.jsp" />
@@ -306,13 +310,17 @@
 		<put-attribute name="title" value="Exceptions" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/error.jsp" />
 	</definition>
+	<definition name="/message/patient/error" extends="patientPanel">
+		<put-attribute name="title" value="Error" />
+		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/patient/error.jsp" />
+	</definition>
 
 	<!-- Success page -->
 	<definition name="/message/employee/success" extends="employeePanel">
 		<put-attribute name="title" value="Success" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/employee/success.jsp" />
 	</definition>
-		<definition name="/message/patient/success" extends="patientPanel">
+	<definition name="/message/patient/success" extends="patientPanel">
 		<put-attribute name="title" value="Success" />
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/patient/success.jsp" />
 	</definition>
