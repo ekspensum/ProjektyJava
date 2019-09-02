@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "pl.dentistoffice")
-@PropertySource(value="/static/properties/database.properties")
+//@PropertySource(value= {"/static/properties/prompt.properties", "/static/properties/mail.properties"}) //for Heroku server
+@PropertySource(value= {"/static/properties/database.properties", "/static/properties/prompt.properties", "/static/properties/mail.properties"}) //for localhost
 @EnableTransactionManagement
 public class RootConfig {
 

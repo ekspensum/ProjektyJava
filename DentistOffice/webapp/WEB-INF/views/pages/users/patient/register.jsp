@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
+<script src="https://www.google.com/recaptcha/api.js?hl=pl"></script>
+
 <h3>Rejestracja pacjenta</h3>
 	<form:form method="POST"
 		action="${pageContext.request.contextPath}/users/patient/register"
@@ -82,6 +84,11 @@
 					<td>Zdjęcie:</td>
 					<td><form:input type="file" name="photo" accept="image/*" path="photo" /></td>
 					<td><form:errors path="photo" class="msgError" /></td>
+				</tr>
+				<tr>
+					<td>Weryfikacja:</td>
+					<td><div class="g-recaptcha" data-sitekey="6LdM-rUUAAAAABOhqqyoOaPVVLui5AVaZoOwQSdk"></div></td>
+					<td class="msgError">${reCaptchaError }</td>
 				</tr>
 				<tr>
 					<td></td><td><input type="submit" value="Zarejestruj" class="navigateButton" onclick="return checkCorrectPassword()" /></td>

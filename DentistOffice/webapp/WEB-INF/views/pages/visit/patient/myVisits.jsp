@@ -9,10 +9,11 @@
 		</c:forEach>
 	</select>
 	<input type="submit" value="Pokaż" class="navigateButton" />
+	<button type="submit" formmethod="POST" form="myVisitsForm" formaction="${pageContext.request.contextPath}/visit/patient/myVisitsPdf" class="navigateButton">Drukuj do PDF</button>
 </form>
 <br>
 <p><b>Staus poniższych wizyt: ${defaultVisitStatus.id != null ? defaultVisitStatus.description : actualVisitStatus.description} </b></p>
-<table border="1" style="width:50%">
+<table border="1" style="width:70%">
 	<thead>
 		<tr><th>Lp.</th><th>Data i godz.</th><th colspan="2">Dane lekarza</th><th>Nazwa zabiegu</th><th></th></tr>
 	</thead>

@@ -26,12 +26,6 @@ table.search td {
     min-height: 25px;
     text-align: center;
     padding-left: 5px;
-    text-align: left;
-}
-
-table.search th {
-    text-align: center;
-    height: 25px;
 }
 
 table.search tr:hover {
@@ -141,7 +135,7 @@ table.search tr:hover {
 .navigateButton {
     font: bold 12px Arial;
     height: 28px;
-    width: 150px;
+    width: 160px;
 }
 
 .navigateButton:hover {

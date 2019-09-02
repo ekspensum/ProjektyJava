@@ -20,12 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
+import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.DentalTreatmentService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
@@ -429,9 +431,41 @@ public class VisitController {
 			model.addAttribute("dentalTreatmentsList", dentalTreatmentsList);
 			return "/visit/doctor/finalizedVisit";
 		}
+	}	
+	
+//	FOR SELF BROWSE AND DELETE VISITS PATIENT
+	@RequestMapping(path = "/visit/patient/myVisits")
+	public String showMyVisits(Model model) {
+		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
+		Patient loggedPatient = userService.getLoggedPatient();
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(loggedPatient, defaultVisitStatus);
+		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+		model.addAttribute("visitStatusList", visitStatusList);
+		model.addAttribute("defaultVisitStatus", defaultVisitStatus);
+		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		model.addAttribute("patient", loggedPatient);
+		return "/visit/patient/myVisits";
 	}
 	
+	@RequestMapping(path = "/visit/patient/myVisits", method = RequestMethod.POST)
+	public String showMyVisits(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, Model model) {
+		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
+		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+		model.addAttribute("visitStatusList", visitStatusList);
+		model.addAttribute("actualVisitStatus", actualVisitStatus);
+		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		return "/visit/patient/myVisits";
+	}	
 	
+	@RequestMapping(path = "/visit/patient/myVisitsPdf", method = RequestMethod.POST)
+	public ModelAndView userDetails(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, ModelAndView modelAndView) {
+		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
+		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
+		modelAndView.addObject("visitsByPatientAndStatus", visitsByPatientAndStatus);
+		modelAndView.setViewName("visitsByPatientAndStatus");
+		return modelAndView;
+	}
 	
 	
 	

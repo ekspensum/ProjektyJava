@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h3>Panel asystenta - przegląd danych pacjenta</h3>
-<table border="1" style="width:50%">
+<table border="1" style="width:70%">
 	<tr><td>Dane pacjenta:</td><td>${patient.firstName }</td><td colspan="2">${patient.lastName }</td>
 	<td rowspan="5"><img src="data:image;base64,${patient.base64Photo }" width="300px" /></td></tr>
 	<tr><td>Pesel:</td><td colspan="3">${patient.pesel }</td></tr>
@@ -21,7 +21,7 @@
 </form>
 <br>
 <p><b>Staus poniższych wizyt: ${defaultVisitStatus.id != null ? defaultVisitStatus.description : actualVisitStatus.description} </b></p>
-<table border="1" style="width:50%">
+<table border="1" style="width:70%">
 	<thead>
 		<tr><th>Lp.</th><th>Data i godz. wizyty</th><th colspan="2">Dane lekarza</th><th>Nazwa zabiegu</th><th>Opis zabiegu</th></tr>
 	</thead>

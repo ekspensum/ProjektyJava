@@ -5,7 +5,6 @@ import java.util.Properties;
 import javax.mail.internet.*;
 
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -14,7 +13,6 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource(value="/static/properties/mail.properties")
 @Primary
 public class SendEmailGoogleService implements SendEmail {
 

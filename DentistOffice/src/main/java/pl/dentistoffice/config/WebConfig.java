@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 import pl.dentistoffice.config.SecurityConfig;
+import pl.dentistoffice.view.PdfView;
 
 @Configuration
 @ComponentScan(basePackages = {"pl.dentistoffice.controller"})
@@ -71,5 +72,6 @@ public class WebConfig implements WebMvcConfigurer {
 	public void configureViewResolvers(ViewResolverRegistry registry) {
 		TilesViewResolver tilesViewResolver = new TilesViewResolver();
 		registry.viewResolver(tilesViewResolver);
+		registry.enableContentNegotiation(new PdfView());
 	}
 }

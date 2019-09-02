@@ -24,6 +24,7 @@ import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.ActivationService;
+import pl.dentistoffice.service.ReCaptchaService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
@@ -42,6 +43,10 @@ public class PatientController {
 	
 	@Autowired
 	private ActivationService activationService;
+	
+	@Autowired
+	private ReCaptchaService reCaptchaService;
+	
 	
 	@RequestMapping(path = "/panels/patientPanel")
 	public String patientPanel(Model model) {
@@ -202,13 +207,16 @@ public class PatientController {
 										  BindingResult result, 
 										  Model model,
 										  @RequestParam("photo") MultipartFile photo,
-										  HttpServletRequest servletRequest
+										  HttpServletRequest servletRequest,
+										  @RequestParam(name = "g-recaptcha-response") String reCaptchaResponse
 										  ) throws IOException {
 		
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(patient.getUser().getUsername());
 		patient.setPhoto(photo.getBytes());
 		
-		if(!result.hasErrors() && dinstinctLogin) {
+		boolean verifyreCaptcha = reCaptchaService.verify(reCaptchaResponse);
+		
+		if(!result.hasErrors() && dinstinctLogin && verifyreCaptcha) {
 			try {
 				userService.addNewPatient(patient, servletRequest.getContextPath());
 				model.addAttribute("success", env.getProperty("successRegisterPatient"));
@@ -221,6 +229,9 @@ public class PatientController {
 		} else {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
+			}
+			if(!verifyreCaptcha) {
+				model.addAttribute("reCaptchaError", env.getProperty("reCaptchaError"));
 			}
 			return "/users/patient/register";
 		}
@@ -276,30 +287,6 @@ public class PatientController {
 			return "/users/patient/edit";
 		}
 	}
-	
-//	FOR SELF BROWSE AND DELETE VISITS PATIENT
-	@RequestMapping(path = "/visit/patient/myVisits")
-	public String showMyVisits(Model model) {
-		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
-		Patient loggedPatient = userService.getLoggedPatient();
-		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(loggedPatient, defaultVisitStatus);
-		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
-		model.addAttribute("visitStatusList", visitStatusList);
-		model.addAttribute("defaultVisitStatus", defaultVisitStatus);
-		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
-		model.addAttribute("patient", loggedPatient);
-		return "/visit/patient/myVisits";
-	}
-	
-	@RequestMapping(path = "/visit/patient/myVisits", method = RequestMethod.POST)
-	public String showMyVisits(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, Model model) {
-		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
-		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
-		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
-		model.addAttribute("visitStatusList", visitStatusList);
-		model.addAttribute("actualVisitStatus", actualVisitStatus);
-		model.addAttribute("visitsByPatientAndStatus", visitsByPatientAndStatus);
-		return "/visit/patient/myVisits";
-	}
+
 
 }
