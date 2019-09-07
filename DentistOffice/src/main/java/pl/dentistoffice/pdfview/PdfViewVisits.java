@@ -44,9 +44,13 @@ public class PdfViewVisits extends AbstractPdfView {
 		document.close();
 	}
 
-	private void pdfViewDoctorVisits(Map<String, Object> model, Document document, PdfWriter writer) throws DocumentException, IOException {
+	private void pdfViewDoctorVisits(Map<String, Object> model, Document document, PdfWriter writer) throws Exception {
 		@SuppressWarnings("unchecked")
 		List<Visit> visits = (List<Visit>) model.get("doctorVisits");
+		
+		if(visits.size() == 0) {
+			throw new Exception("Brak rekorów do wyświetlenia!");
+		}
 		
 		document.setMargins(20, 10, 60, 10);
 		Phrase phrase = new Phrase();
@@ -113,10 +117,14 @@ public class PdfViewVisits extends AbstractPdfView {
 		document.add(visitTable);
 	}
 	
-	private void pdfViewPatientVisits(Map<String, Object> model, Document document, PdfWriter writer) throws DocumentException, IOException {
+	private void pdfViewPatientVisits(Map<String, Object> model, Document document, PdfWriter writer) throws Exception {
 		
 		@SuppressWarnings("unchecked")
 		List<Visit> visits = (List<Visit>) model.get("patientVisits");
+		
+		if(visits.size() == 0) {
+			throw new Exception("Brak rekorów do wyświetlenia!");
+		}
 		
 		document.setMargins(20, 10, 60, 10);
 		Phrase phrase = new Phrase();
