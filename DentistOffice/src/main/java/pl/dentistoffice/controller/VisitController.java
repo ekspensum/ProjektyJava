@@ -435,7 +435,7 @@ public class VisitController {
 	
 //	FOR SELF BROWSE AND DELETE VISITS PATIENT
 	@RequestMapping(path = "/visit/patient/myVisits")
-	public String showMyVisits(Model model) {
+	public String showMyVisitsPatient(Model model) {
 		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
 		Patient loggedPatient = userService.getLoggedPatient();
 		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(loggedPatient, defaultVisitStatus);
@@ -448,7 +448,7 @@ public class VisitController {
 	}
 	
 	@RequestMapping(path = "/visit/patient/myVisits", method = RequestMethod.POST)
-	public String showMyVisits(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, Model model) {
+	public String showMyVisitsPatient(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, Model model) {
 		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
 		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
 		List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
@@ -459,14 +459,53 @@ public class VisitController {
 	}	
 	
 	@RequestMapping(path = "/visit/patient/myVisitsPdf", method = RequestMethod.POST)
-	public ModelAndView userDetails(@SessionAttribute(name = "patient") Patient patient, @RequestParam("statusId") String statusId, ModelAndView modelAndView) {
+	public ModelAndView showMyVisitsPdfPatient(@SessionAttribute(name = "patient") Patient patient, 
+											   @RequestParam("statusId") String statusId, 
+											   ModelAndView modelAndView) {
+		
 		VisitStatus actualVisitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
 		List<Visit> visitsByPatientAndStatus = visitService.getVisitsByPatientAndStatus(patient, actualVisitStatus);
-		modelAndView.addObject("visitsByPatientAndStatus", visitsByPatientAndStatus);
-		modelAndView.setViewName("visitsByPatientAndStatus");
+		modelAndView.addObject("patientVisits", visitsByPatientAndStatus);
+		modelAndView.setViewName("patientVisits");
 		return modelAndView;
 	}
+		
+	@RequestMapping(path = "/visit/doctor/showMyVisits")
+	public String showMyVisitsDoctor(Model model) {
+		LocalDate today = LocalDate.now();
+		model.addAttribute("dateFrom", today);
+		Doctor loggedDoctor = userService.getLoggedDoctor();
+		model.addAttribute("doctor", loggedDoctor);
+		List<Visit> visitsToShow = visitService.getVisitsToShow(LocalDateTime.now(), loggedDoctor);
+		model.addAttribute("visitsToShow", visitsToShow);
+		return "/visit/doctor/showMyVisits";
+	}
 	
+	@RequestMapping(path = "/visit/doctor/showMyVisits", method = RequestMethod.POST)
+	public String showMyVisitsDoctor(@SessionAttribute("doctor") Doctor loggedDoctor,
+							   		 @RequestParam("dateFrom") String dateFrom, 
+							   		 Model model) {
+		
+		LocalDate selectedDate = LocalDate.parse(dateFrom);
+		LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate, LocalTime.now());
+		model.addAttribute("dateFrom", selectedDate);
+		List<Visit> visitsToShow = visitService.getVisitsToShow(selectedDateTime, loggedDoctor);
+		model.addAttribute("visitsToShow", visitsToShow);
+		return "/visit/doctor/showMyVisits";
+	}
+
+	@RequestMapping(path = "/visit/doctor/myVisitsPdf", method = RequestMethod.POST)
+	public ModelAndView showMyVisitsPdfDoctor(@SessionAttribute(name = "doctor") Doctor loggedDoctor, 
+											  @RequestParam("dateFrom") String dateFrom, 
+											  ModelAndView modelAndView) {
+		
+		LocalDate selectedDate = LocalDate.parse(dateFrom);
+		LocalDateTime selectedDateTime = LocalDateTime.of(selectedDate, LocalTime.now());
+		List<Visit> doctorVisits = visitService.getVisitsToShow(selectedDateTime, loggedDoctor);
+		modelAndView.addObject("doctorVisits", doctorVisits);
+		modelAndView.setViewName("doctorVisits");
+		return modelAndView;
+	}	
 	
 	
 //PRIVATE METHODS

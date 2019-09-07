@@ -5,6 +5,6 @@
 
 <p><a href="${pageContext.request.contextPath}/users/doctor/searchPatient"><button class="sideMenuButton">Informacje o pacjencie</button></a></p>
 <p><a href="${pageContext.request.contextPath}/visit/doctor/searchVisitToFinalize"><button class="sideMenuButton">Wizyty do finalizacji</button></a></p>
-<p><a href="${pageContext.request.contextPath}/users/doctor/showMyVisits"><button class="sideMenuButton">Moje wizyty</button></a></p>
+<p><a href="${pageContext.request.contextPath}/visit/doctor/showMyVisits"><button class="sideMenuButton">Moje wizyty</button></a></p>
 <br>
 <p><a href="${pageContext.request.contextPath}/users/doctor/edit"><button class="sideMenuButton">Edycja swoich danych</button></a></p>
