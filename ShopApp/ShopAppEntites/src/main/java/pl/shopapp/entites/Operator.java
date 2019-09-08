@@ -25,7 +25,7 @@ public class Operator implements Serializable {
 	private String lastName;
 	private String phoneNo;
 	private String email;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private User user;
 	@OneToOne
 	private Admin admin;

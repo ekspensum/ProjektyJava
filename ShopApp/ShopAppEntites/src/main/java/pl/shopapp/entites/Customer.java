@@ -38,11 +38,7 @@ public class Customer implements Serializable {
 	private LocalDateTime dateRegistration;
 	private String activationString;
 	
-//	@Column(name="user_id", insertable=false, updatable=false)
-//	private int userId;
-	
-	@OneToOne
-//	@JoinColumn(name="userId")
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private User user;
 	
 	private static final long serialVersionUID = 1L;

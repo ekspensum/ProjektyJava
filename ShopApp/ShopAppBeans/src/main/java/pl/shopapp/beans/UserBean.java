@@ -128,8 +128,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			customer.setDateRegistration(LocalDateTime.now());
 			customer.setActivationString(valid.stringToCode(activationString.toString()));
 			customer.setUser(user);		
-			
-			entityManager.persist(user);
+
 			entityManager.persist(customer);
 			mail.sendEmail(email, mailSubject, mailText);
 			userTransaction.commit();
@@ -184,9 +183,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			customer.setDateRegistration(LocalDateTime.now());
 			customer.setUser(user);	
 
-			entityManager.persist(user);
-			entityManager.persist(customer);
-			
+			entityManager.persist(customer);		
 			userTransaction.commit();
 			return true;
 		} catch (Exception e) {
@@ -362,7 +359,6 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+firstName+" "+lastName+"</b><br>Twoje konto zostało zarejestrowane i możesz rozpocząć pracę.<br>"
 					+ "Twój login to: "+login+". <br><br>Pozdrawiamy<br>ShopApp sp. z o.o.</font><br><br>"+mail.getMailFrom();
 			
-			entityManager.persist(user);
 			entityManager.persist(operator);
 			mail.sendEmail(email, mailSubject, mailText);
 			userTransaction.commit();
@@ -468,8 +464,7 @@ public class UserBean implements UserBeanRemote, UserBeanLocal {
 			newAdmin.setAdmin(admin);
 			newAdmin.setUser(newUser);
 			newAdmin.setDate(LocalDateTime.now());
-			
-			entityManager.persist(newUser);
+
 			entityManager.persist(newAdmin);
 			mail.sendEmail(email, mailSubject, mailText);
 			userTransaction.commit();

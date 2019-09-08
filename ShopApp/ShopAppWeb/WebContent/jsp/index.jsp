@@ -33,19 +33,36 @@
 <p id="loginButtonId"><input  type="submit" name="loginButton" value="Zaloguj"  /></p>
 </form>
 
-<form action="/ShopAppWeb/ProductByCategory" method="POST" id="ProductByCategoryPlain">
-<p id="optionHeader">Wszystkie produkty według kategorii:</p>
-<c:forEach items="${catList}" var="cat" begin="1" end="4">
-<p>${cat.name } <button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryPlain"><img src="data:image;base64,${cat.base64Image}" height="50%" width="150"></button></p>
+<form action="/ShopAppWeb/ProductByCategory" method="POST" id="ProductByCategory">
+<table style="border-collapse: collapse; border: 0px; text-align: center;">
+<tr>
+<c:forEach items="${catList}" var="cat" begin="1" end="8" varStatus="loop">
+<c:if test="${loop.index == 1 }">
+<tr><td id="optionHeader" colspan="4">Wszystkie produkty według kategorii:</td></tr>
+</c:if>
+<c:if test="${loop.index == 5 }">
+<tr><td colspan="4"><br></td></tr>
+<tr><td id="optionHeader" colspan="4">Produkty wysokiej wydajności według kategorii:</td></tr>
+</c:if>
+<td>
+<table align="center" style="border-collapse: collapse; text-align: center;">
+	<tr><td>${cat.name }</td></tr>
+	<tr><td><button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategory"><img src="data:image;base64,${cat.base64Image}" height="150" ></button></td></tr>
+</table>
+</td>
+${loop.index == 4 ? '</tr>' : ''}		
 </c:forEach>
+</table>
 </form>
 
-<form action="/ShopAppWeb/ProductByCategory" method="POST" id="ProductByCategoryFine">
-<p id="optionHeader">Produkty wysokiej wydajności według kategorii:</p>
-<c:forEach items="${catList}" var="cat" begin="5" end="8">
-<p>${cat.name } <button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryFine"><img src="data:image;base64,${cat.base64Image}" height="50%" width="150"></button></p>
-</c:forEach>
-</form>
+<!-- <form action="/ShopAppWeb/ProductByCategory" method="POST" id="ProductByCategoryFine"> -->
+<!-- <p id="optionHeader">Produkty wysokiej wydajności według kategorii:</p> -->
+<!-- <table> -->
+<%-- <c:forEach items="${catList}" var="cat" begin="5" end="8"> --%>
+<%-- <tr><td>${cat.name }</td><td><button type="submit" name="${cat.id }" value="${cat.id}" form="ProductByCategoryFine"><img src="data:image;base64,${cat.base64Image}" height="50%" width="150"></button></td></tr> --%>
+<%-- </c:forEach> --%>
+<!-- </table> -->
+<!-- </form> -->
 
 <c:if test="${SessionData != null && SessionData.idRole == 2}">
 <form action="/ShopAppWeb/LoginServlet" method="POST" id="basket">

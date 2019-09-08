@@ -3,6 +3,7 @@
     background-color:gray;
     color:black;
 }
+
 .buttonClass {
     -webkit-appearance: button;
     -moz-appearance: button;
@@ -12,6 +13,7 @@
     font: menu;
     font-size: 14px;
 }
+
 table, th, td {
     border: 1px;
     border-style:solid;
@@ -24,6 +26,7 @@ table, th, td {
 	top: 50px;
 	right: 100px;
 }
+
 #password {
 	position: absolute;
 	top: 80px;
@@ -83,29 +86,27 @@ table, th, td {
 
 #addProductForm {
 	position: absolute;
-	left: 3%;
-	top: 14%;
+	top: 15%;
 	text-align: left;
 }
 
 #addCategoryForm {
 	position: absolute;
-	left: 3%;
-	top: 67%;
+	left: 35%;
+	top: 15%;
 	text-align: left;
 }
 
 #searchProductForm {
 	position: absolute;
-	left: 35%;
-	top: 14%;
+	top: 60%;
 	text-align: left;
 }
 
 #execTransactionForm {
 	position: absolute;
-	left: 65%;
-	top: 14%;
+	left: 35%;
+	top: 30%;
 	text-align: left;
 }
 
@@ -119,7 +120,7 @@ table, th, td {
 #resultSearchFormMain {
 	position: absolute;
 	left: 30%;
-	top: 660px;
+	top: 600px;
 }
 
 #pageHeader{
@@ -134,17 +135,13 @@ table, th, td {
 	color: navy;
 }
 
-#ProductByCategoryPlain {
+#ProductByCategory {
 	position: absolute;
-	left: 5%;
-	top: 130px;
+	margin: auto;
+	left: 10%;
+	top: 150px;
 }
 
-#ProductByCategoryFine {
-	position: absolute;
-	left: 40%;
-	top: 130px;
-}
 #basket {
 	position: absolute;
 	right: 1%;
