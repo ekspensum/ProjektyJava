@@ -25,6 +25,13 @@ public class NotificationService {
 	@Autowired
 	private UserService userService;
 	
+//	for tests
+	public NotificationService(Environment env, SendEmail sendEmail) {
+		super();
+		this.env = env;
+		this.sendEmail = sendEmail;
+	}
+
 	public void sendEmailWithRegisterNotification(Object user) throws Exception {	
 		String login = null, firstName = null, lastName = null, email = null, mailText;
 		

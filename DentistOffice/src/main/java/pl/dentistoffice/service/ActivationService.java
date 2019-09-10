@@ -29,6 +29,17 @@ public class ActivationService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	public ActivationService() {
+		super();
+	}
+
+//	for tests
+	public ActivationService(Environment env, SendEmail sendEmail) {
+		super();
+		this.env = env;
+		this.sendEmail = sendEmail;
+	}
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void sendEmailWithActivationLink(Patient patient, String contextPath) {
 		String activationLink = createActivationLink(patient, contextPath);

@@ -23,10 +23,25 @@ import pl.dentistoffice.entity.User;
 public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 
 	@Autowired
-	private SessionFactory session;
+	private SessionFactory sessionFactory;
 	
+//	for tests
+	private Session session;
+	
+	public UserRepositoryHibernatePostgreSQLImpl() {
+		super();
+	}
+
+//	for tests
+	public UserRepositoryHibernatePostgreSQLImpl(SessionFactory sessionFactory) {
+		super();
+		this.sessionFactory = sessionFactory;
+		this.session = sessionFactory.getCurrentSession();
+	}
+
 	protected Session getSession() {
-		return session.getCurrentSession();
+		session = sessionFactory.getCurrentSession();
+		return session;
 	}
 	
 	@Override
@@ -93,11 +108,6 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 	@Override
 	public Patient readPatient(String username) {
 		return getSession().createNamedQuery("findPatientByUserName", Patient.class).setParameter("username", username).getSingleResult();
-	}
-
-	@Override
-	public List<Patient> readAllPatients() {
-		return getSession().createQuery("from Patient", Patient.class).getResultList();
 	}
 
 	@Override

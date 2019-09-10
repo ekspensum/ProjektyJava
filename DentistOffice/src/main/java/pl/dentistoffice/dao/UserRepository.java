@@ -27,7 +27,6 @@ public interface UserRepository {
 	void updatePatient(Patient patient);
 	Patient readPatient(int id);
 	Patient readPatient(String username);
-	List<Patient> readAllPatients();
 	
 	void saveAssistant(Assistant assistant);
 	void updateAssistant(Assistant assistant);

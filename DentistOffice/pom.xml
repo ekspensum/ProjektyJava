@@ -68,8 +68,7 @@
 		    <version>${spring-security.version}</version>
 		</dependency>
 		
-		<!-- Database -->
-		
+		<!-- Database -->	
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
 		    <groupId>org.hibernate</groupId>
@@ -262,6 +261,24 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.9</version>
 		</dependency>
+		
+		<!-- for tests -->
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.12</version>
+		    <scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-all</artifactId>
+		    <version>1.10.19</version>
+		    <scope>test</scope>
+		</dependency>
+		
+		
   
   </dependencies>
   

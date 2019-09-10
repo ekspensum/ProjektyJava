@@ -7,7 +7,7 @@
 		<table>
 			<tbody>
 				<tr>
-					<td rowspan="9"><img src="data:image;base64,${doctor.base64Photo }" width="300px" /></td>
+					<td rowspan="10"><img src="data:image;base64,${doctor.base64Photo }" width="300px" /></td>
 					<td>Login:</td>
 					<td><form:input path="user.username" id="username" /></td>
 					<td class="msgError" ><form:errors path="user.username" />${distinctLoginError }</td>

@@ -24,13 +24,18 @@ import pl.dentistoffice.entity.Visit;
 @Service
 public class HibernateSearchService {
 
-	private SessionFactory session;
+	private SessionFactory sessionFactory;
 	
-	@Autowired
-	public HibernateSearchService(SessionFactory session) {
+//	for tests
+	public HibernateSearchService() {
 		super();
-		this.session = session;
-		FullTextSession fullTextSession = Search.getFullTextSession(session.openSession());
+	}
+
+	@Autowired
+	public HibernateSearchService(SessionFactory sessionFactory) {
+		super();
+		this.sessionFactory = sessionFactory;
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.openSession());
 		try {
 			fullTextSession.createIndexer()
 			.batchSizeToLoadObjects(15)
@@ -44,7 +49,7 @@ public class HibernateSearchService {
 
 	public boolean updateIndex() {
 
-		FullTextSession fullTextSession = Search.getFullTextSession(session.openSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.openSession());
 		try {
 //			fullTextSession.getSearchFactory().optimize();
 			fullTextSession.createIndexer()
@@ -62,7 +67,7 @@ public class HibernateSearchService {
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Patient> searchPatientNamePeselStreetPhoneByKeywordQuery(String text){
-		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.getCurrentSession());
 		
 		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
 									.buildQueryBuilder()
@@ -84,7 +89,7 @@ public class HibernateSearchService {
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Visit> searchVisitDateAndStatusByKeywordQuery(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo){
-		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.getCurrentSession());
 		
 		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
 									.buildQueryBuilder()
@@ -111,7 +116,7 @@ public class HibernateSearchService {
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Patient> searchPatientNamePeselStreetPhoneByKeywordQueryAndDoctor(String text, Doctor doctor){
-		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.getCurrentSession());
 		
 		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
 									.buildQueryBuilder()
@@ -157,7 +162,7 @@ public class HibernateSearchService {
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<DentalTreatment> searchDentalTreatmentNameDescriptionByKeywordQuery(String text){
-		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.getCurrentSession());
 		
 		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
 									.buildQueryBuilder()
@@ -182,7 +187,7 @@ public class HibernateSearchService {
 	
 	@Transactional(propagation=Propagation.REQUIRED)
 	public Patient searchPatientToActivationByKeywordQuery(String activationString){
-		FullTextSession fullTextSession = Search.getFullTextSession(session.getCurrentSession());
+		FullTextSession fullTextSession = Search.getFullTextSession(sessionFactory.getCurrentSession());
 		
 		QueryBuilder queryBuilder = fullTextSession.getSearchFactory()
 									.buildQueryBuilder()

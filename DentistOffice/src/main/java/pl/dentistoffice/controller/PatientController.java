@@ -214,9 +214,9 @@ public class PatientController {
 		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(patient.getUser().getUsername());
 		patient.setPhoto(photo.getBytes());
 		
-		boolean verifyreCaptcha = reCaptchaService.verify(reCaptchaResponse);
+		boolean verifyReCaptcha = reCaptchaService.verify(reCaptchaResponse);
 		
-		if(!result.hasErrors() && dinstinctLogin && verifyreCaptcha) {
+		if(!result.hasErrors() && dinstinctLogin && verifyReCaptcha) {
 			try {
 				userService.addNewPatient(patient, servletRequest.getContextPath());
 				model.addAttribute("success", env.getProperty("successRegisterPatient"));
@@ -230,7 +230,7 @@ public class PatientController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			if(!verifyreCaptcha) {
+			if(!verifyReCaptcha) {
 				model.addAttribute("reCaptchaError", env.getProperty("reCaptchaError"));
 			}
 			return "/users/patient/register";

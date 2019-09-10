@@ -53,9 +53,9 @@ public class ContactUsController {
 							+ "<br><br><br>"
 							+ "Adres e-mail nadawcy: "+emailContactService.getReplyMail() + "\n"
 							+ "</font><br><br>";
-		boolean verifyreCaptcha = reCaptchaService.verify(reCaptchaResponse);
+		boolean verifyReCaptcha = reCaptchaService.verify(reCaptchaResponse);
 		
-		if (!result.hasErrors()) {
+		if (!result.hasErrors() && verifyReCaptcha) {
 			try {
 				sendEmail.sendEmail(env, 
 									env.getProperty("mailFrom"), // in this case mailTo == mailFrom
@@ -70,7 +70,7 @@ public class ContactUsController {
 				model.addAttribute("alert", "NO");
 			}			
 		} else {
-			if(!verifyreCaptcha) {
+			if(!verifyReCaptcha) {
 				model.addAttribute("reCaptchaError", env.getProperty("reCaptchaError"));
 			}
 		}

@@ -48,6 +48,19 @@ public class UserService {
 	@Autowired
 	private NotificationService notificationService;
 	
+	public UserService() {
+		super();
+	}
+
+//	for tests
+	public UserService(UserRepository userRepository, NotificationService notificationService, ActivationService activationService, HibernateSearchService searchsService) {
+		super();
+		this.userRepository = userRepository;
+		this.notificationService = notificationService;
+		this.activationService = activationService;
+		this.searchsService = searchsService;
+	}
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void addNewDoctor(Doctor doctor) throws Exception {
 		User user = doctor.getUser();
@@ -157,10 +170,6 @@ public class UserService {
 	
 	public Patient getPatient(int id) {
 		return userRepository.readPatient(id);
-	}
-	
-	public List<Patient> getAllPatients(){
-		return userRepository.readAllPatients();
 	}
 
 	public Patient getLoggedPatient() {
@@ -327,8 +336,8 @@ public class UserService {
 		return false;
 	}
 	
-//	PRIVATE METHODS
-	private List<Role> createCurrentRolesList(User user){
+//	PRIVATE/PROTECTED METHODS
+	protected List<Role> createCurrentRolesList(User user){
 		List<Role> selectedIdRoles = user.getRoles(); //only id is selected on page. Role and roleName was't change
 		List<Role> currentRolesList = new ArrayList<>();
 		Role currentRole;
