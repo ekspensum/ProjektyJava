@@ -42,7 +42,7 @@ import pl.dentistoffice.service.NotificationService;
 import pl.dentistoffice.service.SendEmail;
 import pl.dentistoffice.service.UserService;
 
-public class UserServiceTests {
+public class UserServiceTest {
 	
 	private UserService userService;
 	private UserRepository userRepository;
@@ -98,7 +98,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(doctor.getRegisteredDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(doctor.getUser().getPassword());
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(doctor.getEditedDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(doctor.getUser().getPassword());
 	}
 
 	@Test
@@ -189,7 +189,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(assistant.getRegisteredDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(assistant.getUser().getPassword());
 	}
 
 	@Test
@@ -214,7 +214,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(assistant.getEditedDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(assistant.getUser().getPassword());
 	}
 
 	@Test
@@ -297,7 +297,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(patient.getRegisteredDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(patient.getUser().getPassword());
 		assertEquals(false, patient.getUser().isEnabled());
 		assertNotNull(patient.getActivationString());
 	}
@@ -314,7 +314,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(patient.getEditedDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(patient.getUser().getPassword());
 	}
 
 	@Test
@@ -377,7 +377,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(admin.getRegisteredDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(admin.getUser().getPassword());
 	}
 
 	@Test
@@ -453,7 +453,7 @@ public class UserServiceTests {
 			e.printStackTrace();
 		}
 		assertEquals(admin.getEditedDateTime().compareTo(LocalDateTime.now().minusSeconds(2)), 1);
-		assertNotNull(user.getPassword());
+		assertNotNull(admin.getUser().getPassword());
 	}
 
 	@Test

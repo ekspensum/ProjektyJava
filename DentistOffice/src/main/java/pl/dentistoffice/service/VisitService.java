@@ -42,8 +42,22 @@ public class VisitService {
     @Autowired
     private NotificationService notificationService;
 
-    @Transactional(propagation = Propagation.REQUIRED)
-	public void addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
+    public VisitService() {
+		super();
+	}
+
+//    for tests
+	public VisitService(VisitRepository visitRepository, UserService userService, HibernateSearchService searchsService,
+			NotificationService notificationService) {
+		super();
+		this.visitRepository = visitRepository;
+		this.userService = userService;
+		this.searchsService = searchsService;
+		this.notificationService = notificationService;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Visit addNewVisitByPatient(Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		Patient patient = userService.getLoggedPatient();
@@ -73,10 +87,13 @@ public class VisitService {
 		visit.setReservationDateTime(LocalDateTime.now());
 		visitRepository.saveVisit(visit);
 		notificationService.sendEmailWithVisitDateNotification(visit);
+		
+//		for tests
+		return visit;
 	}
 	
     @Transactional(propagation = Propagation.REQUIRED)
-	public void addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
+	public Visit addNewVisitByAssistant(Patient patient, Doctor doctor, String [] dateTime, List<DentalTreatment> treatments) {
 		Visit visit = new Visit();
 		visit.setDoctor(doctor);
 		User loggedUser = userService.getLoggedUser();
@@ -106,6 +123,9 @@ public class VisitService {
 		visit.setReservationDateTime(LocalDateTime.now());
 		visitRepository.saveVisit(visit);
 		notificationService.sendEmailWithVisitDateNotification(visit);
+		
+//		for tests
+		return visit;
 	}
 	
 	public Map<LocalDate, Map<LocalTime, Boolean>> getWorkingWeekFreeTimeMap(Doctor doctor, int dayStart, int dayEnd){

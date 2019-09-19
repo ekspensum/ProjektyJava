@@ -26,8 +26,22 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+//	for tests
+	private Session session;
+	
+	public VisitRepositoryHibernatePostgreSQLImpl() {
+		super();
+	}
+
+//	for tests
+	public VisitRepositoryHibernatePostgreSQLImpl(SessionFactory sessionFactory) {
+		super();
+		this.sessionFactory = sessionFactory;
+	}
+
 	protected Session getSession() {
-		return sessionFactory.getCurrentSession();
+		this.session = sessionFactory.getCurrentSession();
+		return session;
 	}
 	
 	@Override

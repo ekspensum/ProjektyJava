@@ -30,6 +30,7 @@ public class NotificationService {
 		super();
 		this.env = env;
 		this.sendEmail = sendEmail;
+		this.userService = new UserService();
 	}
 
 	public void sendEmailWithRegisterNotification(Object user) throws Exception {	
