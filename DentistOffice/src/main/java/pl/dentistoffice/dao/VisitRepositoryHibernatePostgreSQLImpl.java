@@ -37,6 +37,7 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	public VisitRepositoryHibernatePostgreSQLImpl(SessionFactory sessionFactory) {
 		super();
 		this.sessionFactory = sessionFactory;
+		this.session = sessionFactory.getCurrentSession();
 	}
 
 	protected Session getSession() {

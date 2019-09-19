@@ -134,7 +134,7 @@ public class VisitService {
 		WorkingWeek workingWeek = doctor.getWorkingWeek();
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = workingWeek.getWorkingWeekMap();
 		
-		List<Visit> visitsList = visitRepository.readVisits(LocalDateTime.now().plusDays(dayStart), LocalDateTime.now().plusDays(dayEnd), doctor);
+		List<Visit> visitsList = visitRepository.readVisits(LocalDateTime.now().plusDays(dayStart).withNano(0), LocalDateTime.now().plusDays(dayEnd).withNano(0), doctor);
 		
 		Iterator<Entry<DayOfWeek, Map<LocalTime, Boolean>>> iteratorWorkingWeekMap;
 		Iterator<Entry<LocalTime, Boolean>> iteratorDayTimeMap;
