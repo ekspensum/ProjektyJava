@@ -57,7 +57,7 @@ public class WorkingWeek implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public Map<DayOfWeek, Map<LocalTime, Boolean>> getWorkingWeekMap() {
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(workingWeekMapByte);
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(this.workingWeekMapByte);
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = null;
 		try {
 			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);

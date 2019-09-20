@@ -258,7 +258,7 @@ public class VisitService {
 	
 	public List<Visit> getVisitsToShow(LocalDateTime dateTimeFrom, Doctor doctor){
 		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
-		List<Visit> visits = visitRepository.readVisits(dateTimeFrom, LocalDateTime.now().plusDays(30), visitStatus, doctor);
+		List<Visit> visits = visitRepository.readVisits(dateTimeFrom, LocalDateTime.now().plusDays(30).withNano(0), visitStatus, doctor);
 		visits.sort(new Comparator<Visit>() {
 
 			@Override
