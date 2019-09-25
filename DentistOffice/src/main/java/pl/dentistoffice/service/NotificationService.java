@@ -25,7 +25,10 @@ public class NotificationService {
 	@Autowired
 	private UserService userService;
 	
-//	for tests
+	public NotificationService() {
+	}
+
+	//	for tests
 	public NotificationService(Environment env, SendEmail sendEmail) {
 		super();
 		this.env = env;

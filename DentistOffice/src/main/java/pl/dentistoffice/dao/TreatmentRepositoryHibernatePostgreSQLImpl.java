@@ -19,8 +19,21 @@ public class TreatmentRepositoryHibernatePostgreSQLImpl implements TreatmentRepo
 	@Autowired
 	private SessionFactory sessionFactory;
 	
+//	for tests
+	private Session session;
+	
+	public TreatmentRepositoryHibernatePostgreSQLImpl() {
+	}
+
+//	for tests
+	public TreatmentRepositoryHibernatePostgreSQLImpl(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+		this.session = sessionFactory.getCurrentSession();
+	}
+
 	protected Session getSession() {
-		return sessionFactory.getCurrentSession();
+		this.session = sessionFactory.getCurrentSession();
+		return session;
 	}
 
 	@Override

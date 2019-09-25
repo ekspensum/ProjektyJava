@@ -26,6 +26,16 @@ public class DentalTreatmentService {
     @Autowired
     private HibernateSearchService searchsService;
 	
+	public DentalTreatmentService() {
+	}
+
+//	for tests
+	public DentalTreatmentService(TreatmentRepository treatmentRepository, UserService userService, HibernateSearchService searchsService) {
+		this.treatmentRepository = treatmentRepository;
+		this.userService = userService;
+		this.searchsService = searchsService;
+	}
+
 	public boolean addNewDentalTreatment(DentalTreatment dentalTreatment) {
 		dentalTreatment.setRegisteredDateTime(LocalDateTime.now());
 		User loggedUser = userService.getLoggedUser();
@@ -131,7 +141,7 @@ public class DentalTreatmentService {
 	
 //	PRIVATE METHODS
 	private List<TreatmentCategory> createCurrentTreatmentsCategoryList(DentalTreatment dentalTreatment){
-		List<TreatmentCategory> selectedIdCategories = dentalTreatment.getTreatmentCategory(); //only id is selected on page. Role and roleName was't change
+		List<TreatmentCategory> selectedIdCategories = dentalTreatment.getTreatmentCategory(); //only id is selected on page. CategoryName was't change
 		List<TreatmentCategory> currentCategoryList = new ArrayList<>();
 		TreatmentCategory currentCategory;
 		for (TreatmentCategory category : selectedIdCategories) {

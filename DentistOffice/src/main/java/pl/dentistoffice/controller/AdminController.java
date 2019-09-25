@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import pl.dentistoffice.entity.Admin;
+import pl.dentistoffice.entity.User;
 import pl.dentistoffice.service.HibernateSearchService;
 import pl.dentistoffice.service.InitApplicationService;
 import pl.dentistoffice.service.UserService;
@@ -40,6 +41,17 @@ public class AdminController {
 	@Autowired
 	private InitApplicationService initApplicationService; 
 	
+	public AdminController() {
+	}
+
+	public AdminController(Environment env, UserService userService, HibernateSearchService searchsService,
+			InitApplicationService initApplicationService) {
+		this.env = env;
+		this.userService = userService;
+		this.searchsService = searchsService;
+		this.initApplicationService = initApplicationService;
+	}
+
 	@RequestMapping(path = "/panels/adminPanel")
 	public String adminPanel(Model model) {
 		return "adminPanel";
@@ -60,7 +72,9 @@ public class AdminController {
 											@RequestParam("photo") MultipartFile photo
 											) throws IOException {
 		
-		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(admin.getUser().getUsername());
+		User user = admin.getUser();
+		String username = user.getUsername();
+		boolean dinstinctLogin = userService.checkDinstinctLoginWithRegisterUser(username);
 		admin.setPhoto(photo.getBytes());
 		if(!result.hasErrors() && dinstinctLogin) {
 			try {
