@@ -1,17 +1,18 @@
 package integration;
 
-import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.mockito.Mockito;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import pl.dentistoffice.dao.TreatmentRepository;
 import pl.dentistoffice.dao.TreatmentRepositoryHibernatePostgreSQLImpl;
@@ -27,6 +28,7 @@ import pl.dentistoffice.service.InitApplicationService;
 import pl.dentistoffice.service.NotificationService;
 import pl.dentistoffice.service.ReCaptchaService;
 import pl.dentistoffice.service.SendEmail;
+import pl.dentistoffice.service.SendEmailGoogleService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
 
@@ -35,68 +37,85 @@ import pl.dentistoffice.service.VisitService;
 @EnableWebMvc
 public class TestMvcConfig implements WebMvcConfigurer {
 	
-	@Bean
-	public UserService userService() {
-		HibernateSearchService searchsService = Mockito.mock(HibernateSearchService.class);
-		Environment env = Mockito.mock(Environment.class);
-		SendEmail sendEmail = Mockito.mock(SendEmail.class);
-		SessionFactory sessionFactory = Mockito.mock(SessionFactory.class);
-		Session session = Mockito.mock(Session.class);
-		when(sessionFactory.getCurrentSession()).thenReturn(session);
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+//	}
 
-		UserRepositoryHibernatePostgreSQLImpl userRepository = new UserRepositoryHibernatePostgreSQLImpl(sessionFactory);
-		ActivationService activationService = new ActivationService(env, sendEmail);
-		NotificationService notificationService = new NotificationService(env, sendEmail); 
+	@Bean
+	public CommonsMultipartResolver multipartResolver() throws IOException {
+	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+//	    Constraints below must resolve Exception (throw runtime error) - see TaskController  
+//	    multipartResolver.setMaxUploadSizePerFile(200000);
+//	    multipartResolver.setMaxUploadSize(200000);
+	    
+//	    Not to use on Heroku cloud
+//	    multipartResolver.setUploadTempDir(new FileSystemResource(System.getenv("TMP")));
+	    return multipartResolver;
+	}
+	
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        return messageSource;
+    }
+    
+//    @Bean
+//    public TilesConfigurer tilesConfigurer(){
+//        TilesConfigurer tilesConfigurer = new TilesConfigurer();
+//        tilesConfigurer.setDefinitions(new String[] {"/WEB-INF/views/**/tiles.xml"});
+//        tilesConfigurer.setCheckRefresh(true);
+//        return tilesConfigurer;
+//    }
+	
+	@Override
+	public void configureViewResolvers(ViewResolverRegistry registry) {
+//		WebMvcConfigurer.super.configureViewResolvers(registry);
 		
-		return new UserService(userRepository, notificationService, activationService, searchsService);
-//		return new UserService();
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/view/pages/");
+        viewResolver.setSuffix(".jsp"); 
+		
+        registry.viewResolver(viewResolver);
+        
+//        TilesViewResolver tilesViewResolver = new TilesViewResolver();
+//		registry.viewResolver(tilesViewResolver);
+	}
+
+	@Bean
+	public UserService userService() throws URISyntaxException {
+		return new UserService();
 	}
 	
 	@Bean
-	public UserRepository userRepository() {
-		SessionFactory sessionFactory = Mockito.mock(SessionFactory.class);
-		Session session = Mockito.mock(Session.class);
-		when(sessionFactory.getCurrentSession()).thenReturn(session);
-		
-		return new UserRepositoryHibernatePostgreSQLImpl(sessionFactory);
-//		return new UserRepositoryHibernatePostgreSQLImpl();
+	public UserRepository userRepository() throws URISyntaxException {
+		return new UserRepositoryHibernatePostgreSQLImpl();
 	}
-	
-	@Bean
-	public SessionFactory sessionFactory() {
-//		SessionFactory sessionFactory = Mockito.mock(SessionFactory.class);
-//		Session session = Mockito.mock(Session.class);
-//		when(sessionFactory.getCurrentSession()).thenReturn(session);
-		return Mockito.mock(SessionFactory.class);
-	}
-	
+
 	@Bean
 	public NotificationService notificationService() {
-//		Environment env = Mockito.mock(Environment.class);
-//		SendEmail sendEmail = Mockito.mock(SendEmail.class);
 		return new NotificationService();
 	}
 	
 	@Bean
 	public ActivationService activationService() {
-//		Environment env = Mockito.mock(Environment.class);
-//		SendEmail sendEmail = Mockito.mock(SendEmail.class);
 		return new ActivationService();
 	}
 	
 	@Bean
 	public HibernateSearchService hibernateSearchService() {
-		return Mockito.mock(HibernateSearchService.class);
+		return new HibernateSearchService();
 	}
 	
 	@Bean
 	public SendEmail sendEmail() {
-		return Mockito.mock(SendEmail.class);
+		return new SendEmailGoogleService();
 	}
 	
 	@Bean
 	public InitApplicationService initApplicationService() {
-		return Mockito.mock(InitApplicationService.class);
+		return new InitApplicationService();
 	}
 	
 	@Bean
@@ -129,8 +148,4 @@ public class TestMvcConfig implements WebMvcConfigurer {
 		return new VisitService();
 	}
 
-	@Bean
-	public BasicDataSource dataSource() {
-		return Mockito.mock(BasicDataSource.class);
-	}
 }

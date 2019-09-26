@@ -3,11 +3,14 @@ package integration;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletContext;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -27,7 +31,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import pl.dentistoffice.config.WebConfig;
 import pl.dentistoffice.controller.AdminController;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.service.HibernateSearchService;
@@ -36,11 +39,11 @@ import pl.dentistoffice.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, TestMvcConfig.class})
-public class AdminControllerIntegrationTest {
+@ContextConfiguration(classes = {TestMvcConfig.class, TestRootConfig.class})
+public class IntegrationTest {
 	
-//    @Autowired
-//    private WebApplicationContext wac;
+    @Autowired
+    private WebApplicationContext wac;
 	
 	private MockMvc mockMvc;    
     private AdminController adminController;
@@ -62,11 +65,11 @@ public class AdminControllerIntegrationTest {
         viewResolver.setPrefix("/WEB-INF/view/pages/");
         viewResolver.setSuffix(".jsp");       
         
-        adminController = new AdminController(env, userService, searchsService, initApplicationService);
-		mockMvc = MockMvcBuilders.standaloneSetup(adminController).setViewResolvers(viewResolver).build();
+//        adminController = new AdminController(env, userService, searchsService, initApplicationService);
+//		mockMvc = MockMvcBuilders.standaloneSetup(adminController).setViewResolvers(viewResolver).build();
 		
-//        DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
-//        this.mockMvc = builder.build();
+        DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
+        this.mockMvc = builder.build();
 	}
 
 	@After
@@ -74,16 +77,18 @@ public class AdminControllerIntegrationTest {
 	}
 
 	@Test
+	public void checkingServletContext() {
+	    ServletContext servletContext = wac.getServletContext();
+	     
+	    assertNotNull(servletContext);
+	    assertTrue(servletContext instanceof MockServletContext);
+	    assertNotNull(wac.getBean("adminController"));
+	}
+	
+	@Test
 	public void testRegistrationAdmin() throws Exception {
-		
-//		mockMvc.perform(get("/users/admin/owner/register"))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("/users/admin/owner/register"));
-		
-		List<Role> roles = new ArrayList<Role>();
-		when(userService.getAllRolesWithoutId(5)).thenReturn(roles);
-		
-		mockMvc.perform(MockMvcRequestBuilders.get("/users/admin/owner/register"))
+		mockMvc.perform(get("/users/admin/owner/register"))
+		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(view().name("/users/admin/owner/register"));
 	}
