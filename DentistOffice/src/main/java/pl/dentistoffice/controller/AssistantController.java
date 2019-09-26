@@ -32,9 +32,16 @@ public class AssistantController {
 	@Autowired
 	private UserService userService;
 	
+	public AssistantController() {
+	}
+
+	public AssistantController(Environment env, UserService userService) {
+		this.env = env;
+		this.userService = userService;
+	}
+
 	@RequestMapping(path = "/panels/assistantPanel")
 	public String assistantPanel(Model model) {
-
 		return "assistantPanel";
 	}
 
