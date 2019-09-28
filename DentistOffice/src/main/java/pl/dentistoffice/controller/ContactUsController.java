@@ -33,6 +33,17 @@ public class ContactUsController {
 	private ReCaptchaService reCaptchaService;
 	
 
+	public ContactUsController() {
+	}
+
+	public ContactUsController(Environment env, EmailContactService emailContactService, SendEmail sendEmail,
+			ReCaptchaService reCaptchaService) {
+		this.env = env;
+		this.emailContactService = emailContactService;
+		this.sendEmail = sendEmail;
+		this.reCaptchaService = reCaptchaService;
+	}
+
 	@RequestMapping(path = "/contact")
 	public String showContactPage(Model model) {
 		model.addAttribute("emailContactService", emailContactService);

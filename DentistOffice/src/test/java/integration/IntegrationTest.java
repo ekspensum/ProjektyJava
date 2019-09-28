@@ -2,8 +2,10 @@ package integration;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -28,7 +30,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import pl.dentistoffice.controller.AdminController;
@@ -91,6 +95,18 @@ public class IntegrationTest {
 		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(view().name("/users/admin/owner/register"));
+		
+		ModelMap modelMap = mockMvc.perform(get("/users/admin/owner/register")).andReturn().getModelAndView().getModelMap();
+		@SuppressWarnings("unchecked")
+		List<Role> rolesList = (List<Role>) modelMap.get("rolesList");
+		
+		assertEquals(4, rolesList.size());
+		
+//		mockMvc.perform(get("/users/admin/owner/register"))
+//		.andExpect(status().isOk()).andReturn().getRequest();
+//		
+//		mockMvc.perform(get("/users/admin/owner/register"))
+//		.andExpect(status().isOk()).andReturn().getResponse();
 	}
 
 	

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +21,6 @@ import pl.dentistoffice.entity.TreatmentCategory;
 import pl.dentistoffice.service.DentalTreatmentService;
 
 @Controller
-@PropertySource(value="classpath:/messages.properties")
 @SessionAttributes(names = {"dentalTreatment", "treatmentCategory"})
 public class DentalTreatmentController {
 	
@@ -31,6 +29,14 @@ public class DentalTreatmentController {
 	
 	@Autowired
 	private DentalTreatmentService dentalTreatmentService;
+
+public DentalTreatmentController() {
+	}
+
+public DentalTreatmentController(Environment env, DentalTreatmentService dentalTreatmentService) {
+		this.env = env;
+		this.dentalTreatmentService = dentalTreatmentService;
+	}
 
 //	FOR ADD DENTAL TREATMENT
 	@RequestMapping(path = "/control/addTreatment")
