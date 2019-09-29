@@ -183,6 +183,9 @@ public class AssistantControllerTest {
 				.sessionAttr("image", image))
 				.andDo(print()).andReturn().getRequest().getAttribute("rolesList");
 		assertEquals(rolesExpected.toString(), rolesActual.toString());
+		
+		doThrow(new Exception("Zaplanowany wyjątek")).when(userService).editAssistant(assistant);
+		assertEquals("forward:/message/employee/error", assistantController.editDataAssistantByAdmin(assistant, result, model, 22, photo, image));
 	}
 
 	@Test
@@ -223,6 +226,8 @@ public class AssistantControllerTest {
 		
 		when(userService.checkDinstinctLoginWithEditUser(user.getUsername(), 22)).thenReturn(true);
 		assertEquals("forward:/message/employee/success", assistantController.editDataAssistantByAdmin(assistant, result, model, 22, photo, image));
+		doThrow(new Exception("Zaplanowany wyjątek")).when(userService).editAssistant(assistant);
+		assertEquals("forward:/message/employee/error", assistantController.editDataAssistantByAdmin(assistant, result, model, 22, photo, image));
 	}
 
 }

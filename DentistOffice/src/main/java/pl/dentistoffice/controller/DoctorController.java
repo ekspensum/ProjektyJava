@@ -49,9 +49,19 @@ public class DoctorController {
 	@Autowired
 	private HibernateSearchService searchService;
 	
+	public DoctorController() {
+	}
+
+	public DoctorController(Environment env, UserService userService, VisitService visitService,
+			HibernateSearchService searchService) {
+		this.env = env;
+		this.userService = userService;
+		this.visitService = visitService;
+		this.searchService = searchService;
+	}
+
 	@RequestMapping(path = "/panels/doctorPanel")
 	public String doctorPanel(Model model) {
-
 		return "doctorPanel";
 	}
 	

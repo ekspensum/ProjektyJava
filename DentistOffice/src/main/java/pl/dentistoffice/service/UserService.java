@@ -71,7 +71,7 @@ public class UserService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void editDoctor(Doctor doctor) {
+	public void editDoctor(Doctor doctor) throws Exception {
 		User user = doctor.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		List<Role> currentRolesList = createCurrentRolesList(user);
@@ -113,7 +113,7 @@ public class UserService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void editAssistant(Assistant assistant) {
+	public void editAssistant(Assistant assistant) throws Exception {
 		User user = assistant.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		assistant.setEditedDateTime(LocalDateTime.now());
@@ -224,7 +224,7 @@ public class UserService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void editAdmin(Admin admin) {
+	public void editAdmin(Admin admin) throws Exception {
 		User user = admin.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		admin.setEditedDateTime(LocalDateTime.now());

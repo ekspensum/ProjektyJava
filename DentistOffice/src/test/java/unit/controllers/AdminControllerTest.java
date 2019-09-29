@@ -169,6 +169,8 @@ public class AdminControllerTest {
 				.andExpect(view().name("/users/admin/owner/edit"));
 		
 		assertEquals("forward:/message/employee/success", adminController.editAdminByOwner(admin, result, model, 1, photo, image));
+		doThrow(new Exception("Zaplanowany wyjątek")).when(userService).editAdmin(admin);
+		assertEquals("forward:/message/employee/error", adminController.editAdminByOwner(admin, result, model, 1, photo, image));
 	}
 
 	@Test
@@ -205,6 +207,8 @@ public class AdminControllerTest {
 				.andExpect(view().name("/users/admin/edit"));
 		
 		assertEquals("forward:/message/employee/success", adminController.selfEditAdmin(admin, result, model, 1, photo, image));
+		doThrow(new Exception("Zaplanowany wyjątek")).when(userService).editAdmin(admin);
+		assertEquals("forward:/message/employee/error", adminController.editAdminByOwner(admin, result, model, 1, photo, image));
 	}
 
 	@Test

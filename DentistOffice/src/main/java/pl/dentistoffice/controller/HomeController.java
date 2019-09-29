@@ -38,6 +38,16 @@ public class HomeController {
 	private int dayStart = 0;
 	private int dayEnd = 0;
 
+	public HomeController() {
+	}
+
+	public HomeController(UserService userService, DentalTreatmentService dentalTreatmentService,
+			VisitService visitService) {
+		this.userService = userService;
+		this.dentalTreatmentService = dentalTreatmentService;
+		this.visitService = visitService;
+	}
+
 	@RequestMapping(path="/")
 	public String home() {		
 		return "home";
@@ -71,6 +81,7 @@ public class HomeController {
 		model.addAttribute("allDoctors", allDoctors);		
 		return "agenda";
 	}
+	
 	@RequestMapping(path="/agenda", method = RequestMethod.POST)
 	public String agenda(@RequestParam(name = "doctorId", required = false) String doctorId,
 						@SessionAttribute(name = "doctor", required = false) Doctor doctorFromSession,
