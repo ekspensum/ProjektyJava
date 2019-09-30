@@ -24,6 +24,14 @@ public class LoginController {
 	@Autowired
 	private UserService userService;
 	
+	public LoginController() {
+	}
+
+	public LoginController(Environment env, UserService userService) {
+		this.env = env;
+		this.userService = userService;
+	}
+
 	@RequestMapping(path = "/login")
 	public String login(
 						@RequestParam(value = "logout", required = false) String logout,
