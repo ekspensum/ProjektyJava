@@ -146,7 +146,7 @@ public class UserService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void addNewPatient(Patient patient, String contextPath) {
+	public void addNewPatient(Patient patient, String contextPath) throws Exception {
 		User user = patient.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		List<Role> patientRole = getPatientRole();
@@ -161,7 +161,7 @@ public class UserService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void editPatient(Patient patient) {
+	public void editPatient(Patient patient) throws Exception {
 		User user = patient.getUser();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPasswordField()));
 		patient.setEditedDateTime(LocalDateTime.now());

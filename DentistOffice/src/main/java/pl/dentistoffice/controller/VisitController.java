@@ -52,6 +52,19 @@ public class VisitController {
 	private int dayStart = 0;
 	private int dayEnd = 0;
 
+	public VisitController() {
+	}
+
+	public VisitController(Environment env, VisitService visitService, UserService userService,
+			DentalTreatmentService treatmentService, int dayStart, int dayEnd) {
+		this.env = env;
+		this.visitService = visitService;
+		this.userService = userService;
+		this.treatmentService = treatmentService;
+		this.dayStart = dayStart;
+		this.dayEnd = dayEnd;
+	}
+
 	@RequestMapping(path = "/visit/patient/selectDoctor")
 	public String visitSelectDoctorByPatient(Model model) {
 		List<Doctor> allDoctorsList = userService.getAllDoctors();

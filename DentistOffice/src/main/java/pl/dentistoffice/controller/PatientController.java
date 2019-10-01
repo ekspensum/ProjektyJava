@@ -48,6 +48,18 @@ public class PatientController {
 	private ReCaptchaService reCaptchaService;
 	
 	
+	public PatientController() {
+	}
+
+	public PatientController(Environment env, UserService userService, VisitService visitService,
+			ActivationService activationService, ReCaptchaService reCaptchaService) {
+		this.env = env;
+		this.userService = userService;
+		this.visitService = visitService;
+		this.activationService = activationService;
+		this.reCaptchaService = reCaptchaService;
+	}
+
 	@RequestMapping(path = "/panels/patientPanel")
 	public String patientPanel(Model model) {
 		return "patientPanel";
@@ -152,7 +164,7 @@ public class PatientController {
 			} catch (Exception e) {
 				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionUpdatePatient"));
-				return "forward:/message/employee/success";
+				return "forward:/message/employee/error";
 			}
 		} else {
 			if(!dinstinctLogin) {
@@ -278,7 +290,7 @@ public class PatientController {
 			} catch (Exception e) {
 				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionUpdatePatient"));
-				return "forward:/message/employee/success";
+				return "forward:/message/patient/error";
 			}
 		} else {
 			if(!dinstinctLogin) {

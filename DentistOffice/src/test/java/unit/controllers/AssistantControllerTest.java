@@ -47,7 +47,7 @@ public class AssistantControllerTest {
 	@Mock
 	private BindingResult result;
 	@Mock
-	RedirectAttributes redirectAttributes;
+	private RedirectAttributes redirectAttributes;
 	
 	@Before
 	public void setUp() throws Exception {

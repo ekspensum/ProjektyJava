@@ -404,7 +404,8 @@ public class DoctorControllerTest {
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.redirectedUrl("/users/doctor/selectPatient"))
 				.andReturn().getFlashMap().get("searchedPatientList");
-		assertEquals(33, searchedPatientList.get(0).getId());	}
+		assertEquals(33, searchedPatientList.get(0).getId());	
+	}
 
 	@Test
 	public void testSelectPatientByDoctor() throws Exception {
@@ -465,8 +466,9 @@ public class DoctorControllerTest {
 				.andReturn().getRequest().getAttribute("actualVisitStatus");
 		assertEquals(1, visitStatusActual.getId());
 		
-		Patient patientActual = (Patient) mockMvc.perform(MockMvcRequestBuilders.get("/users/doctor/showPatient")
-				.sessionAttr("patient", patient))
+		Patient patientActual = (Patient) mockMvc.perform(MockMvcRequestBuilders.post("/users/doctor/showPatient")
+				.sessionAttr("patient", patient)
+				.param("statusId", "1"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("/users/doctor/showPatient"))
 				.andReturn().getRequest().getAttribute("patient");
