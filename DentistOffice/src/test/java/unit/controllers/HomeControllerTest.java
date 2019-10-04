@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -136,6 +137,7 @@ public class HomeControllerTest {
 					.param("weekResultDriver", (String) null))
 					.andExpect(status().isOk())
 					.andExpect(view().name("agenda"))
+					.andExpect(MockMvcResultMatchers.model().attribute("doctor", doctor))
 					.andReturn().getRequest().getAttribute("disableLeftArrow");
 		assertTrue(disableLeftArrow.equals("YES"));
 		
@@ -146,6 +148,7 @@ public class HomeControllerTest {
 					.param("weekResultDriver", "stepRight"))
 					.andExpect(status().isOk())
 					.andExpect(view().name("agenda"))
+					.andExpect(MockMvcResultMatchers.model().attribute("doctor", doctor))
 					.andReturn().getRequest().getAttribute("disableRightArrow");
 		assertTrue(disableRightArrow.equals("YES"));
 		
@@ -156,6 +159,7 @@ public class HomeControllerTest {
 					.param("weekResultDriver", "stepLeft"))
 					.andExpect(status().isOk())
 					.andExpect(view().name("agenda"))
+					.andExpect(MockMvcResultMatchers.model().attribute("doctor", doctor))
 					.andReturn().getRequest().getAttribute("disableLeftArrow");
 		assertTrue(disableLeftArrow.equals("YES"));
 		
@@ -167,6 +171,7 @@ public class HomeControllerTest {
 					.param("weekResultDriver", "otherStep"))
 					.andExpect(status().isOk())
 					.andExpect(view().name("agenda"))
+					.andExpect(MockMvcResultMatchers.model().attribute("doctor", doctor))
 					.andReturn().getRequest().getAttribute("allDoctors");
 		assertTrue(allDoctors.equals(allDoctorsActual));
 	}

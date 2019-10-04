@@ -229,7 +229,7 @@ public class VisitService {
 		return visitRepository.readVisitStatus(stausId);
 	}
 	
-	public List<Visit> getVisitsToFinalize(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
+	public List<Visit> getVisitsToFinalizeOrRemove(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo) {
 //		VisitStatus visitStatus = visitRepository.readVisitStatus(1);
 //		List<Visit> visits = visitRepository.readVisits(dateTimeFrom, dateTimeTo, visitStatus);
 		List<Visit> visits = searchsService.searchVisitDateAndStatusByKeywordQuery(dateTimeFrom, dateTimeTo);
@@ -297,7 +297,7 @@ public class VisitService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void cancelVisit(Visit visit) {
+	public void cancelVisit(Visit visit) throws Exception {
 		visitRepository.removeVisit(visit);
 		notificationService.sendEmailWithVisitCancelNotification(visit);
 	}

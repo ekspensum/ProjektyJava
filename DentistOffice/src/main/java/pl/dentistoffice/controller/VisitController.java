@@ -278,7 +278,7 @@ public class VisitController {
 		LocalDate today = LocalDate.now();
 		model.addAttribute("dateFrom", today.minusDays(3));
 		model.addAttribute("dateTo", today);
-		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(today.atStartOfDay().minusDays(3), LocalDateTime.now());
+		List<Visit> visitsToFinalize = visitService.getVisitsToFinalizeOrRemove(today.atStartOfDay().minusDays(3), LocalDateTime.now());
 		model.addAttribute("visitsToFinalize", visitsToFinalize);
 		return "/visit/assistant/searchVisitToFinalize";
 	}
@@ -287,7 +287,7 @@ public class VisitController {
 	public String searchVisitsToFinalizeByAssistant(@RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo, Model model) {
 		LocalDateTime dateTimeFrom = LocalDateTime.parse(dateFrom + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		LocalDateTime dateTimeTo = LocalDateTime.parse(dateTo + " "+LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-		List<Visit> visitsToFinalize = visitService.getVisitsToFinalize(dateTimeFrom, dateTimeTo);
+		List<Visit> visitsToFinalize = visitService.getVisitsToFinalizeOrRemove(dateTimeFrom, dateTimeTo);
 		model.addAttribute("dateFrom", dateFrom);
 		model.addAttribute("dateTo", dateTo);
 		model.addAttribute("visitsToFinalize", visitsToFinalize);
@@ -338,7 +338,7 @@ public class VisitController {
 		LocalDate today = LocalDate.now();
 		model.addAttribute("dateFrom", today);
 		model.addAttribute("dateTo", today.plusDays(7));
-		List<Visit> visitsToRemove = visitService.getVisitsToFinalize(today.atStartOfDay(), today.atStartOfDay().plusDays(7));
+		List<Visit> visitsToRemove = visitService.getVisitsToFinalizeOrRemove(today.atStartOfDay(), today.atStartOfDay().plusDays(7));
 		model.addAttribute("visitsToRemove", visitsToRemove);
 		return "/visit/assistant/searchVisitToRemove";
 	}
@@ -347,7 +347,7 @@ public class VisitController {
 	public String searchVisitsToRemoveByAssistant(@RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo, Model model) {
 		LocalDateTime dateTimeFrom = LocalDateTime.parse(dateFrom + " 00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		LocalDateTime dateTimeTo = LocalDateTime.parse(dateTo + " "+LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-		List<Visit> visitsToRemove = visitService.getVisitsToFinalize(dateTimeFrom, dateTimeTo);
+		List<Visit> visitsToRemove = visitService.getVisitsToFinalizeOrRemove(dateTimeFrom, dateTimeTo);
 		model.addAttribute("dateFrom", dateFrom);
 		model.addAttribute("dateTo", dateTo);
 		model.addAttribute("visitsToRemove", visitsToRemove);
@@ -361,7 +361,7 @@ public class VisitController {
 			visitService.cancelVisit(visit);
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
 			return "forward:/message/employee/success";
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
 			return "forward:/message/employee/error";
@@ -375,7 +375,7 @@ public class VisitController {
 			visitService.cancelVisit(visit);
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
 			return "forward:/message/patient/success";
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
 			return "forward:/message/patient/error";

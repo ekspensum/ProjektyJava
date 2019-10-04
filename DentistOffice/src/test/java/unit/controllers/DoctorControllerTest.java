@@ -137,6 +137,7 @@ public class DoctorControllerTest {
 				.sessionAttr("doctor", doctor))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("/users/doctor/admin/register"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("templateWorkingWeekMap"))
 				.andReturn().getRequest().getAttribute("dayOfWeekPolish");
 		
 		assertEquals("Wtorek", dayOfWeekPolishActual[2]);
@@ -263,6 +264,7 @@ public class DoctorControllerTest {
 				.sessionAttr("image", "image".getBytes()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("/users/doctor/admin/edit"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("workingWeekMap"))
 				.andReturn().getRequest().getAttribute("dayOfWeekPolish");
 		
 		assertEquals("Wtorek", dayOfWeekPolishActual[2]);
@@ -363,6 +365,7 @@ public class DoctorControllerTest {
 				.sessionAttr("image", "image".getBytes()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("/users/doctor/edit"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("workingWeekMap"))
 				.andReturn().getRequest().getAttribute("dayOfWeekPolish");
 		
 		assertEquals("Wtorek", dayOfWeekPolishActual[2]);

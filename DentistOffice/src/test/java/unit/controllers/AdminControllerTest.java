@@ -87,7 +87,7 @@ public class AdminControllerTest {
 		.andExpect(view().name("/users/admin/owner/register"));
 	}
 
-	@Test()
+	@Test
 	public void testRegistrationAdminByOwner() throws Exception {
 		Admin admin = new Admin();
 		User user = new User();
