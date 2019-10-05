@@ -21,7 +21,7 @@ public class TestRootConfig {
 	@Bean
 	public BasicDataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/dentistoffice");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/dentistofficetest");
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("1234");
@@ -44,7 +44,7 @@ public class TestRootConfig {
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         hibernateProperties.setProperty("hibernate.show_sql", "false");
         hibernateProperties.setProperty("hibernate.format_sql", "false");
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
+        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create");
         hibernateProperties.setProperty("jadira.usertype.autoRegisterUserTypes", "true");
 		sessionFactory.setHibernateProperties(hibernateProperties);
 		

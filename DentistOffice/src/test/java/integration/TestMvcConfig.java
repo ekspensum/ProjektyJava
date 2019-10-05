@@ -3,6 +3,7 @@ package integration;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.mockito.Mockito;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -45,12 +46,6 @@ public class TestMvcConfig implements WebMvcConfigurer {
 	@Bean
 	public CommonsMultipartResolver multipartResolver() throws IOException {
 	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-//	    Constraints below must resolve Exception (throw runtime error) - see TaskController  
-//	    multipartResolver.setMaxUploadSizePerFile(200000);
-//	    multipartResolver.setMaxUploadSize(200000);
-	    
-//	    Not to use on Heroku cloud
-//	    multipartResolver.setUploadTempDir(new FileSystemResource(System.getenv("TMP")));
 	    return multipartResolver;
 	}
 	
@@ -79,7 +74,7 @@ public class TestMvcConfig implements WebMvcConfigurer {
 		
         registry.viewResolver(viewResolver);
         
-//        TilesViewResolver tilesViewResolver = new TilesViewResolver();
+//      TilesViewResolver tilesViewResolver = new TilesViewResolver();
 //		registry.viewResolver(tilesViewResolver);
 	}
 
@@ -95,7 +90,8 @@ public class TestMvcConfig implements WebMvcConfigurer {
 
 	@Bean
 	public NotificationService notificationService() {
-		return new NotificationService();
+//		return new NotificationService();
+		return Mockito.mock(NotificationService.class);
 	}
 	
 	@Bean
@@ -110,7 +106,8 @@ public class TestMvcConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public SendEmail sendEmail() {
-		return new SendEmailGoogleService();
+//		return new SendEmailGoogleService();
+		return Mockito.mock(SendEmailGoogleService.class);
 	}
 	
 	@Bean

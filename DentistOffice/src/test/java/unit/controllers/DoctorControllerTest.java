@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayInputStream;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -98,7 +97,7 @@ public class DoctorControllerTest {
 		doctor.setPhoto("photo".getBytes());
 		doctor.setUser(user);
 		
-		MockMultipartFile photo = new MockMultipartFile("photo", new ByteArrayInputStream(doctor.getPhoto()));
+		MockMultipartFile photo = new MockMultipartFile("photo", doctor.getPhoto());
 		when(userService.checkDinstinctLoginWithRegisterUser(doctor.getUser().getUsername())).thenReturn(true);
 		String [] dayOfWeekPolish = {"Zero", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
 		when(userService.dayOfWeekPolish()).thenReturn(dayOfWeekPolish);
