@@ -3,7 +3,9 @@ package integration;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.hibernate.SessionFactory;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -37,12 +39,10 @@ import pl.dentistoffice.service.VisitService;
 @ComponentScan(basePackages = {"pl.dentistoffice.controller"})
 @EnableWebMvc
 public class TestMvcConfig implements WebMvcConfigurer {
-	
-//	@Override
-//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-//	}
 
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	@Bean
 	public CommonsMultipartResolver multipartResolver() throws IOException {
 	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
@@ -55,27 +55,13 @@ public class TestMvcConfig implements WebMvcConfigurer {
         messageSource.setBasename("messages");
         return messageSource;
     }
-    
-//    @Bean
-//    public TilesConfigurer tilesConfigurer(){
-//        TilesConfigurer tilesConfigurer = new TilesConfigurer();
-//        tilesConfigurer.setDefinitions(new String[] {"/WEB-INF/views/**/tiles.xml"});
-//        tilesConfigurer.setCheckRefresh(true);
-//        return tilesConfigurer;
-//    }
 	
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
-//		WebMvcConfigurer.super.configureViewResolvers(registry);
-		
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/WEB-INF/view/pages/");
-        viewResolver.setSuffix(".jsp"); 
-		
+        viewResolver.setSuffix(".jsp"); 		
         registry.viewResolver(viewResolver);
-        
-//      TilesViewResolver tilesViewResolver = new TilesViewResolver();
-//		registry.viewResolver(tilesViewResolver);
 	}
 
 	@Bean
@@ -90,23 +76,21 @@ public class TestMvcConfig implements WebMvcConfigurer {
 
 	@Bean
 	public NotificationService notificationService() {
-//		return new NotificationService();
 		return Mockito.mock(NotificationService.class);
 	}
 	
 	@Bean
 	public ActivationService activationService() {
-		return new ActivationService();
+		return Mockito.mock(ActivationService.class);
 	}
 	
 	@Bean
 	public HibernateSearchService hibernateSearchService() {
-		return new HibernateSearchService();
+		return new HibernateSearchService(sessionFactory);
 	}
 	
 	@Bean
 	public SendEmail sendEmail() {
-//		return new SendEmailGoogleService();
 		return Mockito.mock(SendEmailGoogleService.class);
 	}
 	
@@ -132,7 +116,7 @@ public class TestMvcConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public ReCaptchaService reCaptchaService() {
-		return new ReCaptchaService();
+		return Mockito.mock(ReCaptchaService.class);
 	}
 	
 	@Bean

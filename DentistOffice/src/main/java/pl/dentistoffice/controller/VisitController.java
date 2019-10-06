@@ -65,6 +65,14 @@ public class VisitController {
 		this.dayEnd = dayEnd;
 	}
 
+	public VisitController(Environment env, VisitService visitService, UserService userService,
+			DentalTreatmentService treatmentService) {
+		this.env = env;
+		this.visitService = visitService;
+		this.userService = userService;
+		this.treatmentService = treatmentService;
+	}
+
 	@RequestMapping(path = "/visit/patient/selectDoctor")
 	public String visitSelectDoctorByPatient(Model model) {
 		List<Doctor> allDoctorsList = userService.getAllDoctors();
@@ -145,7 +153,7 @@ public class VisitController {
 			} catch (Exception e) {
 				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
-				return "forward:/message/employee/error";				
+				return "forward:/message/patient/error";				
 			}
 		} else {
 			throw new Exception("Nie zaznaczono pola wyboru dnia wizyty!"); // additional security
@@ -446,7 +454,7 @@ public class VisitController {
 		}
 	}	
 	
-//	FOR SELF BROWSE AND DELETE VISITS PATIENT
+//	FOR SELF BROWSE VISITS PATIENT
 	@RequestMapping(path = "/visit/patient/myVisits")
 	public String showMyVisitsPatient(Model model) {
 		VisitStatus defaultVisitStatus = visitService.getVisitStatus(2);
