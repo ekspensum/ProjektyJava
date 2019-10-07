@@ -547,7 +547,7 @@ public class VisitController {
 			}
 		}
 		if(treatmentCount == 3) {
-			model.addAttribute("msgError", "Należy wybrać conajmniej jeden rodzaj zabiegu!");
+			model.addAttribute("msgError", env.getProperty("exceptionChoiceTreatmentKind"));
 			return false;
 		}
 		return true;
