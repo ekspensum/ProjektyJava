@@ -13,8 +13,8 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 @Service
-//@Primary
-public class SendEmailGoogleService implements SendEmail {
+@Primary
+public class SendEmailInteriaService implements SendEmail {
 
 	@Override
 	public void sendEmail(Environment env, String mailTo, String mailSubject, String mailText, String replyMail, byte[] attachment, String fileName) {
@@ -60,8 +60,8 @@ public class SendEmailGoogleService implements SendEmail {
 		javaMailSender.setPort(Integer.valueOf(env.getProperty("mail.smtp.port")));
 //		javaMailSender.setUsername(env.getProperty("mail_user"));
 //		javaMailSender.setPassword(env.getProperty("mail_password"));
-		javaMailSender.setUsername(System.getenv("GMAIL_ID"));
-		javaMailSender.setPassword(System.getenv("GMAIL_PASSWORD"));
+		javaMailSender.setUsername(System.getenv("INTERIA_MAIL_ID"));
+		javaMailSender.setPassword(System.getenv("INTERIA_MAIL_PASSWORD"));
 
 		Properties javaMailProperties = new Properties();
 		javaMailProperties.put("mail.smtp.starttls.enable", env.getProperty("mail.smtp.starttls.enable"));

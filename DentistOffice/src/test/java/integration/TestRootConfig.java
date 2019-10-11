@@ -24,7 +24,7 @@ public class TestRootConfig {
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/dentistofficetest");
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUsername("postgres");
-		dataSource.setPassword("1234");
+		dataSource.setPassword("admin");
 //		if 0 then no limits
 		dataSource.setMaxOpenPreparedStatements(0);
 //		pool waiting to infinity: -1
