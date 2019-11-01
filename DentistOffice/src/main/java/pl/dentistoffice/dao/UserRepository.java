@@ -27,6 +27,7 @@ public interface UserRepository {
 	void updatePatient(Patient patient);
 	Patient readPatient(int id);
 	Patient readPatient(String username);
+	Patient readPatientByToken(String token);
 	
 	void saveAssistant(Assistant assistant);
 	void updateAssistant(Assistant assistant);

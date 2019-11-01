@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.persistence.NoResultException;
 
@@ -19,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,6 @@ import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
-
 
 
 @Service
@@ -47,6 +48,9 @@ public class UserService {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	public UserService() {
 		super();
@@ -189,6 +193,34 @@ public class UserService {
 			}
 		});
 		return searchPatient;
+	}
+	
+	public Patient findMobilePatientByToken(String token) {
+		try {
+			Patient mobilePatient = userRepository.readPatientByToken(token);
+			return mobilePatient;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Patient loginMobilePatient(String username, String rawPassword) {
+		try {
+			Patient mobilePatient = userRepository.readPatient(username);
+			boolean matchesPassword = passwordEncoder.matches(rawPassword, mobilePatient.getUser().getPassword());
+			if(matchesPassword && mobilePatient.getUser().isEnabled()) {
+	            String token = UUID.randomUUID().toString();
+	            mobilePatient.setToken(token);
+	            userRepository.updatePatient(mobilePatient);
+				return mobilePatient;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)

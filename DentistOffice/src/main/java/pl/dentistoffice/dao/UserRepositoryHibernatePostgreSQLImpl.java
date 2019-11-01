@@ -111,6 +111,11 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 	}
 
 	@Override
+	public Patient readPatientByToken(String token) {
+		return getSession().createNamedQuery("findPatientByToken", Patient.class).setParameter("token", token).getSingleResult();
+	}
+	
+	@Override
 	public void saveAssistant(Assistant assistant) {
 			getSession().persist(assistant);
 	}

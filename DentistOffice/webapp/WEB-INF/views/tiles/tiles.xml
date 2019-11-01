@@ -325,4 +325,5 @@
 		<put-attribute name="userContent" value="/WEB-INF/views/pages/message/patient/success.jsp" />
 	</definition>
 
+
 </tiles-definitions>

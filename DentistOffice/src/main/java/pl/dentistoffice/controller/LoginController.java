@@ -33,8 +33,7 @@ public class LoginController {
 	}
 
 	@RequestMapping(path = "/login")
-	public String login(
-						@RequestParam(value = "logout", required = false) String logout,
+	public String login(@RequestParam(value = "logout", required = false) String logout,
 						@RequestParam(value = "error", required = false) String error,
 						Model model) {
 		
@@ -44,7 +43,6 @@ public class LoginController {
 		if(logout != null) {
 			model.addAttribute("msg", env.getProperty("logout"));			
 		}
-
 		return "login";
 	}
 

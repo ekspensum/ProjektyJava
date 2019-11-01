@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -22,7 +21,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.pl.PESEL;
 
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -61,11 +61,6 @@ public class Assistant implements Serializable {
 	@Size(min=0, max=600000)
 	private byte [] photo;
 	
-	@Transient
-	@Getter(value = AccessLevel.NONE)
-	@Setter(value = AccessLevel.NONE)
-	private String base64Photo;
-	
 	@Valid
 	@OneToOne
 	@Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
@@ -73,6 +68,7 @@ public class Assistant implements Serializable {
 	private LocalDateTime registeredDateTime;
 	private LocalDateTime editedDateTime;
 	
+	@JsonIgnore
 	public String getBase64Photo() {
 		if(photo == null) {
 			return "";

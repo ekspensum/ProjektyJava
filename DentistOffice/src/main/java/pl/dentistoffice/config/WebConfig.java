@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -20,9 +21,10 @@ import pl.dentistoffice.config.SecurityConfig;
 import pl.dentistoffice.pdfview.PdfViewVisits;
 
 @Configuration
-@ComponentScan(basePackages = {"pl.dentistoffice.controller"})
+@ComponentScan(basePackages = {"pl.dentistoffice.controller", "pl.dentistoffice.rest"})
 @EnableWebMvc
 @Import({SecurityConfig.class})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class WebConfig implements WebMvcConfigurer {
 	
 	@Override

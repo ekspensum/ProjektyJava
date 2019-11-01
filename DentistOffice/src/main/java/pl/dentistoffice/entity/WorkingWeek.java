@@ -20,6 +20,11 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+
+import pl.dentistoffice.config.WorkingMapSerialize;
+
 @Entity
 public class WorkingWeek implements Serializable {
 
@@ -56,6 +61,8 @@ public class WorkingWeek implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
+//	@JsonSerialize(using = LocalTimeSerializer.class)
+//	@JsonSerialize(keyUsing = WorkingMapSerialize.class)
 	public Map<DayOfWeek, Map<LocalTime, Boolean>> getWorkingWeekMap() {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(this.workingWeekMapByte);
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = null;

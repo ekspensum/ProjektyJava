@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,11 +40,13 @@ public class User implements Serializable {
 	@Pattern(regexp="^[^|'\":%^#~}{\\]\\[;=<>`]*$")
 	private String username;
 	
+	@JsonIgnore
 	private String password;
 	private boolean enabled;
 	
 	@Size(min = 4, max = 24)
 	@Transient
+	@JsonIgnore
 	private String passwordField;
 	
 	@ManyToMany
