@@ -25,9 +25,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import lombok.Getter;
@@ -109,11 +107,9 @@ public class Patient implements Serializable {
 	@JsonIgnore
 	private String activationString;
 	
-//	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime registeredDateTime;
 	
-//	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime editedDateTime;
 	

@@ -1,5 +1,6 @@
 package pl.dentistoffice.rest;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -48,8 +49,8 @@ public class AuthRestController {
 				key = Arrays.copyOf(key, 16);
 				Key secretKey = new SecretKeySpec(key, "AES");
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
-				byte[] doFinal = cipher.doFinal(loggedPatient.getToken().getBytes());
-				encodeTokenBase64 = Base64.getEncoder().encodeToString(doFinal);
+				byte[] encodeTokenByte = cipher.doFinal(loggedPatient.getToken().getBytes());
+				encodeTokenBase64 = Base64.getEncoder().encodeToString(encodeTokenByte);
 				System.out.println("AuthRestController - encodeTokenBase64: "+encodeTokenBase64);
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 				e.printStackTrace();
@@ -63,11 +64,17 @@ public class AuthRestController {
 				e.printStackTrace();
 			} catch (InvalidAlgorithmParameterException e) {
 				e.printStackTrace();
-			}
-		
+			}	
 			response.setHeader("token", encodeTokenBase64);
+			return loggedPatient;
+		} else {
+			try {
+				response.sendError(401, "Brak autoryzacji");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
-		return loggedPatient;
 	}
 	
 	@GetMapping(path = "/logout")
@@ -80,8 +87,8 @@ public class AuthRestController {
 		try {
 			String encodeTokenBase64 = request.getHeader("token");
 			byte[] encodeTokenByte = null;
-
-			if (encodeTokenBase64 != null) {
+			
+			if (encodeTokenBase64 != null && !encodeTokenBase64.equals("")) {
 				encodeTokenByte = Base64.getDecoder().decode(encodeTokenBase64);
 				String decodeToken = null;
 				try {
@@ -90,9 +97,8 @@ public class AuthRestController {
 					key = Arrays.copyOf(key, 16);
 					Key secretKey = new SecretKeySpec(key, "AES");
 					cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
-					byte[] doFinal = cipher.doFinal(encodeTokenByte);
-					// byte [] decodeTokenByte = Base64.getDecoder().decode(doFinal);
-					decodeToken = new String(doFinal);
+					byte[] decodeTokenByte = cipher.doFinal(encodeTokenByte);
+					decodeToken = new String(decodeTokenByte);
 				} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 					e.printStackTrace();
 				} catch (InvalidKeyException e) {
