@@ -24,6 +24,7 @@ import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.ActivationService;
+import pl.dentistoffice.service.CipherService;
 import pl.dentistoffice.service.ReCaptchaService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
@@ -47,17 +48,20 @@ public class PatientController {
 	@Autowired
 	private ReCaptchaService reCaptchaService;
 	
+	@Autowired
+	private CipherService cipherService;
 	
 	public PatientController() {
 	}
 
 	public PatientController(Environment env, UserService userService, VisitService visitService,
-			ActivationService activationService, ReCaptchaService reCaptchaService) {
+			ActivationService activationService, ReCaptchaService reCaptchaService, CipherService cipherService) {
 		this.env = env;
 		this.userService = userService;
 		this.visitService = visitService;
 		this.activationService = activationService;
 		this.reCaptchaService = reCaptchaService;
+		this.cipherService = cipherService;
 	}
 
 	@RequestMapping(path = "/panels/patientPanel")
@@ -250,7 +254,10 @@ public class PatientController {
 	}
 	
 	@RequestMapping(value = "/users/patient/activation")
-	public String getActivationString(@RequestParam("activationString") String activationString, Model model) {
+	public String getActivationString(@RequestParam("activationString") String encodeTokenBase64, Model model) {
+		
+		String activationString = cipherService.decodeToken(encodeTokenBase64);
+		
 		if(activationService.setActivePatient(activationString)) {
 			model.addAttribute("patientActivationMessage", env.getRequiredProperty("patientActivationTrue"));
 		} else {

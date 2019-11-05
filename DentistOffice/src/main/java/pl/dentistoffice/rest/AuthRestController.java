@@ -1,20 +1,7 @@
 package pl.dentistoffice.rest;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.service.CipherService;
 import pl.dentistoffice.service.UserService;
 
 @RestController
@@ -35,46 +23,32 @@ public class AuthRestController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping(path = "/login")
-	public Patient login(@RequestParam("username") final String username, 
-						 @RequestParam("password") final String password,
-						 HttpServletResponse response) {
+	@Autowired
+	private CipherService cipherService;
 	
-		Patient loggedPatient = userService.loginMobilePatient(username, password);
-		if(loggedPatient != null) {
-			String encodeTokenBase64 = null;
-			try {
-				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-				byte [] key = "haslo".getBytes("UTF-8");
-				key = Arrays.copyOf(key, 16);
-				Key secretKey = new SecretKeySpec(key, "AES");
-				cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
-				byte[] encodeTokenByte = cipher.doFinal(loggedPatient.getToken().getBytes());
-				encodeTokenBase64 = Base64.getEncoder().encodeToString(encodeTokenByte);
-				System.out.println("AuthRestController - encodeTokenBase64: "+encodeTokenBase64);
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-				e.printStackTrace();
-			} catch (InvalidKeyException e) {
-				e.printStackTrace();
-			} catch (IllegalBlockSizeException e) {
-				e.printStackTrace();
-			} catch (BadPaddingException e) {
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			} catch (InvalidAlgorithmParameterException e) {
-				e.printStackTrace();
-			}	
-			response.setHeader("token", encodeTokenBase64);
-			return loggedPatient;
-		} else {
-			try {
-				response.sendError(401, "Brak autoryzacji");
-			} catch (IOException e) {
-				e.printStackTrace();
+	@PostMapping(path = "/login")
+	public Patient login(@RequestParam("username") final String username,
+						@RequestParam("password") final String password, 
+						HttpServletResponse response) {
+
+		try {
+			Patient loggedPatient = userService.loginMobilePatient(username, password);
+			if (loggedPatient != null) {
+				String token = loggedPatient.getToken();
+				String encodeTokenBase64 = cipherService.encodeToken(token);
+				if (encodeTokenBase64 != null) {
+					response.setHeader("token", encodeTokenBase64);
+					return loggedPatient;
+				} else {
+					response.sendError(401);
+				}
+			} else {
+				response.sendError(401);
 			}
-			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	@GetMapping(path = "/logout")
@@ -86,29 +60,8 @@ public class AuthRestController {
 	public boolean authentication(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String encodeTokenBase64 = request.getHeader("token");
-			byte[] encodeTokenByte = null;
-			
 			if (encodeTokenBase64 != null && !encodeTokenBase64.equals("")) {
-				encodeTokenByte = Base64.getDecoder().decode(encodeTokenBase64);
-				String decodeToken = null;
-				try {
-					Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-					byte[] key = "haslo".getBytes("UTF-8");
-					key = Arrays.copyOf(key, 16);
-					Key secretKey = new SecretKeySpec(key, "AES");
-					cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
-					byte[] decodeTokenByte = cipher.doFinal(encodeTokenByte);
-					decodeToken = new String(decodeTokenByte);
-				} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-					e.printStackTrace();
-				} catch (InvalidKeyException e) {
-					e.printStackTrace();
-				} catch (IllegalBlockSizeException e) {
-					e.printStackTrace();
-				} catch (BadPaddingException e) {
-					e.printStackTrace();
-				}
-				System.out.println("AuthRestController - Decode token " + decodeToken);
+				String decodeToken = cipherService.decodeToken(encodeTokenBase64);
 				Patient patient = userService.findMobilePatientByToken(decodeToken);
 				if (patient != null) {
 					return true;
@@ -120,7 +73,7 @@ public class AuthRestController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 		return false;
 	}
 }

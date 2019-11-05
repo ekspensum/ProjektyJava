@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -24,6 +27,7 @@ import pl.dentistoffice.dao.UserRepositoryHibernatePostgreSQLImpl;
 import pl.dentistoffice.dao.VisitRepository;
 import pl.dentistoffice.dao.VisitRepositoryHibernatePostgreSQLImpl;
 import pl.dentistoffice.service.ActivationService;
+import pl.dentistoffice.service.CipherService;
 import pl.dentistoffice.service.DentalTreatmentService;
 import pl.dentistoffice.service.EmailContactService;
 import pl.dentistoffice.service.HibernateSearchService;
@@ -42,6 +46,9 @@ public class TestMvcConfig implements WebMvcConfigurer {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private Environment env;
 	
 	@Bean
 	public CommonsMultipartResolver multipartResolver() throws IOException {
@@ -128,5 +135,14 @@ public class TestMvcConfig implements WebMvcConfigurer {
 	public VisitService visitService() {
 		return new VisitService();
 	}
+	
+	@Bean
+	public CipherService cipherService() {
+		return new CipherService(env);
+	}
 
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

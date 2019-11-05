@@ -62,6 +62,7 @@ import pl.dentistoffice.entity.User;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.ActivationService;
+import pl.dentistoffice.service.CipherService;
 import pl.dentistoffice.service.DentalTreatmentService;
 import pl.dentistoffice.service.HibernateSearchService;
 import pl.dentistoffice.service.InitApplicationService;
@@ -106,6 +107,8 @@ public class IntegrationTest {
     private ReCaptchaService reCaptchaService;
     @Autowired
     private DentalTreatmentService dentalTreatmentService;
+    @Autowired
+    private CipherService cipherService;
 	@Autowired
 	private Environment env;
 	@Mock
@@ -399,7 +402,7 @@ public class IntegrationTest {
 		patient.setRegisteredDateTime(LocalDateTime.now());
 		patient.setUser(user);
 		
-		patientController = new PatientController(env, userService, visitService, activationService, reCaptchaService);
+		patientController = new PatientController(env, userService, visitService, activationService, reCaptchaService, cipherService);
 		photo = new MockMultipartFile("photo", "content".getBytes());
 		assertEquals("forward:/message/employee/success", patientController.registrationPatientByAssistant(patient, result, model, photo, servletRequest));
 		
@@ -457,7 +460,7 @@ public class IntegrationTest {
 		patient.setRegisteredDateTime(LocalDateTime.now());
 		patient.setUser(user);
 
-		patientController = new PatientController(env, userService, visitService, activationService, reCaptchaService);
+		patientController = new PatientController(env, userService, visitService, activationService, reCaptchaService, cipherService);
 		photo = new MockMultipartFile("photo", "6photo".getBytes());
 		user.setUsername("userPatient2");
 		patient.setUser(user);

@@ -31,6 +31,7 @@ import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.User;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.ActivationService;
+import pl.dentistoffice.service.CipherService;
 import pl.dentistoffice.service.ReCaptchaService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
@@ -51,6 +52,8 @@ public class PatientControllerTest {
 	@Mock
 	private ReCaptchaService reCaptchaService;
 	@Mock
+	private CipherService cipherService;
+	@Mock
 	private Model model;
 	@Mock
 	private BindingResult result;
@@ -67,7 +70,7 @@ public class PatientControllerTest {
         viewResolver.setPrefix("/WEB-INF/view/pages/");
         viewResolver.setSuffix(".jsp"); 
         
-        patientController = new PatientController(env, userService, visitService, activationService, reCaptchaService);
+        patientController = new PatientController(env, userService, visitService, activationService, reCaptchaService, cipherService);
         mockMvc = MockMvcBuilders.standaloneSetup(patientController).setViewResolvers(viewResolver).build();
 	}
 
@@ -313,6 +316,7 @@ public class PatientControllerTest {
 
 	@Test
 	public void testGetActivationString() throws Exception {
+		when(cipherService.decodeToken("encodeTokenBase64")).thenReturn("activationString");
 		mockMvc.perform(MockMvcRequestBuilders.get("/users/patient/activation")
 				.param("activationString", "activationString"))
 				.andExpect(MockMvcResultMatchers.status().isOk())

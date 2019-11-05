@@ -29,6 +29,9 @@ public class ActivationService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private CipherService cipherService;
+	
 	public ActivationService() {
 		super();
 	}
@@ -81,12 +84,13 @@ public class ActivationService {
 	
 	private String createActivationLink(Patient patient, String contextPath) {
 		StringBuilder activationLink = new StringBuilder();
-		String encryptedActivationString = createActivationString(patient);
+		String encryptedActivationString = patient.getActivationString();
+		String encodeToken = cipherService.encodeToken(encryptedActivationString);
 		activationLink.append("<a href=\"").append(env.getProperty("host"))
 										   .append(contextPath)
 										   .append("/users/patient/activation?")
 										   .append("activationString=")
-										   .append(encryptedActivationString)
+										   .append(encodeToken)
 										   .append("\">Naciśnij ten link aktywacyjny</a>");
 		return activationLink.toString();
 	}
