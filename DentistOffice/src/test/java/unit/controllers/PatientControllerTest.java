@@ -316,7 +316,6 @@ public class PatientControllerTest {
 
 	@Test
 	public void testGetActivationString() throws Exception {
-		when(cipherService.decodeToken("encodeTokenBase64")).thenReturn("activationString");
 		mockMvc.perform(MockMvcRequestBuilders.get("/users/patient/activation")
 				.param("activationString", "activationString"))
 				.andExpect(MockMvcResultMatchers.status().isOk())

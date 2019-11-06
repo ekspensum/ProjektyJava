@@ -1,40 +1,18 @@
 package pl.dentistoffice.aop;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import pl.dentistoffice.rest.AuthRestController;
-import pl.dentistoffice.rest.DoctorRestController;
 
 @Component
 @Aspect
 public class RestAspect {
-	
-	
-	@Autowired
-	private DoctorRestController patientRestController;
-	
-	@Autowired
-	private AuthRestController authRestController;
-	
-	
-	@Autowired
-	private HttpServletRequest request;
-	
-	@Autowired
-	private HttpServletResponse response;
+
 	
 //	@Pointcut("execution(* pl.dentistoffice.service.UserService.loginMobilePatient(String, String))")
 //	public void execLoginMobilePatient() {}
@@ -49,15 +27,23 @@ public class RestAspect {
 	
 	@Pointcut("within(pl.dentistoffice.rest.DoctorRestController)")
 //	@Pointcut("execution(* pl.dentistoffice.rest.DoctorRestController.getDoctors())")
-	public void onlyRestController() {}
+	public void doctorRestController() {}
 	
 //	@After(value="execution(* *.getDoctors(*))")
 //	@Before("onlyRestController()")
-	@Around("onlyRestController()")
+	@Around("doctorRestController()")
 	public Object execAuthentication(ProceedingJoinPoint pjp) throws Throwable {
-		boolean authentication = authRestController.authentication(request, response);
-		System.out.println("REST Aspect - Authentication: "+authentication);
-		if(authentication) {
+		
+//		Object[] args = pjp.getArgs();
+//		for (int i = 0; i < args.length; i++) {
+//		System.out.println(args[i].toString());
+//		}
+//		LoggedPatientValidationService object = (LoggedPatientValidationService) args[0];
+//		System.out.println("object "+object.getPatientLoggedMap().size());
+		
+//		boolean authentication = authRestController.authentication(request, response);
+//		System.out.println("REST Aspect - Authentication: "+authentication);
+//		if(authentication) {
 			try {
 				Object proceed = pjp.proceed();
 //				System.out.println("REST Aspect "+proceed.toString());
@@ -65,7 +51,7 @@ public class RestAspect {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-		}
+//		}
 		return null;
 	}
 	
@@ -78,16 +64,11 @@ public class RestAspect {
 //			System.out.println(args[i].toString());
 //		}
 		
-		boolean authentication = authRestController.authentication(request, response);
-		System.out.println("REST Aspect - Authentication: "+authentication);
-		
-		if(authentication) {
 			try {
 				return proceedingJoinPoint.proceed(args);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-		}
 		return null;
 	}
 

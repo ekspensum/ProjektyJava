@@ -1,11 +1,15 @@
 package pl.dentistoffice.rest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +25,17 @@ import pl.dentistoffice.service.UserService;
 public class AuthRestController {
 	
 	@Autowired
+	private Environment env;
+	
+	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	private CipherService cipherService;
 	
+	private Map<Integer, LocalDateTime> patientLoggedMap;
+	
+
 	@PostMapping(path = "/login")
 	public Patient login(@RequestParam("username") final String username,
 						@RequestParam("password") final String password, 
@@ -38,6 +48,12 @@ public class AuthRestController {
 				String encodeTokenBase64 = cipherService.encodeToken(token);
 				if (encodeTokenBase64 != null) {
 					response.setHeader("token", encodeTokenBase64);
+					patientLoggedMap = new HashMap<>();
+					patientLoggedMap.put(loggedPatient.getId(), LocalDateTime.now()
+									.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
+					
+					System.out.println("AuthRestController - token from respons after login "+encodeTokenBase64);
+					
 					return loggedPatient;
 				} else {
 					response.sendError(401);
@@ -60,11 +76,25 @@ public class AuthRestController {
 	public boolean authentication(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String encodeTokenBase64 = request.getHeader("token");
+
+			System.out.println("AuthRestController - token from request: " + encodeTokenBase64);
+
 			if (encodeTokenBase64 != null && !encodeTokenBase64.equals("")) {
 				String decodeToken = cipherService.decodeToken(encodeTokenBase64);
 				Patient patient = userService.findMobilePatientByToken(decodeToken);
 				if (patient != null) {
-					return true;
+					LocalDateTime validDateTime = patientLoggedMap.get(patient.getId());
+					if (validDateTime != null) {
+						if (LocalDateTime.now().withNano(0).isBefore(validDateTime)) {
+							patientLoggedMap.put(patient.getId(), LocalDateTime.now()
+											.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
+							return true;
+						} else {
+							response.sendError(403);
+						}
+					} else {
+						response.sendError(403);
+					}
 				} else {
 					response.sendError(403);
 				}
