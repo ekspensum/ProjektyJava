@@ -2,9 +2,6 @@ package pl.dentistoffice.rest;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +20,10 @@ public class DoctorRestController {
 	@Autowired
 	private AuthRestController authRestController;
 	
-	@Autowired
-	private HttpServletRequest request;
-	
-	@Autowired
-	private HttpServletResponse response;
+//	for aspect
+	public AuthRestController getAuthRestController() {
+		return authRestController;
+	}
 	
 	@GetMapping(path = "/doctors")
 	public DoctorListWrapper getDoctors(){
@@ -36,12 +32,7 @@ public class DoctorRestController {
 
 		DoctorListWrapper doctorListWrapper = new DoctorListWrapper();
 		doctorListWrapper.setDoctorList(allDoctors);
-
-		boolean authentication = authRestController.authentication(request, response);
-		if(authentication) {	
-			return doctorListWrapper;
-		}
-		return null;		
+		return doctorListWrapper;
 	}
 
 	

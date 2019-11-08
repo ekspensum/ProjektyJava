@@ -33,8 +33,22 @@ public class AuthRestController {
 	@Autowired
 	private CipherService cipherService;
 	
+	@Autowired
+	private HttpServletRequest request;
+	
+	@Autowired
+	private HttpServletResponse response;
+	
 	private Map<Integer, LocalDateTime> patientLoggedMap;
 	
+
+	public AuthRestController() {
+		patientLoggedMap = new HashMap<>();
+	}
+
+	public Map<Integer, LocalDateTime> getPatientLoggedMap() {
+		return patientLoggedMap;
+	}
 
 	@PostMapping(path = "/login")
 	public Patient login(@RequestParam("username") final String username,
@@ -44,20 +58,9 @@ public class AuthRestController {
 		try {
 			Patient loggedPatient = userService.loginMobilePatient(username, password);
 			if (loggedPatient != null) {
-				String token = loggedPatient.getToken();
-				String encodeTokenBase64 = cipherService.encodeToken(token);
-				if (encodeTokenBase64 != null) {
-					response.setHeader("token", encodeTokenBase64);
-					patientLoggedMap = new HashMap<>();
-					patientLoggedMap.put(loggedPatient.getId(), LocalDateTime.now()
-									.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
-					
-					System.out.println("AuthRestController - token from respons after login "+encodeTokenBase64);
-					
-					return loggedPatient;
-				} else {
-					response.sendError(401);
-				}
+				patientLoggedMap.put(loggedPatient.getId(), LocalDateTime.now()
+								.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
+				return loggedPatient;
 			} else {
 				response.sendError(401);
 			}
@@ -73,7 +76,7 @@ public class AuthRestController {
 		return "logout";
 	}
 
-	public boolean authentication(HttpServletRequest request, HttpServletResponse response) {
+	public boolean authentication() {
 		try {
 			String encodeTokenBase64 = request.getHeader("token");
 
@@ -91,15 +94,19 @@ public class AuthRestController {
 							return true;
 						} else {
 							response.sendError(403);
+							System.out.println("Forbidden-1");
 						}
 					} else {
 						response.sendError(403);
+						System.out.println("Forbidden-2");
 					}
 				} else {
 					response.sendError(403);
+					System.out.println("Forbidden-3");
 				}
 			} else {
 				response.sendError(403);
+				System.out.println("Forbidden-4");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
