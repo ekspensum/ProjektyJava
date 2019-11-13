@@ -20,6 +20,9 @@ public class DoctorRestController {
 	@Autowired
 	private AuthRestController authRestController;
 	
+	@Autowired
+	private DoctorListWrapper doctorListWrapper;
+	
 //	for aspect
 	public AuthRestController getAuthRestController() {
 		return authRestController;
@@ -27,10 +30,7 @@ public class DoctorRestController {
 	
 	@GetMapping(path = "/doctors")
 	public DoctorListWrapper getDoctors(){
-		
 		List<Doctor> allDoctors = userService.getAllDoctors();
-
-		DoctorListWrapper doctorListWrapper = new DoctorListWrapper();
 		doctorListWrapper.setDoctorList(allDoctors);
 		return doctorListWrapper;
 	}

@@ -23,6 +23,10 @@ import org.hibernate.annotations.NamedQuery;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,14 +59,20 @@ public class DentalTreatment implements Serializable {
 	
 	@ManyToMany
 	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonIgnore
 	private List<TreatmentCategory> treatmentCategory;
 	
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "treatments")
+	@JsonIgnore
 	private List<Visit> visits;
 	
 	@OneToOne
+	@JsonIgnore
 	private User userLogged;
 	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)	
 	private LocalDateTime registeredDateTime;
+	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)	
 	private LocalDateTime editedDateTime;
 }

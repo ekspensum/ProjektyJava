@@ -30,6 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+        registry.addResourceHandler("/properties/**").addResourceLocations("/properties/");
+        registry.addResourceHandler("/messages/**").addResourceLocations("classpath:/resources/");
 	}
 
 	@Bean
@@ -57,6 +59,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setDefaultEncoding("UTF-8");
         messageSource.setBasename("messages");
         return messageSource;
     }

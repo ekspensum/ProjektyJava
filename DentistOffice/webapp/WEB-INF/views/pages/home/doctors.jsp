@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
-<h3>Nasi lekarze</h3>
+<h3><s:message code="home.header.doctors" /></h3>
 <table class="homePageDoctors" >
 	<c:forEach items="${allDoctors }" var="doctor">
 		<tr class="homePageDoctors">

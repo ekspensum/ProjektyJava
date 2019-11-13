@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.dentistoffice.entity.Doctor;
+import pl.dentistoffice.entity.TreatmentCategory;
 
 @Component
 @Getter @Setter
-public class DoctorListWrapper {
+public class TreatmenCategorytListWrapper {
 
-	private List<Doctor> doctorList;
+	private List<TreatmentCategory> treatmentCategoriesList;
 	
 }

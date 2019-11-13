@@ -3,7 +3,7 @@
 
 <script src="https://www.google.com/recaptcha/api.js?hl=pl"></script>
 
-<h3>Kontakt z nami</h3>
+<h3><s:message code="home.header.contactUs" /></h3>
 <form:form modelAttribute="emailContactService" id="contactForm" enctype="multipart/form-data" >
 	<table>
 		<tr>

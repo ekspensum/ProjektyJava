@@ -29,55 +29,55 @@ public class RestAspect {
 //	}
 	
 	
-	@Pointcut("within(pl.dentistoffice.rest.DoctorRestController)")
-//	@Pointcut("execution(* pl.dentistoffice.rest.DoctorRestController.getDoctors())")
-	public void doctorRestController() {}
+//	@Pointcut("within(pl.dentistoffice.rest.DoctorRestController)")
+////	@Pointcut("execution(* pl.dentistoffice.rest.DoctorRestController.getDoctors())")
+//	public void doctorRestController() {}
+//	
+////	@Around(value="execution(* *.getDoctors(*))")
+//	@Around("doctorRestController()")
+//	public Object execAuthentication(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+//		System.out.println("Get this " + proceedingJoinPoint.getThis().getClass().getName());
+//		System.out.println("Get target " + proceedingJoinPoint.getTarget().getClass().getName());
+//		
+//		try {
+//			DoctorRestController target = (DoctorRestController) proceedingJoinPoint.getTarget();
+//			boolean authentication = target.getAuthRestController().authentication();
+//
+////			Object[] args = proceedingJoinPoint.getArgs();
+////			for (int i = 0; i < args.length; i++) {
+////				System.out.println(args[i].toString());
+////			}
+//
+//			if (authentication) {
+//				return proceedingJoinPoint.proceed();
+//			}
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 	
-//	@Around(value="execution(* *.getDoctors(*))")
-	@Around("doctorRestController()")
-	public Object execAuthentication(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-		System.out.println("Get this " + proceedingJoinPoint.getThis().getClass().getName());
-		System.out.println("Get target " + proceedingJoinPoint.getTarget().getClass().getName());
-		
-		try {
-			DoctorRestController target = (DoctorRestController) proceedingJoinPoint.getTarget();
-			boolean authentication = target.getAuthRestController().authentication();
-
+//	@Around(value="execution(* pl.dentistoffice.service.VisitService.getVisitStatus(int))")
+//	@Around(value = "within(pl.dentistoffice.rest.VisitRestController)")
+//	public Object visitStatus(ProceedingJoinPoint proceedingJoinPoint) {
+//		MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+//		System.out.println("Signature " + signature.getMethod().getName());
+//
+//		try {
+//			VisitRestController target = (VisitRestController) proceedingJoinPoint.getTarget();
+//			boolean authentication = target.getAuthRestController().authentication();
 //			Object[] args = proceedingJoinPoint.getArgs();
 //			for (int i = 0; i < args.length; i++) {
 //				System.out.println(args[i].toString());
 //			}
-
-			if (authentication) {
-				return proceedingJoinPoint.proceed();
-			}
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-//	@Around(value="execution(* pl.dentistoffice.service.VisitService.getVisitStatus(int))")
-	@Around(value = "within(pl.dentistoffice.rest.VisitRestController)")
-	public Object visitStatus(ProceedingJoinPoint proceedingJoinPoint) {
-		MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-		System.out.println("Signature " + signature.getMethod().getName());
-
-		try {
-			VisitRestController target = (VisitRestController) proceedingJoinPoint.getTarget();
-			boolean authentication = target.getAuthRestController().authentication();
-			Object[] args = proceedingJoinPoint.getArgs();
-			for (int i = 0; i < args.length; i++) {
-				System.out.println(args[i].toString());
-			}
-
-			if (authentication) {
-				return proceedingJoinPoint.proceed(args);
-			}
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+//
+//			if (authentication) {
+//				return proceedingJoinPoint.proceed(args);
+//			}
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
 }

@@ -9,7 +9,7 @@
 <%-- 	<link href='<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />' rel="stylesheet"> --%>
 	<title><tiles:getAsString name="title" /></title>
 </head>
-<body onload="dateTime()">
+<body onload="dateTime('<s:message code="header.dateTime" />')">
         <header id="header">
             <tiles:insertAttribute name="header" />
         </header>

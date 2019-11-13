@@ -66,6 +66,7 @@ public class HomeController {
 		model.addAttribute("treatmentCategoriesList", treatmentCategoriesList);		
 		return "services";
 	}
+	
 	@RequestMapping(path="/services", method = RequestMethod.POST)
 	public String services(@RequestParam("categoryId") String categoryId, Model model) {
 		TreatmentCategory selectedTreatmentCategory = dentalTreatmentService.getTreatmentCategory(Integer.valueOf(categoryId));

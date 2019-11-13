@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
-<h3>Wolne terminy wizyt</h3>
-<h4>Wybierz lekarza aby przeglądać jego wolne terminy wizyt:</h4>
+<h3><s:message code="home.header.agenda.freeTerm" /></h3>
+<h4><s:message code="home.header.agenda.selectDoctor" /></h4>
 <form id="homePageAgendaSelectDoctor">
 	<table>
 		<tr>

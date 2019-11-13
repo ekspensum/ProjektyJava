@@ -46,6 +46,7 @@ public class Patient implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@JsonIgnore
 	private String token;
 	
 	@Size(min = 3, max = 15)

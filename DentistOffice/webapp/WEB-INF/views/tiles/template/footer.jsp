@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 <div>
-	<h4>${footer }</h4>
+	<h4><s:message code="footer" /></h4>
 </div>

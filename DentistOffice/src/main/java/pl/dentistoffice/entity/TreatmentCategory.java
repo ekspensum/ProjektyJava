@@ -18,6 +18,9 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,6 +48,9 @@ public class TreatmentCategory implements Serializable {
 	@OneToOne
 	private User userLogged;
 	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)	
 	private LocalDateTime registeredDateTime;
+	
+	@JsonSerialize(using = LocalDateTimeSerializer.class)	
 	private LocalDateTime editedDateTime;
 }

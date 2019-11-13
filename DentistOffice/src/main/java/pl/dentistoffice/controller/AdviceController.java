@@ -34,16 +34,12 @@ public class AdviceController {
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {
 		model.addAttribute("exception", env.getProperty("msgExceedSizeFile"));
-	    model.addAttribute("head", env.getProperty("head"));
-	    model.addAttribute("footer", env.getProperty("footer"));
 		return "/message/error";
 	}
 	
 	@ExceptionHandler(javax.persistence.NoResultException.class)
 	public String handleNoResultException(Model model) {
 		model.addAttribute("exception", env.getProperty("msgNoResultException"));
-	    model.addAttribute("head", env.getProperty("head"));
-	    model.addAttribute("footer", env.getProperty("footer"));
 		return "/message/error";
 	}
 	
@@ -54,7 +50,6 @@ public class AdviceController {
 	
 	@ModelAttribute
 	public void globalAttributes(Model model) {
-	    model.addAttribute("head", env.getProperty("head"));
-	    model.addAttribute("footer", env.getProperty("footer"));
+//	    model.addAttribute("footer", env.getProperty("footer"));
 	}
 }

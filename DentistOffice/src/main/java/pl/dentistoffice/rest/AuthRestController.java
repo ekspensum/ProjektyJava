@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,9 +59,16 @@ public class AuthRestController {
 		try {
 			Patient loggedPatient = userService.loginMobilePatient(username, password);
 			if (loggedPatient != null) {
-				patientLoggedMap.put(loggedPatient.getId(), LocalDateTime.now()
-								.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
-				return loggedPatient;
+				String token = loggedPatient.getToken();
+				String encodeTokenBase64 = cipherService.encodeToken(token);
+				if (encodeTokenBase64 != null) {
+					response.setHeader(HttpHeaders.AUTHORIZATION, encodeTokenBase64);
+					patientLoggedMap.put(loggedPatient.getId(), LocalDateTime.now()
+									.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
+					return loggedPatient;
+				} else {
+					response.sendError(401);
+				}				
 			} else {
 				response.sendError(401);
 			}
@@ -78,7 +86,7 @@ public class AuthRestController {
 
 	public boolean authentication() {
 		try {
-			String encodeTokenBase64 = request.getHeader("token");
+			String encodeTokenBase64 = request.getHeader(HttpHeaders.AUTHORIZATION);
 
 			System.out.println("AuthRestController - token from request: " + encodeTokenBase64);
 
