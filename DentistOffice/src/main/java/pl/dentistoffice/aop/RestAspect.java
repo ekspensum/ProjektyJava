@@ -10,6 +10,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import pl.dentistoffice.rest.DoctorRestController;
+import pl.dentistoffice.rest.PatientRestController;
 import pl.dentistoffice.rest.VisitRestController;
 
 
@@ -79,5 +80,20 @@ public class RestAspect {
 //		}
 //		return null;
 //	}
-
+	
+//	@Around(value="execution(* pl.dentistoffice.rest.PatientRestController.editPatientData(Patient))")
+	@Around(value = "within(pl.dentistoffice.rest.PatientRestController)")
+	public Object patientAuthAspect(ProceedingJoinPoint proceedingJoinPoint) {
+		try {
+			PatientRestController target = (PatientRestController) proceedingJoinPoint.getTarget();
+			boolean authentication = target.getAuthRestController().authentication();
+			Object[] args = proceedingJoinPoint.getArgs();
+			if (authentication) {
+				return proceedingJoinPoint.proceed(args);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

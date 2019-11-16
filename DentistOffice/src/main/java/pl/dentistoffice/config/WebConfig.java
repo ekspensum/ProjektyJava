@@ -31,7 +31,6 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
         registry.addResourceHandler("/properties/**").addResourceLocations("/properties/");
-        registry.addResourceHandler("/messages/**").addResourceLocations("classpath:/resources/");
 	}
 
 	@Bean

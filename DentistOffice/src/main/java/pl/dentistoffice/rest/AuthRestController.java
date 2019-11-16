@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.service.CipherService;
 import pl.dentistoffice.service.UserService;
@@ -52,9 +54,10 @@ public class AuthRestController {
 	}
 
 	@PostMapping(path = "/login")
+	@JsonIgnoreProperties(value = {"passwordField", "password", "token"})
 	public Patient login(@RequestParam("username") final String username,
-						@RequestParam("password") final String password, 
-						HttpServletResponse response) {
+									@RequestParam("password") final String password, 
+									HttpServletResponse response) {
 
 		try {
 			Patient loggedPatient = userService.loginMobilePatient(username, password);
