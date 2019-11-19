@@ -23,6 +23,7 @@ public interface VisitRepository {
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, Doctor doctor);
 	public boolean updateVisitOnFinalize(Visit visit);
 	public void removeVisit(Visit visit);
+	public boolean isScheduledVisit(LocalDateTime localDateTime, Doctor doctor);
 	
 	public boolean saveVisitStatus(VisitStatus visitStaus);
 	public VisitStatus readVisitStatus(int id);

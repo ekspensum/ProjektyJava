@@ -28,6 +28,7 @@ import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
 import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
+import pl.dentistoffice.exception.AlreadyScheduledDateTimeVisitException;
 import pl.dentistoffice.service.DentalTreatmentService;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
@@ -150,7 +151,10 @@ public class VisitController {
 				visitService.addNewVisitByPatient(doctor, dateTime, selectedTreatments);
 				model.addAttribute("success", env.getProperty("successAddVisit"));
 				return "forward:/message/patient/success";
-			} catch (Exception e) {
+			} catch (AlreadyScheduledDateTimeVisitException e) {
+				model.addAttribute("exception", env.getProperty("msgAlreadyScheduledDateTimeVisitException"));
+				return "forward:/message/patient/error";	
+			}	catch (Exception e) {
 				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
 				return "forward:/message/patient/error";				
@@ -271,6 +275,9 @@ public class VisitController {
 				visitService.addNewVisitByAssistant(patient, doctor, dateTime, selectedTreatments);
 				model.addAttribute("success", env.getProperty("successAddVisit"));
 				return "forward:/message/employee/success";
+			} catch (AlreadyScheduledDateTimeVisitException e) {
+				model.addAttribute("exception", env.getProperty("msgAlreadyScheduledDateTimeVisitException"));
+				return "forward:/message/employee/error";	
 			} catch (Exception e) {
 				e.printStackTrace();
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));

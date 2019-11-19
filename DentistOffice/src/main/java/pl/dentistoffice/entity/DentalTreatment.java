@@ -40,6 +40,13 @@ public class DentalTreatment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	public DentalTreatment(int id) {
+		this.id = id;
+	}
+
+	public DentalTreatment() {
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;

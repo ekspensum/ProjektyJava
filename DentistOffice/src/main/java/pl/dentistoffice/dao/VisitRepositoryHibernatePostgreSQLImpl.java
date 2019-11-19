@@ -111,6 +111,15 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	}
 
 	@Override
+	public boolean isScheduledVisit(LocalDateTime localDateTime, Doctor doctor) {
+		List<Visit> resultList = getSession().createNamedQuery("isScheduledVisitsByDateTime", Visit.class).setParameter("dateTimeVisit", localDateTime).setParameter("doctor", doctor).getResultList();
+		if(resultList.size() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public boolean saveVisitStatus(VisitStatus visitStaus) {
 		try {
 			getSession().persist(visitStaus);

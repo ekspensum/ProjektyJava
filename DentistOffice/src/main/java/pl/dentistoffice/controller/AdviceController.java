@@ -1,9 +1,6 @@
 package pl.dentistoffice.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -14,22 +11,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
+
 @ControllerAdvice
-@PropertySource(value="classpath:/messages.properties")
 public class AdviceController {
-	
-//	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private Environment env;
 
-//	@ExceptionHandler(Exception.class)
-//	public String handleException(Model model, Exception e) {
-//		model.addAttribute("exception", "Wystapił wyjątek: "+e.getMessage());
-//	    model.addAttribute("head", env.getProperty("head"));
-//	    model.addAttribute("footer", env.getProperty("footer"));
-//		return "/message/error";
-//	}
+	@ExceptionHandler(Exception.class)
+	public String handleException(Model model, Exception e) {
+		model.addAttribute("exception", "Wystapił wyjątek: "+e.getMessage());
+		return "/message/error";
+	}
 	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public String handleMaxUploadSizeExceededException(Model model) {

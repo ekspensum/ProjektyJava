@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -29,22 +30,19 @@ public class AuthRestController {
 	
 	@Autowired
 	private Environment env;
-	
 	@Autowired
 	private UserService userService;
-	
 	@Autowired
 	private CipherService cipherService;
-	
 	@Autowired
 	private HttpServletRequest request;
-	
 	@Autowired
 	private HttpServletResponse response;
 	
 	private Map<Integer, LocalDateTime> patientLoggedMap;
 	
-
+	private static final Logger LOGGER = Logger.getLogger(AuthRestController.class);
+	
 	public AuthRestController() {
 		patientLoggedMap = new HashMap<>();
 	}
@@ -71,9 +69,11 @@ public class AuthRestController {
 					return loggedPatient;
 				} else {
 					response.sendError(401);
+					LOGGER.info("Attempt login - token was not genereted.");
 				}				
 			} else {
 				response.sendError(401);
+				LOGGER.info("Attempt login - invalid username or password.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,9 +90,6 @@ public class AuthRestController {
 	public boolean authentication() {
 		try {
 			String encodeTokenBase64 = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-			System.out.println("AuthRestController - token from request: " + encodeTokenBase64);
-
 			if (encodeTokenBase64 != null && !encodeTokenBase64.equals("")) {
 				String decodeToken = cipherService.decodeToken(encodeTokenBase64);
 				Patient patient = userService.findMobilePatientByToken(decodeToken);
@@ -105,19 +102,19 @@ public class AuthRestController {
 							return true;
 						} else {
 							response.sendError(403);
-							System.out.println("Forbidden-1");
+							LOGGER.info("Attempt to get token - invalid date time.");
 						}
 					} else {
 						response.sendError(403);
-						System.out.println("Forbidden-2");
+						LOGGER.info("Attempt to get token - NULL date time.");
 					}
 				} else {
 					response.sendError(403);
-					System.out.println("Forbidden-3");
+					LOGGER.info("Attempt to get token - NULL patient.");
 				}
 			} else {
 				response.sendError(403);
-				System.out.println("Forbidden-4");
+				LOGGER.info("Attempt to get token - NULL or empty token.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

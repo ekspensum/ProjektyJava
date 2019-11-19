@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.TreatmentCategory;
 import pl.dentistoffice.service.DentalTreatmentService;
 
@@ -17,14 +18,27 @@ public class DentalTreatmentRestController {
 	
 	@Autowired
 	private DentalTreatmentService dentalTreatmentService;
-	
 	@Autowired
-	private TreatmenCategorytListWrapper treatmentCategoryListWrapper;
+	private TreatmentListWrapper treatmentListWrapper;
+	@Autowired
+	private AuthRestController authRestController;
+	
+//	for aspect
+	public AuthRestController getAuthRestController() {
+		return authRestController;
+	}
 
 	@GetMapping(path="/services")
-	public TreatmenCategorytListWrapper services(Model model) {
+	public TreatmentListWrapper services(Model model) {
 		List<TreatmentCategory> treatmentCategoriesList = dentalTreatmentService.getTreatmentCategoriesList();
-		treatmentCategoryListWrapper.setTreatmentCategoriesList(treatmentCategoriesList);
-		return treatmentCategoryListWrapper;
+		treatmentListWrapper.setTreatmentCategoriesList(treatmentCategoriesList);
+		return treatmentListWrapper;
+	}
+	
+	@GetMapping(path="/treatments")
+	public TreatmentListWrapper treatments(Model model) {
+		List<DentalTreatment> dentalTreatmentsList = dentalTreatmentService.getDentalTreatmentsList();
+		treatmentListWrapper.setDentalTreatmentsList(dentalTreatmentsList);
+		return treatmentListWrapper;
 	}
 }

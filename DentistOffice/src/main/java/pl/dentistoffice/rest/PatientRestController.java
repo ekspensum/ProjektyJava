@@ -1,6 +1,9 @@
 package pl.dentistoffice.rest;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +28,13 @@ public class PatientRestController {
 	}
 	
 	@PutMapping(path = "/editPatient")
-	public Boolean editPatientData(@RequestBody Patient patient) {	
+	public Boolean editPatientData(@RequestBody Patient patient, HttpServletResponse response) {	
 		try {
 			userService.editPatient(patient);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.addHeader(HttpHeaders.WARNING, e.getMessage());
 		}
 		return false;
 	}
