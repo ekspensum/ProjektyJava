@@ -40,6 +40,7 @@ import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.entity.VisitTreatmentComment;
 import pl.dentistoffice.entity.WorkingWeek;
+import pl.dentistoffice.exception.AlreadyScheduledDateTimeVisitException;
 import pl.dentistoffice.service.ActivationService;
 import pl.dentistoffice.service.HibernateSearchService;
 import pl.dentistoffice.service.NotificationService;
@@ -136,7 +137,12 @@ public class VisitServiceTest {
 		
 //		set date time
 		String [] dateTime = {"2019-09-11;19:30", "2019-09-11;08:30"};
-		Visit visit = visitService.addNewVisitByPatient(doctor, dateTime, treatments);
+		Visit visit = null;
+		try {
+			visit = visitService.addNewVisitByPatient(doctor, dateTime, treatments);
+		} catch (AlreadyScheduledDateTimeVisitException e) {
+			e.printStackTrace();
+		}
 		
 		assertEquals("doctorLastName", visit.getDoctor().getLastName());
 		assertEquals("login", visit.getPatient().getUser().getUsername());
@@ -185,7 +191,12 @@ public class VisitServiceTest {
 		
 //		set date time
 		String [] dateTime = {"2019-09-11;19:30", "2019-09-11;08:30"};
-		Visit visit = visitService.addNewVisitByAssistant(patient, doctor, dateTime, treatments);
+		Visit visit = null;
+		try {
+			visit = visitService.addNewVisitByAssistant(patient, doctor, dateTime, treatments);
+		} catch (AlreadyScheduledDateTimeVisitException e) {
+			e.printStackTrace();
+		}
 		
 		assertEquals("doctorLastName", visit.getDoctor().getLastName());
 		assertEquals("lastNamePatient", visit.getPatient().getLastName());

@@ -16,17 +16,8 @@ public class DoctorRestController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private AuthRestController authRestController;
-	
 	@Autowired
 	private DoctorListWrapper doctorListWrapper;
-	
-//	for aspect
-	public AuthRestController getAuthRestController() {
-		return authRestController;
-	}
 	
 	@GetMapping(path = "/doctors")
 	public DoctorListWrapper getDoctors(){

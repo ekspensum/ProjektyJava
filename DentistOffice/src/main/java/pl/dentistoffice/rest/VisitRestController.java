@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pl.dentistoffice.entity.DentalTreatment;
 import pl.dentistoffice.entity.Doctor;
+import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.entity.Visit;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.service.UserService;
 import pl.dentistoffice.service.VisitService;
@@ -32,6 +34,8 @@ public class VisitRestController {
 	@Autowired
 	private WorkingWeekMapWrapper workingWeekMapWrapper;
 	@Autowired
+	private VisitAndStatusListWrapper visitAndStatusListWrapper;
+	@Autowired
 	private AuthRestController authRestController;
 	
 //	for aspect
@@ -39,22 +43,38 @@ public class VisitRestController {
 		return authRestController;
 	}
 	
-	@PostMapping(path = "/visitStatus")
-	public VisitStatus getVisitStatus(@RequestParam("id") String statusId) {
-		
-		VisitStatus visitStatus = visitService.getVisitStatus(Integer.valueOf(statusId));
-		return visitStatus;
+	@PostMapping(path = "/visitStatusList")
+	public VisitAndStatusListWrapper getVisitsAndStatusListForPatient(@RequestParam("patientId") String patientId, HttpServletResponse response) {
+		try {
+			List<VisitStatus> visitStatusList = visitService.getVisitStatusList();
+			visitAndStatusListWrapper.setVisitStatusList(visitStatusList);
+			Patient patient = userService.getPatient(Integer.valueOf(patientId));
+			List<Visit> visitsList = visitService.getVisitsByPatient(patient);
+			visitAndStatusListWrapper.setVisitsList(visitsList);
+			return visitAndStatusListWrapper;
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.addHeader(HttpHeaders.WARNING, e.getMessage());
+		}
+		return null;
 	}
 	
 	@PostMapping(path = "/workingWeekMap")
 	public WorkingWeekMapWrapper getWorkingWeekFreeTimeMap(@RequestParam("doctorId") String doctorId, 
 																											@RequestParam("dayStart") String dayStart, 
-																											@RequestParam("dayEnd") String dayEnd) {
+																											@RequestParam("dayEnd") String dayEnd,
+																											HttpServletResponse response) {
 		
-		Doctor doctor = userService.getDoctor(Integer.valueOf(doctorId));
-		Map<LocalDate, Map<LocalTime, Boolean>> workingWeekFreeTimeMap = visitService.getWorkingWeekFreeTimeMap(doctor, Integer.valueOf(dayStart), Integer.valueOf(dayEnd));
-		workingWeekMapWrapper.setWorkingWeekFreeTimeMap(workingWeekFreeTimeMap);
-		return workingWeekMapWrapper;
+		try {
+			Doctor doctor = userService.getDoctor(Integer.valueOf(doctorId));
+			Map<LocalDate, Map<LocalTime, Boolean>> workingWeekFreeTimeMap = visitService.getWorkingWeekFreeTimeMap(doctor, Integer.valueOf(dayStart), Integer.valueOf(dayEnd));
+			workingWeekMapWrapper.setWorkingWeekFreeTimeMap(workingWeekFreeTimeMap);
+			return workingWeekMapWrapper;
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.addHeader(HttpHeaders.WARNING, e.getMessage());
+		}
+		return null;
 	}
 	
 	@PostMapping(path = "/newVisit")
@@ -80,4 +100,16 @@ public class VisitRestController {
 		return false;
 	}
 	
+	@PostMapping(path = "/deleteVisit")
+	public boolean deleteVisit(@RequestParam("visitId") String visitId,	HttpServletResponse response) {
+		try {
+			Visit visit = visitService.getVisit(Integer.valueOf(visitId));
+			visitService.cancelVisit(visit);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.addHeader(HttpHeaders.WARNING, e.getMessage());
+		}
+		return false;
+	}
 }

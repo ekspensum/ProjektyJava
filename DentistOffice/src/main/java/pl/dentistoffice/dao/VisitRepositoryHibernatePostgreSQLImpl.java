@@ -81,6 +81,11 @@ public class VisitRepositoryHibernatePostgreSQLImpl implements VisitRepository {
 	}
 
 	@Override
+	public List<Visit> readVisits(Patient patient) {
+		return getSession().createNamedQuery("readVisitsByPatient", Visit.class).setParameter("patient", patient).getResultList();
+	}
+
+	@Override
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, Doctor doctor) {
 		return getSession().createNamedQuery("readVisitsByDateTimeAndDoctor", Visit.class).setParameter("dateTimeFrom", dateTimeFrom).setParameter("dateTimeTo", dateTimeTo).setParameter("doctor", doctor).getResultList();
 	}

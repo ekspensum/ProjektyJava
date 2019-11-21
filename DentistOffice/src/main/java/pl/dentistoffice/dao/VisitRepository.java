@@ -20,6 +20,7 @@ public interface VisitRepository {
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, VisitStatus visitStatus, Doctor doctor);
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, boolean visitConfirmation);
 	public List<Visit> readVisits(Patient patient, VisitStatus visitStatus);
+	public List<Visit> readVisits(Patient patient);
 	public List<Visit> readVisits(LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo, Doctor doctor);
 	public boolean updateVisitOnFinalize(Visit visit);
 	public void removeVisit(Visit visit);

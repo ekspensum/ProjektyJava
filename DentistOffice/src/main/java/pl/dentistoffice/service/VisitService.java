@@ -131,7 +131,7 @@ public class VisitService {
 			visit.setVisitDateTime(visitDateTime);
 			visit.setReservationDateTime(LocalDateTime.now());
 			visitRepository.saveVisit(visit);
-//			notificationService.sendEmailWithVisitDateNotification(visit);			
+			notificationService.sendEmailWithVisitDateNotification(visit);			
 		} else {
 			throw new AlreadyScheduledDateTimeVisitException("Scheduled date & time visit already exist in database for selected doctor.");
 		}
@@ -256,6 +256,18 @@ public class VisitService {
 	
 	public List<Visit> getVisitsByPatientAndStatus(Patient patient, VisitStatus visitStatus){
 		List<Visit> visits = visitRepository.readVisits(patient, visitStatus);
+		visits.sort(new Comparator<Visit>() {
+
+			@Override
+			public int compare(Visit o1, Visit o2) {
+				return o2.getVisitDateTime().compareTo(o1.getVisitDateTime());
+			}
+		});
+		return visits;
+	}
+
+	public List<Visit> getVisitsByPatient(Patient patient){
+		List<Visit> visits = visitRepository.readVisits(patient);
 		visits.sort(new Comparator<Visit>() {
 
 			@Override

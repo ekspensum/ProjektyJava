@@ -498,6 +498,7 @@ public class VisitController {
 		return modelAndView;
 	}
 		
+//	FOR VISITS DOCTOR
 	@RequestMapping(path = "/visit/doctor/showMyVisits")
 	public String showMyVisitsDoctor(Model model) {
 		LocalDate today = LocalDate.now();
