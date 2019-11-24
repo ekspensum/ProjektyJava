@@ -3,7 +3,6 @@ package pl.dentistoffice.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,20 +22,30 @@ public class DentalTreatmentRestController {
 	@Autowired
 	private AuthRestController authRestController;
 	
-//	for aspect
+	public DentalTreatmentRestController() {
+	}
+
+	public DentalTreatmentRestController(DentalTreatmentService dentalTreatmentService,
+			TreatmentListWrapper treatmentListWrapper, AuthRestController authRestController) {
+		this.dentalTreatmentService = dentalTreatmentService;
+		this.treatmentListWrapper = treatmentListWrapper;
+		this.authRestController = authRestController;
+	}
+
+	//	for aspect
 	public AuthRestController getAuthRestController() {
 		return authRestController;
 	}
 
 	@GetMapping(path="/services")
-	public TreatmentListWrapper services(Model model) {
+	public TreatmentListWrapper services() {
 		List<TreatmentCategory> treatmentCategoriesList = dentalTreatmentService.getTreatmentCategoriesList();
 		treatmentListWrapper.setTreatmentCategoriesList(treatmentCategoriesList);
 		return treatmentListWrapper;
 	}
 	
 	@GetMapping(path="/treatments")
-	public TreatmentListWrapper treatments(Model model) {
+	public TreatmentListWrapper treatments() {
 		List<DentalTreatment> dentalTreatmentsList = dentalTreatmentService.getDentalTreatmentsList();
 		treatmentListWrapper.setDentalTreatmentsList(dentalTreatmentsList);
 		return treatmentListWrapper;

@@ -27,6 +27,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import pl.dentistoffice.dao.UserRepository;
 import pl.dentistoffice.dao.UserRepositoryHibernatePostgreSQLImpl;
@@ -63,6 +64,7 @@ public class VisitServiceTest {
 	private Authentication authentication;
 	private ActivationService activationService;
 	private HibernateSearchService searchsService;
+	private PasswordEncoder passwordEncoder;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -85,7 +87,8 @@ public class VisitServiceTest {
 		when(env.getProperty("host")).thenReturn("host");
 		activationService = new ActivationService(env, sendEmail);
 		searchsService = Mockito.mock(HibernateSearchService.class);
-		userService = new UserService(userRepository, notificationService, activationService, searchsService);	
+		passwordEncoder = Mockito.mock(PasswordEncoder.class);
+		userService = new UserService(userRepository, notificationService, activationService, searchsService, passwordEncoder);	
 		securityContext = Mockito.mock(SecurityContext.class);
 		authentication = Mockito.mock(Authentication.class);
 		visitRepository = new VisitRepositoryHibernatePostgreSQLImpl(sessionFactory);
@@ -97,7 +100,7 @@ public class VisitServiceTest {
 	}
 
 	@Test
-	public void testAddNewVisitByPatient() {	
+	public void testAddNewVisitByPatient_STAGE_A() {	
 //		set doctor
 		Doctor doctor = new Doctor();
 		doctor.setLastName("doctorLastName");
@@ -137,6 +140,16 @@ public class VisitServiceTest {
 		
 //		set date time
 		String [] dateTime = {"2019-09-11;19:30", "2019-09-11;08:30"};
+		String[] splitDateTime = dateTime[0].split(";");
+		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
+		List<Visit> visitList = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		Query<Visit> queryVisit = Mockito.mock(Query.class);
+		when(session.createNamedQuery("isScheduledVisitsByDateTime", Visit.class)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("dateTimeVisit", visitDateTime)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("doctor", doctor)).thenReturn(queryVisit);
+		when(queryVisit.getResultList()).thenReturn(visitList);
+				
 		Visit visit = null;
 		try {
 			visit = visitService.addNewVisitByPatient(doctor, dateTime, treatments);
@@ -150,11 +163,74 @@ public class VisitServiceTest {
 		assertEquals(3, visit.getTreatments().get(2).getId());
 		assertEquals("2019-09-11T19:30", visit.getVisitDateTime().toString());
 	}
-
+	
 	@Test
-	public void testAddNewVisitByAssistant() {
+	public void testAddNewVisitByPatient_STAGE_B() {	
 //		set doctor
 		Doctor doctor = new Doctor();
+		doctor.setLastName("doctorLastName");
+		
+//		set patient
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+		String username = "login";
+		when(authentication.getName()).thenReturn(username);
+		@SuppressWarnings("unchecked")
+		Query<Patient> query = Mockito.mock(Query.class);
+		when(session.createNamedQuery("findPatientByUserName", Patient.class)).thenReturn(query);
+		when(query.setParameter("username", username)).thenReturn(query);
+		User user = new User();
+		user.setUsername(username);
+		Patient patient = new Patient();
+		patient.setUser(user);
+		when(query.getSingleResult()).thenReturn(patient);
+		when(userService.getLoggedPatient()).thenReturn(patient);
+		
+//		set visit status
+		VisitStatus visitStatus = new VisitStatus();
+		visitStatus.setId(1);
+		when(session.find(VisitStatus.class, 1)).thenReturn(visitStatus);
+
+//		set dental treatment list
+		DentalTreatment dentalTreatment1 = new DentalTreatment();
+		dentalTreatment1.setId(1);
+		DentalTreatment dentalTreatment2 = new DentalTreatment();
+		dentalTreatment2.setId(2);
+		DentalTreatment dentalTreatment3 = new DentalTreatment();
+		dentalTreatment3.setId(3);
+		List<DentalTreatment> treatments = new ArrayList<>();
+		treatments.add(dentalTreatment1);
+		treatments.add(dentalTreatment2);
+		treatments.add(dentalTreatment3);
+		
+//		set date time
+		String [] dateTime = {"2019-09-11;19:30", "2019-09-11;08:30"};
+		String[] splitDateTime = dateTime[0].split(";");
+		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
+		List<Visit> visitList = new ArrayList<>();
+		Visit visitMock = new Visit();
+		visitList.add(visitMock);
+		@SuppressWarnings("unchecked")
+		Query<Visit> queryVisit = Mockito.mock(Query.class);
+		when(session.createNamedQuery("isScheduledVisitsByDateTime", Visit.class)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("dateTimeVisit", visitDateTime)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("doctor", doctor)).thenReturn(queryVisit);
+		when(queryVisit.getResultList()).thenReturn(visitList);
+				
+		Visit visit = null;
+		try {
+			visit = visitService.addNewVisitByPatient(doctor, dateTime, treatments);
+		} catch (AlreadyScheduledDateTimeVisitException e) {
+			e.printStackTrace();
+		}
+		assertNull(visit);
+	}
+
+	@Test
+	public void testAddNewVisitByAssistant_STAGE_A() {
+//		set doctor
+		Doctor doctor = new Doctor();
+		doctor.setId(11);
 		doctor.setLastName("doctorLastName");
 		
 //		set patient
@@ -189,21 +265,94 @@ public class VisitServiceTest {
 		treatments.add(dentalTreatment2);
 		treatments.add(dentalTreatment3);
 		
-//		set date time
+//		set date time	
 		String [] dateTime = {"2019-09-11;19:30", "2019-09-11;08:30"};
+		String[] splitDateTime = dateTime[0].split(";");
+		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
+		
+		List<Visit> visitList = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		Query<Visit> queryVisit = Mockito.mock(Query.class);
+		when(session.createNamedQuery("isScheduledVisitsByDateTime", Visit.class)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("dateTimeVisit", visitDateTime)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("doctor", doctor)).thenReturn(queryVisit);
+		when(queryVisit.getResultList()).thenReturn(visitList);
+			
 		Visit visit = null;
 		try {
 			visit = visitService.addNewVisitByAssistant(patient, doctor, dateTime, treatments);
 		} catch (AlreadyScheduledDateTimeVisitException e) {
 			e.printStackTrace();
 		}
-		
 		assertEquals("doctorLastName", visit.getDoctor().getLastName());
 		assertEquals("lastNamePatient", visit.getPatient().getLastName());
 		assertEquals("login", visit.getPatient().getUser().getUsername());
 		assertEquals(1, visit.getStatus().getId());
 		assertEquals(3, visit.getTreatments().get(2).getId());
 		assertEquals("2019-09-11T19:30", visit.getVisitDateTime().toString());
+	}
+	
+	@Test
+	public void testAddNewVisitByAssistant_STAGE_B() {
+//		set doctor
+		Doctor doctor = new Doctor();
+		doctor.setId(11);
+		doctor.setLastName("doctorLastName");
+		
+//		set patient
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+		String username = "login";
+		when(authentication.getName()).thenReturn(username);
+		@SuppressWarnings("unchecked")
+		Query<User> query = Mockito.mock(Query.class);
+		when(session.createNamedQuery("findUserByUserName", User.class)).thenReturn(query);
+		when(query.setParameter("username", username)).thenReturn(query);
+		User user = new User();
+		user.setUsername(username);
+		Patient patient = new Patient();
+		patient.setUser(user);
+		patient.setLastName("lastNamePatient");
+		
+//		set visit status
+		VisitStatus visitStatus = new VisitStatus();
+		visitStatus.setId(1);
+		when(session.find(VisitStatus.class, 1)).thenReturn(visitStatus);
+
+//		set dental treatment list
+		DentalTreatment dentalTreatment1 = new DentalTreatment();
+		dentalTreatment1.setId(1);
+		DentalTreatment dentalTreatment2 = new DentalTreatment();
+		dentalTreatment2.setId(2);
+		DentalTreatment dentalTreatment3 = new DentalTreatment();
+		dentalTreatment3.setId(3);
+		List<DentalTreatment> treatments = new ArrayList<>();
+		treatments.add(dentalTreatment1);
+		treatments.add(dentalTreatment2);
+		treatments.add(dentalTreatment3);
+		
+//		set date time	
+		String [] dateTime = {"2019-09-11;19:30", "2019-09-11;08:30"};
+		String[] splitDateTime = dateTime[0].split(";");
+		LocalDateTime visitDateTime = LocalDateTime.of(LocalDate.parse(splitDateTime[0]), LocalTime.parse(splitDateTime[1]));
+		
+		List<Visit> visitList = new ArrayList<>();
+		Visit visitMock = new Visit();
+		visitList.add(visitMock);
+		@SuppressWarnings("unchecked")
+		Query<Visit> queryVisit = Mockito.mock(Query.class);
+		when(session.createNamedQuery("isScheduledVisitsByDateTime", Visit.class)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("dateTimeVisit", visitDateTime)).thenReturn(queryVisit);
+		when(queryVisit.setParameter("doctor", doctor)).thenReturn(queryVisit);
+		when(queryVisit.getResultList()).thenReturn(visitList);
+			
+		Visit visit = null;
+		try {
+			visit = visitService.addNewVisitByAssistant(patient, doctor, dateTime, treatments);
+		} catch (AlreadyScheduledDateTimeVisitException e) {
+			e.printStackTrace();
+		}
+		assertNull(visit);
 	}
 
 	@Test
@@ -228,12 +377,11 @@ public class VisitServiceTest {
 		@SuppressWarnings("unchecked")
 		Query<Visit> query = Mockito.mock(Query.class);
 		when(session.createNamedQuery("readVisitsByDateTimeAndDoctor", Visit.class)).thenReturn(query);
-		when(query.setParameter("dateTimeFrom", LocalDateTime.now().plusDays(0).withNano(0))).thenReturn(query);
-		when(query.setParameter("dateTimeTo", LocalDateTime.now().plusDays(7).withNano(0))).thenReturn(query);
+		when(query.setParameter("dateTimeFrom", LocalDateTime.now().plusDays(0).withHour(0).withNano(0))).thenReturn(query);
+		when(query.setParameter("dateTimeTo", LocalDateTime.now().plusDays(7).withHour(0).withNano(0))).thenReturn(query);
 		when(query.setParameter("doctor", doctor)).thenReturn(query);
 		when(query.getResultList()).thenReturn(visitsList);
-		
-		
+			
 		Map<LocalDate, Map<LocalTime, Boolean>> workingWeekFreeTimeMap = visitService.getWorkingWeekFreeTimeMap(doctor, 0, 7);
 		Map<LocalTime, Boolean> map1DayPlus = workingWeekFreeTimeMap.get(LocalDate.now().plusDays(1));
 		

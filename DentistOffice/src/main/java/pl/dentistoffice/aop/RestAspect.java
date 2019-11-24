@@ -35,7 +35,8 @@ public class RestAspect {
 		return null;
 	}
 	
-	@Around(value="execution(* pl.dentistoffice.rest.PatientRestController.editPatientData(..))")
+	@Around(value="execution(* pl.dentistoffice.rest.PatientRestController.editPatientData(..)) "
+							+ "execution(* pl.dentistoffice.rest.PatientRestController.logout(..))")
 	public Object patientAuthAspect(ProceedingJoinPoint proceedingJoinPoint) {
 		try {
 			PatientRestController target = (PatientRestController) proceedingJoinPoint.getTarget();

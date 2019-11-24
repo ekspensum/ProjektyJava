@@ -20,6 +20,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import pl.dentistoffice.dao.TreatmentRepository;
 import pl.dentistoffice.dao.TreatmentRepositoryHibernatePostgreSQLImpl;
@@ -50,6 +51,7 @@ public class DentalTreatmentServiceTest {
 	private HibernateSearchService searchsService;
 	private TreatmentRepository treatmentRepository;
 	private DentalTreatmentService dentalTreatmentService;
+	private PasswordEncoder passwordEncoder;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -72,7 +74,8 @@ public class DentalTreatmentServiceTest {
 		when(env.getProperty("host")).thenReturn("host");
 		activationService = new ActivationService(env, sendEmail);
 		searchsService = Mockito.mock(HibernateSearchService.class);
-		userService = new UserService(userRepository, notificationService, activationService, searchsService);	
+		passwordEncoder = Mockito.mock(PasswordEncoder.class);
+		userService = new UserService(userRepository, notificationService, activationService, searchsService, passwordEncoder);	
 		securityContext = Mockito.mock(SecurityContext.class);
 		authentication = Mockito.mock(Authentication.class);
 		treatmentRepository = new TreatmentRepositoryHibernatePostgreSQLImpl(sessionFactory);

@@ -27,6 +27,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import pl.dentistoffice.dao.UserRepository;
 import pl.dentistoffice.dao.UserRepositoryHibernatePostgreSQLImpl;
@@ -55,6 +56,7 @@ public class UserServiceTest {
 	private Authentication authentication;
 	private ActivationService activationService;
 	private HibernateSearchService searchsService;
+	private PasswordEncoder passwordEncoder;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -77,7 +79,8 @@ public class UserServiceTest {
 		when(env.getProperty("host")).thenReturn("host");
 		activationService = new ActivationService(env, sendEmail);
 		searchsService = Mockito.mock(HibernateSearchService.class);
-		userService = new UserService(userRepository, notificationService, activationService, searchsService);	
+		passwordEncoder = Mockito.mock(PasswordEncoder.class);
+		userService = new UserService(userRepository, notificationService, activationService, searchsService, passwordEncoder);	
 		securityContext = Mockito.mock(SecurityContext.class);
 		authentication = Mockito.mock(Authentication.class);
 	}
@@ -364,7 +367,42 @@ public class UserServiceTest {
 		assertEquals(searchedPatients.get(1).getId(), 12);
 		assertNotEquals(searchedPatients.get(0).getId(), 12);
 	}
+	
+	@Test
+	public void testFindMobilePatientByToken() {
+		@SuppressWarnings("unchecked")
+		Query<Patient> query = Mockito.mock(Query.class);
+		when(session.createNamedQuery("findPatientByToken", Patient.class)).thenReturn(query);
+		when(query.setParameter("token", "token")).thenReturn(query);
+		Patient patient = new Patient();
+		patient.setToken("token");
+		when(query.getSingleResult()).thenReturn(patient);	
+		Patient findMobilePatientByToken = userService.findMobilePatientByToken("token");
+		
+		assertEquals(findMobilePatientByToken.getToken(), "token");
+	}
+	
+	@Test
+	public void testLoginMobilePatient() {
+		String username = "login";
+		@SuppressWarnings("unchecked")
+		Query<Patient> query = Mockito.mock(Query.class);
+		when(session.createNamedQuery("findPatientByUserName", Patient.class)).thenReturn(query);
+		when(query.setParameter("username", username)).thenReturn(query);
+		User user = new User();
+		user.setEnabled(true);
+		user.setUsername(username);
+		user.setPassword("encodedPassword");
+		Patient patient = new Patient();
+		patient.setUser(user);
 
+		when(passwordEncoder.matches("rawPassword", patient.getUser().getPassword())).thenReturn(true);		
+		when(query.getSingleResult()).thenReturn(patient);	
+		Patient loginMobilePatient = userService.loginMobilePatient(username, "rawPassword");
+		
+		assertEquals(loginMobilePatient.getUser().getPassword(), "encodedPassword");
+	}
+	
 	@Test
 	public void testAddNewAdmin() {
 		User user = new User();

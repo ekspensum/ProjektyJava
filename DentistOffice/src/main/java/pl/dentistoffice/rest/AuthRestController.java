@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,8 +46,22 @@ public class AuthRestController {
 		patientLoggedMap = new HashMap<>();
 	}
 
+	public AuthRestController(Environment env, UserService userService, CipherService cipherService, 
+												HttpServletRequest request, HttpServletResponse response) {
+		patientLoggedMap = new HashMap<>();
+		this.env = env;
+		this.userService = userService;
+		this.cipherService = cipherService;
+		this.request = request;
+		this.response = response;
+	}
+
 	public Map<Integer, LocalDateTime> getPatientLoggedMap() {
 		return patientLoggedMap;
+	}
+
+	public void setPatientLoggedMap(Map<Integer, LocalDateTime> patientLoggedMap) {
+		this.patientLoggedMap = patientLoggedMap;
 	}
 
 	@PostMapping(path = "/login")
@@ -65,7 +78,7 @@ public class AuthRestController {
 				if (encodeTokenBase64 != null) {
 					response.setHeader(HttpHeaders.AUTHORIZATION, encodeTokenBase64);
 					patientLoggedMap.put(loggedPatient.getId(), LocalDateTime.now()
-									.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
+														.plusSeconds(Integer.valueOf(env.getProperty("patientLoggedValidTime"))).withNano(0));
 					return loggedPatient;
 				} else {
 					response.sendError(401);
@@ -79,12 +92,6 @@ public class AuthRestController {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	@GetMapping(path = "/logout")
-	public String logout() {
-		
-		return "logout";
 	}
 
 	public boolean authentication() {

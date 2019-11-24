@@ -19,6 +19,14 @@ public class DoctorRestController {
 	@Autowired
 	private DoctorListWrapper doctorListWrapper;
 	
+	public DoctorRestController() {
+	}
+
+	public DoctorRestController(UserService userService, DoctorListWrapper doctorListWrapper) {
+		this.userService = userService;
+		this.doctorListWrapper = doctorListWrapper;
+	}
+
 	@GetMapping(path = "/doctors")
 	public DoctorListWrapper getDoctors(){
 		List<Doctor> allDoctors = userService.getAllDoctors();

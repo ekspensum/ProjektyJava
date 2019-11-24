@@ -57,12 +57,13 @@ public class UserService {
 	}
 
 //	for tests
-	public UserService(UserRepository userRepository, NotificationService notificationService, ActivationService activationService, HibernateSearchService searchsService) {
-		super();
+	public UserService(UserRepository userRepository, NotificationService notificationService, ActivationService activationService, 
+									HibernateSearchService searchsService, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.notificationService = notificationService;
 		this.activationService = activationService;
 		this.searchsService = searchsService;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -203,6 +204,14 @@ public class UserService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public boolean deleteTokenForMobilePatient(int patientId) {
+		int deleteTokenForPatient = userRepository.deleteTokenForPatient(patientId);
+		if(deleteTokenForPatient == 1) {
+			return true;
+		}
+		return false;
 	}
 	
 	public Patient loginMobilePatient(String username, String rawPassword) {

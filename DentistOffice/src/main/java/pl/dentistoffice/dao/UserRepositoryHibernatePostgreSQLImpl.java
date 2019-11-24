@@ -116,6 +116,11 @@ public class UserRepositoryHibernatePostgreSQLImpl implements UserRepository {
 	}
 	
 	@Override
+	public int deleteTokenForPatient(int patientId) {
+		return getSession().createNativeQuery("UPDATE patient SET token = null WHERE id ="+patientId+"").executeUpdate();
+	}
+
+	@Override
 	public void saveAssistant(Assistant assistant) {
 			getSession().persist(assistant);
 	}

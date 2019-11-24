@@ -1,6 +1,7 @@
 package pl.dentistoffice.rest;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import pl.dentistoffice.entity.Patient;
@@ -31,9 +33,39 @@ public class PatientRestController {
 	@Autowired
 	private CipherService cipherService;
 	
-//	for aspect
+	public PatientRestController() {
+	}
+
+	public PatientRestController(Environment env, UserService userService, AuthRestController authRestController, CipherService cipherService) {
+		this.env = env;
+		this.userService = userService;
+		this.authRestController = authRestController;
+		this.cipherService = cipherService;
+	}
+
+	//	for aspect
 	public AuthRestController getAuthRestController() {
 		return authRestController;
+	}
+	
+	@PostMapping(path = "/logout")
+	public boolean logout(@RequestParam("patientId") String patientId, HttpServletResponse response) {
+		boolean deleteToken;
+		try {
+			deleteToken = userService.deleteTokenForMobilePatient(Integer.valueOf(patientId));
+			if(deleteToken) {
+				Map<Integer, LocalDateTime> patientLoggedMap = authRestController.getPatientLoggedMap();
+				patientLoggedMap.put(Integer.valueOf(patientId), LocalDateTime.now().withNano(0));
+				authRestController.setPatientLoggedMap(patientLoggedMap);
+				return true;
+			} else {
+				response.addHeader(HttpHeaders.WARNING, "LOGOUT has failed on server.");				
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			response.addHeader(HttpHeaders.WARNING, e.getMessage());
+		}
+		return false;
 	}
 	
 	@PostMapping(path = "/registerPatient")

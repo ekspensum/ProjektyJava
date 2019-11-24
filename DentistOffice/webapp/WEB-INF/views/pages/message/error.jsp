@@ -2,5 +2,5 @@
 <%@ include file="/WEB-INF/views/pages/taglibs.jsp"%>
 
 <h3 class="msgError">${exception }</h3>
-<br><br>
-<button onclick="goBack()">Powrót do poprzedniej strony</button>
+<!-- <br><br> -->
+<!-- <button onclick="goBack()">Powrót do poprzedniej strony</button> -->
