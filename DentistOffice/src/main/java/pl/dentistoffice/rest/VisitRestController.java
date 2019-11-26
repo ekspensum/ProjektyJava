@@ -38,7 +38,20 @@ public class VisitRestController {
 	@Autowired
 	private AuthRestController authRestController;
 	
-//	for aspect
+	public VisitRestController() {
+	}
+
+	public VisitRestController(VisitService visitService, UserService userService, WorkingWeekMapWrapper workingWeekMapWrapper, 
+											VisitAndStatusListWrapper visitAndStatusListWrapper, AuthRestController authRestController) {
+		
+		this.visitService = visitService;
+		this.userService = userService;
+		this.workingWeekMapWrapper = workingWeekMapWrapper;
+		this.visitAndStatusListWrapper = visitAndStatusListWrapper;
+		this.authRestController = authRestController;
+	}
+
+	//	for aspect
 	public AuthRestController getAuthRestController() {
 		return authRestController;
 	}
