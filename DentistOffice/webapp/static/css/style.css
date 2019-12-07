@@ -1,5 +1,5 @@
 body {
-/*     background-color: rgb(105, 126, 117); */
+    background-color: rgb(105, 126, 117);
     background-image: url("../images/dark_embroidery.png");
     color: black;
 }
@@ -185,8 +185,8 @@ table.search tr:hover {
 
 #loggedUser {
     position: absolute;
-    right: 200px;
-    top: 10px;
+    right: 30px;
+    top: 60px;
 }
 
 input[type=text],
