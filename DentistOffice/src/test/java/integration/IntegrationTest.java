@@ -597,12 +597,12 @@ public class IntegrationTest {
 		Patient patient = new Patient();
 		patient.setId(1);
 		patient.setFirstName("firstName");
-		String [] dateTime = {LocalDate.now().plusDays(3).toString()+";19:30"};
+		String [] dateTimeByPatient = {LocalDate.now().plusDays(3).toString()+";19:30"};
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getName()).thenReturn("userPatient1");
 		
-		assertEquals("forward:/message/patient/success", visitController.visitReservationByPatient(doctor, dateTime, "1", "2", "1", model));
+		assertEquals("forward:/message/patient/success", visitController.visitReservationByPatient(doctor, dateTimeByPatient, "1", "2", "1", model));
 		
 		Visit visitActual = (Visit) mockMvc.perform(MockMvcRequestBuilders.post("/visit/assistant/visitToFinalize")
 											.param("visitId", "1"))
@@ -614,7 +614,8 @@ public class IntegrationTest {
 		assertEquals(LocalDateTime.now().withNano(0).withSecond(0), visitActual.getReservationDateTime().withNano(0).withSecond(0));
 
 		when(authentication.getName()).thenReturn("userAssist");
-		assertEquals("forward:/message/employee/success", visitController.visitReservationByAssistant(doctor, patient, dateTime, "1", "2", "1", model));
+		String [] dateTimeByAssistant = {LocalDate.now().plusDays(4).toString()+";19:30"};
+		assertEquals("forward:/message/employee/success", visitController.visitReservationByAssistant(doctor, patient, dateTimeByAssistant, "1", "2", "1", model));
 		visitActual = (Visit) mockMvc.perform(MockMvcRequestBuilders.post("/visit/assistant/visitToFinalize")
 											.param("visitId", "2"))
 											.andExpect(MockMvcResultMatchers.status().isOk())

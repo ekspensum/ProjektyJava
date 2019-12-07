@@ -8,10 +8,10 @@ public class SessionConfig implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
 		
-		se.getSession().setMaxInactiveInterval(1200);
+//		se.getSession().setMaxInactiveInterval(1200);
 		
 //		for Heroku cloud
-//		se.getSession().setMaxInactiveInterval(Integer.valueOf(System.getenv("SESSION_INTERVAL")));
+		se.getSession().setMaxInactiveInterval(Integer.valueOf(System.getenv("SESSION_INTERVAL")));
 
 	}
 

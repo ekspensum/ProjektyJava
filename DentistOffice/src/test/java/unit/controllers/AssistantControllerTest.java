@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -59,10 +58,6 @@ public class AssistantControllerTest {
         
         assistantController = new AssistantController(env, userService);
 		mockMvc = MockMvcBuilders.standaloneSetup(assistantController).setViewResolvers(viewResolver).build();
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	@Test

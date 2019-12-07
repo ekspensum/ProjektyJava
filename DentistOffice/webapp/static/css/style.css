@@ -1,6 +1,6 @@
 body {
-    background-color: rgb(105, 126, 117);
-    /* background-image: url("../images/background.jpg"); */
+/*     background-color: rgb(105, 126, 117); */
+    background-image: url("../images/dark_embroidery.png");
     color: black;
 }
 
@@ -42,7 +42,7 @@ table.search tr:hover {
     position: fixed;
     float: left;
     text-align: left;
-    border-bottom: 2px solid beige;
+    border-bottom: 2px solid #ade2af;
 }
 
 #footer {
@@ -51,7 +51,7 @@ table.search tr:hover {
     top: 94%;
     height: 6%;
     position: fixed;
-    border-top: 2px solid beige;
+    border-top: 2px solid #ade2af;
     text-align: center;
 }
 
@@ -60,7 +60,7 @@ table.search tr:hover {
     width: 100%;
     top: 17%;
     height: 7%;
-    border-bottom: 2px solid beige;
+    border-bottom: 2px solid #ade2af;
     text-align: center;
     position: fixed;
     overflow: auto;
@@ -100,7 +100,7 @@ table.search tr:hover {
     bottom: 6%;
     overflow: auto;
     padding-left: 1%;
-    border-right: 2px solid beige;
+    border-right: 2px solid #ade2af;
     position: fixed;
 }
 
@@ -140,6 +140,20 @@ table.search tr:hover {
 }
 
 .navigateButton:hover {
+    background-color: rgb(133, 155, 89);
+}
+
+#linkMobile {
+	position: absolute;
+    right: 230px;
+    top: 10px;
+    width: 160px;
+    height: 30px;
+    background-color: beige;
+    font: bold 14px Arial;
+}
+
+#linkMobile:hover {
     background-color: rgb(133, 155, 89);
 }
 

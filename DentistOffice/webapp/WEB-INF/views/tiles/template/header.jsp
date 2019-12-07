@@ -5,6 +5,9 @@
 	<h1><s:message code="header.name" /></h1>
 	<p id="clock"></p>
 </div>
+<div>
+	<a href="https://dentistofficemobile.herokuapp.com/"><button id="linkMobile"><s:message code="button.mobile" /></button></a>
+</div>
 <security:authorize access="isAuthenticated()">
 	<h4 id="loggedUser"><s:message code="header.logged" /><security:authentication property="principal.username" /></h4>
 </security:authorize>
