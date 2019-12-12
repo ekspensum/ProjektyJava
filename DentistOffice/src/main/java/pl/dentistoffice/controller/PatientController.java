@@ -254,9 +254,9 @@ public class PatientController {
 	}
 	
 	@RequestMapping(value = "/users/patient/activation")
-	public String getActivationString(@RequestParam("activationString") String encodeTokenBase64, Model model) {
+	public String getActivationString(@RequestParam("activationString") String encodeActivationStringBase64, Model model) {
 		
-		String activationString = cipherService.decodeToken(encodeTokenBase64);
+		String activationString = cipherService.decodeActivationString(encodeActivationStringBase64);
 		
 		if(activationService.setActivePatient(activationString)) {
 			model.addAttribute("patientActivationMessage", env.getRequiredProperty("patientActivationTrue"));

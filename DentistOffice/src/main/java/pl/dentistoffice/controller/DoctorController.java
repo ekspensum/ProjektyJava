@@ -67,7 +67,7 @@ public class DoctorController {
 	
 	@RequestMapping(path = "/users/doctor/admin/register")
 	public String registrationDoctor(Model model) {
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(2));
 		model.addAttribute("doctor", new Doctor());
 		model.addAttribute("templateWorkingWeekMap", userService.getTemplateWorkingWeekMap());
 		model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
@@ -114,7 +114,7 @@ public class DoctorController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));
+			model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(2));
 			model.addAttribute("templateWorkingWeekMap", workingWeekMap);
 			model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 			return "/users/doctor/admin/register";
@@ -140,7 +140,7 @@ public class DoctorController {
 	public String editDoctor(@ModelAttribute("doctor") Doctor doctor, Model model) {
 		model.addAttribute("doctor", doctor);
 		model.addAttribute("image", doctor.getPhoto());
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));				
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(2));				
 		Map<DayOfWeek, Map<LocalTime, Boolean>> workingWeekMap = doctor.getWorkingWeek().getWorkingWeekMap();
 		model.addAttribute("workingWeekMap", workingWeekMap);
 		model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
@@ -190,7 +190,7 @@ public class DoctorController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRolesWithoutId(2));
+			model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(2));
 			model.addAttribute("workingWeekMap", workingWeekMap);
 			model.addAttribute("dayOfWeekPolish", userService.dayOfWeekPolish());
 			return "/users/doctor/admin/edit";

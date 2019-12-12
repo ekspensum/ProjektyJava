@@ -79,7 +79,7 @@ public class AdminControllerTest {
 	@Test
 	public void testRegistrationAdmin() throws Exception {
 		List<Role> roles = new ArrayList<Role>();
-		when(userService.getAllRolesWithoutId(5)).thenReturn(roles);		
+		when(userService.getEmployeeRolesWithoutId(5)).thenReturn(roles);		
 		
 		assertEquals("/users/admin/owner/register", adminController.registrationAdmin(model));
 		mockMvc.perform(MockMvcRequestBuilders.get("/users/admin/owner/register"))

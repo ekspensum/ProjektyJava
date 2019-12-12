@@ -30,6 +30,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import pl.dentistoffice.controller.DoctorController;
 import pl.dentistoffice.entity.Doctor;
 import pl.dentistoffice.entity.Patient;
+import pl.dentistoffice.entity.Role;
 import pl.dentistoffice.entity.User;
 import pl.dentistoffice.entity.VisitStatus;
 import pl.dentistoffice.entity.WorkingWeek;
@@ -82,6 +83,8 @@ public class DoctorControllerTest {
 
 	@Test
 	public void testRegistrationDoctor() throws Exception {
+		List<Role> roles = new ArrayList<Role>();
+		when(userService.getEmployeeRolesWithoutId(2)).thenReturn(roles);	
 		Object doctor = mockMvc.perform(MockMvcRequestBuilders.get("/users/doctor/admin/register"))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("/users/doctor/admin/register"))

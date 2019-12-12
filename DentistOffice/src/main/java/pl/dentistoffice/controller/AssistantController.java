@@ -47,7 +47,7 @@ public class AssistantController {
 
 	@RequestMapping(path = "/users/assistant/admin/register")
 	public String registrationAssistantByAdmin(Model model) {
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(4));
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(4));
 		model.addAttribute("assistant", new Assistant());
 		return "/users/assistant/admin/register";
 	}
@@ -76,7 +76,7 @@ public class AssistantController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRolesWithoutId(4));
+			model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(4));
 			return "/users/assistant/admin/register";
 		}
 	}
@@ -99,7 +99,7 @@ public class AssistantController {
 	@RequestMapping(path = "/users/assistant/admin/edit")
 	public String editAssistantByAdmin(@ModelAttribute("assistant") Assistant assistant, Model model) {
 		model.addAttribute("assistant", assistant);
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(4));	
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(4));	
 		model.addAttribute("image", assistant.getPhoto());
 		return "/users/assistant/admin/edit";
 	}

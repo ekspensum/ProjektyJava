@@ -25,10 +25,10 @@ public class CipherService {
 	private String encryptionKey;
 
 	public CipherService(Environment env) {
-		this.encryptionKey = env.getProperty("encryptionKey");
+//		this.encryptionKey = env.getProperty("encryptionKey");
 		
 //		for Heroku cloud
-//		this.encryptionKey = System.getenv("ENCRYPTION_KEY");
+		this.encryptionKey = System.getenv("ENCRYPTION_KEY");
 	}
 
 	public String encodeToken(String token) {
@@ -51,9 +51,55 @@ public class CipherService {
 	public String decodeToken(String encodeTokenBase64) {
 
 		byte[] encodeTokenByte = null;
-
 		if (encodeTokenBase64 != null && !encodeTokenBase64.equals("")) {
 			encodeTokenByte = Base64.getDecoder().decode(encodeTokenBase64);
+			try {
+				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+				byte[] byteKey = encryptionKey.getBytes("UTF-8");
+				byteKey = Arrays.copyOf(byteKey, 16);
+				Key secretKey = new SecretKeySpec(byteKey, "AES");
+				cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
+				byte[] decodeTokenByte = cipher.doFinal(encodeTokenByte);
+				return new String(decodeTokenByte);
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			} catch (InvalidAlgorithmParameterException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public String encodeActivationString(String activationStringtoken) {
+		
+		try {
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			byte [] byteKey = encryptionKey.getBytes("UTF-8");
+			byteKey = Arrays.copyOf(byteKey, 16);
+			Key secretKey = new SecretKeySpec(byteKey, "AES");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(new byte[16]));
+			byte[] encodeTokenByte = cipher.doFinal(activationStringtoken.getBytes());
+			return Base64.getUrlEncoder().encodeToString(encodeTokenByte);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String decodeActivationString(String encodeActivationStringBase64) {
+
+		byte[] encodeTokenByte = null;
+		if (encodeActivationStringBase64 != null && !encodeActivationStringBase64.equals("")) {
+			encodeTokenByte = Base64.getUrlDecoder().decode(encodeActivationStringBase64);
 			try {
 				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 				byte[] byteKey = encryptionKey.getBytes("UTF-8");

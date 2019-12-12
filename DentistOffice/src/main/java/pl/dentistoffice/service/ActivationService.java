@@ -1,11 +1,9 @@
 package pl.dentistoffice.service;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +16,13 @@ import pl.dentistoffice.entity.User;
 public class ActivationService {
 
 	@Autowired
-	private Environment env;
-	
+	private Environment env;	
 	@Autowired
 	private SendEmail sendEmail;
-	
     @Autowired
     private HibernateSearchService searchsService;
-	
 	@Autowired
 	private UserRepository userRepository;
-	
 	@Autowired
 	private CipherService cipherService;
 	
@@ -62,14 +56,6 @@ public class ActivationService {
 		return false;
 	}
 	
-	public String createActivationString(Patient patient) {
-		StringBuilder activationString = new StringBuilder();
-		Random rand = new Random();
-		int number = rand.nextInt(10000);
-		activationString.append(number).append(patient.getEmail());
-		return new BCryptPasswordEncoder().encode(activationString);
-	}
-	
 //	PRIVATE METHODS
 	private String createMailText(Patient patient, String activationLink) {
 			String mailText = "<font color='blue' size='3'>Dzień dobry <b>"+patient.getFirstName()+" "+patient.getLastName()+"</b><br>"
@@ -85,13 +71,13 @@ public class ActivationService {
 	private String createActivationLink(Patient patient, String contextPath) {
 		StringBuilder activationLink = new StringBuilder();
 		String encryptedActivationString = patient.getActivationString();
-		String encodeToken = cipherService.encodeToken(encryptedActivationString);
+		String encodeToken = cipherService.encodeActivationString(encryptedActivationString);
 		activationLink.append("<a href=\"").append(env.getProperty("host"))
-										   .append(contextPath)
-										   .append("/users/patient/activation?")
-										   .append("activationString=")
-										   .append(encodeToken)
-										   .append("\">Naciśnij ten link aktywacyjny</a>");
+																   .append(contextPath)
+																   .append("/users/patient/activation?")
+																   .append("activationString=")
+																   .append(encodeToken)
+																   .append("\">Naciśnij ten link aktywacyjny</a>");
 		return activationLink.toString();
 	}
 	

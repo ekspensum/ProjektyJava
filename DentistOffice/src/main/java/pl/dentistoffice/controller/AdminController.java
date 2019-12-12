@@ -59,7 +59,7 @@ public class AdminController {
 
 	@RequestMapping(path = "/users/admin/owner/register")
 	public String registrationAdmin(Model model) {
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(5));
 		model.addAttribute("admin", new Admin());
 		return "/users/admin/owner/register";
 	}
@@ -90,7 +90,7 @@ public class AdminController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
+			model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(5));
 			return "/users/admin/owner/register";
 		}
 	}
@@ -113,7 +113,7 @@ public class AdminController {
 	@RequestMapping(path = "/users/admin/owner/edit")
 	public String editAdminByOwner(@ModelAttribute("admin") Admin admin, Model model) {
 		model.addAttribute("admin", admin);
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));	
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(5));	
 		model.addAttribute("image", admin.getPhoto());
 		return "/users/admin/owner/edit";
 	}
@@ -146,7 +146,7 @@ public class AdminController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
+			model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(5));
 			return "/users/admin/owner/edit";
 		}
 	}
@@ -156,7 +156,7 @@ public class AdminController {
 		Admin loggedAdmin = userService.getLoggedAdmin();
 		model.addAttribute("admin", loggedAdmin);
 		model.addAttribute("editUserId", loggedAdmin.getUser().getId());
-		model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));	
+		model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(5));	
 		model.addAttribute("image", loggedAdmin.getPhoto());
 		return "/users/admin/edit";
 	}
@@ -189,7 +189,7 @@ public class AdminController {
 			if(!dinstinctLogin) {
 				model.addAttribute("distinctLoginError", env.getProperty("distinctLoginError"));
 			}
-			model.addAttribute("rolesList", userService.getAllRolesWithoutId(5));
+			model.addAttribute("rolesList", userService.getEmployeeRolesWithoutId(5));
 			return "/users/admin/edit";
 		}
 	}

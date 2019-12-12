@@ -541,9 +541,9 @@ public class UserServiceTest {
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
-	public void testGetAllRolesWithoutId() {
+	public void testGetEmployeeRolesWithoutId() {
 		Role role1 = new Role();
-		role1.setId(1);
+		role1.setId(3);
 		role1.setRole("ROLE_PATIENT");
 		Role role2 = new Role();
 		role2.setId(5);
@@ -551,18 +551,22 @@ public class UserServiceTest {
 		Role role3 = new Role();
 		role3.setId(2);
 		role3.setRole("ROLE_DOCTOR");
+		Role role4 = new Role();
+		role4.setId(4);
+		role4.setRole("ROLE_ASSISTANT");
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(role1);
 		roles.add(role2);
 		roles.add(role3);
+		roles.add(role4);
 		@SuppressWarnings("unchecked")
 		Query<Role> query = Mockito.mock(Query.class);
 		when(session.createNamedQuery("findRoleWithoutOwner", Role.class)).thenReturn(query);
 		when(query.getResultList()).thenReturn(roles);
-		List<Role> allRoles = userService.getAllRolesWithoutId(5);
+		List<Role> allRoles = userService.getEmployeeRolesWithoutId(5);
 		assertEquals(2, allRoles.size());
-		assertEquals(1, allRoles.get(0).getId());
-		assertEquals(2, allRoles.get(1).getId());
+		assertEquals(2, allRoles.get(0).getId());
+		assertEquals(4, allRoles.get(1).getId());
 		assertNull("For role Admin - abowve", allRoles.get(2).getId());
 	}
 

@@ -70,7 +70,7 @@ public class AssistantControllerTest {
 	@Test
 	public void testRegistrationAssistantByAdminModel() throws Exception {
 		List<Role> roles = new ArrayList<Role>();
-		when(userService.getAllRolesWithoutId(5)).thenReturn(roles);		
+		when(userService.getEmployeeRolesWithoutId(5)).thenReturn(roles);		
 		
 		assertEquals("/users/assistant/admin/register", assistantController.registrationAssistantByAdmin(model));
 		

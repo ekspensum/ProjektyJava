@@ -159,7 +159,7 @@ public class UserService {
 		user.setEnabled(false);
 		patient.setUser(user);
 		patient.setRegisteredDateTime(LocalDateTime.now());	
-		String activationString = activationService.createActivationString(patient);
+		String activationString = UUID.randomUUID().toString();
 		patient.setActivationString(activationString);
 		userRepository.savePatient(patient);
 		activationService.sendEmailWithActivationLink(patient, contextPath);
@@ -305,12 +305,12 @@ public class UserService {
 		return allRoles;
 	}
 	
-	public List<Role> getAllRolesWithoutId(int withoutId){
+	public List<Role> getEmployeeRolesWithoutId(int withoutId){
 		List<Role> allRoles = userRepository.readAllRoles();
 		ListIterator<Role> listIterator = allRoles.listIterator();
 		while (listIterator.hasNext()) {
 			Role role = (Role) listIterator.next();
-			if(role.getId() == withoutId) {
+			if(role.getId() == 3 || role.getId() == withoutId) {
 				listIterator.remove();
 			}
 		}
