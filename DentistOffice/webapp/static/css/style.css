@@ -1,7 +1,7 @@
 body {
     background-color: rgb(105, 126, 117);
     background-image: url("../images/dark_embroidery.png");
-    color: black;
+    color: rgb(0, 0, 44)
 }
 
 .msg {

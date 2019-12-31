@@ -254,10 +254,12 @@ function changeSlide() {
         number = 1;
     }
     let file = "<img src=\"static/images/slides/slide" + number + ".jpg\" />";
-    document.getElementById("slider").innerHTML = file;
-    $("#slider").fadeIn(500);
-    setTimeout("changeSlide();", 4000);
-    setTimeout("collapse();", 3500);
+    if(document.getElementById("slider") != null){
+    	document.getElementById("slider").innerHTML = file;
+    	$("#slider").fadeIn(500);
+    	setTimeout("changeSlide();", 4000);
+    	setTimeout("collapse();", 3500);    	
+    }
 }
 
 function checkCorrectPassword(){
