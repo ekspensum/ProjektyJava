@@ -6,7 +6,7 @@
 	<p id="clock"></p>
 </div>
 <div>
-	<a href="https://dentistofficemobile.herokuapp.com/"><button id="linkMobile"><s:message code="button.mobile" /></button></a>
+	<a href="http://77.55.212.7:8080/dentistofficemobile/"><button id="linkMobile"><s:message code="button.mobile" /></button></a>
 </div>
 <security:authorize access="isAuthenticated()">
 	<h4 id="loggedUser"><s:message code="header.logged" /><security:authentication property="principal.username" /></h4>

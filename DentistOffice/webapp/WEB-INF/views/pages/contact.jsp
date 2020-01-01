@@ -23,7 +23,11 @@
 			<td><form:errors path="attachment" class="msgError"></form:errors></td>
 		</tr>
 		<tr>
-			<td><span class="g-recaptcha" data-sitekey="6LdM-rUUAAAAABOhqqyoOaPVVLui5AVaZoOwQSdk"></span></td>
+			<!-- Heroku -->
+			<!-- <td><div class="g-recaptcha" data-sitekey="6LdM-rUUAAAAABOhqqyoOaPVVLui5AVaZoOwQSdk"></div></td> -->
+
+			<!-- Nazwa.pl -->
+			<td><div class="g-recaptcha" data-sitekey="6LdpecsUAAAAAAfuVvhplbRFi_5y19wJbWoqmbBr"></div></td>			
 			<td class="msgError">${reCaptchaError }</td>
 		</tr>
 		<tr>
