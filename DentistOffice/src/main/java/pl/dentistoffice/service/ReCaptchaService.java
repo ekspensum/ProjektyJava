@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class ReCaptchaService {
 	
 	private final String url = "https://www.google.com/recaptcha/api/siteverify";
-//	private final String secret = "6LdM-rUUAAAAAOLfxSHyXJWQkGFtlNWOe61dW-rl"; //Heroku
 	private final String secret = "6LdpecsUAAAAADvlmuGOJ9soHc1lc7jWI2AnYREv"; //Nazwa.pl
 	private final String USER_AGENT = "Mozilla/5.0";
 
