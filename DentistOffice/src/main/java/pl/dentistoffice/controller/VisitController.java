@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -37,6 +38,8 @@ import pl.dentistoffice.service.VisitService;
 @SessionAttributes({"doctor", "patient", "dayStart", "visit"})
 @PropertySource(value="classpath:/messages.properties")
 public class VisitController {
+	
+	private static final Logger LOGGER = Logger.getLogger(VisitController.class);
 	
 	@Autowired
 	private Environment env;
@@ -155,7 +158,7 @@ public class VisitController {
 				model.addAttribute("exception", env.getProperty("msgAlreadyScheduledDateTimeVisitException"));
 				return "forward:/message/patient/error";	
 			}	catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Reservation visit error: ", e);
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
 				return "forward:/message/patient/error";				
 			}
@@ -279,7 +282,7 @@ public class VisitController {
 				model.addAttribute("exception", env.getProperty("msgAlreadyScheduledDateTimeVisitException"));
 				return "forward:/message/employee/error";	
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Reservation visit error: ", e);
 				model.addAttribute("exception", env.getProperty("exceptionAddVisit"));
 				return "forward:/message/employee/error";
 			}										
@@ -377,7 +380,7 @@ public class VisitController {
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
 			return "forward:/message/employee/success";
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Canceled visit error: ", e);
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
 			return "forward:/message/employee/error";
 		}		
@@ -391,7 +394,7 @@ public class VisitController {
 			model.addAttribute("success", env.getProperty("successCanceledVisit"));
 			return "forward:/message/patient/success";
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Canceled visit error: ", e);
 			model.addAttribute("exception", env.getProperty("exceptionCanceledVisit"));
 			return "forward:/message/patient/error";
 		}		

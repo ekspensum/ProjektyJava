@@ -33,9 +33,11 @@
 </form:form>
 	<c:if test="${alert == 'YES' }">
 		<script>
-			sentEmailConfirm();
+			sentEmailConfirm('<s:message code="message.sendEmail" />');
 		</script>
 	</c:if>
 	<c:if test="${alert == 'NO' }">
-		<script>alert("Nie udało się wysłać listu!");</script>
+		<script>
+			alert('<s:message code="message.NoSendEmail" />');
+		</script>
 	</c:if>

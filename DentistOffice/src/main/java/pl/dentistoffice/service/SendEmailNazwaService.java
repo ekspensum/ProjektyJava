@@ -62,6 +62,7 @@ public class SendEmailNazwaService implements SendEmail {
 		Properties javaMailProperties = new Properties();
 		javaMailProperties.put("mail.transport.protocol", env.getProperty("mail.transport.protocol"));
 //		javaMailProperties.put("mail.debug", env.getProperty("mail.debug"));
+		javaMailProperties.put("mail.smtp.starttls.enable", env.getProperty("mail.smtp.starttls.enable"));
 
 		javaMailSender.setJavaMailProperties(javaMailProperties);
 	
