@@ -46,7 +46,6 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 	 * Default constructor.
 	 */
 	public ProductBean() {
-		// TODO Auto-generated constructor stub
 	}
 //	for tests
 	public ProductBean(EntityManager em, UserTransaction ut) {
@@ -127,14 +126,12 @@ public class ProductBean implements ProductBeanRemote, ProductBeanLocal {
 
 	@Override
 	public List<Product> findProduct(String name) {
-		// TODO Auto-generated method stub
 		listProductByName = em.createNamedQuery("productsByName", Product.class).setParameter("name", "%"+name+"%").getResultList();
 		return listProductByName;
 	}
 
 	@Override
 	public List<Product> findProduct(int quantity) {
-		// TODO Auto-generated method stub
 		listProductByQuantity = em.createNamedQuery("productsByQuantity", Product.class).setParameter("quantity", quantity).getResultList();
 		return listProductByQuantity;
 	}

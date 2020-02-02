@@ -147,7 +147,7 @@ class ProductByCategoryTest {
 //		for buttonToBasketFromCategory parameter
 		assertTrue(bbl.addBasketRow(1, 1, "name", 11.22, bbl.getBasketData()));
 //		for buttonDeleteRowBasket parameter - d't forget that assert above add one row		
-		assertEquals(2, bbl.getBasketData().size());
+		assertEquals(4, bbl.getBasketData().size());
 	}
 
 }

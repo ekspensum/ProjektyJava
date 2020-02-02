@@ -169,7 +169,7 @@ class LoginServletTest {
 		assertEquals(1, ubl.getSettingsApp().getSessionTime());
 		
 //		for buttonDeleteRowBasket parameter
-		assertEquals(0, bbl.getBasketData().size());
+		assertEquals(1, bbl.getBasketData().size());
 		
 //		for searchProductButton parameter
 		assertNotNull(request.getParameter("searchProductButton"));

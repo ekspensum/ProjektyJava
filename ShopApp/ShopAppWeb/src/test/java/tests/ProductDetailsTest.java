@@ -109,7 +109,7 @@ class ProductDetailsTest {
 //		for buttonToBasketFromDetails parameter
 		assertTrue(bbl.addBasketRow(pbl.getProduct(1).getId(), 21, pbl.getProduct(1).getName(), pbl.getProduct(1).getPrice(),	bbl.getBasketData()));
 //		for buttonDeleteRowBasket parameter - to keep in mind that above assert added one row to basket
-		assertEquals(2, bbl.getBasketData().size());
+		assertEquals(3, bbl.getBasketData().size());
 	}
 
 }

@@ -12,9 +12,9 @@
 <body>
 <p id="pageHeader">Panel operatora</p>
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
-<a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
+<a href="/ShopAppWeb/LoginServlet" id="toMainPage"><button class="button">Do strony głównej</button></a>
 <b id="message">${message }</b>
-<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
+<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button class="button">Wyloguj</button></a>
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="addProductForm" enctype="multipart/form-data">
 <table>
@@ -34,7 +34,7 @@
 </c:forEach>
 </select></td></tr>
 <tr><td>Dodaj plik:</td><td><input type="file" name="imageProduct" accept="image/*"/></td></tr>
-<tr><td colspan="2" align="right"><input type="submit" name="buttonAddProduct" value="Dodaj produkt" ${productToEdit != null ? 'disabled' : '' } /></td></tr>
+<tr><td colspan="2" align="right"><input type="submit" name="buttonAddProduct" value="Dodaj produkt" ${productToEdit != null ? 'disabled' : '' } class="button" /></td></tr>
 </table>
 </form>
 
@@ -43,41 +43,41 @@
 <tr><td id="optionHeader" colspan="2">Dodawanie kategorii</td></tr>
 <tr><td>Nazwa kategorii:</td><td><input type="text" name="categoryName" value="${param['categoryName'] }" /></td></tr>
 <tr><td>Dodaj plik:</td><td><input type="file" name="imageCategory" required="required" accept="image/*"/></td></tr>
-<tr><td colspan="2" align="right"><input type="submit" name="buttonAddCategory" value="Dodaj kategorię" /></td></tr>
+<tr><td colspan="2" align="right"><input type="submit" name="buttonAddCategory" value="Dodaj kategorię" class="button" /></td></tr>
 </table>
 </form>
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="searchProductForm">
-<table>
+<table id="tableSearchProduct">
 <tr>
 	<td colspan="2">Wyszukaj produkty o ilości < lub = od:</td>
 	<td><input type="number" name="searchPruductByQuantity" min="1" value="5" style="width: 3em;" /></td>
-	<td colspan="2" align="right"><button type="submit" name="searchQuantityButton" value="yes" form="searchProductForm">Wyszukaj</button></td>
+	<td colspan="2" align="right"><button type="submit" name="searchQuantityButton" value="yes" form="searchProductForm" class="button">Wyszukaj</button></td>
 </tr>
 <tr>
 	<td colspan="2">Wyszukaj produkt wg fragmentu nazwy:</td>
 	<td><input type="text" name="searchPruductByName" value="${param['searchPruductByName'] }" /></td>
-	<td colspan="2" align="right"><button type="submit" name="searchPruductButton" value="yes" form="searchProductForm">Wyszukaj</button></td>
+	<td colspan="2" align="right"><button type="submit" name="searchPruductButton" value="yes" form="searchProductForm" class="button">Wyszukaj</button></td>
 </tr>
 <tr><th>Lp</th><th>Nazwa produktu</th><th>Cena</th><th>Ilość na stanie</th><th>Edytuj</th></tr>
 <c:forEach items="${Products }" var="pr" begin="0" varStatus="lp">
 <tr><td>${lp.count }</td><td>${pr.name }</td><td>${pr.price }</td><td>${pr.unitsInStock }</td><td><input type="checkbox" name="idProduct" value="${pr.id }"></td></tr>
 </c:forEach>
 </table>
-<p>Wybierz do edycji zaznaczony produkt: <button type="submit" name="editButton" value="yes" form="searchProductForm" ${param['searchPruductByName'] != null && param['searchPruductByName'] != '' || param['searchPruductByQuantity'] != null ? '' : 'disabled' }>Wybierz</button></p>
-<p>Zapisz zmiany w wybranym produkcie: <button type="submit" name="saveButton" value="yes" form="addProductForm" ${productToEdit != null ? '' : 'disabled' }>Zapisz zmiany</button></p>
+<p>Wybierz do edycji zaznaczony produkt: <button type="submit" class="button" name="editButton" value="yes" form="searchProductForm" ${param['searchPruductByName'] != null && param['searchPruductByName'] != '' || param['searchPruductByQuantity'] != null ? '' : 'disabled' }>Wybierz</button></p>
+<p>Zapisz zmiany w wybranym produkcie: <button type="submit" class="button" name="saveButton" value="yes" form="addProductForm" ${productToEdit != null ? '' : 'disabled' }>Zapisz zmiany</button></p>
 </form>
 
 <form action="/ShopAppWeb/OperatorPanel" method="POST" id="execTransactionForm">
-<table>
+<table id="tableExecTransaction">
 <tr><td id="optionHeader" colspan="8">Wyszukaj niezrealizowane zamówienia:</td></tr>
-<tr><td>Data od:</td><td><input name="transactionDateFrom" type="date" value="${param['transactionDateFrom'] }" /></td><td align="right">Data do:</td><td><input name="transactionDateTo" type="date" value="${param['transactionDateTo'] }" /></td><td colspan="4" align="right"><button name="buttonSearchNoExecOrder" form="execTransactionForm" type="submit" value="yes">Wyszukaj</button></td></tr>
+<tr><td>Data od:</td><td><input name="transactionDateFrom" type="date" value="${param['transactionDateFrom'] }" /></td><td align="right">Data do:</td><td><input name="transactionDateTo" type="date" value="${param['transactionDateTo'] }" /></td><td colspan="4" align="right"><button name="buttonSearchNoExecOrder" form="execTransactionForm" type="submit" value="yes" class="button">Wyszukaj</button></td></tr>
 <tr><th>Lp</th><th>Imie klienta</th><th>Nazwisko klienta</th><th>Nazwa produktu</th><th>Ilość</th><th>Cena</th><th>Data zamówienia</th><th>Wybierz</th></tr>
 <c:forEach items="${Transactions}" var="tr" begin="0" varStatus="lp">
 <tr><td>${lp.count }</td><td>${tr.customer.firstName }</td><td>${tr.customer.lastName }</td><td>${tr.product.name }</td><td>${tr.quantity }</td><td>${tr.price }</td><td>${tr.dateTime }</td><td><input type="checkbox" name="idTransaction" value="${tr.id }" /></td></tr>
 </c:forEach>
 </table>
-<p><button name="buttonExecOrder" form="execTransactionForm" type="submit" value="yes">Oznacz realizację</button></p>
+<p><button name="buttonExecOrder" form="execTransactionForm" type="submit" value="yes" class="button">Oznacz realizację</button></p>
 </form>
 
 </body>

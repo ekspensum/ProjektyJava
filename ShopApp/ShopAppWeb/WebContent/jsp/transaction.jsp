@@ -14,14 +14,14 @@
 <b id="messageTransaction">${message }</b>
 <c:if test="${SessionData != null }">
 <p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
-<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
+<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button class="button" >Wyloguj</button></a>
 </c:if>
-<a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
+<a href="/ShopAppWeb/LoginServlet" id="toMainPage"><button class="button">Do strony głównej</button></a>
 <br><br><br>
 
-<form action="/ShopAppWeb/Transaction" method="POST">
+<form action="/ShopAppWeb/Transaction" method="POST" id="confirmTransactionForm">
 <b>Zawartość koszyka:</b>
-<table>
+<table id="tableBasket">
 <tr><th>L.p.</th><th>Nazwa produktu</th><th>Ilość</th><th>Cana</th><th>Wartość</th></tr>
 <c:forEach items="${SessionData.basketBeanLocal.basketData}" var="br" begin="0" varStatus="loop">
 <tr><td>${loop.count }</td><td>${br.productName }</td>	<td>${br.quantity }</td>	<td>${br.price }</td><td>${br.price * br.quantity}</td></tr>
@@ -29,7 +29,7 @@
 </table>
 <p><b>Wartość zamówienia: ${ total }</b></p>
 <p>Koszty przesyłki kurierem DHL wliczone są do wartości zamówienia</p>
-<button type="submit" name="buttonBuyNow" value="buyNow" ${ total > 0 ? "" : "disabled" } >Kup teraz</button>
+<button type="submit" class="button" name="buttonBuyNow" value="buyNow" ${ total > 0 ? "" : "disabled" } >Kup teraz</button>
 </form>
 
 </body>

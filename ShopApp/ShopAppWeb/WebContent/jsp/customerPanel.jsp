@@ -12,17 +12,18 @@
 </head>
 <body>
 <c:if test="${SessionData != null }">
-<p>Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
-<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button >Wyloguj</button></a>
-<form action="/ShopAppWeb/CustomerPanel" method="POST" id="customerLoginUpdateForm">
-<p>Potwierdź swoje dane w celu edycji:</p>
-<p>Login: <input type="text" name="login"/></p>
-<p>Hasło: <input type="password" name="password" /></p>
-<p><button type="submit" name="buttonOpenEdit" value="yes" form="customerLoginUpdateForm">Otwórz dane do edycji</button>
-<p><button type="submit" name="buttonSaveEdit" value="yes" form="customerDataForm"  ${requestScope['openToEdit'] eq 'yes' || requestScope['saveEdit'] eq 'yes' ? '' : 'disabled'}>Zapisz zmienione dane</button>
-</form>
+	<p id="loginParagraph">Zalogowany: ${SessionData.firstName } ${SessionData.lastName }</p>
+	<a href="/ShopAppWeb/LogOutServlet" id="buttonLogOut"><button class="button" >Wyloguj</button></a>
+		<form action="/ShopAppWeb/CustomerPanel" method="POST" id="customerLoginUpdateForm">
+			<p>Potwierdź swoje dane w celu edycji:</p>
+			<p>Login: <input type="text" name="login"/></p>
+			<p>Hasło: <input type="password" name="password" /></p>
+			<p><button type="submit" name="buttonOpenEdit" value="yes" form="customerLoginUpdateForm" class="button">Otwórz dane do edycji</button>
+			<p><button type="submit" name="buttonSaveEdit" value="yes" form="customerDataForm" class="button" ${requestScope['openToEdit'] eq 'yes' || requestScope['saveEdit'] eq 'yes' ? '' : 'disabled'}>Zapisz zmienione dane</button>
+		</form>
 </c:if>
-<a href="/ShopAppWeb/LoginServlet">Do strony głównej</a>
+
+<a href="/ShopAppWeb/LoginServlet" id="toMainPage"><button class="button">Do strony głównej</button></a>
 <b id="message">${message }</b>
 
 <c:if test="${SessionData.idRole == null || (SessionData.idRole == 2 && requestScope['openToEdit'] eq 'yes') || (SessionData.idRole == 2 && requestScope['saveEdit'] eq 'yes')  }">
@@ -43,7 +44,7 @@
 <p>Nazwa firmy: <input type="text" name="companyName" value="${requestScope['openToEdit'] eq 'yes' ? (customerData.company == true ?  customerData.companyName : '') : param['companyName'] }"/></p>
 <p>NIP: <input type="text" name="taxNo" value="${requestScope['openToEdit'] eq 'yes' ? (customerData.company == true ?  customerData.taxNo : '') : param['taxNo'] }" /></p>
 <p>REGON: <input type="text" name="regon" value="${requestScope['openToEdit'] eq 'yes' ? (customerData.company == true ?  customerData.regon : '') : param['regon'] }"/></p>
-<p><input type="submit" value="Dodaj" name="buttonAddCustomer" ${requestScope['openToEdit'] eq 'yes' || requestScope['saveEdit'] eq 'yes' ? 'disabled' : ''}/></p>
+<p><input type="submit" value="Dodaj" name="buttonAddCustomer" class="button" ${requestScope['openToEdit'] eq 'yes' || requestScope['saveEdit'] eq 'yes' ? 'disabled' : ''}/></p>
 </form>
 </c:if>
 
@@ -57,13 +58,13 @@ Wyświetl: <select name="showRowTransactions">
 	<option value="10" ${param['showRowTransactions'] == '10' ? 'selected' : ''} >10 transakcji</option>
 	<option value="15" ${param['showRowTransactions'] == '15' ? 'selected' : ''} >15 transakcji</option>
 </select>
-<button type="submit" name="buttonSearchTransaction" value="yes" form="customerTransactionForm">Wyszukaj</button></p>
+<button type="submit" name="buttonSearchTransaction" value="yes" form="customerTransactionForm" class="button">Wyszukaj</button></p>
 <p>
 <button name="rowResultDriver" value="stepLeftEnd"><img src="icons/16x16_move_left_to_end.png"></button>
 <button name="rowResultDriver" value="stepLeft" ${buttonMoveLeftDiesabled eq 'YES' ? 'disabled' : ''} ><img src="icons/16x16_move_left.png"></button>
 <button name="rowResultDriver" value="stepRight" ${buttonMoveRightDiesabled eq 'YES' ? 'disabled' : ''} ><img src="icons/16x16_move_right.png"></button>
 <button name="rowResultDriver" value="stepRightEnd"><img src="icons/16x16_move_right_to_end.png"></button></p>
-<table>
+<table id="tableTransactions">
 <tr><th>Lp</th><th>Data zakupu</th>
 <th><button type="submit" name="sortBy" value="productNameAscending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_az_905641.png"></button>
 Nazwa produktu
@@ -73,7 +74,7 @@ Cena
 <button type="submit" name="sortBy" value="productPriceDescending" form="customerTransactionForm"><img src="icons/iconfinder_BT_sort_90_905642.png"></button></th>
 <th>Zakupiona ilość</th><th>Wartość zakupu</th><th>Realizacja</th><th>Data wysyłki</th></tr>
 <c:forEach items="${transactionsDataList}" var="tr" begin="0" varStatus="loop">
-<tr><td>${loop.count }</td><td>${tr.dateTime }</td><td>${tr.productName }</td><td>${tr.price }</td><td>${tr.quantity }</td><td>${tr.price * tr.quantity }</td><td>${tr.execOrder == true ? "Tak" : "Nie" }</td><td>${tr.execOrderDate }</td></tr>
+<tr><td>${loop.count }</td><td>${tr.dateTime.toLocalDate() }</td><td>${tr.productName }</td><td>${tr.price }</td><td>${tr.quantity }</td><td>${tr.price * tr.quantity }</td><td>${tr.execOrder == true ? "Tak" : "Nie" }</td><td>${tr.execOrderDate.toLocalDate() }</td></tr>
 </c:forEach>
 </table>
 </form>

@@ -184,7 +184,7 @@ public class CustomerPanel extends HttpServlet {
 			sortBy = "productIdDescending";
 			try {
 				List<Transaction> transactionsData = tbl.getTransactionsData(sd.getIdUser(), LocalDateTime.parse(dateFrom, formatter), LocalDateTime.parse(dateTo, formatter), sortBy, rowStart, rowOnPage);
-				request.setAttribute("transactionsDataList", transactionsData.subList(rowStart, rowOnPage));
+				request.setAttribute("transactionsDataList", transactionsData.subList(rowStart, rowOnPage >= transactionsData.size() ? transactionsData.size() : rowOnPage));
 			} catch (DateTimeParseException e) {
 				request.setAttribute("message", "Proszę uzupełnić oba pola dat!");
 				e.printStackTrace();

@@ -1,54 +1,88 @@
 ﻿body
 {
     background-color:gray;
+    background-image: url("../background/beige-tiles.png");
     color:black;
 }
-
-.buttonClass {
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
+.button {
     text-decoration: none;
     color: initial;
     font: menu;
     font-size: 14px;
+    min-width: 100px;
+    min-height: 30px;
+/*     background-color: #babdb6; */
 }
-
-table, th, td {
-    border: 1px;
-    border-style:solid;
-    border-color:black;
-
+.button:hover {
+	color: initial;
+/* 	background-color: #888a85; */
 }
-
-#login {
+input[type=text],
+input[type=search],
+input[type=password],
+input[type=file],
+input[type=date],
+select {
+    font-size: 14px;
+    height: 24px;
+}
+#pageHeaderMain {
 	position: absolute;
 	top: 50px;
-	right: 100px;
+	text-align: left;
+	font-style: italic;
+	font-size: xx-large;
+	color: navy;
 }
-
-#password {
-	position: absolute;
-	top: 80px;
-	right: 100px;
-}
-
-#loginButtonId {
-	position: absolute;
-	top: 120px;
-	right: 100px;
-	height: 25px;
-}
-
-#registrationButtonId {
-	position: absolute;
-	top: 15px;
-	right: 175px;
-}
-
-#message {
+#pageHeader {
 	position: absolute;
 	top: 40px;
+	text-align: left;
+	font-size: xx-large;
+	color: navy;
+}
+#loginTable td {
+	border: none;
+}
+#loginTable {
+	border: none;
+	position: absolute;
+	top: 65px;
+	right: 100px;
+	text-align: right;
+}
+#loginButtonId {
+	position: absolute;
+	top: 140px;
+	right: 100px;
+}
+#loginParagraph {
+	position: absolute;
+	top: 10px;
+}
+#toOperatorPanel {
+	position: absolute;
+	top: 10px;
+	right: 350px;
+}
+#buttonLogOut {
+	position: absolute;
+	top: 10px;
+	right: 100px;
+}
+#registrationButtonId {
+	position: absolute;
+	top: 10px;
+	right: 210px;
+}
+#toMainPage {
+	position: absolute;
+	top: 10px;
+	right: 250px;
+}
+#message {
+	position: absolute;
+	top: 45px;
 	right: 100px;
 	color: blue;
 }
@@ -58,93 +92,116 @@ table, th, td {
 	left: 10px;
 	color: blue;
 }
-#buttonLogOut {
+#confirmTransactionForm {
 	position: absolute;
-	top: 15px;
-	right: 100px;
+	top: 150px;
 }
-
 #customerDataForm {
 	position: absolute;
-	left: 3%;
+	left: 5px;
 	top: 100px;
 	text-align: right;
 }
 
 #customerLoginUpdateForm {
 	position: absolute;
-	left: 20%;
+	left: 390px;
 	top: 100px;
 	text-align: right;
 }
 
 #customerTransactionForm {
 	position: absolute;
-	left: 40%;
+	left: 730px;
 	top: 100px;
 }
-
+#tableTransactions th {
+	background-color: rgb(243, 243, 212);
+}
+#tableTransactions tr {
+	background-color: rgb(216, 205, 205);
+}
 #addProductForm {
 	position: absolute;
-	top: 15%;
+	top: 120px;
 	text-align: left;
 }
-
 #addCategoryForm {
 	position: absolute;
-	left: 35%;
-	top: 15%;
+	left: 850px;
+	top: 120px;
 	text-align: left;
 }
-
 #searchProductForm {
 	position: absolute;
-	top: 60%;
+	top: 580px;
 	text-align: left;
 }
-
+#tableSearchProduct th {
+	background-color: rgb(243, 243, 212);
+}
+#tableSearchProduct tr {
+	background-color: rgb(216, 205, 205);
+}
 #execTransactionForm {
 	position: absolute;
-	left: 35%;
-	top: 30%;
+	left: 850px;
+	top: 300px;
 	text-align: left;
 }
-
+#tableExecTransaction th {
+	background-color: rgb(243, 243, 212);
+}
+#tableExecTransaction tr {
+	background-color: rgb(216, 205, 205);
+}
 #searchFormMain {
 	position: absolute;
+	top: 10px;
 	left: 35%;
-	top: 3%;
 	text-align: left;
 }
-
 #resultSearchFormMain {
 	position: absolute;
 	left: 30%;
-	top: 600px;
+	top: 650px;
 }
-
-#pageHeader{
-	font: bold;
-	font-size: x-large;
-	color: navy;
+#tableResultSearchMain th {
+	background-color: rgb(243, 243, 212);
 }
-
+#tableResultSearchMain tr {
+	background-color: rgb(216, 205, 205);
+}
 #optionHeader {
-	font: bold;
+	font-family: sans-serif;
 	font-size: large;
 	color: navy;
 }
-
+#ProductsMainPage {
+	position: absolute;
+	margin: auto;
+	left: 1%;
+	top: 170px;
+}
 #ProductByCategory {
 	position: absolute;
 	margin: auto;
-	left: 10%;
-	top: 150px;
+	left: 1%;
+	top: 130px;
 }
-
+#ProductDetails {
+	position: absolute;
+	top: 130px;
+}
 #basket {
 	position: absolute;
 	right: 1%;
-	top: 200px;
+	top: 210px;
 	font-size: small;
+}
+#tableBasket th {
+	background-color: rgb(243, 243, 212);
+}
+#tableBasket tr {
+	background-color: rgb(216, 205, 205);
 }
