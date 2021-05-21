@@ -3,7 +3,6 @@ package pl.aticode.bean;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.model.ListDataModel;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,16 +22,15 @@ public class ProductDetailsBean {
 	private Long productId;
 
 	public ProductDetailsBean() {
-		productRepository = new ProductRepositoryImpl();
-		
-		System.out.println("CONSTR");
+		productRepository = ProductRepositoryImpl.getInstance();
 	}
 
-	public String displayPage() {
-		System.out.println("ID "+productId);
-		
+//	public String displayPage() {
+//		product = productRepository.findById(productId);
+//		return "productDetails";
+//	}
+	
+	public void setProductId(Long productId) {
 		product = productRepository.findById(productId);
-		return "productDetailsBean";
 	}
-
 }

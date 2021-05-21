@@ -34,6 +34,7 @@ public class Product implements Serializable {
 	private String description;
 	private BigDecimal price;
 	private int quantity;
+	private byte [] photo;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Category category;

@@ -8,31 +8,34 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="template.xhtml">
+	<ui:define name="header">
+		<ui:include src="basket.xhtml" />
+	</ui:define>
 	<ui:define name="content">
-	   	<h3>Lista produktów dla kategorii #{productListOfCategoryBean.category.name}</h3>
-	   	<h:form>
-	   		<h:dataTable id="productTable" value="#{productListOfCategoryBean.productModel}" var="product">
-	   			<h:column>
-	   				<f:facet name="header">Nazwa</f:facet>
-	   				<p:commandLink action="#{productDetailsBean.displayPage}" value="#{product.name}">
-	   					<f:param name="id" value="#{product.id}"/>
-	   				</p:commandLink>
-	   			</h:column>
-	   			<h:column>
-	   				<f:facet name="header">Cena</f:facet>
-	   				<h:outputFormat value="#{product.price}"/>
-	   			</h:column>
-	   			<h:column>
-	   				<f:facet name="header">Dodaj</f:facet>
-	   				<h:commandButton value="Dodaj"/>
-	   			</h:column>
-	   		</h:dataTable>
-	   		<h:commandLink >&#9194;</h:commandLink>
-	   		<h:commandLink >&#9193;</h:commandLink>
-	   		<br/>
-	   		<h:commandButton value="Do koszyka"/>
-	   		<h:commandButton value="Główna"/>
-	   	</h:form>
+		<h3>Lista produktów dla kategorii #{productListOfCategoryBean.category.name}</h3>
+		<h:form>
+			<p:dataTable id="productTable" value="#{productListOfCategoryBean.productModel}" var="product">
+				<p:column>
+					<f:facet name="header">Nazwa</f:facet>
+					<h:outputLink value="productDetails.xhtml">
+						<f:param name="id" value="#{product.id}" />
+						<h:outputText value="#{product.name}" />
+					</h:outputLink>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Cena</f:facet>
+					<h:outputFormat value="#{product.price}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Dodaj</f:facet>
+					<p:commandButton action="#{basketBean.addProduct(product.id)}" ajax="false"	icon="pi pi-plus" />
+				</p:column>
+			</p:dataTable>
+			<h:commandLink>&#9194;</h:commandLink>
+			<h:commandLink>&#9193;</h:commandLink>
+			<br />
+			<p:commandButton action="index?faces-redirect=true" icon="pi pi-home" />
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>

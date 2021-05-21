@@ -8,23 +8,37 @@
 
 <h:body>
 	<ui:composition template="template.xhtml">
-		<br></br>
-		<ui:define name="content">
-		    <h:panelGrid columns="2" columnClasses="cell" border="1">
-		    	<ui:include src="categories.xhtml"/>
-		    	<h:panelGroup style="background-color: gray;">
-		    		<h4>Right site</h4>
-		    		<h:form>
-		    			<p:selectOneMenu>
-			    			<f:selectItem itemLabel="Procesor dual" itemValue="procesor_dual"/>
-			    			<f:selectItem itemLabel="Procesor quad" itemValue="procesor_quad"/>
-		    			</p:selectOneMenu>
-		    			<p:button value="Wybierz"/>
-		    		</h:form>
-		    	</h:panelGroup>
-		    </h:panelGrid>
+		<ui:define name="header">
+			<ui:include src="basket.xhtml" />
 		</ui:define>
-		<br></br>
+		<ui:define name="content">
+		    <p:panelGrid columns="2" layout="grid" border="1">
+		    	<p:panel>
+			    	<ui:include src="categories.xhtml"/>
+		    	</p:panel>
+		    	<p:panel styleClass="cell">
+		    		<h4>Top produkty</h4>
+		    		<h:form>
+			    		<table>
+			    			<tr>
+				    			<td>
+					    			<p:outputLabel for="@next" value="Promocja"/>
+				    			</td>
+				    			<td>
+					    			<p:selectOneMenu>
+						    			<f:selectItem itemLabel="Procesor dual" itemValue="procesor_dual"/>
+						    			<f:selectItem itemLabel="Procesor quad" itemValue="procesor_quad"/>
+					    			</p:selectOneMenu>
+				    			</td>
+				    			<td>
+					    			<p:commandButton value="Wybierz"/>
+				    			</td>
+			    			</tr>
+			    		</table>
+		    		</h:form>
+		    	</p:panel>
+		    </p:panelGrid>
+		</ui:define>
 <!-- 		<ui:define name="footer"> -->
 		   
 <!-- 		</ui:define> -->

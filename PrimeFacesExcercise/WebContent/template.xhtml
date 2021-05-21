@@ -11,6 +11,7 @@
 </h:head>
 
 <h:body>
+	<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces"/>
 	<!-- <ui:debug hotkey="x" rendered="#{initParam['javax.faces.FACELETS_DEVELOPMENT']}"/> -->
 
 	<div id="header">
@@ -23,6 +24,9 @@
 
 
 	<div id="content">
+	    <ui:insert name="header">
+<!-- 	    Content - Header area -->
+	    </ui:insert>
 		<ui:insert name="content">
     	Content area.  See comments below this line in the source.
     	<!--  include your content file or uncomment the include below and create content.xhtml in this directory -->

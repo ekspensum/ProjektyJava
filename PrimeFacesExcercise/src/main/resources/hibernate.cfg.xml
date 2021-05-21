@@ -28,9 +28,10 @@
 	        <property name="hibernate.dbcp.maxWaitMillis">-1</property>
 	    
 			<mapping class="pl.aticode.entity.User" />
-			<mapping class="pl.aticode.entity.Ordering" />
 			<mapping class="pl.aticode.entity.Category" />
 			<mapping class="pl.aticode.entity.Product" />
+			<mapping class="pl.aticode.entity.ProductOrder" />
+			<mapping class="pl.aticode.entity.ProductOrderItem" />
 			
 			
 	    </session-factory>

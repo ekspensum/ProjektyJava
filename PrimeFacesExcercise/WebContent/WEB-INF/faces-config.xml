@@ -15,14 +15,14 @@
 			<to-view-id>/productListOfCategory.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-	</navigation-rule>
-	<navigation-rule>
-		<from-view-id>/productListOfCategory.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>productDetailsBean</from-outcome>
-			<to-view-id>/productDetails.xhtml</to-view-id>
-			<redirect/>
-		</navigation-case>
+		
+<!-- 		<from-view-id>/productListOfCategory.xhtml</from-view-id> -->
+<!-- 		<navigation-case> -->
+<!-- 			<from-outcome>productDetails</from-outcome> -->
+<!-- 			<to-view-id>/productDetails.xhtml</to-view-id> -->
+<!-- 			<redirect/> -->
+<!-- 		</navigation-case> -->
+
 	</navigation-rule>
 
 </faces-config>

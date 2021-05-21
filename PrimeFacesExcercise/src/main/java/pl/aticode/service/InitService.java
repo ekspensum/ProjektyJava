@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import pl.aticode.entity.Category;
-import pl.aticode.entity.Ordering;
+import pl.aticode.entity.ProductOrder;
 import pl.aticode.entity.Product;
 
 public class InitService implements ServletContextListener  {
@@ -22,7 +22,7 @@ public class InitService implements ServletContextListener  {
 		
 		final Transaction transaction = session.beginTransaction();
 		
-//		Ordering ordering = new Ordering();
+//		ProductOrder ordering = new ProductOrder();
 //		ordering.setDescription("order description");		
 //		session.save(ordering);
 		

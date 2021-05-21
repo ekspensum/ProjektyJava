@@ -2,10 +2,7 @@ package pl.aticode.bean;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.ListDataModel;
 
@@ -28,18 +25,16 @@ public class ProductListOfCategoryBean {
 //	@Getter(value = AccessLevel.NONE) @Setter(value = AccessLevel.NONE)
 //	private int page = 0;
 	
-//	@ManagedProperty(value="#{param.id}")
-//	private Long id;
 
 	public ProductListOfCategoryBean() {
 		productModel = new ListDataModel<>();
 	}
 
-	public String getCategory(Long id) {
-		ProductRepository productRepository = new ProductRepositoryImpl();
-		final List<Product> productByCategoryList = productRepository.findByCategoryId(id);
+	public String showPage(Long categoryId) {
+		ProductRepository productRepository = ProductRepositoryImpl.getInstance();
+		final List<Product> productByCategoryList = productRepository.findByCategoryId(categoryId);
 		this.category = productByCategoryList.get(0).getCategory();
-		productModel.setWrappedData(productByCategoryList);
+		productModel.setWrappedData(productByCategoryList);					
 		return "productListOfCategoryBean";
 	}
 

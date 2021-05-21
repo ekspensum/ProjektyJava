@@ -4,28 +4,33 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import pl.aticode.entity.Category;
 import pl.aticode.entity.Product;
 import pl.aticode.service.InitService;
 
-public class ProductRepositoryImpl implements ProductRepository {
+public final class ProductRepositoryImpl implements ProductRepository {
 
+	private static ProductRepository instance;
 	private final Session session;
 	
-	public ProductRepositoryImpl() {
+	private ProductRepositoryImpl() {
 		this.session = InitService.getSession();
 	}
 	
-	@SuppressWarnings("unchecked")
+	public static ProductRepository getInstance() {
+		if(instance == null) {
+			instance = new ProductRepositoryImpl();
+		}
+		return instance;
+	}
+	
 	@Override
 	public List<Product> findAll() {
-		return session.createQuery("from Product").getResultList();
+		return session.createQuery("from Product", Product.class).getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Product> findByCategoryId(Long categoryId) {
-		return session.createNamedQuery("findProductByCategory").setParameter("categoryId", categoryId).getResultList();
+		return session.createNamedQuery("findProductByCategory", Product.class).setParameter("categoryId", categoryId).getResultList();
 	}
 
 	@Override

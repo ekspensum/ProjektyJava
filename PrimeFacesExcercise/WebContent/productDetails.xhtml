@@ -9,14 +9,23 @@
 
 <ui:composition template="template.xhtml">
 	<ui:define name="content">
-		<h3><h:outputText value="#{product.name}"/> </h3>
-	    <h:panelGrid columns="2" border="1">
+		<h3><h:outputText value="#{productDetailsBean.product.name}"/> </h3>
+	    <p:panelGrid columns="2" layout="grid" styleClass="showcase-text-align-center">
+	        <f:facet name="header">
+            	<p:graphicImage name="demo/images/misc/kobe.png"/>
+        	</f:facet>
 	    	<h:outputText value="Cena"/>
-	    	<h:outputFormat value="#{product.price} zł.">
+	    	<h:outputFormat value="#{productDetailsBean.product.price} zł.">
 	    		<f:param value="555.00"/>
 	    	</h:outputFormat>
-	    	<h:outputText value="#{product.description}"/>
-	    </h:panelGrid>
+	    	<h:outputText value="Opis produktu"/>
+	    	<h:outputText value="#{productDetailsBean.product.description}"/>
+	    	<h:outputText value="Dostępna ilość"/>
+	    	<h:outputText value="#{productDetailsBean.product.quantity}"/>
+	    </p:panelGrid>
+	    <h:form>
+	    	<p:commandButton action="index?faces-redirect=true" value="Główna"/>
+	    </h:form>
 	</ui:define>
 </ui:composition>
 </html>

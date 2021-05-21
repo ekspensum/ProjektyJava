@@ -7,18 +7,25 @@ import org.hibernate.Session;
 import pl.aticode.entity.Category;
 import pl.aticode.service.InitService;
 
-public class CategoryRepositoryImpl implements CategoryRepository {
+public final class CategoryRepositoryImpl implements CategoryRepository {
 
+	private static CategoryRepository instance;
 	private final Session session;
 	
-	public CategoryRepositoryImpl() {
+	private CategoryRepositoryImpl() {
 		this.session = InitService.getSession();
 	}
 
-	@SuppressWarnings("unchecked")
+	public static CategoryRepository getInstance() {
+		if(instance == null){
+			instance = new CategoryRepositoryImpl();
+		}
+		return instance;
+	}
+	
 	@Override
 	public List<Category> findAll() {	
-		return session.createQuery("from Category").getResultList();
+		return session.createQuery("from Category", Category.class).getResultList();
 	}
 
 	@Override

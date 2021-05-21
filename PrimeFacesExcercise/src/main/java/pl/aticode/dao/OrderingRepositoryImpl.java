@@ -2,24 +2,40 @@ package pl.aticode.dao;
 
 import java.util.List;
 
-import pl.aticode.entity.Ordering;
+import org.hibernate.Session;
 
-public class OrderingRepositoryImpl implements OrderingRepository {
+import pl.aticode.entity.ProductOrder;
+import pl.aticode.service.InitService;
 
+public final class OrderingRepositoryImpl implements OrderingRepository {
+
+	private static OrderingRepository instance;
+	private final Session session;
+	
+	private OrderingRepositoryImpl() {
+		session = InitService.getSession();
+	}
+	
+	public static OrderingRepository getInstance() {
+		if(instance == null) {
+			instance = new OrderingRepositoryImpl();
+		}
+		return instance;
+	}
+	
 	@Override
-	public List<Ordering> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProductOrder> findAll() {
+		return session.createQuery("from ProductOrder", ProductOrder.class).getResultList();
 	}
 
 	@Override
-	public void saveOrUpdate(Ordering ordering) {
+	public void saveOrUpdate(ProductOrder productOrder) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Ordering findById(Long id) {
+	public ProductOrder findById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
