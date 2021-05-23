@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="template.xhtml">
+	<ui:define name="content">
+		<h3>Zestawienie złożonych zamówień</h3>
+		<h:form>
+			<p:commandButton action="index?faces-redirect=true" ajax="false" icon="pi pi-home" value="Strona główna" />
+		</h:form>
+		<br/>
+		<p:dataTable var="order" value="#{allOrdersBean.allOrdersList}" rowIndexVar="i">
+			<p:column width="30">
+				<f:facet name="header">
+					<h:outputText value="Lp." />
+				</f:facet>
+				<h:outputText escape="false" value="#{i+1}" />
+			</p:column>	
+			<p:column width="200">
+				<f:facet name="header">
+					<h:outputText value="Zamawiający" />
+				</f:facet>
+				<table>
+				  <tr>
+				    <td align="right" style="border: none;"><h:outputText escape="false" value="#{order.user.firstName}" /> </td>
+				    <td style="border: none;"><h:outputText escape="false" value="#{order.user.lastName}" /></td>
+				  </tr>
+				</table>
+			</p:column>				
+			<p:column width="300">
+				<f:facet name="header">
+					<h:outputText value="Uwagi do zamówienia" />
+				</f:facet>
+				<h:outputText escape="false" value="#{order.description}" />
+			</p:column>
+			<p:column width="100">
+				<f:facet name="header">
+					<h:outputText value="Data zamówienia" />
+				</f:facet>
+				<h:outputText value="#{order.orderedDateTime.toString().substring(0,10)} godz. #{order.orderedDateTime.toString().substring(11,16)}" />
+			</p:column>
+			<p:column width="200">
+				<f:facet name="header">
+					<h:outputText value="Nazwa produktu" />
+				</f:facet>
+				<ui:repeat var="orderItem" value="#{order.productOrderItemList}">
+					<h:outputText escape="false" value="#{orderItem.product.name}" /><br/>
+				</ui:repeat>
+			</p:column>
+			<p:column width="30">
+				<f:facet name="header">
+					<h:outputText value="Zakupiona ilość" />
+				</f:facet>
+				<ui:repeat var="orderItem" value="#{order.productOrderItemList}">
+					<h:outputText escape="false" value="#{orderItem.productQuantity}" /><br/>
+				</ui:repeat>
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+</ui:composition>
+</html>

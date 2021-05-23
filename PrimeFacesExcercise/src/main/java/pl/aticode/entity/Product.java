@@ -12,6 +12,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Type;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +23,8 @@ import lombok.Setter;
 @Table(name = "product")
 @Getter @Setter
 @NamedQueries({
-    @NamedQuery(name = "findProductByCategory", query = "SELECT product FROM Product product WHERE product.category.id = :categoryId")
+    @NamedQuery(name = "findProductByCategory", query = "SELECT product FROM Product product WHERE product.category.id = :categoryId"),
+    @NamedQuery(name = "getTopProducts", query = "SELECT product FROM Product product WHERE product.id IN (:topProductId)")
 })
 public class Product implements Serializable {
 
@@ -31,7 +35,11 @@ public class Product implements Serializable {
 	private Long id;
 	
 	private String name;
+	
+    @Size(min = 0, max = 2048)
+    @Type(type = "text")
 	private String description;
+    
 	private BigDecimal price;
 	private int quantity;
 	private byte [] photo;
@@ -39,9 +47,9 @@ public class Product implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Category category;
 		
-	public Product(Long id, String name, BigDecimal price, int quantity, Category category) {
-		this.id = id;
+	public Product(String name, String description, BigDecimal price, int quantity, Category category) {
 		this.name = name;
+		this.description = description;
 		this.price = price;
 		this.quantity = quantity;
 		this.category = category;

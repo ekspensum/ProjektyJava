@@ -13,9 +13,9 @@
 			<h:form>
 				<ui:repeat var="category" value="#{categoryBean.categoryModel}">
 					<li>
-						<p:commandButton 
+						<p:commandButton style="min-width: 200px; margin: 3px;"
 								action="#{productListOfCategoryBean.showPage(category.id)}" value="#{category.name}"
-								styleClass="rounded-button ui-button-info">
+								styleClass="">
 						</p:commandButton>
 					</li>
 				</ui:repeat>

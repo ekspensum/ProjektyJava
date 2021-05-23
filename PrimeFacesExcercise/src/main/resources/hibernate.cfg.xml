@@ -4,22 +4,20 @@
 	        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 	<hibernate-configuration>
 	    <session-factory>
-            <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/primefaces2</property>
+            <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/primefaces</property>
             <property name="hibernate.connection.username">admin</property>
             <property name="hibernate.connection.password">admin</property>
 			<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-	        <!-- Select our SQL dialect -->
+	        <!-- Select SQL dialect -->
 <!-- 	        <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property> -->
 <!-- 			<property name="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</property> -->
-<!-- 			<property name="hibernate.hbm2ddl.auto">update</property> -->
-			<property name="hbm2ddl.auto">update</property>
-<!-- 			<property name="show_sql">true</property> -->
+			<property name="hibernate.hbm2ddl.auto">update</property>
 			<property name="hibernate.show_sql">true</property>
 	    
-	        <!-- JDBC connection pool settings ... using built-in test pool -->
-	        <property name="connection.pool_size">1</property>
 	        <!-- Set the current session context -->
 	        <property name="current_session_context_class">thread</property>
+	        <!-- JDBC connection pool settings -->
+	        <property name="connection.pool_size">1</property>
 	        <!-- dbcp connection pool configuration -->
 	        <property name="hibernate.dbcp.initialSize">5</property>
 	        <property name="hibernate.dbcp.maxTotal">20</property>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:index.xhtml" PATH="index.xhtml"
+  SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:index.xhtml:0" NAME="item" PATH="index.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="productListOfCategory::productListOfCategory.xhtml"
+    NAME="output" PATH="productListOfCategory.xhtml"
+    TARGET="rules:productListOfCategory.xhtml"
+    TITLE="productListOfCategory" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:productListOfCategory.xhtml"
+  PATH="productListOfCategory.xhtml" SHAPE="240,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:productListOfCategory.xhtml:0" NAME="item"
+   PATH="productListOfCategory.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="productDetails::productDetails.xhtml"
+    NAME="output" PATH="productDetails.xhtml"
+    TARGET="rules:productDetails.xhtml" TITLE="productDetails" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:productDetails.xhtml"
+  PATH="productDetails.xhtml" SHAPE="256,177,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:sendOrder.xhtml" PATH="sendOrder.xhtml"
+  SHAPE="32,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:sendOrder.xhtml:0" NAME="item"
+   PATH="sendOrder.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="allOrders:#{basketBean.saveOrder}:allOrders.xhtml" NAME="output"
+    PATH="allOrders.xhtml" TARGET="rules:allOrders.xhtml"
+    TITLE="#{basketBean.saveOrder}:allOrders" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:allOrders.xhtml" PATH="allOrders.xhtml"
+  SHAPE="240,257,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

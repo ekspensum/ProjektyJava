@@ -1,4 +1,4 @@
-package pl.aticode.service;
+package pl.aticode.config;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;

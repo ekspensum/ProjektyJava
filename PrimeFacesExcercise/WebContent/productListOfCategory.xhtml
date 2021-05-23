@@ -12,29 +12,30 @@
 		<ui:include src="basket.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<h3>Lista produktów dla kategorii #{productListOfCategoryBean.category.name}</h3>
 		<h:form>
+			<p:commandButton action="index?faces-redirect=true" icon="pi pi-home" value="Strona główna" />
+			<h3>Lista produktów dla kategorii #{productListOfCategoryBean.category.name}</h3>
 			<p:dataTable id="productTable" value="#{productListOfCategoryBean.productModel}" var="product">
 				<p:column>
 					<f:facet name="header">Nazwa</f:facet>
-					<h:outputLink value="productDetails.xhtml">
-						<f:param name="id" value="#{product.id}" />
-						<h:outputText value="#{product.name}" />
-					</h:outputLink>
+<!-- 					<h:outputLink value="productDetails.xhtml"> -->
+<!-- 						<f:param name="id" value="#{product.id}" /> -->
+<!-- 						<h:outputText value="#{product.name}" /> -->
+<!-- 					</h:outputLink> -->
+					<p:commandButton action="#{productDetailsBean.displayPage(product.id)}" value="#{product.name}"></p:commandButton>
 				</p:column>
 				<p:column>
 					<f:facet name="header">Cena</f:facet>
 					<h:outputFormat value="#{product.price}" />
 				</p:column>
 				<p:column>
-					<f:facet name="header">Dodaj</f:facet>
+					<f:facet name="header">Do koszyka</f:facet>
 					<p:commandButton action="#{basketBean.addProduct(product.id)}" ajax="false"	icon="pi pi-plus" />
 				</p:column>
 			</p:dataTable>
 			<h:commandLink>&#9194;</h:commandLink>
 			<h:commandLink>&#9193;</h:commandLink>
 			<br />
-			<p:commandButton action="index?faces-redirect=true" icon="pi pi-home" />
 		</h:form>
 	</ui:define>
 </ui:composition>

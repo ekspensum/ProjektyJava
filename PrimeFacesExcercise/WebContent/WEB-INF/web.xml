@@ -19,7 +19,7 @@
 		<param-value>glass-x</param-value>
 	</context-param>
 	<listener>
-		<listener-class>pl.aticode.service.InitService</listener-class>
+		<listener-class>pl.aticode.config.InitApplication</listener-class>
 	</listener>
 	<welcome-file-list>
 		<welcome-file>index.xhtml</welcome-file>

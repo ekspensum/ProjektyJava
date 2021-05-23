@@ -4,16 +4,95 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="template.xhtml">
+	<ui:define name="header">
+		<ui:include src="basket.xhtml" />
+	</ui:define>
 	<ui:define name="content">
-	   <h3>Finalizuj zamówienie</h3>
-	   <h:panelGrid columns="2">
-	   	<h:outputText value="Imię"/>
-	   	<h:inputText value=""/>
-	   </h:panelGrid>
-	   
+		<h:form>
+			<p:commandButton action="index?faces-redirect=true" ajax="false" icon="pi pi-home" value="Strona główna" />
+		</h:form>
+		<h3>Wyślij zamówienie:</h3>
+		<h:form>
+			<h:messages/>
+			<p:panelGrid columns="2">
+				<h:outputText value="Uwagi do zamówienia:" />
+				<p:textEditor value="#{basketBean.productOrder.description}" height="200" style="width: 500px;">
+				    <f:facet name="toolbar">
+				        <span class="ql-formats">
+				            <button class="ql-bold"></button>
+				            <button class="ql-italic"></button>
+				            <button class="ql-underline"></button>
+				            <button class="ql-strike"></button>
+				        </span>
+				        <span class="ql-formats">
+				            <select class="ql-font"></select>
+				            <select class="ql-size"></select>
+				        </span>
+				    </f:facet>
+				    <f:validateLength maximum="2048"/>
+				</p:textEditor>
+				<h:outputText value="Imię:" />
+				<p:inputText required="true" 
+					requiredMessage="Imię jest wymagane!"
+					validatorMessage="Ilość znaków dla pola: Imię jest nieprawidłowa - min. 2 max 20"
+					value="#{basketBean.productOrder.user.firstName}">
+					<f:validateLength minimum="2" maximum="20"/>
+				</p:inputText>
+				<h:outputText value="Nazwisko:" />
+				<p:inputText required="true" 
+					requiredMessage="Nazwisko jest wymagane!"
+					validatorMessage="Ilość znaków dla pola: Nazwisko jest nieprawidłowa - min. 2 max 20"
+					value="#{basketBean.productOrder.user.lastName}">
+					<f:validateLength minimum="2" maximum="20"/>
+				</p:inputText>
+				<h:outputText value="Kod pocztowy:" />
+				<p:inputText required="true" 
+					requiredMessage="Kod pocztowy jest wymagany!"
+					validatorMessage="Ilość znaków dla pola: Kod pocztowy jest nieprawidłowa - powinno być 6 znaków"
+					value="#{basketBean.productOrder.user.zipCode}">
+					<f:validateLength minimum="6" maximum="6"></f:validateLength>
+				</p:inputText>
+				<h:outputText value="Miasto:" />
+				<p:inputText required="true" 
+					requiredMessage="Miasto jest wymagane!"
+					validatorMessage="Ilość znaków dla pola: Miasto jest nieprawidłowa - min. 2 max 20"
+					value="#{basketBean.productOrder.user.city}">
+					<f:validateLength minimum="2" maximum="20"/>
+				</p:inputText>
+				<h:outputText value="Ulica:" />
+				<p:inputText required="true"
+					requiredMessage="Ulica jest wymagana!"
+					validatorMessage="Ilość znaków dla pola: Ulica jest nieprawidłowa - min. 2 max 20"
+					value="#{basketBean.productOrder.user.street}">
+					<f:validateLength minimum="2" maximum="20"/>
+				</p:inputText>
+				<h:outputText value="Nr domu:" />
+				<p:inputText required="true"
+					requiredMessage="Nr domu jest wymagany!"
+					validatorMessage="Ilość znaków dla pola: Nr domu jest nieprawidłowa - min. 2 max 20" 
+					value="#{basketBean.productOrder.user.streetNo}">
+					<f:validateLength minimum="1" maximum="20"/>
+				</p:inputText>
+				<h:outputText value="Nr lokalu:" />
+				<p:inputText 
+					validatorMessage="Ilość znaków dla pola: Nr lokalu jest nieprawidłowa - max 20"
+					value="#{basketBean.productOrder.user.unitNo}">
+					<f:validateLength maximum="20"/>
+				</p:inputText>
+				<h:outputText value="E-mail:" />
+				<p:inputText required="true" 
+					requiredMessage="Email jest wymagany!"
+					value="#{basketBean.productOrder.user.email}">
+					<f:validator validatorId="emailValidator"/>
+				</p:inputText>
+				<h:outputText value="" />
+				<p:commandButton action="#{basketBean.saveOrder}" value="Zatwierdź" ajax="false" />
+			</p:panelGrid>
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>

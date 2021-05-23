@@ -1,11 +1,13 @@
 package pl.aticode.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import pl.aticode.config.InitApplication;
 import pl.aticode.entity.Product;
-import pl.aticode.service.InitService;
 
 public final class ProductRepositoryImpl implements ProductRepository {
 
@@ -13,7 +15,7 @@ public final class ProductRepositoryImpl implements ProductRepository {
 	private final Session session;
 	
 	private ProductRepositoryImpl() {
-		this.session = InitService.getSession();
+		this.session = InitApplication.getSession();
 	}
 	
 	public static ProductRepository getInstance() {
@@ -34,13 +36,24 @@ public final class ProductRepositoryImpl implements ProductRepository {
 	}
 
 	@Override
-	public void saveOrUpdate(Product product) {
+	public void saveOrUpdate(Product product) throws Exception {
+		final Transaction transaction = session.beginTransaction();
 		session.saveOrUpdate(product);		
+		transaction.commit();
 	}
 
 	@Override
 	public Product findById(Long id) {
 		return session.find(Product.class, id);
+	}
+
+	@Override
+	public List<Product> getTopProdcts() {
+		List<Long> listOfProductId = new ArrayList<>();
+		listOfProductId.add(1L);
+		listOfProductId.add(3L);
+		listOfProductId.add(5L);
+		return session.createNamedQuery("getTopProducts", Product.class).setParameterList("topProductId", listOfProductId).getResultList();
 	}
 
 }

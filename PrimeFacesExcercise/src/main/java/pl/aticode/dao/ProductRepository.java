@@ -8,7 +8,7 @@ public interface ProductRepository {
 	
 	List<Product> findAll();
 	List<Product> findByCategoryId(Long categoryId);
-	void saveOrUpdate(Product product);
+	void saveOrUpdate(Product product) throws Exception;
 	Product findById(Long id);
-
+	List<Product> getTopProdcts();
 }

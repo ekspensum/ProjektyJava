@@ -21,5 +21,12 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String username;
+	private String firstName;
+	private String lastName;
+	private String zipCode;
+	private String city;
+	private String street;
+	private String streetNo;
+	private String unitNo;
+	private String email;
 }

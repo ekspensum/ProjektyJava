@@ -20,6 +20,7 @@ import pl.aticode.entity.Product;
 @Getter @Setter
 public class ProductListOfCategoryBean {
 
+	private ProductRepository productRepository;
 	private ListDataModel<Product> productModel;
 	private Category category;
 //	@Getter(value = AccessLevel.NONE) @Setter(value = AccessLevel.NONE)
@@ -27,15 +28,15 @@ public class ProductListOfCategoryBean {
 	
 
 	public ProductListOfCategoryBean() {
+		productRepository = ProductRepositoryImpl.getInstance();
 		productModel = new ListDataModel<>();
 	}
 
 	public String showPage(Long categoryId) {
-		ProductRepository productRepository = ProductRepositoryImpl.getInstance();
 		final List<Product> productByCategoryList = productRepository.findByCategoryId(categoryId);
 		this.category = productByCategoryList.get(0).getCategory();
 		productModel.setWrappedData(productByCategoryList);					
-		return "productListOfCategoryBean";
+		return "productListOfCategory";
 	}
 
 }

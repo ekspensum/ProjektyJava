@@ -8,23 +8,31 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="template.xhtml">
+	<ui:define name="header">
+		<ui:include src="basket.xhtml" />
+	</ui:define>
 	<ui:define name="content">
-		<h3><h:outputText value="#{productDetailsBean.product.name}"/> </h3>
-	    <p:panelGrid columns="2" layout="grid" styleClass="showcase-text-align-center">
-	        <f:facet name="header">
-            	<p:graphicImage name="demo/images/misc/kobe.png"/>
-        	</f:facet>
-	    	<h:outputText value="Cena"/>
-	    	<h:outputFormat value="#{productDetailsBean.product.price} zł.">
-	    		<f:param value="555.00"/>
-	    	</h:outputFormat>
-	    	<h:outputText value="Opis produktu"/>
-	    	<h:outputText value="#{productDetailsBean.product.description}"/>
-	    	<h:outputText value="Dostępna ilość"/>
-	    	<h:outputText value="#{productDetailsBean.product.quantity}"/>
-	    </p:panelGrid>
 	    <h:form>
-	    	<p:commandButton action="index?faces-redirect=true" value="Główna"/>
+		    <p:menubar>
+			    <p:menuitem value="Do koszyka" action="#{basketBean.addProduct(productDetailsBean.product.id)}" ajax="false" icon="pi pi-plus" />
+			    <p:menuitem value="Strona główna" action="index?faces-redirect=true" ajax="false" icon="pi pi-home" />
+		    </p:menubar>
+		    <p:panelGrid columns="2" layout="grid" styleClass="">
+		        <f:facet name="header">
+					<h:outputText value="#{productDetailsBean.product.name}"/>		        	
+<!-- 	            	<p:graphicImage name="demo/images/misc/kobe.png"/> -->
+	        	</f:facet>
+		    	<h:outputText value="Cena"/>
+		    	<h:outputFormat value="#{productDetailsBean.product.price} zł.">
+		    		<f:param value="555.00"/>
+		    	</h:outputFormat>
+		    	<h:outputText value="Opis produktu"/>
+		    	<h:outputText value="#{productDetailsBean.product.description}"/>
+		    	<h:outputText value="Dostępna ilość"/>
+		    	<h:outputText value="#{productDetailsBean.product.quantity}"/>
+		    	<h:outputText value="Id"/>
+		    	<h:outputText value="#{productDetailsBean.product.id}"/>
+		    </p:panelGrid>
 	    </h:form>
 	</ui:define>
 </ui:composition>

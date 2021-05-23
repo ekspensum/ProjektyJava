@@ -9,10 +9,11 @@
 
 <ui:component>
 	<p:fragment rendered="#{basketBean.productOrderItemList.isEmpty() == true}">
-		<h4>Koszyk jest pusty</h4>
+		<h3>Koszyk jest pusty</h3>
 	</p:fragment>
 	<h:form rendered="#{basketBean.productOrderItemList.isEmpty() == false}" >
-		<p:commandButton value="Do kasy" />
+		<p:commandButton action="sendOrder.xhtml" ajax="false" value="Do kasy" />
+		<h3>Zawartość koszyka:</h3>
 		<p:dataTable id="basketTable" value="#{basketBean.productOrderItemList}" var="productOrderItem">
 			<p:column>
 				<f:facet name="header">Nazwa</f:facet>
@@ -32,5 +33,6 @@
 			</p:column>
 		</p:dataTable>
 	</h:form>
+	<br/>
 </ui:component>
 </html>

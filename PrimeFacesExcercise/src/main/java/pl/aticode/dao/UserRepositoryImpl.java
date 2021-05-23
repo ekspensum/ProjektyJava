@@ -3,9 +3,10 @@ package pl.aticode.dao;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import pl.aticode.config.InitApplication;
 import pl.aticode.entity.User;
-import pl.aticode.service.InitService;
 
 public final class UserRepositoryImpl implements UserRepository {
 	
@@ -13,7 +14,7 @@ public final class UserRepositoryImpl implements UserRepository {
 	private final Session session;
 
 	private UserRepositoryImpl() {
-		session = InitService.getSession();
+		session = InitApplication.getSession();
 	}
 	
 	public static UserRepository getInstance() {
@@ -29,9 +30,10 @@ public final class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public void saveOrUpdate(User user) {
-		// TODO Auto-generated method stub
-		
+	public void saveOrUpdate(User user) throws Exception {
+		final Transaction transaction = session.beginTransaction();
+		session.saveOrUpdate(user);
+		transaction.commit();
 	}
 
 	@Override

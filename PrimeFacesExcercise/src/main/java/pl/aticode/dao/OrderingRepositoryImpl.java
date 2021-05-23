@@ -3,9 +3,10 @@ package pl.aticode.dao;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import pl.aticode.config.InitApplication;
 import pl.aticode.entity.ProductOrder;
-import pl.aticode.service.InitService;
 
 public final class OrderingRepositoryImpl implements OrderingRepository {
 
@@ -13,7 +14,7 @@ public final class OrderingRepositoryImpl implements OrderingRepository {
 	private final Session session;
 	
 	private OrderingRepositoryImpl() {
-		session = InitService.getSession();
+		session = InitApplication.getSession();
 	}
 	
 	public static OrderingRepository getInstance() {
@@ -29,15 +30,15 @@ public final class OrderingRepositoryImpl implements OrderingRepository {
 	}
 
 	@Override
-	public void saveOrUpdate(ProductOrder productOrder) {
-		// TODO Auto-generated method stub
-		
+	public void saveOrUpdate(ProductOrder productOrder) throws Exception {
+		final Transaction transaction = session.beginTransaction();
+		session.saveOrUpdate(productOrder);
+		transaction.commit();
 	}
 
 	@Override
 	public ProductOrder findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return session.find(ProductOrder.class, id);
 	}
 
 }

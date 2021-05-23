@@ -3,9 +3,10 @@ package pl.aticode.dao;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import pl.aticode.config.InitApplication;
 import pl.aticode.entity.Category;
-import pl.aticode.service.InitService;
 
 public final class CategoryRepositoryImpl implements CategoryRepository {
 
@@ -13,7 +14,7 @@ public final class CategoryRepositoryImpl implements CategoryRepository {
 	private final Session session;
 	
 	private CategoryRepositoryImpl() {
-		this.session = InitService.getSession();
+		this.session = InitApplication.getSession();
 	}
 
 	public static CategoryRepository getInstance() {
@@ -29,8 +30,10 @@ public final class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
-	public void saveOrUpdate(Category category) {
+	public void saveOrUpdate(Category category) throws Exception {
+		final Transaction transaction = session.beginTransaction();
 		session.saveOrUpdate(category);
+		transaction.commit();
 	}
 
 	@Override

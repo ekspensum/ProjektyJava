@@ -6,43 +6,34 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:body>
-	<ui:composition template="template.xhtml">
-		<ui:define name="header">
-			<ui:include src="basket.xhtml" />
-		</ui:define>
-		<ui:define name="content">
-		    <p:panelGrid columns="2" layout="grid" border="1">
-		    	<p:panel>
-			    	<ui:include src="categories.xhtml"/>
-		    	</p:panel>
-		    	<p:panel styleClass="cell">
-		    		<h4>Top produkty</h4>
-		    		<h:form>
-			    		<table>
-			    			<tr>
-				    			<td>
-					    			<p:outputLabel for="@next" value="Promocja"/>
-				    			</td>
-				    			<td>
-					    			<p:selectOneMenu>
-						    			<f:selectItem itemLabel="Procesor dual" itemValue="procesor_dual"/>
-						    			<f:selectItem itemLabel="Procesor quad" itemValue="procesor_quad"/>
-					    			</p:selectOneMenu>
-				    			</td>
-				    			<td>
-					    			<p:commandButton value="Wybierz"/>
-				    			</td>
-			    			</tr>
-			    		</table>
-		    		</h:form>
-		    	</p:panel>
-		    </p:panelGrid>
-		</ui:define>
-<!-- 		<ui:define name="footer"> -->
-		   
-<!-- 		</ui:define> -->
-	</ui:composition>
+<ui:composition template="template.xhtml">
+	<ui:define name="header">
+		<ui:include src="basket.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panelGrid columns="2" layout="grid" border="1">
+			<p:panel styleClass="cell">
+				<ui:include src="categories.xhtml" />
+			</p:panel>
+			<p:panel styleClass="cell">
+				<h4>Top produkty</h4>
+				<h:form>
+					<table>
+						<tr>
+							<td><p:outputLabel for="@next" value="Promocja: " /></td>
+							<td><p:selectOneMenu value="#{topProductsBean.selectedProduct}">
+									<f:selectItems value="#{topProductsBean.topProductList}" />
+									<f:converter converterId="productConverter"/>
+								</p:selectOneMenu></td>
+							<td><p:commandButton action="#{productDetailsBean.displayPage(topProductsBean.selectedProduct.id)}" value="Wybierz" /></td>
+						</tr>
+					</table>
+				</h:form>
+			</p:panel>
+		</p:panelGrid>
+	</ui:define>
+	<!-- 		<ui:define name="footer"> -->
 
-</h:body>
+	<!-- 		</ui:define> -->
+</ui:composition>
 </html>

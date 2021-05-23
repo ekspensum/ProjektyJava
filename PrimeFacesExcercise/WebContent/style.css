@@ -1,5 +1,48 @@
+#header {
+	position: absolute;
+	top: 0px;
+	height: 100px;
+	font-size: 24px;
+	color: navy;
+	margin: 5px;
+	margin-top: 20px;
+}
+#content {
+	position: fixed;
+	overflow: auto;
+	top: 100px;
+	bottom: 40px;	
+	margin: 5px;
+	width: 99%;
+/* 	background-color: olive; */
+}
+#footer {
+	position: fixed;
+	width: 100%;
+	bottom: 0px;
+	height: 40px;
+	margin: 5px;
+
+	/* align vertical center	 */
+	/* Internet Explorer 10 */
+	display:-ms-flexbox;
+	-ms-flex-pack:center;
+	-ms-flex-align:center;
+	/* Firefox */
+	display:-moz-box;
+	-moz-box-pack:center;
+	-moz-box-align:center;
+	/* Safari, Opera, and Chrome */
+	display:-webkit-box;
+	-webkit-box-pack:center;
+	-webkit-box-align:center;
+	/* W3C */
+	display:box;
+	box-pack:center;
+	box-align:center;
+}
 .cell {
 	width: auto;
-	height: auto;
-	background-color: gray;
+	height: 97%;
+	background-color: silver;
 }
