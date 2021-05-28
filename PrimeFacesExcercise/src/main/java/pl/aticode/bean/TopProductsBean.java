@@ -3,8 +3,8 @@ package pl.aticode.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import lombok.Getter;
@@ -14,7 +14,7 @@ import pl.aticode.dao.ProductRepositoryImpl;
 import pl.aticode.entity.Product;
 
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 @Getter @Setter
 public class TopProductsBean {
 	

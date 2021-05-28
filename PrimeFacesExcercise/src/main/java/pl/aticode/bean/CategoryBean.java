@@ -1,7 +1,12 @@
 package pl.aticode.bean;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.model.ListDataModel;
 
 import lombok.Getter;
@@ -13,14 +18,16 @@ import pl.aticode.entity.Category;
 @ManagedBean
 @RequestScoped
 @Getter @Setter
-public class CategoryBean {
+public class CategoryBean implements Serializable {
 
-	private ListDataModel<Category> categoryModel;
+	private static final long serialVersionUID = 1L;
+	
+	private List<Category> categoryList;
 
 	public CategoryBean() {
-		categoryModel = new ListDataModel<>();
+		categoryList = new ArrayList<>();
 		CategoryRepository categoryRepository = CategoryRepositoryImpl.getInstance();
-		categoryModel.setWrappedData(categoryRepository.findAll());
+		categoryList = categoryRepository.findAll();
 	}
 	
 	

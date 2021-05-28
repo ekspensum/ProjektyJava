@@ -17,7 +17,7 @@
 		</h:form>
 		<h3>Wyślij zamówienie:</h3>
 		<h:form>
-			<h:messages/>
+<!-- 			<h:messages/> -->
 			<p:panelGrid columns="2">
 				<h:outputText value="Uwagi do zamówienia:" />
 				<p:textEditor value="#{basketBean.productOrder.description}" height="200" style="width: 500px;">
@@ -90,7 +90,7 @@
 					<f:validator validatorId="emailValidator"/>
 				</p:inputText>
 				<h:outputText value="" />
-				<p:commandButton action="#{basketBean.saveOrder}" value="Zatwierdź" ajax="false" />
+				<p:commandButton action="#{basketBean.saveOrder}" value="Zatwierdź" ajax="false" update="messages" />
 			</p:panelGrid>
 		</h:form>
 	</ui:define>

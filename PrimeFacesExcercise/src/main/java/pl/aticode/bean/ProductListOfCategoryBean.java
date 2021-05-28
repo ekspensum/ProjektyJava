@@ -1,12 +1,14 @@
 package pl.aticode.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.ListDataModel;
+import javax.faces.bean.ViewScoped;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import pl.aticode.dao.ProductRepository;
@@ -14,29 +16,24 @@ import pl.aticode.dao.ProductRepositoryImpl;
 import pl.aticode.entity.Category;
 import pl.aticode.entity.Product;
 
-@SuppressWarnings("deprecation")
 @ManagedBean
-@SessionScoped
+@ApplicationScoped
 @Getter @Setter
-public class ProductListOfCategoryBean {
+public class ProductListOfCategoryBean implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private ProductRepository productRepository;
-	private ListDataModel<Product> productModel;
 	private Category category;
-//	@Getter(value = AccessLevel.NONE) @Setter(value = AccessLevel.NONE)
-//	private int page = 0;
+	private List<Product> productByCategoryList;
 	
 
 	public ProductListOfCategoryBean() {
 		productRepository = ProductRepositoryImpl.getInstance();
-		productModel = new ListDataModel<>();
 	}
-
+	
 	public String showPage(Long categoryId) {
-		final List<Product> productByCategoryList = productRepository.findByCategoryId(categoryId);
-		this.category = productByCategoryList.get(0).getCategory();
-		productModel.setWrappedData(productByCategoryList);					
+		productByCategoryList = productRepository.findByCategoryId(categoryId);
 		return "productListOfCategory";
-	}
-
+	}	
 }

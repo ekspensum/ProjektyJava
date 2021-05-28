@@ -11,11 +11,12 @@
 		<h4>Kategorie</h4>
 		<ul>
 			<h:form>
-				<ui:repeat var="category" value="#{categoryBean.categoryModel}">
+				<ui:repeat var="category" value="#{categoryBean.categoryList}">
 					<li>
 						<p:commandButton style="min-width: 200px; margin: 3px;"
 								action="#{productListOfCategoryBean.showPage(category.id)}" value="#{category.name}"
 								styleClass="">
+								<f:setPropertyActionListener value="#{category}" target="#{productListOfCategoryBean.category}"/>
 						</p:commandButton>
 					</li>
 				</ui:repeat>

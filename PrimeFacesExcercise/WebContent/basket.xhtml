@@ -11,26 +11,53 @@
 	<p:fragment rendered="#{basketBean.productOrderItemList.isEmpty() == true}">
 		<h3>Koszyk jest pusty</h3>
 	</p:fragment>
-	<h:form rendered="#{basketBean.productOrderItemList.isEmpty() == false}" >
-		<p:commandButton action="sendOrder.xhtml" ajax="false" value="Do kasy" />
-		<h3>Zawartość koszyka:</h3>
-		<p:dataTable id="basketTable" value="#{basketBean.productOrderItemList}" var="productOrderItem">
+	<p:messages for="messages" />
+	<h:form rendered="#{basketBean.productOrderItemList.isEmpty() == false}">
+		<p:commandButton action="sendOrder.xhtml" ajax="false" value="Do kasy" style="margin-bottom: 5px;" />
+		<p:dataTable id="basketTable" value="#{basketBean.productOrderItemList}" var="productOrderItem" rowIndexVar="i">
+		    <f:facet name="header">
+		    	<div style="text-align: left;">
+		    		Zawartość koszyka:
+		    	</div>
+    		</f:facet>
+			<p:column width="15">
+				<f:facet name="header">
+					<h:outputText value="Lp." />
+				</f:facet>
+				<h:outputText escape="false" value="#{i+1}" />
+			</p:column>			
 			<p:column>
 				<f:facet name="header">Nazwa</f:facet>
 				<h:outputText value="#{productOrderItem.product.name}" />
 			</p:column>
-			<p:column>
+			<p:column width="80">
 				<f:facet name="header">Cena</f:facet>
 				<h:outputText value="#{productOrderItem.product.price}" />
 			</p:column>
-			<p:column>
+			<p:column width="70">
 				<f:facet name="header">Ilość</f:facet>
-				<h:outputText value="#{productOrderItem.productQuantity}" />
+				<p:spinner value="#{productOrderItem.productQuantity}" min="1" max="#{productOrderItem.product.quantity}">
+<!-- 					<f:ajax render="@form" event="change" execute="@form" listener="#{basketBean.calculateTotalPrice()}"/> -->
+					<p:ajax update="@form" listener="#{basketBean.calculateTotalPrice()}"/>
+				</p:spinner>
 			</p:column>
-			<p:column>
+			<p:column width="120">
+				<f:facet name="header">Wartość</f:facet>
+				<div style="text-align: right;">
+					<h:outputText value="#{productOrderItem.product.price * productOrderItem.productQuantity}" id="itemValue" />
+				</div>
+			</p:column>
+			<p:column width="40">
 				<f:facet name="header">Usuń</f:facet>
-				<p:commandButton action="#{basketBean.removeProduct(productOrderItem.product.id)}" ajax="false" icon="pi pi-trash" />
+				<p:commandButton icon="pi pi-trash">
+					<p:ajax update="@all" listener="#{basketBean.removeProduct(productOrderItem.product.id)}"/>
+				</p:commandButton>
 			</p:column>
+			    <f:facet name="footer">
+			    	<div style="text-align: right;">
+	        			Wartość zakupów: <h:outputText value="#{basketBean.totalPrice}" id="totalPrice"/> zł.     			
+			    	</div>
+    			</f:facet>
 		</p:dataTable>
 	</h:form>
 	<br/>

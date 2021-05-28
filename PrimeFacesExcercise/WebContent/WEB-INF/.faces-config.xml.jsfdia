@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PROCESS model-entity="JSFProcess">
- <PROCESS-ITEM NAME="rules:index.xhtml" PATH="index.xhtml"
-  SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:index.xhtml:0" NAME="item" PATH="index.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT
-    ID="productListOfCategory::productListOfCategory.xhtml"
-    NAME="output" PATH="productListOfCategory.xhtml"
-    TARGET="rules:productListOfCategory.xhtml"
-    TITLE="productListOfCategory" model-entity="JSFProcessItemOutput"/>
-  </PROCESS-ITEM>
- </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:productListOfCategory.xhtml"
   PATH="productListOfCategory.xhtml" SHAPE="240,33,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:productListOfCategory.xhtml:0" NAME="item"
@@ -33,4 +23,14 @@
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:allOrders.xhtml" PATH="allOrders.xhtml"
   SHAPE="240,257,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:index.xhtml" PATH="index.xhtml"
+  SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:index.xhtml:0" NAME="item" PATH="index.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="productListOfCategory::productListOfCategory.xhtml"
+    NAME="output" PATH="productListOfCategory.xhtml"
+    TARGET="rules:productListOfCategory.xhtml"
+    TITLE="productListOfCategory" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
 </PROCESS>

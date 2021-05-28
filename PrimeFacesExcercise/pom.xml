@@ -19,8 +19,6 @@
             <url>http://repository.primefaces.org</url>
         </repository>
     </repositories>
-    
-    
         
 	<dependencies>
 	<!-- PrimeFaces -->
@@ -97,18 +95,18 @@
   
 	</dependencies>
 	
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-			<plugin>            
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-war-plugin</artifactId>
-			  <configuration>
-			    <webXml>WebContent/WEB-INF/web.xml</webXml>        
-			  </configuration>
-			</plugin>
-        </plugins>
-    </build>
+<!--     <build> -->
+<!--         <finalName>${project.artifactId}</finalName> -->
+<!--         <plugins> -->
+<!-- 			<plugin>             -->
+<!-- 			  <groupId>org.apache.maven.plugins</groupId> -->
+<!-- 			  <artifactId>maven-war-plugin</artifactId> -->
+<!-- 			  <configuration> -->
+<!-- 			    <webXml>WebContent/WEB-INF/web.xml</webXml>         -->
+<!-- 			  </configuration> -->
+<!-- 			</plugin> -->
+<!--         </plugins> -->
+<!--     </build> -->
 	
 
 </project>

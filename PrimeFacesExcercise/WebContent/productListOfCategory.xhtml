@@ -14,25 +14,33 @@
 	<ui:define name="content">
 		<h:form>
 			<p:commandButton action="index?faces-redirect=true" icon="pi pi-home" value="Strona główna" />
-			<h3>Lista produktów dla kategorii #{productListOfCategoryBean.category.name}</h3>
-			<p:dataTable id="productTable" value="#{productListOfCategoryBean.productModel}" var="product">
-				<p:column>
-					<f:facet name="header">Nazwa</f:facet>
-<!-- 					<h:outputLink value="productDetails.xhtml"> -->
-<!-- 						<f:param name="id" value="#{product.id}" /> -->
-<!-- 						<h:outputText value="#{product.name}" /> -->
-<!-- 					</h:outputLink> -->
-					<p:commandButton action="#{productDetailsBean.displayPage(product.id)}" value="#{product.name}"></p:commandButton>
-				</p:column>
-				<p:column>
-					<f:facet name="header">Cena</f:facet>
-					<h:outputFormat value="#{product.price}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Do koszyka</f:facet>
-					<p:commandButton action="#{basketBean.addProduct(product.id)}" ajax="false"	icon="pi pi-plus" />
-				</p:column>
-			</p:dataTable>
+			<h3>Lista produktów dla kategorii: #{productListOfCategoryBean.category.name}</h3>
+				<p:dataTable id="productTable" value="#{productListOfCategoryBean.productByCategoryList}" var="product" rowIndexVar="i">
+					<p:column width="15">
+						<f:facet name="header">
+							<h:outputText value="Lp." />
+						</f:facet>
+						<h:outputText escape="false" value="#{i+1}" />
+					</p:column>	
+					<p:column>
+						<f:facet name="header">Nazwa</f:facet>
+	<!-- 					<h:outputLink value="productDetails.xhtml"> -->
+	<!-- 						<f:param name="id" value="#{product.id}" /> -->
+	<!-- 						<h:outputText value="#{product.name}" /> -->
+	<!-- 					</h:outputLink> -->
+						<p:commandButton action="#{productDetailsBean.displayPage(product.id)}" value="#{product.name}"  style="min-width: 200px;"/>
+					</p:column>
+					<p:column width="100">
+						<f:facet name="header">Cena</f:facet>
+						<div style="text-align: right;">
+							<h:outputFormat value="#{product.price}" />
+						</div>
+					</p:column>
+					<p:column width="100" style="text-align: center;">
+						<f:facet name="header">Do koszyka</f:facet>
+						<p:commandButton action="#{basketBean.addProduct(product.id)}" ajax="false"	icon="pi pi-plus" />
+					</p:column>
+				</p:dataTable>
 			<h:commandLink>&#9194;</h:commandLink>
 			<h:commandLink>&#9193;</h:commandLink>
 			<br />

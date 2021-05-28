@@ -1,16 +1,19 @@
 package pl.aticode.bean;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.el.ELContext;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.ListDataModel;
 
+import org.jboss.classfilewriter.util.Boxing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,7 @@ public class BasketBean {
 	private List<ProductOrderItem> productOrderItemList;
 	private ProductRepository productRepository;
 	private OrderingRepository orderingRepository;
+	private BigDecimal totalPrice;
 
 	public BasketBean() {
 		setNewBasket();
@@ -45,13 +49,26 @@ public class BasketBean {
 	}
 	
 	public String addProduct(Long productId) {
+		boolean isProductInBasket = false;
 		final Product product = productRepository.findById(productId);
-		ProductOrderItem productOrderItem = new ProductOrderItem();
-		productOrderItem.setProduct(product);
-		productOrderItem.setProductQuantity(1);
-		productOrderItem.setProductOrder(productOrder);
-		productOrderItemList.add(productOrderItem);
+		for (ProductOrderItem productOrderItem : productOrderItemList) {
+			if(productOrderItem.getProduct().getId() == product.getId()) {
+				int productQuantity = productOrderItem.getProductQuantity();
+				productQuantity++;
+				productOrderItem.setProductQuantity(productQuantity);
+				isProductInBasket = true;
+				break;
+			}
+		}
+		if(!isProductInBasket) {
+			ProductOrderItem productOrderItem = new ProductOrderItem();
+			productOrderItem.setProduct(product);
+			productOrderItem.setProductQuantity(1);
+			productOrderItem.setProductOrder(productOrder);			
+			productOrderItemList.add(productOrderItem);
+		}
 		productOrder.setProductOrderItemList(productOrderItemList);
+		calculateTotalPrice();
 		return "";
 	}
 	
@@ -76,8 +93,10 @@ public class BasketBean {
 			return "allOrders";
 		} catch (Exception e) {
 			logger.error("ERROR save product order ", e);		
-			
-			return "errorOrder";
+			FacesContext.getCurrentInstance().addMessage("messages", 
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, 
+							"Błąd działania programu!", "Nie udało się zapisać zmówienia do bazy danych. Proszę o kontakt z administratorem lub sprzedawcą."));
+			return "";
 		}
 	}
 	
@@ -85,5 +104,14 @@ public class BasketBean {
 		productOrder = new ProductOrder();
 		productOrderItemList = new ArrayList<>();
 		productOrder.setUser(new User());
+	}
+	
+	public void calculateTotalPrice() {
+		BigDecimal itemCost = BigDecimal.ZERO;
+		totalPrice = new BigDecimal(0);
+		for (ProductOrderItem productOrderItem : productOrderItemList) {
+			itemCost = productOrderItem.getProduct().getPrice().multiply(new BigDecimal(productOrderItem.getProductQuantity()));
+			totalPrice = totalPrice.add(itemCost);
+		}
 	}
 }
