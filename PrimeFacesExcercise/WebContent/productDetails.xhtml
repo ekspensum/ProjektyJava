@@ -17,22 +17,33 @@
 			    <p:menuitem value="Do koszyka" action="#{basketBean.addProduct(productDetailsBean.product.id)}" ajax="false" icon="pi pi-plus" />
 			    <p:menuitem value="Strona główna" action="index?faces-redirect=true" ajax="false" icon="pi pi-home" />
 		    </p:menubar>
-		    <p:panelGrid columns="2" layout="grid" styleClass="">
-		        <f:facet name="header">
-					<h:outputText value="#{productDetailsBean.product.name}"/>		        	
-<!-- 	            	<p:graphicImage name="demo/images/misc/kobe.png"/> -->
-	        	</f:facet>
-		    	<h:outputText value="Cena"/>
-		    	<h:outputFormat value="#{productDetailsBean.product.price} zł.">
-		    		<f:param value="555.00"/>
-		    	</h:outputFormat>
-		    	<h:outputText value="Opis produktu"/>
-		    	<h:outputText value="#{productDetailsBean.product.description}"/>
-		    	<h:outputText value="Dostępna ilość"/>
-		    	<h:outputText value="#{productDetailsBean.product.quantity}"/>
-		    	<h:outputText value="Id"/>
-		    	<h:outputText value="#{productDetailsBean.product.id}"/>
-		    </p:panelGrid>
+		    <table>
+			<tr>
+				<td style="height: 200px;">
+				    <p:panelGrid columns="2" layout="grid">
+				        <f:facet name="header">
+							<h:outputText value="#{productDetailsBean.product.name}"/>		        	
+			        	</f:facet>
+				    	<h:outputText value="Cena"/>
+				    	<h:outputFormat value="#{productDetailsBean.product.price} zł.">
+				    		<f:param value="555.00"/>
+				    	</h:outputFormat>
+				    	<h:outputText value="Opis produktu"/>
+				    	<h:outputText value="#{productDetailsBean.product.description}" escape="false" />
+				    	<h:outputText value="Dostępna ilość"/>
+				    	<h:outputText value="#{productDetailsBean.product.quantity}"/>
+				    	<h:outputText value="Id"/>
+				    	<h:outputText value="#{productDetailsBean.product.id}"/>
+				    </p:panelGrid>
+				</td>
+				<td>
+				    <p:panel header="zdjęcie produktu">
+							<h:graphicImage rendered="#{productDetailsBean.product.photo != null}" value="data:image/jpg;base64,#{productDetailsBean.product.base64Image}" 
+								style="height: 240px;" />
+					</p:panel>
+				</td>
+			</tr>
+		    </table>
 	    </h:form>
 	</ui:define>
 </ui:composition>

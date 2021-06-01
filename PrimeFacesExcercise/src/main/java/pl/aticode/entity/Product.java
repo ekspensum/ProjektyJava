@@ -2,12 +2,14 @@ package pl.aticode.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Base64;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -42,6 +44,8 @@ public class Product implements Serializable {
     
 	private BigDecimal price;
 	private int quantity;
+	
+	@Lob
 	private byte [] photo;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -59,5 +63,7 @@ public class Product implements Serializable {
 
 	}
 	
-	
+	public String getBase64Image() {
+		return Base64.getEncoder().encodeToString(this.photo);
+	}
 }

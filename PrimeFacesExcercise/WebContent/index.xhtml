@@ -21,10 +21,12 @@
 					<table>
 						<tr>
 							<td><p:outputLabel for="@next" value="Promocja: " /></td>
-							<td><p:selectOneMenu value="#{topProductsBean.selectedProduct}">
+							<td>
+								<p:selectOneMenu value="#{topProductsBean.selectedProduct}">
 									<f:selectItems value="#{topProductsBean.topProductList}" />
 									<f:converter converterId="productConverter"/>
-								</p:selectOneMenu></td>
+								</p:selectOneMenu>
+							</td>
 							<td><p:commandButton action="#{productDetailsBean.displayPage(topProductsBean.selectedProduct.id)}" value="Wybierz" /></td>
 						</tr>
 					</table>

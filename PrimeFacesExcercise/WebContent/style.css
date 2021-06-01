@@ -1,3 +1,6 @@
+body {
+	background-color: activecaption;
+}
 #header {
 	position: absolute;
 	top: 0px;

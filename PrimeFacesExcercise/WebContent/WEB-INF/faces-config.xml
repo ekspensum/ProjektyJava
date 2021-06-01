@@ -10,9 +10,17 @@
 		<validator-id>emailValidator</validator-id>
 		<validator-class>pl.aticode.config.EmailValidator</validator-class>
 	</validator>
+	<validator>
+		<validator-id>uploadedFileValidator</validator-id>
+		<validator-class>pl.aticode.config.UploadedFileValidator</validator-class>
+	</validator>
 	<converter>
 		<converter-id>productConverter</converter-id>
 		<converter-class>pl.aticode.config.ProductConverter</converter-class>
+	</converter>
+	<converter>
+		<converter-id>categoryConverter</converter-id>
+		<converter-class>pl.aticode.config.CategoryConverter</converter-class>
 	</converter>
 	
 	<navigation-rule>

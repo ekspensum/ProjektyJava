@@ -16,14 +16,6 @@
 	    
 	        <!-- Set the current session context -->
 	        <property name="current_session_context_class">thread</property>
-	        <!-- JDBC connection pool settings -->
-	        <property name="connection.pool_size">1</property>
-	        <!-- dbcp connection pool configuration -->
-	        <property name="hibernate.dbcp.initialSize">5</property>
-	        <property name="hibernate.dbcp.maxTotal">20</property>
-	        <property name="hibernate.dbcp.maxIdle">10</property>
-	        <property name="hibernate.dbcp.minIdle">5</property>
-	        <property name="hibernate.dbcp.maxWaitMillis">-1</property>
 	    
 			<mapping class="pl.aticode.entity.User" />
 			<mapping class="pl.aticode.entity.Category" />
